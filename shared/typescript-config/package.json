@@ -1,0 +1,14 @@
+{
+  "name": "@open-tomato/typescript-config",
+  "version": "0.0.0",
+  "private": true,
+  "license": "PROPRIETARY",
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    "./base": "./base.json",
+    "./react": "./react.json",
+    "./next": "./nextjs.json"
+  }
+}
