@@ -1,0 +1,23 @@
+{
+  "name": "@open-tomato/monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.3.9",
+  "workspaces": ["app", "services/*", "types"],
+  "scripts": {
+    "build": "turbo run build",
+    "check-types": "turbo run check-types",
+    "dev": "turbo run dev",
+    "dev:stack": "docker compose up --build",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "file:../packages/shared/eslint-config",
+    "@open-tomato/typescript-config": "file:../packages/shared/typescript-config",
+    "turbo": "^2.5.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": { "node": ">=18" }
+}
