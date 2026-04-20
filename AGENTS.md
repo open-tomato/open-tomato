@@ -84,6 +84,14 @@ Never use `workspace:*` to reach libraries across repo roots — this workspace 
 - [ ] **Errors**: Does the error handler catch potential failures — nothing will crash the process?
 - [ ] **Delivery**: Is the code completed, properly consumed/integrated, and ready for production?
 
+## Known Deviations (Scaffold Stage)
+
+- **Lint gate is a no-op at the scaffold stage.** `@open-tomato/eslint-config` is consumed via `file:../packages/shared/eslint-config`. Its plugin dependencies (`@typescript-eslint/*`, `eslint-plugin-*`, `jiti`, `eslint` itself) are declared as `devDependencies` of that package and are therefore not installed transitively via a `file:` ref. Real linting will be restored once:
+  1. `@open-tomato/eslint-config` moves its consumer-facing plugin deps to `dependencies` / `peerDependencies`, **or**
+  2. the packages are published to the npm org and consumed via semver ranges.
+  Until then, `app/package.json`'s `lint` script is an `echo + exit 0` placeholder. Do not restore `eslint --fix` until one of the two conditions above holds.
+- **Root `package.json` contains `overrides`** mapping `@open-tomato/eslint-config` and `@open-tomato/typescript-config` to their `file:` paths. This works around `bun install` failing to resolve `workspace:*` specifiers inside the linked packages. Remove the overrides block once the packages are on npm.
+
 ## See Also
 
 [README.md](README.md) — overview · [CONTRIBUTING.md](CONTRIBUTING.md) — dev guide · [SECURITY.md](SECURITY.md) — security · [../AGENTS.md](../AGENTS.md) — umbrella split map.
