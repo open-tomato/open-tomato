@@ -1,0 +1,36 @@
+{
+  "name": "@open-tomato/logger",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./dist/node.js",
+  "types": "./dist/node.d.ts",
+  "exports": {
+    ".": {
+      "browser": "./dist/browser.js",
+      "default": "./dist/node.js"
+    }
+  },
+  "scripts": {
+    "build": "bun run build:node && bun run build:browser && bun run build:types",
+    "build:node": "bun build ./src/node.ts --outfile ./dist/node.js --target node",
+    "build:browser": "bun build ./src/browser.ts --outfile ./dist/browser.js --target browser",
+    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir ./dist",
+    "check:browser": "bun run build:browser && bun run scripts/check-browser-bundle.ts",
+    "lint": "eslint --fix",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "pino": "^9.6.0",
+    "pino-http": "^10.4.0",
+    "pino-pretty": "^13.0.0"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:*",
+    "eslint": "^9.39.4",
+    "globals": "^16.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.0"
+  }
+}
