@@ -1,0 +1,43 @@
+{
+  "name": "@open-tomato/cache",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "bun run build:browser && bun run build:server && bun run build:types",
+    "postbuild": "grep -q 'ioredis' ./dist/browser.js && { echo 'ERROR: ioredis leaked into browser bundle' >&2; exit 1; } || exit 0",
+    "build:browser": "bun build ./src/browser.ts --outfile ./dist/browser.js --target browser",
+    "build:server": "bun build ./src/server.ts --outfile ./dist/server.js --target node",
+    "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly --declaration --declarationDir ./dist",
+    "lint": "eslint --fix",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.80.0",
+    "react": "^19.2.4"
+  },
+  "peerDependencies": {
+    "ioredis": "^5.0.0"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.10",
+    "eslint": "^9.39.4",
+    "ioredis-mock": "^8.0.0",
+    "jsdom": "^29.0.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  },
+  "exports": {
+    ".": {
+      "browser": "./dist/browser.js",
+      "default": "./dist/browser.js"
+    },
+    "./server": {
+      "default": "./dist/server.js"
+    }
+  }
+}
