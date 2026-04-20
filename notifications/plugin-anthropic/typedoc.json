@@ -1,0 +1,10 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "tsconfig": "tsconfig.json",
+  "readme": "README.md",
+  "name": "@open-tomato/notifications-plugin-anthropic",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "includeVersion": false
+}
