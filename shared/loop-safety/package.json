@@ -1,0 +1,23 @@
+{
+  "name": "@open-tomato/loop-safety",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "eslint --fix",
+    "test": "bun test",
+    "docs:generate": "typedoc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:*",
+    "eslint": "^9.39.4",
+    "typedoc": "^0.28.17",
+    "typescript": "^5.9.3"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
