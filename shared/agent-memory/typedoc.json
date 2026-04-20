@@ -1,0 +1,11 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "tsconfig": "tsconfig.typedoc.json",
+  "readme": "README.md",
+  "name": "@open-tomato/agent-memory",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "includeVersion": false,
+  "exclude": ["src/__tests__/**"]
+}
