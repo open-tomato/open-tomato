@@ -1,0 +1,37 @@
+{
+  "name": "@open-tomato/mcp",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "eslint src tests",
+    "test": "vitest run",
+    "docs:generate": "typedoc"
+  },
+  "dependencies": {
+    "@open-tomato/logger": "workspace:*",
+    "@open-tomato/service-core": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.10.0",
+    "zod": "^3.25.67"
+  },
+  "peerDependencies": {
+    "@open-tomato/service-core": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.10.0"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/service-core": "workspace:*",
+    "@open-tomato/typescript-config": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.10.0",
+    "eslint": "^9.39.4",
+    "globals": "^16.0.0",
+    "typescript": "^5.9.3",
+    "typedoc": "^0.28.17",
+    "vitest": "^4.1.0"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

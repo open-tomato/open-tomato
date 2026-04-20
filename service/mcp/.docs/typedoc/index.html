@@ -1,0 +1,137 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@open-tomato/mcp</title><meta name="description" content="Documentation for @open-tomato/mcp"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">@open-tomato/mcp</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>@open-tomato/mcp</h1></div><div class="tsd-panel tsd-typography"><h1 id="open-tomatomcp" class="tsd-anchor-link">@open-tomato/mcp<a href="#open-tomatomcp" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>Factory package for building Model Context Protocol (MCP) servers within the open-tomato monorepo. Wraps the MCP SDK with transport selection, health endpoint, graceful shutdown, and structured logging.</p>
+<h2 id="overview" class="tsd-anchor-link">Overview<a href="#overview" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>createMCP(config)</code> is the single entry point. It:</p>
+<ol>
+<li>Validates and defaults configuration via Zod</li>
+<li>Instantiates a <code>McpServer</code> from the MCP SDK</li>
+<li>Invokes your <code>setup</code> callback to register tools, resources, and prompts</li>
+<li>Wires the selected transport (HTTP or stdio)</li>
+<li>Starts a standalone health server (HTTP mode only)</li>
+<li>Registers a <code>SIGTERM</code> handler for graceful shutdown</li>
+<li>Returns an <code>MCPHandle</code> with <code>stop()</code> and <code>healthUrl()</code> methods</li>
+</ol>
+<p>The server auto-starts on call — no explicit <code>start()</code> is needed.</p>
+<h2 id="installation" class="tsd-anchor-link">Installation<a href="#installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>This package is a workspace member. Add it as a dependency in your <code>package.json</code>:</p>
+<pre><code class="json"><span class="hl-0">{</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;dependencies&quot;</span><span class="hl-0">: {</span><br/><span class="hl-0">    </span><span class="hl-1">&quot;@open-tomato/mcp&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;workspace:*&quot;</span><br/><span class="hl-0">  }</span><br/><span class="hl-0">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="usage" class="tsd-anchor-link">Usage<a href="#usage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="ts"><span class="hl-3">import</span><span class="hl-0"> { </span><span class="hl-4">createMCP</span><span class="hl-0"> } </span><span class="hl-3">from</span><span class="hl-0"> </span><span class="hl-2">&#39;@open-tomato/mcp&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">handle</span><span class="hl-0"> = </span><span class="hl-7">createMCP</span><span class="hl-0">({</span><br/><span class="hl-0">  </span><span class="hl-4">serviceId:</span><span class="hl-0"> </span><span class="hl-2">&#39;my-mcp-service&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-7">setup</span><span class="hl-4">:</span><span class="hl-0"> </span><span class="hl-5">async</span><span class="hl-0"> (</span><span class="hl-4">server</span><span class="hl-0">, { </span><span class="hl-4">logger</span><span class="hl-0">, </span><span class="hl-4">clients</span><span class="hl-0"> }) </span><span class="hl-5">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-4">server</span><span class="hl-0">.</span><span class="hl-7">tool</span><span class="hl-0">(</span><span class="hl-2">&#39;greet&#39;</span><span class="hl-0">, {}, </span><span class="hl-5">async</span><span class="hl-0"> () </span><span class="hl-5">=&gt;</span><span class="hl-0"> ({</span><br/><span class="hl-0">      </span><span class="hl-4">content:</span><span class="hl-0"> [{ </span><span class="hl-4">type:</span><span class="hl-0"> </span><span class="hl-2">&#39;text&#39;</span><span class="hl-0">, </span><span class="hl-4">text:</span><span class="hl-0"> </span><span class="hl-2">&#39;Hello!&#39;</span><span class="hl-0"> }],</span><br/><span class="hl-0">    }));</span><br/><span class="hl-0">    </span><span class="hl-4">logger</span><span class="hl-0">.</span><span class="hl-7">info</span><span class="hl-0">(</span><span class="hl-2">&#39;Tools registered&#39;</span><span class="hl-0">);</span><br/><span class="hl-0">  },</span><br/><span class="hl-0">});</span><br/><br/><span class="hl-8">// Health URL (HTTP mode only):</span><br/><span class="hl-4">console</span><span class="hl-0">.</span><span class="hl-7">log</span><span class="hl-0">(</span><span class="hl-4">handle</span><span class="hl-0">.</span><span class="hl-7">healthUrl</span><span class="hl-0">()); </span><span class="hl-8">// http://localhost:3001/health</span><br/><br/><span class="hl-8">// Graceful shutdown:</span><br/><span class="hl-3">await</span><span class="hl-0"> </span><span class="hl-4">handle</span><span class="hl-0">.</span><span class="hl-7">stop</span><span class="hl-0">();</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="api" class="tsd-anchor-link">API<a href="#api" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="_" class="tsd-anchor-link"><code>createMCP(config: MCPConfig): MCPHandle</code><a href="#_" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Creates and auto-starts an MCP server.</p>
+<h4 id="_-1" class="tsd-anchor-link"><code>MCPConfig</code><a href="#_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>serviceId</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>Unique service identifier. Used as logger scope and service label in health responses.</td>
+</tr>
+<tr>
+<td><code>setup</code></td>
+<td><code>(server, ctx) =&gt; void | Promise&lt;void&gt;</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>Callback to register tools, resources, and prompts. Awaited before transport is opened.</td>
+</tr>
+<tr>
+<td><code>clients</code></td>
+<td><code>TypedClient&lt;unknown&gt;[]</code></td>
+<td>No</td>
+<td><code>[]</code></td>
+<td>Managed HTTP clients made available via <code>ctx.clients</code> in <code>setup</code>.</td>
+</tr>
+<tr>
+<td><code>health.port</code></td>
+<td><code>number</code></td>
+<td>No</td>
+<td><code>3001</code></td>
+<td>Port for the standalone health server (HTTP mode only).</td>
+</tr>
+<tr>
+<td><code>health.path</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td><code>'/health'</code></td>
+<td>URL path for the health check route.</td>
+</tr>
+<tr>
+<td><code>logger</code></td>
+<td><code>LoggerOptions</code></td>
+<td>No</td>
+<td>—</td>
+<td>Logger options forwarded to <code>@open-tomato/logger</code>. Defaults to <code>LOG_LEVEL</code> env var or <code>'info'</code>.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_-2" class="tsd-anchor-link"><code>MCPContext</code><a href="#_-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<p>The second argument passed to <code>setup</code>:</p>
+<pre><code class="ts"><span class="hl-5">interface</span><span class="hl-0"> </span><span class="hl-9">MCPContext</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-4">logger</span><span class="hl-0">: </span><span class="hl-9">Logger</span><span class="hl-0">;      </span><span class="hl-8">// structured logger scoped to serviceId</span><br/><span class="hl-0">  </span><span class="hl-4">clients</span><span class="hl-0">: </span><span class="hl-9">ClientsMap</span><span class="hl-0">; </span><span class="hl-8">// Record&lt;string, TypedClient&lt;unknown&gt;&gt; keyed by client name</span><br/><span class="hl-0">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h4 id="_-3" class="tsd-anchor-link"><code>MCPHandle</code><a href="#_-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<pre><code class="ts"><span class="hl-5">interface</span><span class="hl-0"> </span><span class="hl-9">MCPHandle</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-7">stop</span><span class="hl-0">(): </span><span class="hl-9">Promise</span><span class="hl-0">&lt;</span><span class="hl-9">void</span><span class="hl-0">&gt;;   </span><span class="hl-8">// gracefully shuts down transport and health server</span><br/><span class="hl-0">  </span><span class="hl-7">healthUrl</span><span class="hl-0">(): </span><span class="hl-9">string</span><span class="hl-0">;     </span><span class="hl-8">// e.g. &quot;http://localhost:3001/health&quot; (empty string in stdio mode)</span><br/><span class="hl-0">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="environment-variables" class="tsd-anchor-link">Environment Variables<a href="#environment-variables" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MCP_TRANSPORT</code></td>
+<td><code>'http'</code> | <code>'stdio'</code></td>
+<td><code>'http'</code></td>
+<td>Selects the transport. Set to <code>'stdio'</code> for Claude Desktop or local pipe-based clients.</td>
+</tr>
+<tr>
+<td><code>PORT</code></td>
+<td>number</td>
+<td><code>8080</code></td>
+<td>Port on which the MCP HTTP transport listens (not the health server).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transport-modes" class="tsd-anchor-link">Transport modes<a href="#transport-modes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>HTTP (default):</strong> The MCP protocol is served over <code>WebStandardStreamableHTTPServerTransport</code> on <code>PORT</code> (default <code>8080</code>). A separate health server starts on <code>health.port</code> (default <code>3001</code>).</p>
+<p><strong>stdio:</strong> Set <code>MCP_TRANSPORT=stdio</code>. The MCP protocol is served over stdin/stdout via <code>StdioServerTransport</code>. No health server is started.</p>
+<h2 id="health-endpoint" class="tsd-anchor-link">Health Endpoint<a href="#health-endpoint" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>When running in HTTP mode, a health server listens on <code>health.port</code> (default <code>3001</code>) at <code>health.path</code> (default <code>'/health'</code>).</p>
+<p>Response shape:</p>
+<pre><code class="json"><span class="hl-0">{</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;status&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;ok&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;serviceId&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;my-mcp-service&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;clients&quot;</span><span class="hl-0">: {</span><br/><span class="hl-0">    </span><span class="hl-1">&quot;my-api-client&quot;</span><span class="hl-0">: { </span><span class="hl-1">&quot;status&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;running&quot;</span><span class="hl-0"> }</span><br/><span class="hl-0">  }</span><br/><span class="hl-0">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Aggregate <code>status</code> values:</p>
+<ul>
+<li><code>&quot;ok&quot;</code> — all clients are healthy</li>
+<li><code>&quot;degraded&quot;</code> — at least one client has <code>status === 'starting'</code> (none are <code>'error'</code>)</li>
+<li><code>&quot;error&quot;</code> — at least one client has <code>status === 'error'</code></li>
+</ul>
+<p>All other paths return <code>404 Not Found</code>.</p>
+<h2 id="with-http-clients" class="tsd-anchor-link">With HTTP clients<a href="#with-http-clients" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="ts"><span class="hl-3">import</span><span class="hl-0"> { </span><span class="hl-4">createMCP</span><span class="hl-0"> } </span><span class="hl-3">from</span><span class="hl-0"> </span><span class="hl-2">&#39;@open-tomato/mcp&#39;</span><span class="hl-0">;</span><br/><span class="hl-3">import</span><span class="hl-0"> { </span><span class="hl-4">createHttpClient</span><span class="hl-0"> } </span><span class="hl-3">from</span><span class="hl-0"> </span><span class="hl-2">&#39;@open-tomato/service-core&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">apiClient</span><span class="hl-0"> = </span><span class="hl-7">createHttpClient</span><span class="hl-0">({</span><br/><span class="hl-0">  </span><span class="hl-4">name:</span><span class="hl-0"> </span><span class="hl-2">&#39;downstream-api&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-4">baseUrl:</span><span class="hl-0"> </span><span class="hl-2">&#39;https://api.example.com&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">});</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">handle</span><span class="hl-0"> = </span><span class="hl-7">createMCP</span><span class="hl-0">({</span><br/><span class="hl-0">  </span><span class="hl-4">serviceId:</span><span class="hl-0"> </span><span class="hl-2">&#39;my-mcp-service&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-4">clients:</span><span class="hl-0"> [</span><span class="hl-4">apiClient</span><span class="hl-0">],</span><br/><span class="hl-0">  </span><span class="hl-7">setup</span><span class="hl-4">:</span><span class="hl-0"> </span><span class="hl-5">async</span><span class="hl-0"> (</span><span class="hl-4">server</span><span class="hl-0">, { </span><span class="hl-4">logger</span><span class="hl-0">, </span><span class="hl-4">clients</span><span class="hl-0"> }) </span><span class="hl-5">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">api</span><span class="hl-0"> = </span><span class="hl-4">clients</span><span class="hl-0">[</span><span class="hl-2">&#39;downstream-api&#39;</span><span class="hl-0">];</span><br/><span class="hl-0">    </span><span class="hl-4">server</span><span class="hl-0">.</span><span class="hl-7">tool</span><span class="hl-0">(</span><span class="hl-2">&#39;fetch-data&#39;</span><span class="hl-0">, {}, </span><span class="hl-5">async</span><span class="hl-0"> () </span><span class="hl-5">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">      </span><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">data</span><span class="hl-0"> = </span><span class="hl-3">await</span><span class="hl-0"> </span><span class="hl-4">api</span><span class="hl-0">.</span><span class="hl-7">get</span><span class="hl-0">(</span><span class="hl-2">&#39;/data&#39;</span><span class="hl-0">);</span><br/><span class="hl-0">      </span><span class="hl-3">return</span><span class="hl-0"> { </span><span class="hl-4">content:</span><span class="hl-0"> [{ </span><span class="hl-4">type:</span><span class="hl-0"> </span><span class="hl-2">&#39;text&#39;</span><span class="hl-0">, </span><span class="hl-4">text:</span><span class="hl-0"> </span><span class="hl-6">JSON</span><span class="hl-0">.</span><span class="hl-7">stringify</span><span class="hl-0">(</span><span class="hl-4">data</span><span class="hl-0">) }] };</span><br/><span class="hl-0">    });</span><br/><span class="hl-0">  },</span><br/><span class="hl-0">});</span>
+</code><button type="button">Copy</button></pre>
+
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#open-tomatomcp"><span>@open-<wbr/>tomato/mcp</span></a><ul><li><a href="#overview"><span>Overview</span></a></li><li><a href="#installation"><span>Installation</span></a></li><li><a href="#usage"><span>Usage</span></a></li><li><a href="#api"><span>API</span></a></li><li><ul><li><a href="#_"><span></span></a></li><li><ul><li><a href="#_-1"><span></span></a></li><li><a href="#_-2"><span></span></a></li><li><a href="#_-3"><span></span></a></li></ul></li></ul></li><li><a href="#environment-variables"><span>Environment <wbr/>Variables</span></a></li><li><ul><li><a href="#transport-modes"><span>Transport modes</span></a></li></ul></li><li><a href="#health-endpoint"><span>Health <wbr/>Endpoint</span></a></li><li><a href="#with-http-clients"><span>With <wbr/>HTTP clients</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">@open-tomato/mcp</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
