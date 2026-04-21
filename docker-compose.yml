@@ -71,18 +71,18 @@ services:
       timeout: 3s
       retries: 10
 
-  # scheduler:
-  #   build:
-  #     context: .
-  #     dockerfile: services/scheduler/Dockerfile
-  #   working_dir: /workspace/services/scheduler
-  #   command: bun run dev
-  #   env_file: ./services/scheduler/.env
-  #   ports:
-  #     - "3003:3000"
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
+  scheduler:
+    build:
+      context: .
+      dockerfile: services/scheduler/Dockerfile
+    working_dir: /workspace/services/scheduler
+    command: bun run dev
+    env_file: ./services/scheduler/.env
+    ports:
+      - "3003:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   # task-worker:
   #   build:

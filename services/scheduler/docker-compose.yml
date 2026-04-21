@@ -1,0 +1,23 @@
+# Local dev only — starts the Postgres dependency.
+# Run the schedulus service itself via `bun dev`.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: schedulus
+      POSTGRES_PASSWORD: schedulus
+      POSTGRES_DB: schedulus
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U schedulus -d schedulus"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - schedulus_pg_data:/var/lib/postgresql/data
+
+volumes:
+  schedulus_pg_data:
