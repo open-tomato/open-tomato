@@ -84,16 +84,16 @@ services:
       postgres:
         condition: service_healthy
 
-  # task-worker:
-  #   build:
-  #     context: .
-  #     dockerfile: services/task-worker/Dockerfile
-  #   working_dir: /workspace/services/task-worker
-  #   command: bun run dev
-  #   env_file: ./services/task-worker/.env
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
+  task-worker:
+    build:
+      context: .
+      dockerfile: services/task-worker/Dockerfile
+    working_dir: /workspace/services/task-worker
+    command: bun run dev
+    env_file: ./services/task-worker/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:
