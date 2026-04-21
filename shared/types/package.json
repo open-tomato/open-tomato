@@ -13,8 +13,8 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@open-tomato/eslint-config": "workspace:^",
-    "@open-tomato/typescript-config": "workspace:*",
+    "@open-tomato/eslint-config": "file:../eslint-config",
+    "@open-tomato/typescript-config": "file:../typescript-config",
     "eslint": "^9.39.4",
     "globals": "^16.0.0",
     "typescript": "^5.9.3",

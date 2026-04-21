@@ -11,19 +11,19 @@
     "docs:generate": "typedoc"
   },
   "dependencies": {
-    "@open-tomato/logger": "workspace:*",
-    "@open-tomato/service-core": "workspace:*",
+    "@open-tomato/logger": "file:../../shared/logger",
+    "@open-tomato/service-core": "file:../service-core",
     "@modelcontextprotocol/sdk": "^1.10.0",
     "zod": "^3.25.67"
   },
   "peerDependencies": {
-    "@open-tomato/service-core": "workspace:*",
+    "@open-tomato/service-core": "file:../service-core",
     "@modelcontextprotocol/sdk": "^1.10.0"
   },
   "devDependencies": {
-    "@open-tomato/eslint-config": "workspace:^",
-    "@open-tomato/service-core": "workspace:*",
-    "@open-tomato/typescript-config": "workspace:*",
+    "@open-tomato/eslint-config": "file:../../shared/eslint-config",
+    "@open-tomato/service-core": "file:../service-core",
+    "@open-tomato/typescript-config": "file:../../shared/typescript-config",
     "@modelcontextprotocol/sdk": "^1.10.0",
     "eslint": "^9.39.4",
     "globals": "^16.0.0",

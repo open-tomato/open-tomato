@@ -9,13 +9,13 @@
     "docs:generate": "typedoc"
   },
   "dependencies": {
-    "@open-tomato/errors": "workspace:*",
-    "@open-tomato/logger": "workspace:*",
+    "@open-tomato/errors": "file:../../shared/errors",
+    "@open-tomato/logger": "file:../../shared/logger",
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@open-tomato/eslint-config": "workspace:^",
-    "@open-tomato/typescript-config": "workspace:*",
+    "@open-tomato/eslint-config": "file:../../shared/eslint-config",
+    "@open-tomato/typescript-config": "file:../../shared/typescript-config",
     "eslint": "^9.39.4",
     "typedoc": "^0.28.17",
     "typescript": "^5.9.3"
