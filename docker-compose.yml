@@ -95,5 +95,41 @@ services:
       postgres:
         condition: service_healthy
 
+  # ---------------------------------------------------------------------
+  # External services (live in sibling umbrella folders, not this
+  # monorepo). Uncomment to join them to the dev-loop constellation.
+  # See README.md § "External services" and ../README.md for the
+  # umbrella layout.
+  # ---------------------------------------------------------------------
+
+  # auth:
+  #   build:
+  #     context: ../auth
+  #     dockerfile: Dockerfile
+  #   env_file: ../auth/.env
+  #   ports:
+  #     - "3004:3000"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+
+  # knowledge-base:
+  #   build:
+  #     context: ../knowledge-base
+  #     dockerfile: Dockerfile
+  #   env_file: ../knowledge-base/.env
+  #   ports:
+  #     - "3005:3000"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+
+  # token-monitor:
+  #   build:
+  #     context: ../token-monitor
+  #   env_file: ../token-monitor/.env
+  #   ports:
+  #     - "4242:4242"
+
 volumes:
   postgres_data:

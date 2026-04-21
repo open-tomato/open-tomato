@@ -73,6 +73,22 @@ bun run test --filter @open-tomato/notifications
 | [`../template-service-mcp/`](../template-service-mcp/) | Boilerplate for new MCP services |
 | [`../skills/`](../skills/) | Claude agent skills (API, drizzle-orm, styling, …) |
 
+## External services
+
+Migrated in Plan 08, these live as **standalone sibling folders** under
+the umbrella rather than inside this monorepo. They are intentionally
+decoupled from the turbo pipeline.
+
+| Path | Purpose | Port |
+|------|---------|------|
+| [`../auth/`](../auth/) | `@open-tomato/auth-service` — OAuth (GitHub/Google), session introspection | 3004 |
+| [`../knowledge-base/`](../knowledge-base/) | `@open-tomato/knowledge-base` — knowledge artifact store (scaffold) | 3005 |
+| [`../token-monitor/`](../token-monitor/) | `claude-dashboard-backend` — Claude Code activity dashboard (deprecated; JS-only) | 4242 |
+
+To join any of these to the dev-loop constellation, uncomment the
+matching `docker-compose.yml` stanza — each uses `context: ../<name>` so
+Docker builds from the sibling folder.
+
 ## Further reading
 
 - [AGENTS.md](AGENTS.md) — role definition, profiles, and workflow checklists for agentic development.
