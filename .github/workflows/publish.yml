@@ -1,0 +1,38 @@
+# DISABLED: enable when npm org registry is configured for @open-tomato/*.
+#
+# When enabled, pushing a `v*` tag publishes `@open-tomato/tomato-cli` to
+# the npm registry with `--access public`. Requires an `NPM_TOKEN` repo
+# secret scoped to the `@open-tomato` org.
+
+name: publish
+
+# on:
+#   push:
+#     tags: ['v*']
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    if: false  # remove when enabling.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
