@@ -16,6 +16,7 @@
   "devDependencies": {
     "@open-tomato/eslint-config": "file:../packages/shared/eslint-config",
     "@open-tomato/typescript-config": "file:../packages/shared/typescript-config",
+    "@types/bun": "latest",
     "turbo": "^2.5.0",
     "typescript": "^5.9.3"
   },

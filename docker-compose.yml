@@ -53,23 +53,23 @@ services:
       timeout: 3s
       retries: 10
 
-  # orchestrator:
-  #   build:
-  #     context: .
-  #     dockerfile: services/orchestrator/Dockerfile
-  #   working_dir: /workspace/services/orchestrator
-  #   command: bun run dev
-  #   env_file: ./services/orchestrator/.env
-  #   ports:
-  #     - "3002:3000"
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   healthcheck:
-  #     test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
-  #     interval: 10s
-  #     timeout: 3s
-  #     retries: 10
+  orchestrator:
+    build:
+      context: .
+      dockerfile: services/orchestrator/Dockerfile
+    working_dir: /workspace/services/orchestrator
+    command: bun run dev
+    env_file: ./services/orchestrator/.env
+    ports:
+      - "3002:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
 
   # scheduler:
   #   build:

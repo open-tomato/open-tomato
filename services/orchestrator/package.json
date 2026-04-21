@@ -1,0 +1,42 @@
+{
+  "name": "@open-tomato/orchestrator",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch index.ts",
+    "start": "bun index.ts",
+    "build": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint --fix",
+    "test": "bun --env-file=.env x vitest run",
+    "docs:generate": "typedoc",
+    "db:start": "docker compose up -d",
+    "db:stop": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "dependencies": {
+    "@open-tomato/express": "file:../../../packages/service/express",
+    "@open-tomato/service-core": "file:../../../packages/service/service-core",
+    "@open-tomato/worker-protocol": "file:../../../packages/service/worker-protocol",
+    "drizzle-orm": "^0.45.1",
+    "express": "^4.21.2",
+    "pg": "^8.20.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "file:../../../packages/shared/eslint-config",
+    "@open-tomato/typescript-config": "file:../../../packages/shared/typescript-config",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.13.5",
+    "@types/pg": "^8.18.0",
+    "drizzle-kit": "^0.31.9",
+    "eslint": "^9.39.4",
+    "globals": "^16.0.0",
+    "typescript": "^5.9.3",
+    "typedoc": "^0.28.17",
+    "vitest": "^3.0.6"
+  }
+}

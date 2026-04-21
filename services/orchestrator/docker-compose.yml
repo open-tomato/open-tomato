@@ -1,0 +1,53 @@
+# Local dev — starts the Postgres dependency and optionally task-worker containers.
+#
+# Usage:
+#   docker compose up -d                         # Postgres only (default)
+#   docker compose --profile workers up -d       # Postgres + task-worker containers
+#   docker compose --profile workers up -d --scale task-worker=3  # Multiple workers
+#
+# Run the executor service itself via `RUN_MODE=docker bun dev`.
+# After workers are healthy, register them with the executor using:
+#   bun scripts/start-workers.ts
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: executor
+      POSTGRES_PASSWORD: executor
+      POSTGRES_DB: executor
+    ports:
+      - "5434:5432"     # offset to avoid clashing with notifications (5433) and default (5432)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U executor -d executor"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - executor_pg_data:/var/lib/postgresql/data
+
+  task-worker:
+    profiles: ["workers"]
+    build:
+      context: ../..
+      dockerfile: services/task-worker/Dockerfile
+    environment:
+      - WORKER_ID=docker-worker-${COMPOSE_INSTANCE:-0}
+      - DEFAULT_MODEL=${DEFAULT_MODEL:-sonnet}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ORCHESTRATOR_URL=${ORCHESTRATOR_URL:-}
+    ports:
+      - "4310-4319:4310"    # dynamic port range for multiple instances
+    healthcheck:
+      test: ["CMD", "bun", "-e", "const r = await fetch('http://localhost:4310/health'); process.exit(r.ok ? 0 : 1)"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  executor_pg_data:
