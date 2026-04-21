@@ -1,0 +1,37 @@
+{
+  "name": "@open-tomato/tomato-cli",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "Open Tomato general-purpose CLI",
+  "bin": { "tomato": "./bin/tomato.ts" },
+  "exports": { ".": "./src/cli.ts" },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
+    "dev": "bun run bin/tomato.ts",
+    "lint": "eslint --fix",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@linear/sdk": "^76.0.0",
+    "@open-tomato/errors": "file:../packages/shared/errors",
+    "@open-tomato/linear": "file:../packages/shared/linear",
+    "@open-tomato/logger": "file:../packages/shared/logger",
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "inquirer": "^13.3.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "file:../packages/shared/eslint-config",
+    "@open-tomato/typescript-config": "file:../packages/shared/typescript-config",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.13.5",
+    "eslint": "^9.39.4",
+    "globals": "^16.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.6"
+  },
+  "engines": { "node": ">=18", "bun": ">=1.3" }
+}
