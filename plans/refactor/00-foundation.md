@@ -18,7 +18,7 @@ Top-level already contains these scaffolded-but-empty folders (LICENSE + README 
 - `./open-tomato/` (has `services/{notifications,orchestrator,scheduler,worker}/node_modules` only)
 - `./packages/`
 - `./skills/`
-- `./template-backend-express/` (to be renamed `./template-service-express/` in Plan 04)
+- `./template-service-express/`
 - `./template-service-mcp/`
 - `./tomato-cli/` (has `{dependencies,event,linear,ralph}/node_modules` only)
 - `./workflows/`, `./documentation/`, `./legacy-app/` — **ignored** per clarifications
