@@ -1,0 +1,10 @@
+{
+  "entryPointStrategy": "expand",
+  "entryPoints": ["src"],
+  "out": ".docs/typedoc",
+  "tsconfig": "tsconfig.docs.json",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "name": "Notifications Hub",
+  "readme": "README.md"
+}

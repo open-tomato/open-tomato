@@ -1,0 +1,23 @@
+# Local dev only — starts the Postgres dependency.
+# Run the notification service itself via `bun dev`.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: notifications
+      POSTGRES_PASSWORD: notifications
+      POSTGRES_DB: notifications
+    ports:
+      - "5433:5432"     # offset to avoid clashing with other local Postgres instances
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U notifications -d notifications"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - notifications_pg_data:/var/lib/postgresql/data
+
+volumes:
+  notifications_pg_data:

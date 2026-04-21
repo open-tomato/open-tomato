@@ -35,23 +35,23 @@ services:
   #     - ./:/workspace
   #     - /workspace/node_modules
 
-  # notifications:
-  #   build:
-  #     context: .
-  #     dockerfile: services/notifications/Dockerfile
-  #   working_dir: /workspace/services/notifications
-  #   command: bun run dev
-  #   env_file: ./services/notifications/.env
-  #   ports:
-  #     - "3001:3000"
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   healthcheck:
-  #     test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
-  #     interval: 10s
-  #     timeout: 3s
-  #     retries: 10
+  notifications:
+    build:
+      context: .
+      dockerfile: services/notifications/Dockerfile
+    working_dir: /workspace/services/notifications
+    command: bun run dev
+    env_file: ./services/notifications/.env
+    ports:
+      - "3001:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
 
   # orchestrator:
   #   build:
