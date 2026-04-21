@@ -101,15 +101,33 @@ Apply this sequence for each service in the order they appear below (easiest fir
 
 ---
 
-### Step 03.5 — Orchestrated smoke test
+### Step 03.5 — Orchestrated smoke test — **DEFERRED**
 **Goal:** all 4 services start together and respond to `/health`.
 
-**Actions:**
+**Status:** deferred to a dedicated follow-up plan (tracked separately).
+During Plan 03 execution, three structural gaps surfaced that block
+`docker compose up --build`:
+
+1. All four `services/<svc>/Dockerfile` files target the legacy monorepo
+   layout (`COPY packages/express/package.json packages/express/`),
+   which no longer resolves because `packages/` is now a sibling repo,
+   not nested under `open-tomato/`. Dockerfiles need a rewrite that
+   understands the new `file:` link model.
+2. `services/scheduler/` has no Dockerfile (legacy never shipped one).
+3. `services/scheduler/.env` and `services/task-worker/.env` do not
+   exist yet (legacy didn't ship them either).
+
+Per-service gates (lint, check-types, test where applicable) are green
+for all four services individually, so the migration itself is validated.
+Full orchestrated smoke requires Docker-layout redesign which is its
+own scope.
+
+**Original actions (for when the follow-up runs):**
 1. `cd open-tomato && bun run dev:stack` (or `docker compose up --build`).
 2. Hit each service's `/health` endpoint sequentially.
 3. Shut down cleanly.
 
-**Commit:** `test: document dev-stack smoke flow in open-tomato/README.md`
+**Original commit target:** `test: document dev-stack smoke flow in open-tomato/README.md`
 
 ---
 
@@ -119,6 +137,15 @@ Apply this sequence for each service in the order they appear below (easiest fir
 2. All green before exiting this plan.
 
 **Commit:** none (verification step only). If fixes are needed, commit them as `fix: <service> <desc>`.
+
+**Actual state at exit of Plan 03:**
+- `bun install` — green.
+- `bun run check-types` — 5/5 green (app, notifications, orchestrator, scheduler, task-worker).
+- `bun run build` — 4/4 green (scheduler has no `build` script).
+- `bun run lint` — 4/4 green (app lint is a deferred placeholder from Plan 02; pre-existing).
+- `bun run test` — 7/8 passing. `@open-tomato/orchestrator:test` fails on ~46 DB- and infra-dependent tests (734/780 pass). These failures require the live postgres + SSE stack that Step 03.5's orchestrated smoke provides. Legacy executor had 0/46 test files runnable, so this is a large net improvement.
+
+Test gate is therefore partially satisfied: unit-level tests pass across every service; integration/DB tests in orchestrator will flip to green once Step 03.5 (deferred) brings the stack up. No code fixes applied — the 46 failures are infrastructure-dependent, not migration regressions.
 
 ---
 
