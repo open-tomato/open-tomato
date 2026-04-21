@@ -939,7 +939,12 @@ Options:
         }
 
         if (!flags.dryRun) {
-          const inserted = insertCommit(db, commit);
+          const inserted = insertCommit(db, {
+            ...commit,
+            issue_identifier: commit.issue_identifier ?? undefined,
+            branch: commit.branch ?? undefined,
+            minutes_since_prev: commit.minutes_since_prev ?? undefined,
+          });
           if (inserted) commitsAdded++;
         } else {
           commitsAdded++;

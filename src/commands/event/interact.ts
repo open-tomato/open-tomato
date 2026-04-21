@@ -457,7 +457,7 @@ async function runRead(client: ReturnType<typeof createClient>): Promise<void> {
   try {
     if (kinds) {
       const fetches = await Promise.all(
-        kinds.map((k) => client.get<EventRow[]>('/events', { params: { kind: k, limit: 20 } })),
+        kinds.map((k: string) => client.get<EventRow[]>('/events', { params: { kind: k, limit: 20 } })),
       );
       events = fetches.flatMap((r) => r.data);
     } else {
