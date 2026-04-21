@@ -60,7 +60,7 @@ Never use `workspace:*` to reach libraries across repo roots — this workspace 
 
 ## Workflow Summary
 
-1. **Read context** — this file, the target project's `AGENTS.md`, and applicable skills at [`../skills/`](../skills/) <!-- TODO(07): repoint to ../skills/... after Plan 07 populates it -->.
+1. **Read context** — this file, the target project's `AGENTS.md`, and applicable skills at [`../skills/`](../skills/).
 2. **Plan** — present a flat checklist; align on architecture before adding deps or structural changes.
 3. **Develop with TDD** — tests first, then implementation; lint and test continuously.
 4. **API work** — Zod validation, consistent response envelopes, security headers.

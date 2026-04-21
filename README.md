@@ -71,7 +71,7 @@ bun run test --filter @open-tomato/notifications
 | [`../tomato-cli/`](../tomato-cli/) | Standalone `tomato` CLI — repo helpers |
 | [`../template-service-express/`](../template-service-express/) | Boilerplate for new Express services |
 | [`../template-service-mcp/`](../template-service-mcp/) | Boilerplate for new MCP services |
-| <!-- TODO(07): repoint to ../skills/... after Plan 07 --> Claude agent skills | Relocated by Plan 07 |
+| [`../skills/`](../skills/) | Claude agent skills (API, drizzle-orm, styling, …) |
 
 ## Further reading
 
