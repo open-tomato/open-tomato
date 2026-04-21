@@ -1,4 +1,4 @@
-# services/executor — Headless Ralph Loop Service
+# services/orchestrator — Headless Ralph Loop Service
 
 Managed HTTP service that wraps the ralph loop for remote execution on cluster nodes (Raspberry Pis). Receives a job dispatch (branch + plan), validates prerequisites, and runs the loop headlessly — emitting structured activity events to the notification hub instead of printing to stdio.
 
@@ -25,7 +25,7 @@ worker management
   → DELETE /workers/:workerId        unregister a worker from the pool
 ```
 
-The executor acts as an **orchestrator** with a **worker pool**. Jobs are dispatched to idle workers from the pool. `POST /jobs` returns `503` if no idle workers are available.
+The orchestrator runs a **worker pool**. Jobs are dispatched to idle workers from the pool. `POST /jobs` returns `503` if no idle workers are available.
 
 ### Worker backends
 
@@ -40,7 +40,7 @@ A default worker is auto-registered at startup based on `WORKER_MODE` (defaults 
 
 ### Multi-backend fallback chain
 
-In `local` mode, the executor uses a `FallbackChainWorkerClient` that supports multiple AI CLI backends (Claude, Gemini, Codex) behind a single `WorkerClient` interface. The runner, pool, and dependency layers are unaware of backend identity.
+In `local` mode, the orchestrator uses a `FallbackChainWorkerClient` that supports multiple AI CLI backends (Claude, Gemini, Codex) behind a single `WorkerClient` interface. The runner, pool, and dependency layers are unaware of backend identity.
 
 **Supported backends:**
 
@@ -92,7 +92,7 @@ In `local` mode, the executor uses a `FallbackChainWorkerClient` that supports m
 ## Directory structure
 
 ```text
-services/executor/
+services/orchestrator/
 ├── index.ts                         # createService entry point
 ├── .env.example                     # Environment variable template
 ├── docker-compose.yml               # PostgreSQL 16 for local dev (port 5434)
@@ -400,7 +400,7 @@ POST /jobs received
 
 ## PREREQUISITES.md format
 
-The executor parses `PREREQUISITES.md` in the repo root before starting the loop. Supported tag syntax:
+The orchestrator parses `PREREQUISITES.md` in the repo root before starting the loop. Supported tag syntax:
 
 ```markdown
 ## Automated Checks [auto]
@@ -420,9 +420,9 @@ The executor parses `PREREQUISITES.md` in the repo root before starting the loop
 3. Section header containing `Manual` or `Human` → items default to `human`.
 4. No tag, no section default → conservatively treated as `human`.
 
-**`[auto]` items** — the first backtick-wrapped string is extracted as the probe command (e.g. `` `bun --version` ``). The command is run via `Bun.spawn`. On failure, the executor attempts a single auto-fix (scoped claude invocation) then re-probes. Still failing → escalated as a `[human]` approval request.
+**`[auto]` items** — the first backtick-wrapped string is extracted as the probe command (e.g. `` `bun --version` ``). The command is run via `Bun.spawn`. On failure, the orchestrator attempts a single auto-fix (scoped claude invocation) then re-probes. Still failing → escalated as a `[human]` approval request.
 
-**`[human]` items** — the executor emits a `prerequisite.check { result: 'pending' }` event and calls `requestApproval()`, blocking until the notification service delivers a decision.
+**`[human]` items** — the orchestrator emits a `prerequisite.check { result: 'pending' }` event and calls `requestApproval()`, blocking until the notification service delivers a decision.
 
 ---
 
@@ -450,9 +450,9 @@ Uses `@open-tomato/notifications-plugin-executor` under the hood:
 - **Worker pool** — `POST /jobs` returns `503` if no idle workers are available. A default worker is auto-registered at startup based on `WORKER_MODE`.
 - **Pause is between-task** — issuing pause while a claude invocation is running does not interrupt it. The pause takes effect when that task finishes.
 - **Workspace preparation** — handled by `WorkerClient.prepareWorkspace()`. For local mode, this runs `git fetch/checkout/pull`. For Docker mode, it clones into a host temp dir bind-mounted into the container.
-- **Crash recovery** — on startup, the executor scans for jobs in `running`/`paused` state and transitions them to `blocked` with a `loop.cancelled` event.
+- **Crash recovery** — on startup, the orchestrator scans for jobs in `running`/`paused` state and transitions them to `blocked` with a `loop.cancelled` event.
 - **Import extensions** — all internal imports use `.js` extensions (`import { foo } from './bar.js'`) even in TypeScript files (Bun + ESM requirement).
 - **`NOTIFICATION_URL` absent** — stub mode is intentional for local dev. The service works fully without a running notification service.
-- **Multi-backend detection** — at startup in `local` mode, the executor auto-detects available CLI backends (claude, gemini, codex) via PATH scan. If none are found, it falls back to the Claude descriptor without an availability check. Check `[executor] detected backends:` log line to verify detection.
+- **Multi-backend detection** — at startup in `local` mode, the orchestrator auto-detects available CLI backends (claude, gemini, codex) via PATH scan. If none are found, it falls back to the Claude descriptor without an availability check. Check `[executor] detected backends:` log line to verify detection.
 - **Backend exit codes** — all three CLIs (Claude, Gemini, Codex) use exit code `1` for rate-limit errors (no dedicated code). Classification relies on stderr text pattern matching, not exit codes. Exit code `41` is Gemini-specific for auth failures.
 - **Circuit breaker state is in-memory** — circuit breaker state does not persist across restarts. All backends start with closed circuits on each fresh boot.
