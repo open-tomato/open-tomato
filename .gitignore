@@ -143,3 +143,6 @@ vite.config.ts.timestamp-*
 
 # macOS
 .DS_Store
+
+# Publish staging dir produced by scripts/prepare-publish.ts
+.staging/
