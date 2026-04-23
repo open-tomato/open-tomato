@@ -49,7 +49,18 @@ bun run check-types   # turbo check-types
 
 ## Publishing
 
-Publishing is gated behind a disabled GitHub Actions workflow at [.github/workflows/packages-publish.yml](./.github/workflows/packages-publish.yml). See the workflow header for enablement steps.
+Packages publish to `@open-tomato` on npm via GitHub Actions, driven by
+[Changesets](https://github.com/changesets/changesets). Authors declare
+per-package semver intent in feature PRs; a standing "Version Packages" PR
+aggregates pending changes; merging it triggers the publish matrix.
+
+- [VERSIONING.md](./VERSIONING.md) — patch / minor / major criteria.
+- [RELEASING.md](./RELEASING.md) — end-to-end release flow and troubleshooting.
+- [.github/workflows/packages-publish.yml](./.github/workflows/packages-publish.yml) — the workflow.
+
+Private packages carry a `REFACTOR_NEEDED.md` describing what they need
+before graduating to publishable. The invariant holds repo-wide: a package
+is `"private": true` if and only if it has a `REFACTOR_NEEDED.md`.
 
 ## Refactor context
 
