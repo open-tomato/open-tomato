@@ -1,8 +1,19 @@
 {
   "name": "@open-tomato/typescript-config",
   "version": "0.0.0",
-  "private": true,
-  "license": "PROPRIETARY",
+  "description": "Shared TypeScript base / React / Next.js tsconfig presets for @open-tomato packages.",
+  "license": "MIT",
+  "private": false,
+  "author": "Open Tomato",
+  "homepage": "https://github.com/open-tomato/packages/tree/main/shared/typescript-config",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-tomato/packages.git",
+    "directory": "shared/typescript-config"
+  },
+  "bugs": {
+    "url": "https://github.com/open-tomato/packages/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -10,5 +21,12 @@
     "./base": "./base.json",
     "./react": "./react.json",
     "./next": "./nextjs.json"
-  }
+  },
+  "files": [
+    "base.json",
+    "react.json",
+    "nextjs.json",
+    "README.md",
+    "LICENSE"
+  ]
 }

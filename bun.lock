@@ -2074,17 +2074,27 @@
 
     "@modelcontextprotocol/sdk/zod": ["zod@4.3.6", "", {}, "sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg=="],
 
+    "@open-tomato/agent-memory/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/agent-memory/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
     "@open-tomato/agent-memory/vitest": ["vitest@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/expect": "3.2.4", "@vitest/mocker": "3.2.4", "@vitest/pretty-format": "^3.2.4", "@vitest/runner": "3.2.4", "@vitest/snapshot": "3.2.4", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "debug": "^4.4.1", "expect-type": "^1.2.1", "magic-string": "^0.30.17", "pathe": "^2.0.3", "picomatch": "^4.0.2", "std-env": "^3.9.0", "tinybench": "^2.9.0", "tinyexec": "^0.3.2", "tinyglobby": "^0.2.14", "tinypool": "^1.1.1", "tinyrainbow": "^2.0.0", "vite": "^5.0.0 || ^6.0.0 || ^7.0.0-0", "vite-node": "3.2.4", "why-is-node-running": "^2.3.0" }, "peerDependencies": { "@edge-runtime/vm": "*", "@types/debug": "^4.1.12", "@types/node": "^18.0.0 || ^20.0.0 || >=22.0.0", "@vitest/browser": "3.2.4", "@vitest/ui": "3.2.4", "happy-dom": "*", "jsdom": "*" }, "optionalPeers": ["@edge-runtime/vm", "@types/debug", "@types/node", "@vitest/browser", "@vitest/ui", "happy-dom", "jsdom"], "bin": { "vitest": "vitest.mjs" } }, "sha512-LUCP5ev3GURDysTWiP47wRRUpLKMOfPh+yKTx3kVIEiu5KOMeqzpnYNsKyOoVrULivR8tLcks4+lga33Whn90A=="],
 
+    "@open-tomato/cache/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/cache/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/config/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
 
     "@open-tomato/config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
     "@open-tomato/config/vitest": ["vitest@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/expect": "3.2.4", "@vitest/mocker": "3.2.4", "@vitest/pretty-format": "^3.2.4", "@vitest/runner": "3.2.4", "@vitest/snapshot": "3.2.4", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "debug": "^4.4.1", "expect-type": "^1.2.1", "magic-string": "^0.30.17", "pathe": "^2.0.3", "picomatch": "^4.0.2", "std-env": "^3.9.0", "tinybench": "^2.9.0", "tinyexec": "^0.3.2", "tinyglobby": "^0.2.14", "tinypool": "^1.1.1", "tinyrainbow": "^2.0.0", "vite": "^5.0.0 || ^6.0.0 || ^7.0.0-0", "vite-node": "3.2.4", "why-is-node-running": "^2.3.0" }, "peerDependencies": { "@edge-runtime/vm": "*", "@types/debug": "^4.1.12", "@types/node": "^18.0.0 || ^20.0.0 || >=22.0.0", "@vitest/browser": "3.2.4", "@vitest/ui": "3.2.4", "happy-dom": "*", "jsdom": "*" }, "optionalPeers": ["@edge-runtime/vm", "@types/debug", "@types/node", "@vitest/browser", "@vitest/ui", "happy-dom", "jsdom"], "bin": { "vitest": "vitest.mjs" } }, "sha512-LUCP5ev3GURDysTWiP47wRRUpLKMOfPh+yKTx3kVIEiu5KOMeqzpnYNsKyOoVrULivR8tLcks4+lga33Whn90A=="],
 
+    "@open-tomato/diagnostics/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/diagnostics/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/errors/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
 
     "@open-tomato/errors/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
@@ -2094,47 +2104,77 @@
 
     "@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
 
+    "@open-tomato/event-bus/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/event-bus/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
     "@open-tomato/event-bus/vitest": ["vitest@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/expect": "3.2.4", "@vitest/mocker": "3.2.4", "@vitest/pretty-format": "^3.2.4", "@vitest/runner": "3.2.4", "@vitest/snapshot": "3.2.4", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "debug": "^4.4.1", "expect-type": "^1.2.1", "magic-string": "^0.30.17", "pathe": "^2.0.3", "picomatch": "^4.0.2", "std-env": "^3.9.0", "tinybench": "^2.9.0", "tinyexec": "^0.3.2", "tinyglobby": "^0.2.14", "tinypool": "^1.1.1", "tinyrainbow": "^2.0.0", "vite": "^5.0.0 || ^6.0.0 || ^7.0.0-0", "vite-node": "3.2.4", "why-is-node-running": "^2.3.0" }, "peerDependencies": { "@edge-runtime/vm": "*", "@types/debug": "^4.1.12", "@types/node": "^18.0.0 || ^20.0.0 || >=22.0.0", "@vitest/browser": "3.2.4", "@vitest/ui": "3.2.4", "happy-dom": "*", "jsdom": "*" }, "optionalPeers": ["@edge-runtime/vm", "@types/debug", "@types/node", "@vitest/browser", "@vitest/ui", "happy-dom", "jsdom"], "bin": { "vitest": "vitest.mjs" } }, "sha512-LUCP5ev3GURDysTWiP47wRRUpLKMOfPh+yKTx3kVIEiu5KOMeqzpnYNsKyOoVrULivR8tLcks4+lga33Whn90A=="],
+
+    "@open-tomato/express/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
 
     "@open-tomato/express/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
     "@open-tomato/express/vitest": ["vitest@2.1.9", "", { "dependencies": { "@vitest/expect": "2.1.9", "@vitest/mocker": "2.1.9", "@vitest/pretty-format": "^2.1.9", "@vitest/runner": "2.1.9", "@vitest/snapshot": "2.1.9", "@vitest/spy": "2.1.9", "@vitest/utils": "2.1.9", "chai": "^5.1.2", "debug": "^4.3.7", "expect-type": "^1.1.0", "magic-string": "^0.30.12", "pathe": "^1.1.2", "std-env": "^3.8.0", "tinybench": "^2.9.0", "tinyexec": "^0.3.1", "tinypool": "^1.0.1", "tinyrainbow": "^1.2.0", "vite": "^5.0.0", "vite-node": "2.1.9", "why-is-node-running": "^2.3.0" }, "peerDependencies": { "@edge-runtime/vm": "*", "@types/node": "^18.0.0 || >=20.0.0", "@vitest/browser": "2.1.9", "@vitest/ui": "2.1.9", "happy-dom": "*", "jsdom": "*" }, "optionalPeers": ["@edge-runtime/vm", "@types/node", "@vitest/browser", "@vitest/ui", "happy-dom", "jsdom"], "bin": { "vitest": "vitest.mjs" } }, "sha512-MSmPM9REYqDGBI8439mA4mWhV5sKmDlBKWIYbA3lRb2PTHACE0mgKwA8yQ2xq9vxDTuk4iPrECBAEW2aoFXY0Q=="],
 
+    "@open-tomato/linear/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/linear/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/logger/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
 
     "@open-tomato/logger/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
     "@open-tomato/logger/vitest": ["vitest@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/expect": "3.2.4", "@vitest/mocker": "3.2.4", "@vitest/pretty-format": "^3.2.4", "@vitest/runner": "3.2.4", "@vitest/snapshot": "3.2.4", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "debug": "^4.4.1", "expect-type": "^1.2.1", "magic-string": "^0.30.17", "pathe": "^2.0.3", "picomatch": "^4.0.2", "std-env": "^3.9.0", "tinybench": "^2.9.0", "tinyexec": "^0.3.2", "tinyglobby": "^0.2.14", "tinypool": "^1.1.1", "tinyrainbow": "^2.0.0", "vite": "^5.0.0 || ^6.0.0 || ^7.0.0-0", "vite-node": "3.2.4", "why-is-node-running": "^2.3.0" }, "peerDependencies": { "@edge-runtime/vm": "*", "@types/debug": "^4.1.12", "@types/node": "^18.0.0 || ^20.0.0 || >=22.0.0", "@vitest/browser": "3.2.4", "@vitest/ui": "3.2.4", "happy-dom": "*", "jsdom": "*" }, "optionalPeers": ["@edge-runtime/vm", "@types/debug", "@types/node", "@vitest/browser", "@vitest/ui", "happy-dom", "jsdom"], "bin": { "vitest": "vitest.mjs" } }, "sha512-LUCP5ev3GURDysTWiP47wRRUpLKMOfPh+yKTx3kVIEiu5KOMeqzpnYNsKyOoVrULivR8tLcks4+lga33Whn90A=="],
 
+    "@open-tomato/loop-safety/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/loop-safety/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
+    "@open-tomato/mcp/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/mcp/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/notifications-plugin-anthropic/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
 
     "@open-tomato/notifications-plugin-anthropic/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
     "@open-tomato/notifications-plugin-anthropic/@types/node": ["@types/node@22.19.17", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-wGdMcf+vPYM6jikpS/qhg6WiqSV/OhG+jeeHT/KlVqxYfD40iYJf9/AE1uQxVWFvU7MipKRkRv8NSHiCGgPr8Q=="],
 
+    "@open-tomato/notifications-plugin-executor/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/notifications-plugin-executor/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
     "@open-tomato/notifications-plugin-executor/@types/node": ["@types/node@22.19.17", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-wGdMcf+vPYM6jikpS/qhg6WiqSV/OhG+jeeHT/KlVqxYfD40iYJf9/AE1uQxVWFvU7MipKRkRv8NSHiCGgPr8Q=="],
+
+    "@open-tomato/notifications-plugin-tech-tree/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
 
     "@open-tomato/notifications-plugin-tech-tree/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
     "@open-tomato/notifications-plugin-tech-tree/@types/node": ["@types/node@22.19.17", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-wGdMcf+vPYM6jikpS/qhg6WiqSV/OhG+jeeHT/KlVqxYfD40iYJf9/AE1uQxVWFvU7MipKRkRv8NSHiCGgPr8Q=="],
 
+    "@open-tomato/orchestration/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/orchestration/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/prompt-builder/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
 
     "@open-tomato/prompt-builder/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
+    "@open-tomato/service-core/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/service-core/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
+    "@open-tomato/task-store/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
+
     "@open-tomato/task-store/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/types/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
 
     "@open-tomato/types/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
     "@open-tomato/types/vitest": ["vitest@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/expect": "3.2.4", "@vitest/mocker": "3.2.4", "@vitest/pretty-format": "^3.2.4", "@vitest/runner": "3.2.4", "@vitest/snapshot": "3.2.4", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "debug": "^4.4.1", "expect-type": "^1.2.1", "magic-string": "^0.30.17", "pathe": "^2.0.3", "picomatch": "^4.0.2", "std-env": "^3.9.0", "tinybench": "^2.9.0", "tinyexec": "^0.3.2", "tinyglobby": "^0.2.14", "tinypool": "^1.1.1", "tinyrainbow": "^2.0.0", "vite": "^5.0.0 || ^6.0.0 || ^7.0.0-0", "vite-node": "3.2.4", "why-is-node-running": "^2.3.0" }, "peerDependencies": { "@edge-runtime/vm": "*", "@types/debug": "^4.1.12", "@types/node": "^18.0.0 || ^20.0.0 || >=22.0.0", "@vitest/browser": "3.2.4", "@vitest/ui": "3.2.4", "happy-dom": "*", "jsdom": "*" }, "optionalPeers": ["@edge-runtime/vm", "@types/debug", "@types/node", "@vitest/browser", "@vitest/ui", "happy-dom", "jsdom"], "bin": { "vitest": "vitest.mjs" } }, "sha512-LUCP5ev3GURDysTWiP47wRRUpLKMOfPh+yKTx3kVIEiu5KOMeqzpnYNsKyOoVrULivR8tLcks4+lga33Whn90A=="],
+
+    "@open-tomato/worker-protocol/@open-tomato/eslint-config": ["@open-tomato/eslint-config@file:shared/eslint-config", { "devDependencies": { "@eslint/compat": "^2.0.2", "@eslint/js": "^9.39.4", "@eslint/markdown": "^7.5.1", "@next/eslint-plugin-next": "^16.1.6", "@open-tomato/typescript-config": "file:../typescript-config", "@stylistic/eslint-plugin": "^5.10.0", "@types/eslint-plugin-jsx-a11y": "^6.10.1", "@typescript-eslint/eslint-plugin": "^8.54.0", "@typescript-eslint/parser": "^8.54.0", "eslint": "^9.39.4", "eslint-import-resolver-typescript": "^4.4.4", "eslint-plugin-import": "^2.32.0", "eslint-plugin-jsonc": "^3.1.2", "eslint-plugin-jsx-a11y": "^6.10.2", "eslint-plugin-only-warn": "^1.1.0", "eslint-plugin-react": "^7.37.5", "eslint-plugin-react-hooks": "^7.0.1", "eslint-plugin-react-refresh": "^0.5.2", "eslint-plugin-storybook": "^10.2.19", "eslint-plugin-turbo": "^2.8.1", "globals": "^17.2.0", "jsonc-eslint-parser": "^3.1.0", "typescript": "^5.9.3", "typescript-eslint": "^8.57.0" } }],
 
     "@open-tomato/worker-protocol/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
 
@@ -2258,6 +2298,10 @@
 
     "@modelcontextprotocol/sdk/express/type-is": ["type-is@2.0.1", "", { "dependencies": { "content-type": "^1.0.5", "media-typer": "^1.1.0", "mime-types": "^3.0.0" } }, "sha512-OZs6gsjF4vMp32qrCbiVSkrFmXtG/AZhY3t0iAMrMBiAZyV9oALtXO8hsrHbMXF9x6L3grlFuwW2oAz7cav+Gw=="],
 
+    "@open-tomato/agent-memory/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/agent-memory/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
     "@open-tomato/agent-memory/vitest/@vitest/expect": ["@vitest/expect@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "tinyrainbow": "^2.0.0" } }, "sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig=="],
 
     "@open-tomato/agent-memory/vitest/@vitest/mocker": ["@vitest/mocker@3.2.4", "", { "dependencies": { "@vitest/spy": "3.2.4", "estree-walker": "^3.0.3", "magic-string": "^0.30.17" }, "peerDependencies": { "msw": "^2.4.9", "vite": "^5.0.0 || ^6.0.0 || ^7.0.0-0" }, "optionalPeers": ["msw", "vite"] }, "sha512-46ryTE9RZO/rfDd7pEqFl7etuyzekzEhUbTW3BvmeO/BcCMEgq59BKhek3dXDWgAj4oMK6OZi+vRr1wPW6qjEQ=="],
@@ -2277,6 +2321,14 @@
     "@open-tomato/agent-memory/vitest/tinyexec": ["tinyexec@0.3.2", "", {}, "sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA=="],
 
     "@open-tomato/agent-memory/vitest/tinyrainbow": ["tinyrainbow@2.0.0", "", {}, "sha512-op4nsTR47R6p0vMUUoYl/a+ljLFVtlfaXkLQmqfLR1qHma1h/ysYk4hEXZ880bf2CYgTskvTa/e196Vd5dDQXw=="],
+
+    "@open-tomato/cache/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/cache/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/config/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/config/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
 
     "@open-tomato/config/vitest/@vitest/expect": ["@vitest/expect@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "tinyrainbow": "^2.0.0" } }, "sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig=="],
 
@@ -2298,6 +2350,14 @@
 
     "@open-tomato/config/vitest/tinyrainbow": ["tinyrainbow@2.0.0", "", {}, "sha512-op4nsTR47R6p0vMUUoYl/a+ljLFVtlfaXkLQmqfLR1qHma1h/ysYk4hEXZ880bf2CYgTskvTa/e196Vd5dDQXw=="],
 
+    "@open-tomato/diagnostics/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/diagnostics/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/errors/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/errors/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
     "@open-tomato/errors/vitest/@vitest/expect": ["@vitest/expect@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "tinyrainbow": "^2.0.0" } }, "sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig=="],
 
     "@open-tomato/errors/vitest/@vitest/mocker": ["@vitest/mocker@3.2.4", "", { "dependencies": { "@vitest/spy": "3.2.4", "estree-walker": "^3.0.3", "magic-string": "^0.30.17" }, "peerDependencies": { "msw": "^2.4.9", "vite": "^5.0.0 || ^6.0.0 || ^7.0.0-0" }, "optionalPeers": ["msw", "vite"] }, "sha512-46ryTE9RZO/rfDd7pEqFl7etuyzekzEhUbTW3BvmeO/BcCMEgq59BKhek3dXDWgAj4oMK6OZi+vRr1wPW6qjEQ=="],
@@ -2318,6 +2378,10 @@
 
     "@open-tomato/errors/vitest/tinyrainbow": ["tinyrainbow@2.0.0", "", {}, "sha512-op4nsTR47R6p0vMUUoYl/a+ljLFVtlfaXkLQmqfLR1qHma1h/ysYk4hEXZ880bf2CYgTskvTa/e196Vd5dDQXw=="],
 
+    "@open-tomato/event-bus/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/event-bus/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
     "@open-tomato/event-bus/vitest/@vitest/expect": ["@vitest/expect@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "tinyrainbow": "^2.0.0" } }, "sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig=="],
 
     "@open-tomato/event-bus/vitest/@vitest/mocker": ["@vitest/mocker@3.2.4", "", { "dependencies": { "@vitest/spy": "3.2.4", "estree-walker": "^3.0.3", "magic-string": "^0.30.17" }, "peerDependencies": { "msw": "^2.4.9", "vite": "^5.0.0 || ^6.0.0 || ^7.0.0-0" }, "optionalPeers": ["msw", "vite"] }, "sha512-46ryTE9RZO/rfDd7pEqFl7etuyzekzEhUbTW3BvmeO/BcCMEgq59BKhek3dXDWgAj4oMK6OZi+vRr1wPW6qjEQ=="],
@@ -2337,6 +2401,10 @@
     "@open-tomato/event-bus/vitest/tinyexec": ["tinyexec@0.3.2", "", {}, "sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA=="],
 
     "@open-tomato/event-bus/vitest/tinyrainbow": ["tinyrainbow@2.0.0", "", {}, "sha512-op4nsTR47R6p0vMUUoYl/a+ljLFVtlfaXkLQmqfLR1qHma1h/ysYk4hEXZ880bf2CYgTskvTa/e196Vd5dDQXw=="],
+
+    "@open-tomato/express/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/express/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
 
     "@open-tomato/express/vitest/@vitest/expect": ["@vitest/expect@2.1.9", "", { "dependencies": { "@vitest/spy": "2.1.9", "@vitest/utils": "2.1.9", "chai": "^5.1.2", "tinyrainbow": "^1.2.0" } }, "sha512-UJCIkTBenHeKT1TTlKMJWy1laZewsRIzYighyYiJKZreqtdxSos/S1t+ktRMQWu2CKqaarrkeszJx1cgC5tGZw=="],
 
@@ -2364,6 +2432,14 @@
 
     "@open-tomato/express/vitest/vite-node": ["vite-node@2.1.9", "", { "dependencies": { "cac": "^6.7.14", "debug": "^4.3.7", "es-module-lexer": "^1.5.4", "pathe": "^1.1.2", "vite": "^5.0.0" }, "bin": { "vite-node": "vite-node.mjs" } }, "sha512-AM9aQ/IPrW/6ENLQg3AGY4K1N2TGZdR5e4gu/MmmR2xR3Ll1+dib+nook92g4TV3PXVyeyxdWwtaCAiUL0hMxA=="],
 
+    "@open-tomato/linear/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/linear/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/logger/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/logger/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
     "@open-tomato/logger/vitest/@vitest/expect": ["@vitest/expect@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "tinyrainbow": "^2.0.0" } }, "sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig=="],
 
     "@open-tomato/logger/vitest/@vitest/mocker": ["@vitest/mocker@3.2.4", "", { "dependencies": { "@vitest/spy": "3.2.4", "estree-walker": "^3.0.3", "magic-string": "^0.30.17" }, "peerDependencies": { "msw": "^2.4.9", "vite": "^5.0.0 || ^6.0.0 || ^7.0.0-0" }, "optionalPeers": ["msw", "vite"] }, "sha512-46ryTE9RZO/rfDd7pEqFl7etuyzekzEhUbTW3BvmeO/BcCMEgq59BKhek3dXDWgAj4oMK6OZi+vRr1wPW6qjEQ=="],
@@ -2384,6 +2460,46 @@
 
     "@open-tomato/logger/vitest/tinyrainbow": ["tinyrainbow@2.0.0", "", {}, "sha512-op4nsTR47R6p0vMUUoYl/a+ljLFVtlfaXkLQmqfLR1qHma1h/ysYk4hEXZ880bf2CYgTskvTa/e196Vd5dDQXw=="],
 
+    "@open-tomato/loop-safety/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/loop-safety/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/mcp/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/mcp/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/notifications-plugin-anthropic/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/notifications-plugin-anthropic/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/notifications-plugin-executor/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/notifications-plugin-executor/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/notifications-plugin-tech-tree/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/notifications-plugin-tech-tree/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/orchestration/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/orchestration/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/prompt-builder/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/prompt-builder/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/service-core/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/service-core/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/task-store/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/task-store/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
+    "@open-tomato/types/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/types/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
+
     "@open-tomato/types/vitest/@vitest/expect": ["@vitest/expect@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "tinyrainbow": "^2.0.0" } }, "sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig=="],
 
     "@open-tomato/types/vitest/@vitest/mocker": ["@vitest/mocker@3.2.4", "", { "dependencies": { "@vitest/spy": "3.2.4", "estree-walker": "^3.0.3", "magic-string": "^0.30.17" }, "peerDependencies": { "msw": "^2.4.9", "vite": "^5.0.0 || ^6.0.0 || ^7.0.0-0" }, "optionalPeers": ["msw", "vite"] }, "sha512-46ryTE9RZO/rfDd7pEqFl7etuyzekzEhUbTW3BvmeO/BcCMEgq59BKhek3dXDWgAj4oMK6OZi+vRr1wPW6qjEQ=="],
@@ -2403,6 +2519,10 @@
     "@open-tomato/types/vitest/tinyexec": ["tinyexec@0.3.2", "", {}, "sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA=="],
 
     "@open-tomato/types/vitest/tinyrainbow": ["tinyrainbow@2.0.0", "", {}, "sha512-op4nsTR47R6p0vMUUoYl/a+ljLFVtlfaXkLQmqfLR1qHma1h/ysYk4hEXZ880bf2CYgTskvTa/e196Vd5dDQXw=="],
+
+    "@open-tomato/worker-protocol/@open-tomato/eslint-config/@open-tomato/typescript-config": ["@open-tomato/typescript-config@file:shared/typescript-config", {}],
+
+    "@open-tomato/worker-protocol/@open-tomato/eslint-config/globals": ["globals@17.5.0", "", {}, "sha512-qoV+HK2yFl/366t2/Cb3+xxPUo5BuMynomoDmiaZBIdbs+0pYbjfZU+twLhGKp4uCZ/+NbtpVepH5bGCxRyy2g=="],
 
     "@open-tomato/worker-protocol/vitest/@vitest/expect": ["@vitest/expect@3.2.4", "", { "dependencies": { "@types/chai": "^5.2.2", "@vitest/spy": "3.2.4", "@vitest/utils": "3.2.4", "chai": "^5.2.0", "tinyrainbow": "^2.0.0" } }, "sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig=="],
 
