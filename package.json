@@ -13,10 +13,14 @@
     "build": "turbo run build",
     "check-types": "turbo run check-types",
     "lint": "turbo run lint",
+    "release": "changeset publish",
     "test": "turbo run test"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.10",
     "@types/bun": "latest",
+    "publint": "^0.3.9",
     "turbo": "^2.5.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
