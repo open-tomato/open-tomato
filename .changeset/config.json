@@ -1,0 +1,33 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": ["@changesets/changelog-github", { "repo": "open-tomato/packages" }],
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@open-tomato/agent-memory",
+    "@open-tomato/cache",
+    "@open-tomato/config",
+    "@open-tomato/diagnostics",
+    "@open-tomato/errors",
+    "@open-tomato/eslint-config",
+    "@open-tomato/event-bus",
+    "@open-tomato/linear",
+    "@open-tomato/logger",
+    "@open-tomato/loop-safety",
+    "@open-tomato/prompt-builder",
+    "@open-tomato/task-store",
+    "@open-tomato/types",
+    "@open-tomato/express",
+    "@open-tomato/mcp",
+    "@open-tomato/orchestration",
+    "@open-tomato/service-core",
+    "@open-tomato/worker-protocol",
+    "@open-tomato/notifications-plugin-anthropic",
+    "@open-tomato/notifications-plugin-executor",
+    "@open-tomato/notifications-plugin-tech-tree"
+  ]
+}
