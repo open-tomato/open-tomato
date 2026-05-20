@@ -519,8 +519,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 # Stage: Tooling config
 
 - [x] Create `src/styles/globals.css` with `@import "tailwindcss"`, `@theme` token block, and base layer
-- [ ] Create `postcss.config.mjs`
-- [ ] Create `components.json` at package root pointed at `src/styles/globals.css` and `@/atoms` alias
+- [x] Create `postcss.config.mjs`
+- [x] Create `components.json` at package root pointed at `src/styles/globals.css` and `@/atoms` alias
 - [ ] Create `registry.json` at package root with a stub `button` item; do NOT publish
 - [ ] Update `tsconfig.json` to include `paths: { "@/*": ["src/*"] }`, `jsx: "react-jsx"`, `lib: ["DOM","DOM.Iterable","ES2022"]`, `moduleResolution: "bundler"`
 - [ ] Create `tsconfig.build.json` with `emitDeclarationOnly`
