@@ -550,7 +550,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 # Stage: Atoms — shadcn-wrapping (15)
 
-- [ ] AspectRatio: wraps `@radix-ui/react-aspect-ratio`; variants `{ ratio: "square"|"video"|"portrait" }`
+- [x] AspectRatio: wraps `@radix-ui/react-aspect-ratio`; variants `{ ratio: "square"|"video"|"portrait" }`
 - [ ] Avatar: wraps `@radix-ui/react-avatar`; variants `{ size, shape }`; image+fallback slot props
 - [ ] Badge: pure CVA over `<span>`; variants `{ variant: primary|secondary|outline|destructive, size }`
 - [ ] Button: wraps with `Slot` for `asChild`; variants `{ variant, size }`; props `loading`, `leadingIcon`, `trailingIcon`

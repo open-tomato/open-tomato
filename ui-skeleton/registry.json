@@ -11,6 +11,15 @@
         { "path": "src/atoms/Button/button.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-slot"]
+    },
+    {
+      "name": "aspect-ratio",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/AspectRatio/AspectRatio.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/AspectRatio/aspect-ratio.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-aspect-ratio"]
     }
   ]
 }
