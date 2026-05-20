@@ -101,6 +101,15 @@
         { "path": "src/atoms/Slider/slider.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-slider"]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Textarea/Textarea.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Textarea/textarea.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
     }
   ]
 }

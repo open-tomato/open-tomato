@@ -563,7 +563,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Separator: wraps `@radix-ui/react-separator`; variants `{ orientation, variant }`
 - [x] Skeleton: pure CVA over `<div>`; variants `{ variant: rect|circle|text, animate: pulse|wave|none }`
 - [x] Slider: wraps `@radix-ui/react-slider`; variants `{ size }`
-- [ ] Textarea: wraps `<textarea>`; variants `{ size, variant }`; props `autoResize`
+- [x] Textarea: wraps `<textarea>`; variants `{ size, variant }`; props `autoResize`
 - [ ] Toggle: wraps `@radix-ui/react-toggle`; variants `{ variant, size }`
 
 # Stage: Atoms — author from scratch (3)
