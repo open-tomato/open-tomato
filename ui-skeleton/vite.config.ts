@@ -25,6 +25,8 @@ const atoms = [
   'Typography',
 ] as const;
 
+const rootDir = import.meta.dirname;
+
 export default defineConfig({
   plugins: [
     react(),
@@ -32,18 +34,18 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      '@': resolve(rootDir, 'src'),
     },
   },
   build: {
     lib: {
       entry: {
-        index: resolve(__dirname, 'src/index.ts'),
-        particles: resolve(__dirname, 'src/particles/index.ts'),
+        index: resolve(rootDir, 'src/index.ts'),
+        particles: resolve(rootDir, 'src/particles/index.ts'),
         ...Object.fromEntries(
           atoms.map((a) => [
             `atoms/${a}`,
-            resolve(__dirname, `src/atoms/${a}/index.ts`),
+            resolve(rootDir, `src/atoms/${a}/index.ts`),
           ]),
         ),
       },

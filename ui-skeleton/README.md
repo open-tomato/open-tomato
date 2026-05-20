@@ -102,7 +102,7 @@ Pagination
 Resizable
 Sonner ( as toast)
 
-# Templates
+### Templates
 Navigation Menu
 Sheet
 Sidebar
