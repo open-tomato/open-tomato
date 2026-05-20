@@ -36,9 +36,12 @@
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/vite": "^4",
     "@types/node": "^22.13.5",
+    "@vitejs/plugin-react": "^6.0.2",
     "eslint": "^9.39.4",
     "postcss": "^8.5.15",
     "tailwindcss": "^4",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^8.0.13",
+    "vite-plugin-dts": "^5.0.1"
   }
 }
