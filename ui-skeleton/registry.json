@@ -92,6 +92,15 @@
         { "path": "src/atoms/Skeleton/skeleton.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": []
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Slider/Slider.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Slider/slider.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-slider"]
     }
   ]
 }
