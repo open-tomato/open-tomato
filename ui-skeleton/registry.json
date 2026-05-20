@@ -74,6 +74,15 @@
         { "path": "src/atoms/Progress/progress.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-progress"]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Separator/Separator.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Separator/separator.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-separator"]
     }
   ]
 }
