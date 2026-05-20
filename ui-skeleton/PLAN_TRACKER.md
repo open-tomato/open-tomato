@@ -579,7 +579,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Create `<Component>.test.tsx` with at least: renders children, applies variant class, jest-axe a11y assertion
 - [x] Create `<Component>.stories.tsx` with `Default` and `AllVariants` stories, autodocs tag
 - [x] Create `README.md` per the template (import, props table, variants table, a11y notes, Do/Don't)
-- [ ] Create `index.ts` barrel: `export * from "./<Component>"; export * from "./<component>.variants";`
+- [x] Create `index.ts` barrel: `export * from "./<Component>"; export * from "./<component>.variants";`
 
 # Stage: Higher-layer placeholders
 
