@@ -583,7 +583,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 # Stage: Higher-layer placeholders
 
-- [ ] Create `src/molecules/index.ts` (empty `export {};`)
+- [x] Create `src/molecules/index.ts` (empty `export {};`)
 - [ ] Create `src/organisms/index.ts`
 - [ ] Create `src/providers/index.ts`
 - [ ] Create `src/templates/index.ts`
