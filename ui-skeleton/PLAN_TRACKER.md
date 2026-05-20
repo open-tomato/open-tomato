@@ -558,7 +558,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Checkbox: wraps `@radix-ui/react-checkbox`; variants `{ size }`; supports `label` prop
 - [x] Input: wraps `<input>`; variants `{ size, variant: default|error|success }`; props `leadingIcon`, `trailingIcon`
 - [x] Label: wraps `@radix-ui/react-label`; variants `{ size, required: boolean }`
-- [ ] Progress: wraps `@radix-ui/react-progress`; variants `{ size, variant }`
+- [x] Progress: wraps `@radix-ui/react-progress`; variants `{ size, variant }`
 - [ ] ScrollArea: wraps `@radix-ui/react-scroll-area`; variants `{ orientation: vertical|horizontal|both }`
 - [ ] Separator: wraps `@radix-ui/react-separator`; variants `{ orientation, variant }`
 - [ ] Skeleton: pure CVA over `<div>`; variants `{ variant: rect|circle|text, animate: pulse|wave|none }`

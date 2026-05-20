@@ -1,0 +1,76 @@
+# Progress
+
+Single-entry wrapper over Radix `@radix-ui/react-progress`. Renders a track
+(`role="progressbar"`) with an inner indicator translated horizontally to
+reflect the current `value` against `max`.
+
+## Import
+
+```ts
+import { Progress } from '@open-tomato/ui-skeleton';
+```
+
+## Props
+
+| Prop          | Type                                                         | Default     |
+| ------------- | ------------------------------------------------------------ | ----------- |
+| variant       | `'default' \| 'success' \| 'warning' \| 'destructive'`       | `'default'` |
+| size          | `'sm' \| 'md' \| 'lg'`                                       | `'md'`      |
+| value         | `number \| null \| undefined`                                | —           |
+| max           | `number`                                                     | `100`       |
+| getValueLabel | `(value: number, max: number) => string`                     | —           |
+| className     | `string` (discouraged escape hatch)                          | —           |
+
+All other props are forwarded to the underlying Radix Progress root (which
+renders the track `<div role="progressbar">`).
+
+## Variants
+
+| variant       | Track             | Indicator        |
+| ------------- | ----------------- | ---------------- |
+| `default`     | `bg-secondary`    | `bg-primary`     |
+| `success`     | `bg-emerald-100`  | `bg-emerald-500` |
+| `warning`     | `bg-amber-100`    | `bg-amber-500`   |
+| `destructive` | `bg-destructive/20` | `bg-destructive` |
+
+| size | Height   |
+| ---- | -------- |
+| `sm` | `h-1.5`  |
+| `md` | `h-2.5`  |
+| `lg` | `h-4`    |
+
+The resolved variant and size are reflected on the track as
+`data-variant="<name>"` and `data-size="<name>"`. The indicator carries
+`data-slot="progress-indicator"` for downstream styling and testing hooks.
+
+`success` and `warning` use Tailwind palette colors (emerald / amber) because
+the design-system token set in this iteration does not include semantic
+`--color-success` / `--color-warning`. Replace with semantic tokens when they
+land without breaking the public variant API.
+
+## Accessibility
+
+- The track renders with `role="progressbar"` and the standard `aria-valuemin`
+  / `aria-valuemax` / `aria-valuenow` attributes managed by Radix.
+- Always provide an accessible name via `aria-label` or `aria-labelledby` so
+  the bar's purpose is announced.
+- Pass `value={null}` (or omit) to signal indeterminate progress; Radix sets
+  `data-state="indeterminate"` and the wrapper parks the indicator at
+  `translateX(-100%)` (off-screen). Pair with an accessible status message —
+  this wrapper does not render an animated indeterminate state.
+- `value` is clamped to `[0, max]` before the indicator transform is computed,
+  so out-of-range inputs do not visually overflow the track.
+- Use `getValueLabel` to customize the human-readable label of the current
+  value when the raw percentage is not meaningful (e.g. `"3 of 10 steps"`).
+
+## Do / Don't
+
+- DO use `variant` to communicate the state (in-flight, success, warning,
+  failure). DON'T override the indicator color via `className`.
+- DO pass a `value` between `0` and `max`. DON'T pass `NaN` or strings — the
+  wrapper assumes a finite number.
+- DO supply an `aria-label` (or `aria-labelledby`) so the bar has an
+  accessible name. DON'T rely on surrounding text alone.
+- DO use `value={null}` for indeterminate progress. DON'T animate the
+  indicator manually with `className` — wrap the bar in your own status
+  region instead.

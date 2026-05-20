@@ -65,6 +65,15 @@
         { "path": "src/atoms/Label/label.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-label"]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Progress/Progress.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Progress/progress.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-progress"]
     }
   ]
 }
