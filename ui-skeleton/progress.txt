@@ -9,3 +9,5 @@ General findings for future tasks (broadly applicable; not task-specific):
 - `@open-tomato/typescript-config` exposes subpath exports `./base`, `./react`, `./next` (note the JSON filename is `nextjs.json` but the export key is `./next`).
 - `@open-tomato/eslint-config` already lists `eslint-plugin-storybook` as a dep, so Storybook lint integration does not require adding it to ui-skeleton.
 - Root `packages/` directory does not have a top-level `package.json` workspaces entry covering `ui-skeleton` this iteration — keep it standalone and use `file:` links.
+- Git repository root is `packages/` (not the monorepo root above it). Paths in `git status`/`git diff` are relative to `packages/` (e.g. `ui-skeleton/...`). `cd` above `packages/` is not a git repo.
+- `PLAN_TRACKER.md` is the working checklist that gets edited every task — expect it to show as modified in `git status`; this is bookkeeping, not a dirty tree.
