@@ -591,8 +591,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 # Stage: Top-level wiring
 
-- [ ] Create `src/atoms/index.ts` re-exporting every atom barrel
-- [ ] Create `src/index.ts` re-exporting `./particles`, `./atoms`, `./molecules`, `./organisms`, `./providers`, `./templates`, `./pages`
+- [x] Create `src/atoms/index.ts` re-exporting every atom barrel
+- [x] Create `src/index.ts` re-exporting `./particles`, `./atoms`, `./molecules`, `./organisms`, `./providers`, `./templates`, `./pages`
 
 # Stage: Registry entries
 
