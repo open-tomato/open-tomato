@@ -553,8 +553,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] AspectRatio: wraps `@radix-ui/react-aspect-ratio`; variants `{ ratio: "square"|"video"|"portrait" }`
 - [x] Avatar: wraps `@radix-ui/react-avatar`; variants `{ size, shape }`; image+fallback slot props
 - [x] Badge: pure CVA over `<span>`; variants `{ variant: primary|secondary|outline|destructive, size }`
-- [ ] Button: wraps with `Slot` for `asChild`; variants `{ variant, size }`; props `loading`, `leadingIcon`, `trailingIcon`
-- [ ] Card: slot-based wrapper (props `header`, `title`, `description`, `footer`, `children`); variants `{ variant: default|elevated|outlined, padding }`
+- [x] Button: wraps with `Slot` for `asChild`; variants `{ variant, size }`; props `loading`, `leadingIcon`, `trailingIcon`
+- [x] Card: slot-based wrapper (props `header`, `title`, `description`, `footer`, `children`); variants `{ variant: default|elevated|outlined, padding }`
 - [ ] Checkbox: wraps `@radix-ui/react-checkbox`; variants `{ size }`; supports `label` prop
 - [ ] Input: wraps `<input>`; variants `{ size, variant: default|error|success }`; props `leadingIcon`, `trailingIcon`
 - [ ] Label: wraps `@radix-ui/react-label`; variants `{ size, required: boolean }`
