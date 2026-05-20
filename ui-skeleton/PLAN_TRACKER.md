@@ -561,7 +561,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Progress: wraps `@radix-ui/react-progress`; variants `{ size, variant }`
 - [x] ScrollArea: wraps `@radix-ui/react-scroll-area`; variants `{ orientation: vertical|horizontal|both }`
 - [x] Separator: wraps `@radix-ui/react-separator`; variants `{ orientation, variant }`
-- [ ] Skeleton: pure CVA over `<div>`; variants `{ variant: rect|circle|text, animate: pulse|wave|none }`
+- [x] Skeleton: pure CVA over `<div>`; variants `{ variant: rect|circle|text, animate: pulse|wave|none }`
 - [ ] Slider: wraps `@radix-ui/react-slider`; variants `{ size }`
 - [ ] Textarea: wraps `<textarea>`; variants `{ size, variant }`; props `autoResize`
 - [ ] Toggle: wraps `@radix-ui/react-toggle`; variants `{ variant, size }`

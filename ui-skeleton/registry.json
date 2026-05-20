@@ -83,6 +83,15 @@
         { "path": "src/atoms/Separator/separator.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-separator"]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Skeleton/Skeleton.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Skeleton/skeleton.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
     }
   ]
 }
