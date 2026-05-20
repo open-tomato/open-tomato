@@ -110,3 +110,11 @@ Tabs
 
 ### Providers
 Direction
+
+## Internal shadcn Registry
+
+The `registry.json` at the package root is an **internal** shadcn registry manifest. It is committed to source control so the shadcn CLI (`bunx shadcn@latest`) and downstream tooling within this monorepo can resolve item paths, file types, and dependency metadata for every atom in `src/atoms/`.
+
+It is **not published** to npm, to a public registry endpoint, or to `ui.shadcn.com`. The `"homepage": "internal"` field signals this intent. Consumers outside this monorepo should not rely on the registry; it has no stable URL and no compatibility guarantees across iterations.
+
+If external consumption is ever needed, the registry would be published to a separate private location as a follow-up; this is out of scope for the current iteration.

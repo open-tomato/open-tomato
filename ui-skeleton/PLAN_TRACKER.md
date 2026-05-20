@@ -596,7 +596,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 # Stage: Registry entries
 
-- [ ] Append each atom to `registry.json` `items[]` with `path`, `type`, and any `registryDependencies`
+- [x] Append each atom to `registry.json` `items[]` with `path`, `type`, and any `registryDependencies`
 - [ ] Document in `README.md` (top-level) that the registry is internal and not published
 
 # Stage: Verification
