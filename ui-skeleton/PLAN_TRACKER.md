@@ -528,8 +528,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Create `vitest.config.ts` merging `vite.config.ts` with jsdom + coverage thresholds
 - [x] Create `vitest.setup.ts` registering jest-dom and jest-axe matchers
 - [x] Create `.storybook/main.ts` with react-vite framework and autodocs
-- [ ] Create `.storybook/preview.ts` importing `src/styles/globals.css`
-- [ ] Update `package.json` scripts: build (vite build), dev (vite), test, test:watch, test:coverage, storybook, build-storybook, shadcn:add
+- [x] Create `.storybook/preview.ts` importing `src/styles/globals.css`
+- [x] Update `package.json` scripts: build (vite build), dev (vite), test, test:watch, test:coverage, storybook, build-storybook, shadcn:add
 - [ ] Run `bunx shadcn@latest init --yes` to validate CLI parses `components.json`
 
 # Stage: Particles

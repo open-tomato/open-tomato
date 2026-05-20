@@ -7,9 +7,16 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc --noEmit",
+    "build": "vite build",
+    "build-storybook": "storybook build",
     "check-types": "tsc --noEmit",
-    "lint": "eslint --fix"
+    "dev": "vite",
+    "lint": "eslint --fix",
+    "shadcn:add": "bunx shadcn@latest add",
+    "storybook": "storybook dev -p 6006",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@radix-ui/react-aspect-ratio": "^1.1.8",
