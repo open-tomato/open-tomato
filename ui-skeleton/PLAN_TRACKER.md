@@ -603,8 +603,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 - [x] Run `bun install` — must complete without resolution errors
 - [x] Run `bun run check-types` — passes with zero errors
-- [ ] Run `bun run lint` — passes
-- [ ] Run `bun run test` — every atom's smoke tests pass; coverage thresholds met
+- [x] Run `bun run lint` — passes
+- [x] Run `bun run test` — every atom's smoke tests pass; coverage thresholds met
 - [ ] Run `bun run build` — `dist/` contains `index.js`, `particles.js`, and per-atom `atoms/<Name>.js` plus matching `.d.ts`
 - [ ] Run `bun run storybook` — Storybook starts on 6006; every atom renders its `Default` and `AllVariants` stories; autodocs page generated
 - [ ] Run `bun run build-storybook` — static Storybook build succeeds
