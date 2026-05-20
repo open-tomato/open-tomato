@@ -29,6 +29,15 @@
         { "path": "src/atoms/Avatar/avatar.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-avatar"]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Badge/Badge.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Badge/badge.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
     }
   ]
 }
