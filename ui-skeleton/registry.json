@@ -56,6 +56,15 @@
         { "path": "src/atoms/Checkbox/checkbox.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-checkbox", "lucide-react"]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Label/Label.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Label/label.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-label"]
     }
   ]
 }

@@ -556,8 +556,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Button: wraps with `Slot` for `asChild`; variants `{ variant, size }`; props `loading`, `leadingIcon`, `trailingIcon`
 - [x] Card: slot-based wrapper (props `header`, `title`, `description`, `footer`, `children`); variants `{ variant: default|elevated|outlined, padding }`
 - [x] Checkbox: wraps `@radix-ui/react-checkbox`; variants `{ size }`; supports `label` prop
-- [ ] Input: wraps `<input>`; variants `{ size, variant: default|error|success }`; props `leadingIcon`, `trailingIcon`
-- [ ] Label: wraps `@radix-ui/react-label`; variants `{ size, required: boolean }`
+- [x] Input: wraps `<input>`; variants `{ size, variant: default|error|success }`; props `leadingIcon`, `trailingIcon`
+- [x] Label: wraps `@radix-ui/react-label`; variants `{ size, required: boolean }`
 - [ ] Progress: wraps `@radix-ui/react-progress`; variants `{ size, variant }`
 - [ ] ScrollArea: wraps `@radix-ui/react-scroll-area`; variants `{ orientation: vertical|horizontal|both }`
 - [ ] Separator: wraps `@radix-ui/react-separator`; variants `{ orientation, variant }`
