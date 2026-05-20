@@ -136,6 +136,67 @@ Every atom must also be appended to `registry.json` `items[]` with:
 The registry is internal-only and never published, but the shadcn CLI uses it
 locally and downstream apps can mirror entries.
 
+## Generation workflow
+
+The chosen approach for iteration 1 is **hand-write Button as the canonical
+reference, then copy-shape for the remaining 17 atoms**. No code-generation
+script, no plop/hygen templates, no single-shot bulk generation. Each atom is
+authored in its own task by reading Button and adapting per the inventory
+notes in `PLAN.md`.
+
+### Why this approach (not templates or code-gen)
+
+- Per-atom logic diverges enough (Radix wrappers vs. pure CVA vs. polymorphic
+  `as` prop) that templates would have too many holes; a literal copy of
+  Button is a better starting point than a parameterized template.
+- The agent loop processes one atom per task — consistency comes from the
+  shared reference, not from runtime generation.
+- Direct inspection of Button is unambiguous and reviewable; a generator
+  would add a dependency and hide the convention behind tooling.
+- shadcn CLI's `bunx shadcn@latest add <atom>` can be consulted for the
+  underlying primitive shape, but its output never lands in `src/atoms/` —
+  always rewrite into the six-file wrapper convention.
+
+### Per-atom procedure
+
+For each of the remaining 17 atoms (AspectRatio, Avatar, Badge, Card,
+Checkbox, Input, Kbd, Label, Progress, ScrollArea, Separator, Skeleton,
+Slider, Spinner, Textarea, Toggle, Typography):
+
+1. Open `src/atoms/Button/` and read all six files end-to-end. Button is
+   ground truth for file layout, TSDoc style, variant naming, test
+   structure, story structure, and README structure.
+2. Look up the atom's row in the `PLAN.md` inventory (variants, props,
+   underlying primitive). That row is the only intentional deviation from
+   Button.
+3. Create `src/atoms/<Component>/` with the six required files. Start each
+   file by copying its Button counterpart, then adapt:
+   - `<component>.variants.ts`: rename `buttonVariants` → `<component>Variants`,
+     replace the `variants` block per the inventory row.
+   - `<Component>.tsx`: rename the component and props interface, swap the
+     rendered element (or Radix primitive import), keep the `forwardRef` +
+     `cn(<component>Variants({...}), className)` shape. Drop `asChild` /
+     `Slot` if polymorphism is not needed.
+   - `<Component>.test.tsx`: keep the same three-assertion shape (renders,
+     variant class, no a11y violations). Adjust the role / variant under test.
+   - `<Component>.stories.tsx`: copy meta shape, retitle `Atoms/<Component>`,
+     adjust `argTypes` and the `AllVariants` matrix to match the inventory.
+   - `README.md`: copy the section order, fill the props/variants tables,
+     rewrite the Do/Don't bullets if non-obvious.
+   - `index.ts`: re-export the component and the variants module.
+4. Append the atom to `registry.json` `items[]` per the registry section
+   below.
+5. Run `bun run check-types` and `bun run test` locally; do not move on
+   while either fails.
+
+### Authored-from-scratch atoms (Kbd, Spinner, Typography)
+
+These three have no shadcn equivalent. They still follow the six-file
+convention and still copy Button's shape; the only difference is the
+rendered element is a plain HTML tag (`<kbd>`, `<div>`, or a polymorphic
+`as` prop) and there is no Radix import. Treat them like Badge / Skeleton —
+pure CVA over a primitive element.
+
 ## When in doubt
 
 - The canonical reference atom is **Button** — copy its shape (file layout,

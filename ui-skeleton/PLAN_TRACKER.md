@@ -546,7 +546,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 # Stage: Atom scaffolding generator (one-time)
 
 - [x] Document the per-atom file set in `pre-prompt.md` so future agents know the convention
-- [ ] Choose generation approach: hand-write Button as canonical reference, then copy-shape for the rest
+- [x] Choose generation approach: hand-write Button as canonical reference, then copy-shape for the rest
 
 # Stage: Atoms — shadcn-wrapping (15)
 
