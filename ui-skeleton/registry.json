@@ -20,6 +20,15 @@
         { "path": "src/atoms/AspectRatio/aspect-ratio.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-aspect-ratio"]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Avatar/Avatar.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Avatar/avatar.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-avatar"]
     }
   ]
 }
