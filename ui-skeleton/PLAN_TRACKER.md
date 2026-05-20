@@ -523,8 +523,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Create `components.json` at package root pointed at `src/styles/globals.css` and `@/atoms` alias
 - [x] Create `registry.json` at package root with a stub `button` item; do NOT publish
 - [x] Update `tsconfig.json` to include `paths: { "@/*": ["src/*"] }`, `jsx: "react-jsx"`, `lib: ["DOM","DOM.Iterable","ES2022"]`, `moduleResolution: "bundler"`
-- [ ] Create `tsconfig.build.json` with `emitDeclarationOnly`
-- [ ] Create `vite.config.ts` with library multi-entry and `@` alias, `vite-plugin-dts`, externalized peers
+- [x] Create `tsconfig.build.json` with `emitDeclarationOnly`
+- [x] Create `vite.config.ts` with library multi-entry and `@` alias, `vite-plugin-dts`, externalized peers
 - [ ] Create `vitest.config.ts` merging `vite.config.ts` with jsdom + coverage thresholds
 - [ ] Create `vitest.setup.ts` registering jest-dom and jest-axe matchers
 - [ ] Create `.storybook/main.ts` with react-vite framework and autodocs
