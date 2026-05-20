@@ -58,6 +58,15 @@
       "registryDependencies": ["@radix-ui/react-checkbox", "lucide-react"]
     },
     {
+      "name": "kbd",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Kbd/Kbd.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Kbd/kbd.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
+    },
+    {
       "name": "label",
       "type": "registry:ui",
       "files": [
