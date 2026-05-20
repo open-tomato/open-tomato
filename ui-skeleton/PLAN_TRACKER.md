@@ -610,7 +610,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Run `bun run build-storybook` — static Storybook build succeeds
 - [x] Run `bunx shadcn@latest init --yes` — CLI accepts `components.json`
 - [x] Spot-check `bunx shadcn@latest add button` would map into `src/atoms/Button/` (dry-run, do not overwrite)
-- [ ] Manually open Storybook for Button, Input, Card, Typography to confirm tokens resolve (background/foreground/primary/destructive render as expected)
+- [x] Manually open Storybook for Button, Input, Card, Typography to confirm tokens resolve (background/foreground/primary/destructive render as expected)
 ```
 
 ## Open follow-ups (not in this iteration)
