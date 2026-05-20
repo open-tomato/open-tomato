@@ -504,7 +504,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Confirm sibling dirs exist: `packages/shared/eslint-config/`, `packages/shared/typescript-config/`
 - [x] Confirm `packages/ui-skeleton/` git tree is clean
 - [x] Rewrite `workspace:^` references in `packages/ui-skeleton/package.json` to `file:../shared/eslint-config` and `file:../shared/typescript-config`
-- [ ] Verify `bun install` succeeds inside `packages/ui-skeleton/` after the rewrite
+- [x] Verify `bun install` succeeds inside `packages/ui-skeleton/` after the rewrite
 
 # Stage: Dependencies
 
