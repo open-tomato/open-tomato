@@ -574,7 +574,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 # Stage: Per-atom artifacts (apply to every atom above)
 
-- [ ] Create `<Component>.tsx` with TSDoc, `forwardRef`, props interface
+- [x] Create `<Component>.tsx` with TSDoc, `forwardRef`, props interface
 - [ ] Create `<component>.variants.ts` with `cva()` + `VariantProps` export
 - [ ] Create `<Component>.test.tsx` with at least: renders children, applies variant class, jest-axe a11y assertion
 - [ ] Create `<Component>.stories.tsx` with `Default` and `AllVariants` stories, autodocs tag
