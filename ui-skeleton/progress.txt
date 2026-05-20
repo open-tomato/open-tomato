@@ -1,0 +1,11 @@
+# Progress notes for ui-skeleton iteration 1
+
+General findings for future tasks (broadly applicable; not task-specific):
+
+- Sibling shared packages live under `packages/shared/<name>/`, not `packages/<name>/`. From `packages/ui-skeleton/` the relative path is `../shared/<name>`. Use this when rewriting `workspace:^` → `file:` links.
+- Package names of the relevant siblings: `@open-tomato/eslint-config` and `@open-tomato/typescript-config`.
+- `@open-tomato/eslint-config` already depends on `@open-tomato/typescript-config` via `file:../typescript-config` (precedent for the file-link approach).
+- `@open-tomato/eslint-config` exposes subpath exports `./base`, `./next`, `./react` — choose the right one in `eslint.config.mjs`.
+- `@open-tomato/typescript-config` exposes subpath exports `./base`, `./react`, `./next` (note the JSON filename is `nextjs.json` but the export key is `./next`).
+- `@open-tomato/eslint-config` already lists `eslint-plugin-storybook` as a dep, so Storybook lint integration does not require adding it to ui-skeleton.
+- Root `packages/` directory does not have a top-level `package.json` workspaces entry covering `ui-skeleton` this iteration — keep it standalone and use `file:` links.
