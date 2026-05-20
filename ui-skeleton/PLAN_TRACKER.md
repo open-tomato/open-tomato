@@ -586,7 +586,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Create `src/molecules/index.ts` (empty `export {};`)
 - [x] Create `src/organisms/index.ts`
 - [x] Create `src/providers/index.ts`
-- [ ] Create `src/templates/index.ts`
+- [x] Create `src/templates/index.ts`
 - [ ] Create `src/pages/index.ts`
 
 # Stage: Top-level wiring
