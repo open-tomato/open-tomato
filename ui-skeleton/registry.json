@@ -47,6 +47,15 @@
         { "path": "src/atoms/Card/card.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": []
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Checkbox/Checkbox.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Checkbox/checkbox.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-checkbox", "lucide-react"]
     }
   ]
 }
