@@ -540,8 +540,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Create `src/particles/animations.ts` exporting animation class constants (spin, pulse, fade)
 - [x] Create `src/particles/shadows.ts` exporting elevation class constants (`shadow-elev-1`, `shadow-elev-2`)
 - [x] Create `src/particles/mixins.ts` exporting composable className mixins (focus ring, disabled state)
-- [ ] Create `src/particles/index.ts` barrel
-- [ ] Add `src/particles/__tests__/cn.test.ts` verifying tailwind-merge conflict resolution
+- [x] Create `src/particles/index.ts` barrel
+- [x] Add `src/particles/__tests__/cn.test.ts` verifying tailwind-merge conflict resolution
 
 # Stage: Atom scaffolding generator (one-time)
 
