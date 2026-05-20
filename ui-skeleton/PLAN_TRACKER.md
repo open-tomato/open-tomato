@@ -512,7 +512,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Add Radix primitives for atoms that wrap them: `@radix-ui/react-aspect-ratio`, `@radix-ui/react-avatar`, `@radix-ui/react-checkbox`, `@radix-ui/react-label`, `@radix-ui/react-progress`, `@radix-ui/react-scroll-area`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-toggle`
 - [x] Add dev deps for Tailwind v4: `tailwindcss@^4`, `@tailwindcss/postcss@^4`, `@tailwindcss/vite@^4`, `postcss`
 - [x] Add dev deps for build: `vite`, `@vitejs/plugin-react`, `vite-plugin-dts`
-- [ ] Add dev deps for test: `vitest`, `@vitest/coverage-v8`, `jsdom`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jest-axe`, `@types/jest-axe`
+- [x] Add dev deps for test: `vitest`, `@vitest/coverage-v8`, `jsdom`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jest-axe`, `@types/jest-axe`
 - [ ] Add dev deps for Storybook 8: `storybook`, `@storybook/react-vite`, `@storybook/addon-essentials`, `@storybook/addon-a11y`, `@storybook/addon-interactions`, `@storybook/test`
 - [ ] Move `react` and `react-dom` to `peerDependencies` while keeping a dev mirror
 
