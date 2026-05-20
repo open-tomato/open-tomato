@@ -530,7 +530,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Create `.storybook/main.ts` with react-vite framework and autodocs
 - [x] Create `.storybook/preview.ts` importing `src/styles/globals.css`
 - [x] Update `package.json` scripts: build (vite build), dev (vite), test, test:watch, test:coverage, storybook, build-storybook, shadcn:add
-- [ ] Run `bunx shadcn@latest init --yes` to validate CLI parses `components.json`
+- [x] Run `bunx shadcn@latest init --yes` to validate CLI parses `components.json`
 
 # Stage: Particles
 
