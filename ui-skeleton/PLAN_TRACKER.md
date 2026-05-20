@@ -527,7 +527,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Create `vite.config.ts` with library multi-entry and `@` alias, `vite-plugin-dts`, externalized peers
 - [x] Create `vitest.config.ts` merging `vite.config.ts` with jsdom + coverage thresholds
 - [x] Create `vitest.setup.ts` registering jest-dom and jest-axe matchers
-- [ ] Create `.storybook/main.ts` with react-vite framework and autodocs
+- [x] Create `.storybook/main.ts` with react-vite framework and autodocs
 - [ ] Create `.storybook/preview.ts` importing `src/styles/globals.css`
 - [ ] Update `package.json` scripts: build (vite build), dev (vite), test, test:watch, test:coverage, storybook, build-storybook, shadcn:add
 - [ ] Run `bunx shadcn@latest init --yes` to validate CLI parses `components.json`
