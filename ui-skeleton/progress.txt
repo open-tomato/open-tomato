@@ -15,3 +15,5 @@ General findings for future tasks (broadly applicable; not task-specific):
 - `bun install` may warn `Blocked 1 postinstall. Run \`bun pm untrusted\` for details.` — this is informational, not a failure. Bun blocks postinstalls from untrusted packages by default.
 - `lucide-react` is at major version 1.x (1.16.0+ at time of writing), not the older 0.x range. If a task or doc references an older 0.x version range, treat it as outdated and pin to ^1.x.
 - `bun add <pkg>` updates `package.json` automatically and reorders keys alphabetically — expect dependency blocks to be sorted after each add.
+- Radix UI primitive packages are mostly at major v1.x, but a few are at higher majors (e.g. `@radix-ui/react-label` is v2.x). Don't assume a uniform major across the `@radix-ui/*` namespace when pinning.
+- `bun add` of multiple packages in a single command works and is faster than per-package adds; the lockfile is updated once at the end.
