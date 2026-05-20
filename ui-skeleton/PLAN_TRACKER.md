@@ -535,8 +535,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 # Stage: Particles
 
 - [x] Create `src/particles/cn.ts` (clsx + tailwind-merge wrapper)
-- [ ] Create `src/particles/variants.ts` re-exporting `cva` and `VariantProps` plus shared variant helpers
-- [ ] Create `src/particles/tokens.ts` exporting TS-typed mirror of `@theme` token names (radius, animate, shadow)
+- [x] Create `src/particles/variants.ts` re-exporting `cva` and `VariantProps` plus shared variant helpers
+- [x] Create `src/particles/tokens.ts` exporting TS-typed mirror of `@theme` token names (radius, animate, shadow)
 - [ ] Create `src/particles/animations.ts` exporting animation class constants (spin, pulse, fade)
 - [ ] Create `src/particles/shadows.ts` exporting elevation class constants (`shadow-elev-1`, `shadow-elev-2`)
 - [ ] Create `src/particles/mixins.ts` exporting composable className mixins (focus ring, disabled state)
