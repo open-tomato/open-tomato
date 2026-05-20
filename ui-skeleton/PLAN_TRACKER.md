@@ -568,8 +568,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 # Stage: Atoms — author from scratch (3)
 
-- [ ] Kbd: pure CVA over `<kbd>`; variants `{ size, variant }`; renders keyboard shortcuts
-- [ ] Spinner: pure CVA over `<div>` with `animate-spin`; variants `{ size, variant }`
+- [x] Kbd: pure CVA over `<kbd>`; variants `{ size, variant }`; renders keyboard shortcuts
+- [x] Spinner: pure CVA over `<div>` with `animate-spin`; variants `{ size, variant }`
 - [ ] Typography: polymorphic `as` prop (h1-h6, p, span, code); variants `{ variant: display|h1|h2|h3|h4|body|caption|code|kbd, weight, align }`
 
 # Stage: Per-atom artifacts (apply to every atom above)
