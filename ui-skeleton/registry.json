@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "open-tomato-skeleton",
+  "homepage": "internal",
+  "items": [
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Button/Button.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Button/button.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-slot"]
+    }
+  ]
+}
