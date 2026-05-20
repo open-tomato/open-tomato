@@ -576,7 +576,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 - [x] Create `<Component>.tsx` with TSDoc, `forwardRef`, props interface
 - [x] Create `<component>.variants.ts` with `cva()` + `VariantProps` export
-- [ ] Create `<Component>.test.tsx` with at least: renders children, applies variant class, jest-axe a11y assertion
+- [x] Create `<Component>.test.tsx` with at least: renders children, applies variant class, jest-axe a11y assertion
 - [ ] Create `<Component>.stories.tsx` with `Default` and `AllVariants` stories, autodocs tag
 - [ ] Create `README.md` per the template (import, props table, variants table, a11y notes, Do/Don't)
 - [ ] Create `index.ts` barrel: `export * from "./<Component>"; export * from "./<component>.variants";`
