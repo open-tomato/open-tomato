@@ -597,11 +597,11 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 # Stage: Registry entries
 
 - [x] Append each atom to `registry.json` `items[]` with `path`, `type`, and any `registryDependencies`
-- [ ] Document in `README.md` (top-level) that the registry is internal and not published
+- [x] Document in `README.md` (top-level) that the registry is internal and not published
 
 # Stage: Verification
 
-- [ ] Run `bun install` — must complete without resolution errors
+- [x] Run `bun install` — must complete without resolution errors
 - [ ] Run `bun run check-types` — passes with zero errors
 - [ ] Run `bun run lint` — passes
 - [ ] Run `bun run test` — every atom's smoke tests pass; coverage thresholds met
