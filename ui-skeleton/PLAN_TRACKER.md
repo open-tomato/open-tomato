@@ -525,8 +525,8 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Update `tsconfig.json` to include `paths: { "@/*": ["src/*"] }`, `jsx: "react-jsx"`, `lib: ["DOM","DOM.Iterable","ES2022"]`, `moduleResolution: "bundler"`
 - [x] Create `tsconfig.build.json` with `emitDeclarationOnly`
 - [x] Create `vite.config.ts` with library multi-entry and `@` alias, `vite-plugin-dts`, externalized peers
-- [ ] Create `vitest.config.ts` merging `vite.config.ts` with jsdom + coverage thresholds
-- [ ] Create `vitest.setup.ts` registering jest-dom and jest-axe matchers
+- [x] Create `vitest.config.ts` merging `vite.config.ts` with jsdom + coverage thresholds
+- [x] Create `vitest.setup.ts` registering jest-dom and jest-axe matchers
 - [ ] Create `.storybook/main.ts` with react-vite framework and autodocs
 - [ ] Create `.storybook/preview.ts` importing `src/styles/globals.css`
 - [ ] Update `package.json` scripts: build (vite build), dev (vite), test, test:watch, test:coverage, storybook, build-storybook, shadcn:add
