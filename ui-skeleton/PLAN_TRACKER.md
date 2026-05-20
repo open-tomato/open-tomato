@@ -518,7 +518,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 
 # Stage: Tooling config
 
-- [ ] Create `src/styles/globals.css` with `@import "tailwindcss"`, `@theme` token block, and base layer
+- [x] Create `src/styles/globals.css` with `@import "tailwindcss"`, `@theme` token block, and base layer
 - [ ] Create `postcss.config.mjs`
 - [ ] Create `components.json` at package root pointed at `src/styles/globals.css` and `@/atoms` alias
 - [ ] Create `registry.json` at package root with a stub `button` item; do NOT publish
