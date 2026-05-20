@@ -33,8 +33,12 @@
   "devDependencies": {
     "@open-tomato/eslint-config": "file:../shared/eslint-config",
     "@open-tomato/typescript-config": "file:../shared/typescript-config",
+    "@tailwindcss/postcss": "^4",
+    "@tailwindcss/vite": "^4",
     "@types/node": "^22.13.5",
     "eslint": "^9.39.4",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4",
     "typescript": "^5.9.3"
   }
 }

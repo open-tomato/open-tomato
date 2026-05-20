@@ -509,7 +509,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 # Stage: Dependencies
 
 - [x] Add runtime deps: `class-variance-authority`, `clsx`, `tailwind-merge`, `@radix-ui/react-slot`, `lucide-react`
-- [ ] Add Radix primitives for atoms that wrap them: `@radix-ui/react-aspect-ratio`, `@radix-ui/react-avatar`, `@radix-ui/react-checkbox`, `@radix-ui/react-label`, `@radix-ui/react-progress`, `@radix-ui/react-scroll-area`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-toggle`
+- [x] Add Radix primitives for atoms that wrap them: `@radix-ui/react-aspect-ratio`, `@radix-ui/react-avatar`, `@radix-ui/react-checkbox`, `@radix-ui/react-label`, `@radix-ui/react-progress`, `@radix-ui/react-scroll-area`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-toggle`
 - [ ] Add dev deps for Tailwind v4: `tailwindcss@^4`, `@tailwindcss/postcss@^4`, `@tailwindcss/vite@^4`, `postcss`
 - [ ] Add dev deps for build: `vite`, `@vitejs/plugin-react`, `vite-plugin-dts`
 - [ ] Add dev deps for test: `vitest`, `@vitest/coverage-v8`, `jsdom`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jest-axe`, `@types/jest-axe`

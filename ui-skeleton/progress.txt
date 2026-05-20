@@ -17,3 +17,4 @@ General findings for future tasks (broadly applicable; not task-specific):
 - `bun add <pkg>` updates `package.json` automatically and reorders keys alphabetically — expect dependency blocks to be sorted after each add.
 - Radix UI primitive packages are mostly at major v1.x, but a few are at higher majors (e.g. `@radix-ui/react-label` is v2.x). Don't assume a uniform major across the `@radix-ui/*` namespace when pinning.
 - `bun add` of multiple packages in a single command works and is faster than per-package adds; the lockfile is updated once at the end.
+- Tailwind v4 ships as `tailwindcss@^4` (resolves to 4.3.x) with companion packages `@tailwindcss/postcss@^4` (PostCSS plugin) and `@tailwindcss/vite@^4` (Vite plugin). The Vite plugin is the preferred integration for Vite-driven builds; the PostCSS plugin covers tooling that runs PostCSS independently (e.g. Storybook in some configs). `postcss` itself is still needed as a dev dep.
