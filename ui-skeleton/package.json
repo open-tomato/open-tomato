@@ -1,5 +1,5 @@
 {
-  "name": "@open-tomato/notifications-plugin-tech-tree",
+  "name": "@open-tomato/ui-skeleton",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -12,7 +12,9 @@
     "lint": "eslint --fix"
   },
   "dependencies": {
-    "zod": "^3.24.2"
+    "shadcn": "^4.7.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
   },
   "devDependencies": {
     "@open-tomato/eslint-config": "workspace:^",

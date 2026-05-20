@@ -15,8 +15,8 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@open-tomato/eslint-config": "file:../../shared/eslint-config",
-    "@open-tomato/typescript-config": "file:../../shared/typescript-config",
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
     "eslint": "^9.39.4",
     "globals": "^16.0.0",
     "typescript": "^5.9.3",
