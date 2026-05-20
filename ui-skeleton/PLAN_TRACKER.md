@@ -608,7 +608,7 @@ export default { plugins: { "@tailwindcss/postcss": {} } };
 - [x] Run `bun run build` — `dist/` contains `index.js`, `particles.js`, and per-atom `atoms/<Name>.js` plus matching `.d.ts`
 - [x] Run `bun run storybook` — Storybook starts on 6006; every atom renders its `Default` and `AllVariants` stories; autodocs page generated
 - [x] Run `bun run build-storybook` — static Storybook build succeeds
-- [ ] Run `bunx shadcn@latest init --yes` — CLI accepts `components.json`
+- [x] Run `bunx shadcn@latest init --yes` — CLI accepts `components.json`
 - [ ] Spot-check `bunx shadcn@latest add button` would map into `src/atoms/Button/` (dry-run, do not overwrite)
 - [ ] Manually open Storybook for Button, Input, Card, Typography to confirm tokens resolve (background/foreground/primary/destructive render as expected)
 ```
