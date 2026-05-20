@@ -58,6 +58,15 @@
       "registryDependencies": ["@radix-ui/react-checkbox", "lucide-react"]
     },
     {
+      "name": "input",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Input/Input.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Input/input.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
+    },
+    {
       "name": "kbd",
       "type": "registry:ui",
       "files": [
@@ -83,6 +92,15 @@
         { "path": "src/atoms/Progress/progress.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-progress"]
+    },
+    {
+      "name": "scroll-area",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/ScrollArea/ScrollArea.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/ScrollArea/scroll-area.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-scroll-area"]
     },
     {
       "name": "separator",
@@ -112,11 +130,38 @@
       "registryDependencies": ["@radix-ui/react-slider"]
     },
     {
+      "name": "spinner",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Spinner/Spinner.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Spinner/spinner.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
+    },
+    {
       "name": "textarea",
       "type": "registry:ui",
       "files": [
         { "path": "src/atoms/Textarea/Textarea.tsx", "type": "registry:ui" },
         { "path": "src/atoms/Textarea/textarea.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Toggle/Toggle.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Toggle/toggle.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-toggle"]
+    },
+    {
+      "name": "typography",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/atoms/Typography/Typography.tsx", "type": "registry:ui" },
+        { "path": "src/atoms/Typography/typography.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": []
     }
