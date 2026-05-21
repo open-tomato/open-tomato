@@ -100,8 +100,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Atom-authoring skill update
 ```
 
-- [ ] Update [`skills/atom-authoring/SKILL.md`](./skills/atom-authoring/SKILL.md) "The className rule (cardinal)" section to the post-refactor wording in the Technical context Section A6 (declare universal compliance, drop the "existing atoms still violate" paragraph, add the `Omit<..., 'className'>` bullet)
-- [ ] Add a bullet to the per-atom procedure note clarifying the `Omit<HTMLAttrs, 'color' | 'className'>` inheritance pattern
+- [x] Update [`skills/atom-authoring/SKILL.md`](./skills/atom-authoring/SKILL.md) "The className rule (cardinal)" section to the post-refactor wording in the Technical context Section A6 (declare universal compliance, drop the "existing atoms still violate" paragraph, add the `Omit<..., 'className'>` bullet)
+- [x] Add a bullet to the per-atom procedure note clarifying the `Omit<HTMLAttrs, 'color' | 'className'>` inheritance pattern
 - [ ] Remove NEXT-ITERATIONS #1 and #2 entries from [`NEXT-ITERATIONS.md`](./NEXT-ITERATIONS.md)
 
 ```text
