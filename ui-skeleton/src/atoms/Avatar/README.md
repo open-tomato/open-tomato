@@ -19,10 +19,11 @@ import { Avatar } from '@open-tomato/ui-skeleton';
 | fallback               | `ReactNode` (typically initials)            | —          |
 | fallbackDelayMs        | `number` (ms before fallback paints)        | —          |
 | onLoadingStatusChange  | `(status) => void`                          | —          |
-| imageProps             | `Omit<ImgHTMLAttributes, 'src' \| 'alt'>`   | —          |
-| className              | `string` (discouraged escape hatch)         | —          |
+| imageProps             | non-styling `<img>` attrs (e.g. `referrerPolicy`, `crossOrigin`) | — |
 
-All other props are forwarded to the underlying Radix root `<span>`.
+All other Radix Avatar root props (except `className`) are forwarded to the
+underlying `<span>`. `className` is not part of the public API — styling is
+controlled exclusively through `size` and `shape`.
 
 ## Variants
 
@@ -49,6 +50,14 @@ The resolved variants are reflected on the rendered element as `data-size="<name
 
 ## Do / Don't
 
-- DO use `size` and `shape` for visual tuning. DON'T pass arbitrary `className` to override dimensions or radius.
-- DO supply `fallback` (initials or an icon) so the avatar remains meaningful when the image is missing or fails to load.
-- DON'T compose multiple `Avatar` wrappers to render an avatar group — that pattern belongs in a molecule.
+- DO use `size` and `shape` for visual tuning. If a knob is missing, add a
+  variant axis — Avatar has no `className` escape hatch.
+- DO compose Avatar inside parent wrappers that handle layout (spacing,
+  positioning, alignment). The avatar itself does not own its own positioning
+  context.
+- DO supply `fallback` (initials or an icon) so the avatar remains meaningful
+  when the image is missing or fails to load.
+- DO provide a meaningful `alt` whenever `src` is set. DON'T ship an image
+  avatar without an accessible name.
+- DON'T compose multiple `Avatar` wrappers to render an avatar group — that
+  pattern belongs in a molecule.

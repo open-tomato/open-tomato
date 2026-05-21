@@ -21,10 +21,11 @@ type RadixAvatarFallbackProps = React.ComponentPropsWithoutRef<typeof RadixAvata
 /**
  * Avatar — single encapsulated wrapper over Radix Avatar (root + image + fallback).
  *
- * @remarks All visual customization MUST go through `size` and `shape` variants.
- * The image is provided via `src`/`alt`; the fallback rendered while the image
- * loads (or on error) is provided via `fallback`. `className` is an escape hatch
- * only and is discouraged in this design system.
+ * @remarks All visual customization is controlled exclusively through `size` and
+ * `shape` variants. There is no `className` escape hatch — if a knob is missing,
+ * add a variant axis instead. The image is provided via `src`/`alt`; the
+ * fallback rendered while the image loads (or on error) is provided via
+ * `fallback`.
  *
  * @example
  * ```tsx
@@ -32,7 +33,7 @@ type RadixAvatarFallbackProps = React.ComponentPropsWithoutRef<typeof RadixAvata
  * ```
  */
 export interface AvatarProps
-  extends Omit<RadixAvatarProps, 'children'>,
+  extends Omit<RadixAvatarProps, 'children' | 'className'>,
   AvatarVariants {
   /** Image URL to display. When omitted, only the fallback is rendered. */
   src?: string;
@@ -44,14 +45,13 @@ export interface AvatarProps
   fallbackDelayMs?: RadixAvatarFallbackProps['delayMs'];
   /** Notified when the underlying image transitions between loading states. */
   onLoadingStatusChange?: RadixAvatarImageProps['onLoadingStatusChange'];
-  /** Escape-hatch props forwarded to the inner `<img>` (e.g. `referrerPolicy`, `crossOrigin`). */
-  imageProps?: Omit<RadixAvatarImageProps, 'src' | 'alt' | 'onLoadingStatusChange'>;
+  /** Non-styling props forwarded to the inner `<img>` (e.g. `referrerPolicy`, `crossOrigin`). */
+  imageProps?: Omit<RadixAvatarImageProps, 'src' | 'alt' | 'onLoadingStatusChange' | 'className'>;
 }
 
 export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
   (
     {
-      className,
       size,
       shape,
       src,
@@ -72,7 +72,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         ref={ref}
         data-size={resolvedSize}
         data-shape={resolvedShape}
-        className={cn(avatarVariants({ size: resolvedSize, shape: resolvedShape }), className)}
+        className={cn(avatarVariants({ size: resolvedSize, shape: resolvedShape }))}
         {...rest}
       >
         {src
