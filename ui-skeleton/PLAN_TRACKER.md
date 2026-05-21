@@ -162,13 +162,13 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 
 - [x] Create [`src/molecules/ButtonGroup/`](./src/molecules/ButtonGroup/) per Section D #2 (composes Button via `React.cloneElement` for size/variant propagation)
 - [x] Create [`src/molecules/Item/`](./src/molecules/Item/) per Section D #7 (polymorphic `as` axis)
-- [ ] Create [`src/molecules/Table/`](./src/molecules/Table/) per Section D #13 (slot props for caption/headers/rows/footer)
+- [x] Create [`src/molecules/Table/`](./src/molecules/Table/) per Section D #13 (slot props for caption/headers/rows/footer)
 
 ```text
 # Stage: Remaining molecules — Radix stateful
 ```
 
-- [ ] Create [`src/molecules/Collapsible/`](./src/molecules/Collapsible/) per Section D #3
+- [x] Create [`src/molecules/Collapsible/`](./src/molecules/Collapsible/) per Section D #3
 - [ ] Create [`src/molecules/Switch/`](./src/molecules/Switch/) per Section D #12 (inline-label pattern)
 - [ ] Create [`src/molecules/RadioGroup/`](./src/molecules/RadioGroup/) per Section D #10 (`React.useId()` for label/item pairing)
 - [ ] Create [`src/molecules/ToggleGroup/`](./src/molecules/ToggleGroup/) per Section D #14 (composes Toggle atom via `asChild`)
