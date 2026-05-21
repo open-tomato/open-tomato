@@ -88,19 +88,70 @@ describe('ScrollArea', () => {
     expect(viewport?.textContent).toContain('inner');
   });
 
-  it('forwards className to the root and viewportProps.className to the viewport', () => {
+  it('emits no frame classes on the root when frame is omitted', () => {
+    const { container } = render(<ScrollArea aria-label="x">x</ScrollArea>);
+    const root = container.querySelector('[data-slot="scroll-area"]');
+    expect(root).not.toHaveClass('border');
+    expect(root).not.toHaveClass('rounded-md');
+    expect(root).not.toHaveClass('bg-card');
+  });
+
+  it('applies the bordered frame classes on the root when frame="bordered"', () => {
+    const { container } = render(
+      <ScrollArea frame="bordered" aria-label="x">x</ScrollArea>,
+    );
+    const root = container.querySelector('[data-slot="scroll-area"]');
+    expect(root).toHaveClass('border');
+    expect(root).toHaveClass('rounded-md');
+    expect(root).not.toHaveClass('bg-card');
+  });
+
+  it('applies the card frame classes on the root when frame="card"', () => {
+    const { container } = render(
+      <ScrollArea frame="card" aria-label="x">x</ScrollArea>,
+    );
+    const root = container.querySelector('[data-slot="scroll-area"]');
+    expect(root).toHaveClass('border');
+    expect(root).toHaveClass('rounded-md');
+    expect(root).toHaveClass('bg-card');
+  });
+
+  it('emits no padding classes on the viewport when viewportPadding is omitted', () => {
+    const { container } = render(<ScrollArea aria-label="x">x</ScrollArea>);
+    const viewport = container.querySelector('[data-slot="scroll-area-viewport"]');
+    expect(viewport).not.toHaveClass('p-2');
+    expect(viewport).not.toHaveClass('p-4');
+    expect(viewport).not.toHaveClass('p-6');
+  });
+
+  it('applies the matching padding class on the viewport for each viewportPadding value', () => {
+    const cases: Array<['sm' | 'md' | 'lg', string]> = [
+      ['sm', 'p-2'],
+      ['md', 'p-4'],
+      ['lg', 'p-6'],
+    ];
+    for (const [padding, expected] of cases) {
+      const { container, unmount } = render(
+        <ScrollArea viewportPadding={padding} aria-label="x">x</ScrollArea>,
+      );
+      const viewport = container.querySelector('[data-slot="scroll-area-viewport"]');
+      expect(viewport).toHaveClass(expected);
+      unmount();
+    }
+  });
+
+  it('forwards non-styling viewportProps to the viewport element', () => {
     const { container } = render(
       <ScrollArea
         aria-label="x"
-        className="custom-root"
-        viewportProps={{ className: 'custom-viewport' }}
+        viewportProps={{ tabIndex: -1, 'aria-describedby': 'desc' }}
       >
         x
       </ScrollArea>,
     );
-    expect(container.querySelector('[data-slot="scroll-area"]')).toHaveClass('custom-root');
-    expect(container.querySelector('[data-slot="scroll-area-viewport"]'))
-      .toHaveClass('custom-viewport');
+    const viewport = container.querySelector('[data-slot="scroll-area-viewport"]');
+    expect(viewport).toHaveAttribute('tabindex', '-1');
+    expect(viewport).toHaveAttribute('aria-describedby', 'desc');
   });
 
   it('has no a11y violations', async () => {

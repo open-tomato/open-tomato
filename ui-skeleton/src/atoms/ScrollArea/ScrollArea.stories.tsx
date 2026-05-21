@@ -11,9 +11,13 @@ const meta: Meta<typeof ScrollArea> = {
   tags: ['autodocs'],
   argTypes: {
     orientation: { control: 'select', options: ['vertical', 'horizontal', 'both'] },
+    frame: { control: 'select', options: ['none', 'bordered', 'card'] },
+    viewportPadding: { control: 'select', options: ['none', 'sm', 'md', 'lg'] },
   },
   args: {
     orientation: 'vertical',
+    frame: 'bordered',
+    viewportPadding: 'md',
     'aria-label': 'Scrollable region',
   },
 };
@@ -22,61 +26,106 @@ export default meta;
 type Story = StoryObj<typeof ScrollArea>;
 
 export const Default: Story = {
-  args: { className: 'h-72 w-48 rounded-md border' },
   render: (args) => (
-    <ScrollArea {...args}>
-      <div className="p-4">
+    <div className="h-72 w-48">
+      <ScrollArea {...args}>
         <h4 className="mb-4 text-sm font-medium leading-none">Tags</h4>
         {verticalTags.map((tag) => (
           <div key={tag} className="border-b border-border py-2 text-sm last:border-b-0">
             {tag}
           </div>
         ))}
-      </div>
-    </ScrollArea>
+      </ScrollArea>
+    </div>
   ),
 };
 
 export const Horizontal: Story = {
-  args: {
-    orientation: 'horizontal',
-    className: 'w-96 whitespace-nowrap rounded-md border',
-  },
+  args: { orientation: 'horizontal' },
   render: (args) => (
-    <ScrollArea {...args}>
-      <div className="flex w-max gap-3 p-4">
-        {horizontalChips.map((chip) => (
-          <span
-            key={chip}
-            className="shrink-0 rounded-full border border-border px-3 py-1 text-xs"
-          >
-            {chip}
-          </span>
-        ))}
-      </div>
-    </ScrollArea>
+    <div className="w-96">
+      <ScrollArea {...args}>
+        <div className="flex w-max gap-3 whitespace-nowrap">
+          {horizontalChips.map((chip) => (
+            <span
+              key={chip}
+              className="shrink-0 rounded-full border border-border px-3 py-1 text-xs"
+            >
+              {chip}
+            </span>
+          ))}
+        </div>
+      </ScrollArea>
+    </div>
   ),
 };
 
 export const Both: Story = {
-  args: {
-    orientation: 'both',
-    className: 'h-72 w-72 rounded-md border',
-  },
+  args: { orientation: 'both' },
   render: (args) => (
-    <ScrollArea {...args}>
-      <div className="w-[640px] p-4">
-        {Array.from({ length: 40 }).map((_, row) => (
-          <div key={row} className="flex gap-2 py-1 text-sm">
-            {Array.from({ length: 16 }).map((__, col) => (
-              <span key={col} className="shrink-0 rounded bg-muted px-2 py-1">
-                r{row + 1}c{col + 1}
-              </span>
-            ))}
+    <div className="h-72 w-72">
+      <ScrollArea {...args}>
+        <div className="w-[640px]">
+          {Array.from({ length: 40 }).map((_, row) => (
+            <div key={row} className="flex gap-2 py-1 text-sm">
+              {Array.from({ length: 16 }).map((__, col) => (
+                <span key={col} className="shrink-0 rounded bg-muted px-2 py-1">
+                  r{row + 1}c{col + 1}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
+    </div>
+  ),
+};
+
+export const FrameVariants: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-6">
+      {(['none', 'bordered', 'card'] as const).map((frame) => (
+        <div key={frame} className="flex flex-col gap-2">
+          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            frame=
+            {frame}
+          </span>
+          <div className="h-48 w-40">
+            <ScrollArea aria-label={`${frame} frame`} frame={frame} viewportPadding="md">
+              {verticalTags.slice(0, 30).map((tag) => (
+                <div key={tag} className="py-1 text-sm">{tag}</div>
+              ))}
+            </ScrollArea>
           </div>
-        ))}
-      </div>
-    </ScrollArea>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const ViewportPaddingVariants: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-6">
+      {(['none', 'sm', 'md', 'lg'] as const).map((padding) => (
+        <div key={padding} className="flex flex-col gap-2">
+          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            viewportPadding=
+            {padding}
+          </span>
+          <div className="h-48 w-40">
+            <ScrollArea
+              aria-label={`viewportPadding ${padding}`}
+              frame="bordered"
+              viewportPadding={padding}
+            >
+              {verticalTags.slice(0, 30).map((tag) => (
+                <div key={tag} className="py-1 text-sm">{tag}</div>
+              ))}
+            </ScrollArea>
+          </div>
+        </div>
+      ))}
+    </div>
   ),
 };
 
@@ -87,53 +136,64 @@ export const AllVariants: Story = {
         <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           vertical
         </span>
-        <ScrollArea aria-label="vertical example" className="h-48 w-40 rounded-md border">
-          <div className="p-3 text-sm">
+        <div className="h-48 w-40">
+          <ScrollArea aria-label="vertical example" frame="bordered" viewportPadding="sm">
             {verticalTags.slice(0, 30).map((tag) => (
-              <div key={tag} className="py-1">{tag}</div>
+              <div key={tag} className="py-1 text-sm">{tag}</div>
             ))}
-          </div>
-        </ScrollArea>
+          </ScrollArea>
+        </div>
       </div>
       <div className="flex flex-col gap-2">
         <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           horizontal
         </span>
-        <ScrollArea
-          orientation="horizontal"
-          aria-label="horizontal example"
-          className="w-80 whitespace-nowrap rounded-md border"
-        >
-          <div className="flex w-max gap-2 p-3">
-            {horizontalChips.map((chip) => (
-              <span key={chip} className="shrink-0 rounded-full border border-border px-3 py-1 text-xs">
-                {chip}
-              </span>
-            ))}
-          </div>
-        </ScrollArea>
+        <div className="w-80">
+          <ScrollArea
+            aria-label="horizontal example"
+            orientation="horizontal"
+            frame="bordered"
+            viewportPadding="sm"
+          >
+            <div className="flex w-max gap-2 whitespace-nowrap">
+              {horizontalChips.map((chip) => (
+                <span
+                  key={chip}
+                  className="shrink-0 rounded-full border border-border px-3 py-1 text-xs"
+                >
+                  {chip}
+                </span>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
       </div>
       <div className="flex flex-col gap-2">
         <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           both
         </span>
-        <ScrollArea
-          orientation="both"
-          aria-label="both example"
-          className="h-48 w-60 rounded-md border"
-        >
-          <div className="w-[480px] p-3">
-            {Array.from({ length: 20 }).map((_, row) => (
-              <div key={row} className="flex gap-2 py-1 text-sm">
-                {Array.from({ length: 10 }).map((__, col) => (
-                  <span key={col} className="shrink-0 rounded bg-muted px-2 py-1">
-                    {row + 1},{col + 1}
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
+        <div className="h-48 w-60">
+          <ScrollArea
+            aria-label="both example"
+            orientation="both"
+            frame="bordered"
+            viewportPadding="sm"
+          >
+            <div className="w-[480px]">
+              {Array.from({ length: 20 }).map((_, row) => (
+                <div key={row} className="flex gap-2 py-1 text-sm">
+                  {Array.from({ length: 10 }).map((__, col) => (
+                    <span key={col} className="shrink-0 rounded bg-muted px-2 py-1">
+                      {row + 1}
+                      ,
+                      {col + 1}
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
       </div>
     </div>
   ),
