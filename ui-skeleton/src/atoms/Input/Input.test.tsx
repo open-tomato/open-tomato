@@ -34,20 +34,50 @@ describe('Input', () => {
     expect(root).toHaveClass('h-10');
   });
 
-  it('exposes resolved variant and size via data attributes on the root', () => {
-    const { container } = render(<Input aria-label="x" variant="success" size="sm" />);
+  it('exposes resolved variant, size, density, and tone via data attributes on the root', () => {
+    const { container } = render(
+      <Input aria-label="x" variant="success" size="sm" density="compact" tone="subtle" />,
+    );
     const root = container.querySelector('[data-slot="input-root"]');
     expect(root).toHaveAttribute('data-variant', 'success');
     expect(root).toHaveAttribute('data-size', 'sm');
+    expect(root).toHaveAttribute('data-density', 'compact');
+    expect(root).toHaveAttribute('data-tone', 'subtle');
   });
 
-  it('defaults to default/md when variants are omitted', () => {
+  it('defaults to default/md/comfortable/neutral when variants are omitted', () => {
     const { container } = render(<Input aria-label="x" />);
     const root = container.querySelector('[data-slot="input-root"]');
     expect(root).toHaveAttribute('data-variant', 'default');
     expect(root).toHaveAttribute('data-size', 'md');
+    expect(root).toHaveAttribute('data-density', 'comfortable');
+    expect(root).toHaveAttribute('data-tone', 'neutral');
     expect(root).toHaveClass('border-input');
     expect(root).toHaveClass('h-9');
+  });
+
+  it('propagates density=compact to the root frame class', () => {
+    const { container } = render(<Input aria-label="x" density="compact" />);
+    const root = container.querySelector('[data-slot="input-root"]');
+    expect(root).toHaveAttribute('data-density', 'compact');
+    expect(root).toHaveClass('[&]:h-7');
+    expect(root).toHaveClass('py-0');
+  });
+
+  it('propagates tone=subtle to the root frame class', () => {
+    const { container } = render(<Input aria-label="x" tone="subtle" />);
+    const root = container.querySelector('[data-slot="input-root"]');
+    expect(root).toHaveAttribute('data-tone', 'subtle');
+    expect(root).toHaveClass('border-0');
+    expect(root).toHaveClass('bg-muted/40');
+  });
+
+  it('propagates tone=inverted to the root frame class', () => {
+    const { container } = render(<Input aria-label="x" tone="inverted" />);
+    const root = container.querySelector('[data-slot="input-root"]');
+    expect(root).toHaveAttribute('data-tone', 'inverted');
+    expect(root).toHaveClass('bg-foreground');
+    expect(root).toHaveClass('text-background');
   });
 
   it('automatically sets aria-invalid on the inner input when variant=error', () => {
