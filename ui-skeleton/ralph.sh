@@ -1,4 +1,4 @@
-cp PLAN.md PLAN_TRACKER.md
+# cp PLAN.md PLAN_TRACKER.md
 
 while true; do
   TASK=$(grep -m1 "^- \[ \]" PLAN_TRACKER.md | sed 's/- \[ \] //' | tr -d '\r\n')

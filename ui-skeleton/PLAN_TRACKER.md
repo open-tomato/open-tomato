@@ -38,7 +38,7 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 
 - [x] Read [`AGENTS.md`](./AGENTS.md), [`NEXT-ITERATIONS.md`](./NEXT-ITERATIONS.md), and [`skills/atom-authoring/SKILL.md`](./skills/atom-authoring/SKILL.md) end-to-end before any code change
 - [x] Confirm phase 1 baseline: `bun install && bun run check-types && bun run test && bun run build && bun run build-storybook` all exit 0 from [`packages/ui-skeleton/`](./)
-- [x] Confirm `bun run lint` failures are limited to the pre-existing [`README.md`](./README.md) heading violations and not in atom code
+- [BLOCKED] Confirm `bun run lint` failures are limited to the pre-existing [`README.md`](./README.md) heading violations and not in atom code
 
 ```text
 # Stage: Atom className refactor — wrapper-frame particle extraction
@@ -132,8 +132,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 
 - [x] Create [`src/molecules/Alert/Alert.tsx`](./src/molecules/Alert/Alert.tsx) per Technical context Section C-Alert
 - [x] Create `src/molecules/Alert/alert.variants.ts` with empty-root cva + `alertHeaderVariants`
-- [ ] Create `src/molecules/Alert/Alert.test.tsx` with the five molecule-minimum assertions
-- [ ] Create `src/molecules/Alert/Alert.stories.tsx` with `Default`, `AllVariants`, `WithCustomHeader`, `WithActions` stories
+- [x] Create `src/molecules/Alert/Alert.test.tsx` with the five molecule-minimum assertions
+- [x] Create `src/molecules/Alert/Alert.stories.tsx` with `Default`, `AllVariants`, `WithCustomHeader`, `WithActions` stories
 - [ ] Create `src/molecules/Alert/README.md` with the new `## Composition` section
 - [ ] Create `src/molecules/Alert/index.ts` with two-line barrel
 
