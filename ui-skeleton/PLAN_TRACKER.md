@@ -109,8 +109,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 ```
 
 - [x] Run `bun run check-types && bun run test && bun run lint` — all three must pass
-- [ ] Run `bun run test:coverage` and confirm 80/80/75/80 thresholds still hold after deleted className-merging tests
-- [ ] Run `bun run build && bun run build-storybook` for sanity
+- [x] Run `bun run test:coverage` and confirm 80/80/75/80 thresholds still hold after deleted className-merging tests
+- [x] Run `bun run build && bun run build-storybook` for sanity
 
 ```text
 # Stage: Molecule infrastructure — ESLint layer guard
