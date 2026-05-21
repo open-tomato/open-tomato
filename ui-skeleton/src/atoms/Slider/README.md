@@ -26,7 +26,6 @@ import { Slider } from '@open-tomato/ui-skeleton';
 | onValueChange   | `(value: number[]) => void`                         | —                       |
 | onValueCommit   | `(value: number[]) => void`                         | —                       |
 | thumbAriaLabels | `string[]`                                          | `[aria-label, ...]`     |
-| className       | `string` (discouraged escape hatch)                 | —                       |
 
 All other props are forwarded to the underlying Radix Slider root (which
 renders as `<span>` with `role="group"` and contains the track, range, and
@@ -70,9 +69,11 @@ single class block covers both axes.
 
 ## Do / Don't
 
-- DO use `size` to scale track + thumb together. DON'T override `bg-primary`,
-  `border-primary`, or thumb shape via `className` — extend the variants
-  instead.
+- DO use `size` to scale track + thumb together. If a knob isn't covered,
+  add a variant axis rather than reaching for a class override — styling is
+  the atom's responsibility, not the consumer's.
+- DO compose with a parent wrapper for layout, sizing, or alignment
+  concerns that live outside the slider itself.
 - DO supply an `aria-label` (or `aria-labelledby`) per slider so the thumb
   has an accessible name. DON'T rely on surrounding text alone.
 - DO pass `defaultValue={[n]}` for a single-thumb slider and `[lo, hi]` for

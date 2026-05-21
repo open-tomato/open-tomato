@@ -24,7 +24,6 @@ type RadixSliderProps = React.ComponentPropsWithoutRef<typeof RadixSlider>;
  * track thickness and thumb diameter together.
  *
  * @remarks All visual customization MUST go through the `size` variant.
- * `className` is an escape hatch only and is discouraged in this design system.
  *
  * Supports any number of thumbs by passing an array `value` or `defaultValue`.
  * When neither is provided, the wrapper falls back to `[min, max]` (two thumbs
@@ -43,7 +42,7 @@ type RadixSliderProps = React.ComponentPropsWithoutRef<typeof RadixSlider>;
  * <Slider orientation="vertical" defaultValue={[40]} aria-label="Bass" />
  * ```
  */
-export interface SliderProps extends RadixSliderProps, SliderVariants {
+export interface SliderProps extends Omit<RadixSliderProps, 'className'>, SliderVariants {
   /**
    * Per-thumb accessible labels. When provided, each entry overrides the
    * default thumb label (which mirrors the wrapper's `aria-label`). Useful
@@ -56,7 +55,6 @@ export interface SliderProps extends RadixSliderProps, SliderVariants {
 export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
   (
     {
-      className,
       size,
       value,
       defaultValue,
@@ -92,7 +90,7 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
         defaultValue={defaultValue}
         min={resolvedMin}
         max={resolvedMax}
-        className={cn(sliderVariants({ size: resolvedSize }), className)}
+        className={cn(sliderVariants({ size: resolvedSize }))}
         {...rest}
       >
         <RadixSliderTrack
