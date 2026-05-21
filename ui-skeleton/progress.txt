@@ -42,7 +42,7 @@
 - Radix `Slot` + multiple children throws at runtime when `asChild=true`. Wrap the main child in `<Slottable>` so icon siblings coexist.
 - ESM `.config.{ts,js,mjs}` files don't get `__dirname`; use `import.meta.dirname` (Node 20.11+, Bun-supported).
 - jsdom does not implement `ResizeObserver`. Any Radix primitive that observes size throws at render without the polyfill in `vitest.setup.ts`.
-- The shared `@open-tomato/eslint-config` base ignores `dist/**`, `build/**`, `node_modules/**` but NOT `storybook-static/**`. After `bun run build-storybook`, `bun run lint` will report ~24k errors in those minified JS artifacts. Workaround: `bunx eslint --fix --ignore-pattern 'storybook-static/**'` (or delete the dir) to see real source state.
+- The shared `@open-tomato/eslint-config` base ignores `dist/**`, `build/**`, `node_modules/**` but NOT `storybook-static/**`. The package's local `eslint.config.mjs` now spreads the base config and appends `{ ignores: ['storybook-static/**'] }` so `bun run lint` stays clean after `bun run build-storybook`. If you add a sibling package, extend its eslint config the same way (`export default [...baseConfig, { ignores: ['storybook-static/**'] }]`) instead of relying on `--ignore-pattern` flags or deleting build output.
 
 ## Useful locations
 - `src/particles/cn.ts` — sole class-merging utility.
