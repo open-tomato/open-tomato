@@ -56,6 +56,7 @@
 ## Markdown / ESLint constraints
 - Per-component READMEs: single H1, H2 top-level, H3 nested — no skipped heading levels (`markdown/heading-increment` fails lint).
 - Every fenced code block needs a language tag (`text`, `bash`, `tsx`, `ts`, `css`).
+- To embed a fenced code block INSIDE another fenced block (e.g. a `markdown` example that itself contains a `ts` snippet), the outer fence MUST use four backticks (` ```` `). Three-backtick outer + three-backtick inner causes the inner closing fence to terminate the outer block early, then the next ``` opens a language-less block and trips `markdown/fenced-code-language`.
 - Single quotes in `.ts` / `.tsx`.
 - `@stylistic/implicit-arrow-linebreak` forbids a linebreak between `=>` and a wrapped multi-line call. Either keep the body on one line or write `(...) => cn(\n  a,\n  b,\n);` (i.e. start the call on the same line as `=>` and break inside the parens).
 
