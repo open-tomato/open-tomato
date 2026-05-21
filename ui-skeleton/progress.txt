@@ -11,6 +11,7 @@
 
 ## Cardinal rules
 - Atoms and molecules MUST NOT accept public `className`. The fix is `Omit<..., 'className'>` on the HTMLAttributes-derived props interface AND no consumer string in `cn(...)`. Without `Omit`, `className` is inherited and leaks to DOM via `{...rest}`.
+- Per-part bag props that forward to inner sub-components (e.g. Avatar's `imageProps`, ScrollArea's `viewportProps`/`scrollbarProps`) must also include `'className'` in their `Omit<...>` — otherwise consumer strings reach inner parts through the bag and re-open the escape hatch.
 - Variants are the only public styling surface. If a knob isn't covered, add a variant axis — don't open an escape hatch.
 - Molecules import atoms + particles only; never other molecules or upward layers (organisms/templates/pages/providers). Atoms import particles only.
 - Use `React.forwardRef` with named exports; set `displayName` immediately after.
