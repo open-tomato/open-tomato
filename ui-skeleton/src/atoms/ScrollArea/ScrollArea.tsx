@@ -15,6 +15,7 @@ import {
   scrollAreaVariants,
   scrollAreaViewportVariants,
   type ScrollAreaVariants,
+  type ScrollAreaViewportVariants,
 } from './scroll-area.variants';
 
 type RadixScrollAreaProps = React.ComponentPropsWithoutRef<typeof RadixScrollArea>;
@@ -23,44 +24,50 @@ type RadixScrollAreaScrollbarProps = React.ComponentPropsWithoutRef<typeof Radix
 
 /**
  * ScrollArea — single encapsulated wrapper over Radix ScrollArea
- * (root + viewport + scrollbar(s) + thumb(s) + corner) with a single
- * `orientation` axis controlling which scrollbar(s) render.
+ * (root + viewport + scrollbar(s) + thumb(s) + corner) with axes for
+ * `orientation` (which scrollbar(s) render), `frame` (outer visual frame),
+ * and `viewportPadding` (inner viewport padding).
  *
- * @remarks All visual customization MUST go through `orientation`. `className`
- * applies to the outer root (the visual frame); to style the scrollable inner
- * region use `viewportProps`. `scrollbarProps` is forwarded to every rendered
- * scrollbar (useful for `forceMount`, `hidden`, etc.).
- *
- * Consumers must constrain the root with width/height (Tailwind `h-*`, `w-*`)
- * for scrolling to be meaningful — the wrapper does not impose a default size.
+ * @remarks All visual customization MUST go through variants. Consumers must
+ * constrain the root with width/height by wrapping the component in a sized
+ * container — the wrapper does not impose a default size. `viewportProps` and
+ * `scrollbarProps` are non-styling escape hatches for native attributes (e.g.
+ * `tabIndex`, `forceMount`, `hidden`); they cannot supply `className`.
  *
  * @example
  * ```tsx
- * <ScrollArea className="h-72 w-48 rounded-md border">
- *   <ul className="p-4">…</ul>
- * </ScrollArea>
+ * <div className="h-72 w-48">
+ *   <ScrollArea frame="bordered" viewportPadding="md">
+ *     <ul>…</ul>
+ *   </ScrollArea>
+ * </div>
  *
- * <ScrollArea orientation="horizontal" className="w-96 whitespace-nowrap">
- *   <div className="flex gap-4 p-4">…</div>
+ * <ScrollArea orientation="horizontal" frame="card" viewportPadding="md">
+ *   <div className="flex gap-4 whitespace-nowrap">…</div>
  * </ScrollArea>
  * ```
  */
 export interface ScrollAreaProps
-  extends Omit<RadixScrollAreaProps, 'dir'>,
+  extends Omit<RadixScrollAreaProps, 'dir' | 'className' | 'children'>,
   ScrollAreaVariants {
   /** Reading direction; forwarded to the underlying Radix root. */
   dir?: RadixScrollAreaProps['dir'];
-  /** Escape-hatch props forwarded to the inner viewport (e.g. extra `className`, `tabIndex`). */
-  viewportProps?: Omit<RadixScrollAreaViewportProps, 'children'>;
-  /** Escape-hatch props forwarded to every rendered scrollbar. */
-  scrollbarProps?: Omit<RadixScrollAreaScrollbarProps, 'orientation' | 'children'>;
+  /** Scrollable content. */
+  children?: React.ReactNode;
+  /** Padding applied to the inner viewport. */
+  viewportPadding?: ScrollAreaViewportVariants['padding'];
+  /** Non-styling props forwarded to the inner viewport (e.g. `tabIndex`, ARIA). */
+  viewportProps?: Omit<RadixScrollAreaViewportProps, 'children' | 'className'>;
+  /** Non-styling props forwarded to every rendered scrollbar (e.g. `forceMount`, `hidden`). */
+  scrollbarProps?: Omit<RadixScrollAreaScrollbarProps, 'orientation' | 'children' | 'className'>;
 }
 
 export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
   (
     {
-      className,
       orientation,
+      frame,
+      viewportPadding,
       children,
       viewportProps,
       scrollbarProps,
@@ -77,13 +84,13 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
         ref={ref}
         data-slot="scroll-area"
         data-orientation={resolvedOrientation}
-        className={cn(scrollAreaVariants({ orientation: resolvedOrientation }), className)}
+        className={cn(scrollAreaVariants({ orientation: resolvedOrientation, frame }))}
         {...rest}
       >
         <RadixScrollAreaViewport
           data-slot="scroll-area-viewport"
           {...viewportProps}
-          className={cn(scrollAreaViewportVariants(), viewportProps?.className)}
+          className={cn(scrollAreaViewportVariants({ padding: viewportPadding }))}
         >
           {children}
         </RadixScrollAreaViewport>
@@ -93,10 +100,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
               data-slot="scroll-area-scrollbar"
               orientation="vertical"
               {...scrollbarProps}
-              className={cn(
-                scrollAreaScrollbarVariants({ orientation: 'vertical' }),
-                scrollbarProps?.className,
-              )}
+              className={cn(scrollAreaScrollbarVariants({ orientation: 'vertical' }))}
             >
               <RadixScrollAreaThumb
                 data-slot="scroll-area-thumb"
@@ -111,10 +115,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
               data-slot="scroll-area-scrollbar"
               orientation="horizontal"
               {...scrollbarProps}
-              className={cn(
-                scrollAreaScrollbarVariants({ orientation: 'horizontal' }),
-                scrollbarProps?.className,
-              )}
+              className={cn(scrollAreaScrollbarVariants({ orientation: 'horizontal' }))}
             >
               <RadixScrollAreaThumb
                 data-slot="scroll-area-thumb"
