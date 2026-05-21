@@ -21,9 +21,8 @@ import { Card } from '@open-tomato/ui-skeleton';
 | description | `ReactNode`                                     | —           |
 | footer      | `ReactNode`                                     | —           |
 | children    | `ReactNode` (rendered in the content slot)      | —           |
-| className   | `string` (discouraged escape hatch)             | —           |
 
-All other props are forwarded to the underlying `<div>` root.
+All other props (apart from `className`) are forwarded to the underlying `<div>` root.
 
 ## Variants
 
@@ -59,9 +58,12 @@ and testing. Sections expose `data-slot="card-header" | "card-title" |
 
 ## Do / Don't
 
-- DO use `variant` and `padding` to tune appearance. DON'T pass arbitrary
-  `className` to override the surface, border, or spacing.
+- DO use `variant` and `padding` to tune appearance. If a knob is missing,
+  add a variant axis — there is no `className` escape hatch on the root or
+  on any inner section.
 - DO use `title` / `description` for simple cards and the `header` slot for
   cards that need actions or custom heading levels.
+- DO compose with parent wrappers for sizing and positioning concerns that
+  the variant axes don't cover.
 - DON'T mix the `header` slot with `title` / `description` — `header`
   replaces the default header layout when present.

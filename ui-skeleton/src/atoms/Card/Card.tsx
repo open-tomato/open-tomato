@@ -19,8 +19,10 @@ import {
  * (root + header + title + description + content + footer) into one
  * slot-based component.
  *
- * @remarks All visual customization MUST go through `variant` and `padding`.
- * `className` is an escape hatch only and is discouraged in this design system.
+ * @remarks All visual customization is controlled exclusively through
+ * `variant` and `padding`. There is no `className` escape hatch — neither on
+ * the root nor on any inner section — and if a knob is missing, add a variant
+ * axis instead of opening one.
  *
  * Sections render conditionally: the header section is emitted when `header`,
  * `title`, or `description` is set; the footer section is emitted when `footer`
@@ -39,7 +41,7 @@ import {
  * ```
  */
 export interface CardProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'className'>,
   CardVariants {
   /**
    * Custom header content. When set, replaces the default
@@ -57,7 +59,6 @@ export interface CardProps
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
     {
-      className,
       variant,
       padding,
       header,
@@ -81,10 +82,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         data-variant={resolvedVariant}
         data-padding={resolvedPadding}
-        className={cn(
-          cardVariants({ variant: resolvedVariant, padding: resolvedPadding }),
-          className,
-        )}
+        className={cn(cardVariants({ variant: resolvedVariant, padding: resolvedPadding }))}
         {...rest}
       >
         {hasHeader

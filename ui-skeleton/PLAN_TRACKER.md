@@ -64,8 +64,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 - [x] Refactor [`src/atoms/Kbd/`](./src/atoms/Kbd/) per A1 recipe
 - [x] Refactor [`src/atoms/Checkbox/`](./src/atoms/Checkbox/) per A1 recipe
 - [x] Refactor [`src/atoms/Slider/`](./src/atoms/Slider/) per A1 recipe
-- [ ] Refactor [`src/atoms/Progress/`](./src/atoms/Progress/) per A1 recipe
-- [ ] Refactor [`src/atoms/Card/`](./src/atoms/Card/) per A1 recipe (multi-part internally, but no per-part className exposed)
+- [x] Refactor [`src/atoms/Progress/`](./src/atoms/Progress/) per A1 recipe
+- [x] Refactor [`src/atoms/Card/`](./src/atoms/Card/) per A1 recipe (multi-part internally, but no per-part className exposed)
 
 ```text
 # Stage: Atom className refactor — wrapper-frame atoms (A2 recipe)
