@@ -19,10 +19,10 @@ import { Progress } from '@open-tomato/ui-skeleton';
 | value         | `number \| null \| undefined`                                | —           |
 | max           | `number`                                                     | `100`       |
 | getValueLabel | `(value: number, max: number) => string`                     | —           |
-| className     | `string` (discouraged escape hatch)                          | —           |
 
 All other props are forwarded to the underlying Radix Progress root (which
-renders the track `<div role="progressbar">`).
+renders the track `<div role="progressbar">`). `className` is not a public
+prop — styling is controlled exclusively through `variant` and `size`.
 
 ## Variants
 
@@ -66,11 +66,14 @@ land without breaking the public variant API.
 ## Do / Don't
 
 - DO use `variant` to communicate the state (in-flight, success, warning,
-  failure). DON'T override the indicator color via `className`.
+  failure). If a knob isn't covered, add a variant axis rather than reaching
+  for a class override — styling is the atom's responsibility.
+- DO compose with a parent wrapper for layout, sizing, or alignment concerns
+  that live outside the bar itself.
 - DO pass a `value` between `0` and `max`. DON'T pass `NaN` or strings — the
   wrapper assumes a finite number.
 - DO supply an `aria-label` (or `aria-labelledby`) so the bar has an
   accessible name. DON'T rely on surrounding text alone.
-- DO use `value={null}` for indeterminate progress. DON'T animate the
-  indicator manually with `className` — wrap the bar in your own status
-  region instead.
+- DO use `value={null}` for indeterminate progress and wrap the bar in your
+  own status region — this wrapper does not render an animated indeterminate
+  state.

@@ -19,7 +19,8 @@ type RadixProgressProps = React.ComponentPropsWithoutRef<typeof RadixProgress>;
  * (root + indicator) with design-system `variant` and `size` axes.
  *
  * @remarks All visual customization MUST go through `variant` and `size`.
- * `className` is an escape hatch only and is discouraged in this design system.
+ * Styling is the atom's responsibility — if a knob isn't covered, add a
+ * variant axis instead of reaching for a class override.
  *
  * Pass `value` (0–`max`, defaults to `max=100`) to drive the indicator width.
  * When `value` is `null` or `undefined`, the underlying Radix primitive treats
@@ -33,12 +34,11 @@ type RadixProgressProps = React.ComponentPropsWithoutRef<typeof RadixProgress>;
  * <Progress value={null} aria-label="Loading" />
  * ```
  */
-export interface ProgressProps extends RadixProgressProps, ProgressVariants {}
+export interface ProgressProps extends Omit<RadixProgressProps, 'className'>, ProgressVariants {}
 
 export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
   (
     {
-      className,
       variant,
       size,
       value,
@@ -65,7 +65,7 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
         max={resolvedMax}
         data-variant={resolvedVariant}
         data-size={resolvedSize}
-        className={cn(progressVariants({ variant: resolvedVariant, size: resolvedSize }), className)}
+        className={cn(progressVariants({ variant: resolvedVariant, size: resolvedSize }))}
         {...rest}
       >
         <RadixProgressIndicator
