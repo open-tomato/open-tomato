@@ -12,17 +12,18 @@ import { Label } from '@open-tomato/ui-skeleton';
 
 ## Props
 
-| Prop                | Type                                | Default |
-| ------------------- | ----------------------------------- | ------- |
-| size                | `'sm' \| 'md' \| 'lg'`              | `'md'`  |
-| required            | `boolean`                           | `false` |
-| requiredIndicator   | `ReactNode`                         | `'*'`   |
-| htmlFor             | `string`                            | —       |
-| children            | `ReactNode`                         | —       |
-| className           | `string` (discouraged escape hatch) | —       |
+| Prop                | Type                       | Default |
+| ------------------- | -------------------------- | ------- |
+| size                | `'sm' \| 'md' \| 'lg'`     | `'md'`  |
+| required            | `boolean`                  | `false` |
+| requiredIndicator   | `ReactNode`                | `'*'`   |
+| htmlFor             | `string`                   | —       |
+| children            | `ReactNode`                | —       |
 
-All other props are forwarded to the underlying Radix Label root (which
-renders a native `<label>`).
+All other props (except `className`) are forwarded to the underlying Radix
+Label root, which renders a native `<label>`. `className` is intentionally not
+part of the public API — use the `size` variant for typography control and
+wrap the label in a parent container for layout concerns.
 
 ## Variants
 
@@ -57,8 +58,9 @@ testing hooks.
 
 ## Do / Don't
 
-- DO use `size` to tune typography. DON'T pass arbitrary `className` to
-  override font, weight, or color.
+- DO use the `size` variant to tune typography. DO wrap the label in a parent
+  container (`<div className="flex flex-col gap-1.5">`) for layout — the label
+  itself does not own positioning.
 - DO pair `required` on the Label with `required` (or `aria-required`) on the
   associated form control. DON'T rely on the asterisk alone — screen readers
   will not announce the visual marker.

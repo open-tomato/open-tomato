@@ -14,8 +14,9 @@ type RadixLabelProps = React.ComponentPropsWithoutRef<typeof RadixLabel>;
 /**
  * Label — single encapsulated wrapper over Radix `@radix-ui/react-label`.
  *
- * @remarks All visual customization MUST go through the `size` variant.
- * `className` is an escape hatch only and is discouraged in this design system.
+ * @remarks All visual customization is controlled exclusively through the
+ * `size` variant. There is no `className` escape hatch — if a knob is missing,
+ * add a variant axis instead.
  *
  * When `required` is `true`, the wrapper renders a visual indicator
  * (`*` by default) after the children with `aria-hidden` set. The marker is
@@ -35,7 +36,7 @@ type RadixLabelProps = React.ComponentPropsWithoutRef<typeof RadixLabel>;
  * </Label>
  * ```
  */
-export interface LabelProps extends RadixLabelProps, LabelVariants {
+export interface LabelProps extends Omit<RadixLabelProps, 'className'>, LabelVariants {
   /**
    * Override the required indicator content. Defaults to `*`. Rendered with
    * `aria-hidden` so it does not pollute the accessible name; ensure the
@@ -47,7 +48,6 @@ export interface LabelProps extends RadixLabelProps, LabelVariants {
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
   (
     {
-      className,
       size,
       required,
       requiredIndicator,
@@ -66,10 +66,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
         data-required={isRequired
           ? ''
           : undefined}
-        className={cn(
-          labelVariants({ size: resolvedSize, required: isRequired }),
-          className,
-        )}
+        className={cn(labelVariants({ size: resolvedSize, required: isRequired }))}
         {...rest}
       >
         {children}

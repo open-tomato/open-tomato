@@ -56,8 +56,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 - [x] Refactor [`src/atoms/Badge/`](./src/atoms/Badge/) per A1 recipe (component, tests, story, README)
 - [x] Refactor [`src/atoms/Toggle/`](./src/atoms/Toggle/) per A1 recipe
 - [x] Refactor [`src/atoms/Avatar/`](./src/atoms/Avatar/) per A1 recipe
-- [ ] Refactor [`src/atoms/AspectRatio/`](./src/atoms/AspectRatio/) per A1 recipe
-- [ ] Refactor [`src/atoms/Label/`](./src/atoms/Label/) per A1 recipe
+- [x] Refactor [`src/atoms/AspectRatio/`](./src/atoms/AspectRatio/) per A1 recipe
+- [x] Refactor [`src/atoms/Label/`](./src/atoms/Label/) per A1 recipe
 - [ ] Refactor [`src/atoms/Separator/`](./src/atoms/Separator/) per A1 recipe
 - [ ] Refactor [`src/atoms/Spinner/`](./src/atoms/Spinner/) per A1 recipe
 - [ ] Refactor [`src/atoms/Typography/`](./src/atoms/Typography/) per A1 recipe
