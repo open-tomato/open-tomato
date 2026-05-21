@@ -4,3 +4,4 @@ export * from './tokens';
 export * from './animations';
 export * from './shadows';
 export * from './mixins';
+export * from './wrapper-frame.variants';
