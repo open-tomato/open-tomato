@@ -24,7 +24,6 @@ import { Checkbox } from '@open-tomato/ui-skeleton';
 | name              | `string`                                                      | —       |
 | value             | `string`                                                      | —       |
 | id                | `string` (auto-generated when `label` is set and `id` omitted) | —       |
-| className         | `string` (discouraged escape hatch)                           | —       |
 
 All other props are forwarded to the underlying Radix Checkbox root.
 
@@ -59,8 +58,11 @@ that exposes `data-slot="checkbox-root"`; the label element exposes
 
 ## Do / Don't
 
-- DO use `size` to tune appearance. DON'T pass arbitrary `className` to
-  override sizing, border, or color.
+- DO use `size` to tune appearance. If a knob isn't covered, add a variant
+  axis rather than reaching for a class override — styling is the atom's
+  responsibility, not the consumer's.
+- DO compose with a parent wrapper for layout, spacing, or alignment
+  concerns that live outside the checkbox itself.
 - DO use the `label` prop for the common checkbox + label pair. DON'T omit
   both `label` and `aria-label[ledby]` — the checkbox still needs an
   accessible name.

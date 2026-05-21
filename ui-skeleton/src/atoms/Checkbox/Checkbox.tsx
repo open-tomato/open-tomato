@@ -23,7 +23,6 @@ type RadixCheckboxProps = React.ComponentPropsWithoutRef<typeof RadixCheckbox>;
  * (root + indicator) with an optional inline label slot.
  *
  * @remarks All visual customization MUST go through the `size` variant.
- * `className` is an escape hatch only and is discouraged in this design system.
  *
  * When `label` is provided, the wrapper renders the checkbox alongside a
  * `<label>` linked via auto-generated `id` / `htmlFor`. Supports both
@@ -38,7 +37,7 @@ type RadixCheckboxProps = React.ComponentPropsWithoutRef<typeof RadixCheckbox>;
  * ```
  */
 export interface CheckboxProps
-  extends Omit<RadixCheckboxProps, 'children'>,
+  extends Omit<RadixCheckboxProps, 'children' | 'className'>,
   CheckboxVariants {
   /**
    * Optional inline label. When provided, the wrapper renders the checkbox
@@ -52,7 +51,6 @@ export interface CheckboxProps
 export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
   (
     {
-      className,
       size,
       label,
       id,
@@ -71,7 +69,7 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
         ref={ref}
         id={resolvedId}
         data-size={resolvedSize}
-        className={cn(checkboxVariants({ size: resolvedSize }), className)}
+        className={cn(checkboxVariants({ size: resolvedSize }))}
         {...rest}
       >
         <RadixCheckboxIndicator className={cn(checkboxIndicatorVariants())}>
