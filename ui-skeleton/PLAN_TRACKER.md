@@ -171,13 +171,13 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 - [x] Create [`src/molecules/Collapsible/`](./src/molecules/Collapsible/) per Section D #3
 - [x] Create [`src/molecules/Switch/`](./src/molecules/Switch/) per Section D #12 (inline-label pattern)
 - [x] Create [`src/molecules/RadioGroup/`](./src/molecules/RadioGroup/) per Section D #10 (`React.useId()` for label/item pairing)
-- [ ] Create [`src/molecules/ToggleGroup/`](./src/molecules/ToggleGroup/) per Section D #14 (composes Toggle atom via `asChild`)
+- [x] Create [`src/molecules/ToggleGroup/`](./src/molecules/ToggleGroup/) per Section D #14 (composes Toggle atom via `asChild`)
 
 ```text
 # Stage: Remaining molecules — portal-based
 ```
 
-- [ ] Create [`src/molecules/Popover/`](./src/molecules/Popover/) per Section D #9 (`trigger` slot prop, portal)
+- [x] Create [`src/molecules/Popover/`](./src/molecules/Popover/) per Section D #9 (`trigger` slot prop, portal)
 - [ ] Create [`src/molecules/Tooltip/`](./src/molecules/Tooltip/) per Section D #15 (internal `RadixTooltip.Provider`, `delayDuration={300}` default)
 - [ ] Create [`src/molecules/HoverCard/`](./src/molecules/HoverCard/) per Section D #5
 - [ ] Create [`src/molecules/ContextMenu/`](./src/molecules/ContextMenu/) per Section D #4 (discriminated `items` union)
