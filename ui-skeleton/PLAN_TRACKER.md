@@ -116,8 +116,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Molecule infrastructure — ESLint layer guard
 ```
 
-- [ ] Add `no-restricted-imports` rule for `src/molecules/**` and `src/atoms/**` in [`eslint.config.mjs`](./eslint.config.mjs) per Technical context Section C3
-- [ ] Verify the rule fires by adding a temporary molecule-imports-molecule case and confirming `bun run lint` reports it, then revert
+- [x] Add `no-restricted-imports` rule for `src/molecules/**` and `src/atoms/**` in [`eslint.config.mjs`](./eslint.config.mjs) per Technical context Section C3
+- [x] Verify the rule fires by adding a temporary molecule-imports-molecule case and confirming `bun run lint` reports it, then revert
 
 ```text
 # Stage: Molecule infrastructure — npm dependencies

@@ -43,6 +43,7 @@
 - ESM `.config.{ts,js,mjs}` files don't get `__dirname`; use `import.meta.dirname` (Node 20.11+, Bun-supported).
 - jsdom does not implement `ResizeObserver`. Any Radix primitive that observes size throws at render without the polyfill in `vitest.setup.ts`.
 - The shared `@open-tomato/eslint-config` base ignores `dist/**`, `build/**`, `node_modules/**` but NOT `storybook-static/**`. The package's local `eslint.config.mjs` now spreads the base config and appends `{ ignores: ['storybook-static/**'] }` so `bun run lint` stays clean after `bun run build-storybook`. If you add a sibling package, extend its eslint config the same way (`export default [...baseConfig, { ignores: ['storybook-static/**'] }]`) instead of relying on `--ignore-pattern` flags or deleting build output.
+- `no-restricted-imports` matches purely on the import-path string — the target does NOT need to resolve to a real file. To verify a new layer-import guard, drop a temp file under the guarded directory that imports a non-existent path (e.g. `import type { Foo } from '@/molecules/X'`) and run `bun run lint`; the guard fires before any unresolved-import rule complains. Useful when introducing organism/template/page guards before those layers have code.
 
 ## Useful locations
 - `src/particles/cn.ts` — sole class-merging utility.
