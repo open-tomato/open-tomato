@@ -1,0 +1,60 @@
+# Progress findings — broadly applicable to future tasks
+
+## Canonical references
+- `src/atoms/Button/` is the canonical reference for atom shape (file layout, TSDoc, variants, tests, stories, README). Open it before authoring or refactoring any atom.
+- Phase 2 designates `src/molecules/Alert/` as the canonical reference for the molecule layer (composed via Card + Typography atoms).
+
+## Layout conventions
+- Path alias `@/...` resolves to `src/...`. Never use deep relative paths like `../../particles/cn`. Sibling imports within an atom/molecule dir use `./<name>`.
+- Six files per atom OR molecule (no exceptions): `<Component>.tsx`, `<component>.variants.ts`, `<Component>.test.tsx`, `<Component>.stories.tsx`, `README.md`, `index.ts`.
+- Barrel `index.ts` files are two-line `export * from './<X>'` — no side effects, no default exports anywhere under `src/atoms/` or `src/molecules/`.
+
+## Cardinal rules
+- Atoms and molecules MUST NOT accept public `className`. The fix is `Omit<..., 'className'>` on the HTMLAttributes-derived props interface AND no consumer string in `cn(...)`. Without `Omit`, `className` is inherited and leaks to DOM via `{...rest}`.
+- Variants are the only public styling surface. If a knob isn't covered, add a variant axis — don't open an escape hatch.
+- Molecules import atoms + particles only; never other molecules or upward layers (organisms/templates/pages/providers). Atoms import particles only.
+- Use `React.forwardRef` with named exports; set `displayName` immediately after.
+
+## Skill index (load on demand)
+- `skills/atom-authoring/SKILL.md` — six-file layout, naming, per-atom procedure, className rule.
+- `skills/molecule-authoring/SKILL.md` — (added in Phase 2) molecule six-file convention, composition rule, slot props, trigger pattern.
+- `skills/styling/SKILL.md` — Tailwind v4 setup, `@theme` tokens, palette.
+- `skills/cva-variants/SKILL.md` — CVA variant maps, polymorphism, `Omit<..., 'size'>` trap.
+- `skills/radix-wrappers/SKILL.md` — Slot/Slottable, multi-thumb role pattern, inline-label.
+- `skills/component-testing/SKILL.md` — Vitest, jsdom polyfills, `ResizeObserver`, `bun test` vs `bun run test`.
+- `skills/accessibility/SKILL.md` — ARIA, alt, decorative markers, label patterns.
+- `skills/build-tooling/SKILL.md` — Bun, Vite library mode, ESLint, TS, monorepo.
+- `skills/storybook/SKILL.md` — Storybook 8 setup, manifest, headless verification.
+- `skills/shadcn-integration/SKILL.md` — registry.json, shadcn CLI, dependency translation.
+
+## Verification chain (always run after a change)
+- `bun run check-types && bun run test && bun run lint` — all three must pass.
+- Coverage thresholds: 80% lines / 80% statements / 75% branches / 80% functions (package-wide, not per-file).
+- Sanity: `bun run build && bun run build-storybook`.
+
+## Gotchas
+- `bun test <path>` is Bun's built-in runner, NOT Vitest. Use `bun run test` or `bunx vitest run` so jsdom + `vitest.setup.ts` (incl. ResizeObserver polyfill) load.
+- `bun run lint` is auto-mutating (`eslint --fix`), not check-only.
+- Tailwind v4 silently drops utility classes that reference undeclared `@theme` tokens — no build warning. Verify every `bg-*`/`text-*`/`border-*` has a matching `--color-*` in `src/styles/globals.css`.
+- `<input>`/`<textarea>`/`<select>` carry a native numeric `size` attribute. Variant interfaces extending `*HTMLAttributes` MUST `Omit<..., 'size'>` to allow categorical `'sm' | 'md' | 'lg'`.
+- Multi-thumb Radix primitives (Slider) put `role="slider"` on the THUMB, not the Root. Forward `aria-label` per thumb.
+- Radix `Slot` + multiple children throws at runtime when `asChild=true`. Wrap the main child in `<Slottable>` so icon siblings coexist.
+- ESM `.config.{ts,js,mjs}` files don't get `__dirname`; use `import.meta.dirname` (Node 20.11+, Bun-supported).
+- jsdom does not implement `ResizeObserver`. Any Radix primitive that observes size throws at render without the polyfill in `vitest.setup.ts`.
+
+## Useful locations
+- `src/particles/cn.ts` — sole class-merging utility.
+- `src/particles/index.ts` — particle barrel; new particles (e.g. `wrapper-frame.variants.ts`) are added here.
+- `src/styles/globals.css` — Tailwind v4 entry + `@theme` tokens.
+- `vitest.setup.ts` — registers `@testing-library/jest-dom/vitest` matchers and the `ResizeObserver` polyfill.
+- `registry.json` — internal shadcn registry; every atom/molecule appears in `items[]` with kebab-case name, `type: registry:ui`, files, `registryDependencies`. Internal `@/atoms/*` imports are NOT registry deps.
+- `NEXT-ITERATIONS.md` — backlog; delete entries when resolved and update relevant skill + AGENTS.md if cardinal rules shift.
+
+## Markdown / ESLint constraints
+- Per-component READMEs: single H1, H2 top-level, H3 nested — no skipped heading levels (`markdown/heading-increment` fails lint).
+- Every fenced code block needs a language tag (`text`, `bash`, `tsx`, `ts`, `css`).
+- Single quotes in `.ts` / `.tsx`.
+
+## Package status (Phase 1 → 2)
+- Package is standalone this iteration — NOT in root `packages/package.json` workspaces. `devDependencies` use `file:../shared/<name>` links, not `workspace:^`. Do not "fix" without coordinating a workspace rewrite.
+- `registry.json` is internal-only — never publish; `"homepage": "internal"` signals intent.
