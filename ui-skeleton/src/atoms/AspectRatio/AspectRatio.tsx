@@ -14,8 +14,9 @@ type RadixAspectRatioProps = React.ComponentPropsWithoutRef<typeof RadixAspectRa
 /**
  * AspectRatio — single encapsulated wrapper over Radix AspectRatio.
  *
- * @remarks All visual customization MUST go through the `ratio` variant.
- * `className` is an escape hatch only and is discouraged in this design system.
+ * @remarks All visual customization is controlled exclusively through the
+ * `ratio` variant. There is no `className` escape hatch — if a knob is missing,
+ * add a variant axis instead.
  *
  * @example
  * ```tsx
@@ -25,18 +26,18 @@ type RadixAspectRatioProps = React.ComponentPropsWithoutRef<typeof RadixAspectRa
  * ```
  */
 export interface AspectRatioProps
-  extends Omit<RadixAspectRatioProps, 'ratio'>,
+  extends Omit<RadixAspectRatioProps, 'ratio' | 'className'>,
   AspectRatioVariants {}
 
 export const AspectRatio = React.forwardRef<HTMLDivElement, AspectRatioProps>(
-  ({ className, ratio, ...rest }, ref) => {
+  ({ ratio, ...rest }, ref) => {
     const resolved = ratio ?? 'video';
     return (
       <RadixAspectRatio
         ref={ref}
         ratio={aspectRatioMap[resolved]}
         data-ratio={resolved}
-        className={cn(aspectRatioVariants({ ratio: resolved }), className)}
+        className={cn(aspectRatioVariants({ ratio: resolved }))}
         {...rest}
       />
     );
