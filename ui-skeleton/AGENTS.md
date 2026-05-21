@@ -47,7 +47,7 @@ packages/ui-skeleton/
 │   ├── styles/globals.css      # Tailwind v4 entry + @theme tokens
 │   ├── particles/              # shared helpers: cn, variants, tokens, mixins, shadows, animations
 │   ├── atoms/                  # single-entry wrappers (one directory per atom, 6 files each)
-│   ├── molecules/              # placeholder barrel
+│   ├── molecules/              # 15 molecules, one directory per molecule, 6 files each
 │   ├── organisms/              # placeholder barrel
 │   ├── providers/              # placeholder barrel
 │   ├── templates/              # placeholder barrel
