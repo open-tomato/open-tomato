@@ -13,12 +13,10 @@ import {
  * Input — single encapsulated wrapper that frames a native `<input>` with
  * optional `leadingIcon` / `trailingIcon` slots.
  *
- * @remarks All visual customization MUST go through `variant` and `size`.
- * `className` is an escape hatch only and is discouraged in this design system,
- * and is applied to the visible root frame (a wrapping `<div>`), not the inner
- * `<input>`. All other native input attributes (`name`, `value`,
- * `placeholder`, `disabled`, `aria-*`, etc.) and the forwarded `ref` are
- * applied to the inner `<input>`.
+ * @remarks All visual customization MUST go through the variant axes
+ * (`variant`, `size`, `density`, `tone`). All native input attributes
+ * (`name`, `value`, `placeholder`, `disabled`, `aria-*`, etc.) and the
+ * forwarded `ref` are applied to the inner `<input>`.
  *
  * When `variant="error"`, the inner input automatically receives
  * `aria-invalid="true"` unless the caller passes `aria-invalid` explicitly.
@@ -28,10 +26,11 @@ import {
  * <Input placeholder="Email" />
  * <Input variant="error" defaultValue="bad@" />
  * <Input size="lg" leadingIcon={<MailIcon />} trailingIcon={<CheckIcon />} />
+ * <Input density="compact" tone="subtle" placeholder="Filter" />
  * ```
  */
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'className'>,
   InputVariants {
   /** Optional leading icon node, rendered inside the input frame before the field. */
   leadingIcon?: React.ReactNode;
@@ -42,9 +41,10 @@ export interface InputProps
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
     {
-      className,
       variant,
       size,
+      density,
+      tone,
       leadingIcon,
       trailingIcon,
       type,
@@ -55,6 +55,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const resolvedVariant = variant ?? 'default';
     const resolvedSize = size ?? 'md';
+    const resolvedDensity = density ?? 'comfortable';
+    const resolvedTone = tone ?? 'neutral';
     const resolvedAriaInvalid = ariaInvalid ?? (resolvedVariant === 'error'
       ? true
       : undefined);
@@ -64,10 +66,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         data-slot="input-root"
         data-variant={resolvedVariant}
         data-size={resolvedSize}
-        className={cn(
-          inputVariants({ variant: resolvedVariant, size: resolvedSize }),
-          className,
-        )}
+        data-density={resolvedDensity}
+        data-tone={resolvedTone}
+        className={cn(inputVariants({
+          variant: resolvedVariant,
+          size: resolvedSize,
+          density: resolvedDensity,
+          tone: resolvedTone,
+        }))}
       >
         {leadingIcon !== undefined
           ? (

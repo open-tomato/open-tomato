@@ -71,7 +71,7 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Atom className refactor — wrapper-frame atoms (A2 recipe)
 ```
 
-- [ ] Rewrite [`src/atoms/Input/input.variants.ts`](./src/atoms/Input/input.variants.ts) to consume `wrapperFrameVariants` with added `density` + `tone` axes
+- [x] Rewrite [`src/atoms/Input/input.variants.ts`](./src/atoms/Input/input.variants.ts) to consume `wrapperFrameVariants` with added `density` + `tone` axes
 - [ ] Update [`src/atoms/Input/Input.tsx`](./src/atoms/Input/Input.tsx) to drop `className`, accept the new axes
 - [ ] Update [`src/atoms/Input/Input.test.tsx`](./src/atoms/Input/Input.test.tsx) (drop className assertions, add density/tone propagation assertions)
 - [ ] Update [`src/atoms/Input/Input.stories.tsx`](./src/atoms/Input/Input.stories.tsx) (drop className argType, add density/tone argTypes and matrix story)
