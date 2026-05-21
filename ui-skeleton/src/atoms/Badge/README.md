@@ -15,9 +15,8 @@ import { Badge } from '@open-tomato/ui-skeleton';
 | variant   | `'primary' \| 'secondary' \| 'outline' \| 'destructive'`     | `'primary'` |
 | size      | `'sm' \| 'md' \| 'lg'`                                       | `'md'`      |
 | children  | `ReactNode`                                                  | —           |
-| className | `string` (discouraged escape hatch)                          | —           |
 
-All other props are forwarded to the underlying `<span>`.
+All other span props (except `className`) are forwarded to the underlying `<span>`. `className` is not part of the public API — styling is controlled exclusively through `variant` and `size`.
 
 ## Variants
 
@@ -45,6 +44,7 @@ The resolved variants are reflected on the rendered element as `data-variant="<n
 
 ## Do / Don't
 
-- DO use `variant` and `size` for visual tuning. DON'T pass arbitrary `className` to override colors or dimensions.
+- DO use `variant` and `size` for visual tuning. If a knob is missing, add a variant axis — Badge has no `className` escape hatch.
+- DO compose Badge inside parent wrappers that handle layout (spacing, positioning, alignment). The badge itself does not own its own positioning context.
 - DO keep badge content short (a word, an icon, a single-digit count). Multi-line content breaks the inline rhythm.
 - DON'T use Badge as a clickable element — wrap it in a `<button>` or `<a>` instead so the interaction has correct semantics.
