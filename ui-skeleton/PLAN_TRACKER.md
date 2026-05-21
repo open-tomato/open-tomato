@@ -123,8 +123,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Molecule infrastructure — npm dependencies
 ```
 
-- [ ] Add 10 new dependencies to [`package.json`](./package.json) `dependencies`: `@radix-ui/react-collapsible`, `@radix-ui/react-context-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-popover`, `@radix-ui/react-radio-group`, `@radix-ui/react-select`, `@radix-ui/react-switch`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `input-otp`
-- [ ] Run `bun install` and confirm clean resolution
+- [x] Add 10 new dependencies to [`package.json`](./package.json) `dependencies`: `@radix-ui/react-collapsible`, `@radix-ui/react-context-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-popover`, `@radix-ui/react-radio-group`, `@radix-ui/react-select`, `@radix-ui/react-switch`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `input-otp`
+- [x] Run `bun install` and confirm clean resolution
 
 ```text
 # Stage: Molecule canonical reference — Alert
