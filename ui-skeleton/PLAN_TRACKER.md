@@ -178,8 +178,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 ```
 
 - [x] Create [`src/molecules/Popover/`](./src/molecules/Popover/) per Section D #9 (`trigger` slot prop, portal)
-- [ ] Create [`src/molecules/Tooltip/`](./src/molecules/Tooltip/) per Section D #15 (internal `RadixTooltip.Provider`, `delayDuration={300}` default)
-- [ ] Create [`src/molecules/HoverCard/`](./src/molecules/HoverCard/) per Section D #5
+- [x] Create [`src/molecules/Tooltip/`](./src/molecules/Tooltip/) per Section D #15 (internal `RadixTooltip.Provider`, `delayDuration={300}` default)
+- [x] Create [`src/molecules/HoverCard/`](./src/molecules/HoverCard/) per Section D #5
 - [ ] Create [`src/molecules/ContextMenu/`](./src/molecules/ContextMenu/) per Section D #4 (discriminated `items` union)
 - [ ] Create [`src/molecules/Select/`](./src/molecules/Select/) per Section D #11 (wrapper-frame particle for trigger)
 
