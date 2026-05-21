@@ -8,12 +8,12 @@ import { kbdVariants, type KbdVariants } from './kbd.variants';
  * Kbd — pure CVA wrapper rendered as a `<kbd>` element for displaying
  * keyboard shortcuts and key bindings inline with text.
  *
- * @remarks All visual customization MUST go through `variant` and `size`.
- * `className` is an escape hatch only and is discouraged in this design system.
- * Kbd has no underlying Radix primitive — the rendered element is a native
- * `<kbd>` so screen readers announce it with the correct semantics. Compose
- * multiple Kbd instances (separated by literal `+` text) to render chord
- * shortcuts like `Cmd + K`.
+ * @remarks All visual customization is controlled exclusively through
+ * `variant` and `size`. There is no `className` escape hatch — if a knob is
+ * missing, add a variant axis instead. Kbd has no underlying Radix primitive —
+ * the rendered element is a native `<kbd>` so screen readers announce it with
+ * the correct semantics. Compose multiple Kbd instances (separated by literal
+ * `+` text) to render chord shortcuts like `Cmd + K`.
  *
  * @example
  * ```tsx
@@ -23,11 +23,11 @@ import { kbdVariants, type KbdVariants } from './kbd.variants';
  * ```
  */
 export interface KbdProps
-  extends Omit<React.HTMLAttributes<HTMLElement>, 'color'>,
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'color' | 'className'>,
   KbdVariants {}
 
 export const Kbd = React.forwardRef<HTMLElement, KbdProps>(
-  ({ className, variant, size, ...rest }, ref) => {
+  ({ variant, size, ...rest }, ref) => {
     const resolvedVariant = variant ?? 'outline';
     const resolvedSize = size ?? 'md';
 
@@ -37,7 +37,7 @@ export const Kbd = React.forwardRef<HTMLElement, KbdProps>(
         data-slot="kbd"
         data-variant={resolvedVariant}
         data-size={resolvedSize}
-        className={cn(kbdVariants({ variant: resolvedVariant, size: resolvedSize }), className)}
+        className={cn(kbdVariants({ variant: resolvedVariant, size: resolvedSize }))}
         {...rest}
       />
     );

@@ -10,14 +10,13 @@ import { Kbd } from '@open-tomato/ui-skeleton';
 
 ## Props
 
-| Prop      | Type                                 | Default     |
-| --------- | ------------------------------------ | ----------- |
-| variant   | `'outline' \| 'solid' \| 'ghost'`    | `'outline'` |
-| size      | `'sm' \| 'md' \| 'lg'`               | `'md'`      |
-| children  | `ReactNode`                          | —           |
-| className | `string` (discouraged escape hatch)  | —           |
+| Prop     | Type                              | Default     |
+| -------- | --------------------------------- | ----------- |
+| variant  | `'outline' \| 'solid' \| 'ghost'` | `'outline'` |
+| size     | `'sm' \| 'md' \| 'lg'`            | `'md'`      |
+| children | `ReactNode`                       | —           |
 
-All other props are forwarded to the underlying `<kbd>`.
+All other props (apart from `className`) are forwarded to the underlying `<kbd>`.
 
 ## Variants
 
@@ -44,7 +43,8 @@ The resolved variants are reflected on the rendered element as `data-slot="kbd"`
 
 ## Do / Don't
 
-- DO use `variant` and `size` for visual tuning. DON'T pass arbitrary `className` to override colors or dimensions.
+- DO use `variant` and `size` for visual tuning. If a knob is missing, add a variant axis — there is no `className` escape hatch.
 - DO keep content short — a single key name, symbol (`⌘`, `⇧`), or modifier abbreviation. Multi-word content breaks the inline rhythm.
 - DO compose chords as multiple `<Kbd>` instances with literal `+` between them. DON'T put `+` inside a single `<Kbd>`.
+- DO wrap Kbd in a parent element when sizing/positioning constraints matter — Kbd renders inline by design.
 - DON'T use Kbd as a clickable element — wrap it in a `<button>` or attach handlers to the surrounding label instead so the interaction has correct semantics.
