@@ -153,8 +153,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 - [x] Add cardinal rule #11 enforcing layer-import direction (molecules import atoms + particles only)
 - [x] Add `molecule-authoring` row to the skill-index table
 - [x] Update "Where things live" tree to remove the `# placeholder barrel` comment on `molecules/`
-- [ ] Add "Adding a new molecule" subsection under "Day-to-day workflow"
-- [ ] Add molecule-specific pitfalls (portal testing via `findByRole`, `trigger` slot typing, ESLint layer guard, Tooltip Provider semantics)
+- [x] Add "Adding a new molecule" subsection under "Day-to-day workflow"
+- [x] Add molecule-specific pitfalls (portal testing via `findByRole`, `trigger` slot typing, ESLint layer guard, Tooltip Provider semantics)
 
 ```text
 # Stage: Remaining molecules — stateless composition
