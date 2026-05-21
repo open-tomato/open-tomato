@@ -21,9 +21,8 @@ import { Button } from '@open-tomato/ui-skeleton';
 | disabled      | `boolean`                                                                  | `false`     |
 | type          | `'button' \| 'submit' \| 'reset'`                                          | `'button'`  |
 | children      | `ReactNode`                                                                | —           |
-| className     | `string` (discouraged escape hatch)                                        | —           |
 
-All other props are forwarded to the underlying element (a `<button>`, or the single child element when `asChild` is `true`).
+All other props are forwarded to the underlying element (a `<button>`, or the single child element when `asChild` is `true`). `className` is not a public prop — styling is controlled exclusively through `variant` and `size`.
 
 ## Variants
 
@@ -54,7 +53,7 @@ The resolved variants are reflected on the rendered element as `data-variant="<n
 
 ## Do / Don't
 
-- DO tune visuals through `variant` and `size`. DON'T pass arbitrary `className` to override colors or dimensions.
+- DO tune visuals through `variant` and `size`. DO compose with a parent wrapper for sizing or positioning concerns (margins, grid placement) — the wrapper is the right surface for layout, not the Button.
 - DO use `asChild` with `<a>` / `<Link>` to keep semantics correct when the button is a navigation. DON'T pass multiple children when `asChild` is `true`; provide a single child element.
 - DO pass `aria-label` for `size="icon"` buttons. DON'T rely on a glyph alone for meaning.
 - DO use `loading` for async actions (saving, submitting). DON'T also set `disabled` manually — `loading` already disables interaction.

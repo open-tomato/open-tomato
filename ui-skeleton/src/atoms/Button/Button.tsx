@@ -9,10 +9,11 @@ import { buttonVariants, type ButtonVariants } from './button.variants';
  * Button — single encapsulated wrapper over a native `<button>` (or any
  * element via `asChild`) driven by design-system `variant` and `size`.
  *
- * @remarks All visual customization MUST go through `variant` and `size`.
- * `className` is an escape hatch only and is discouraged in this design system.
+ * @remarks All visual customization is controlled exclusively through
+ * `variant` and `size`. There is no `className` escape hatch — if a knob is
+ * missing, add a variant axis instead.
  *
- * When `asChild` is `true`, props (className, variants, `data-*`) are merged
+ * When `asChild` is `true`, props (variants, `data-*`, ARIA, ref) are merged
  * onto the single child element via Radix `Slot`. `Slottable` is used
  * internally so `leadingIcon` / `trailingIcon` continue to render around the
  * merged child without violating `Slot`'s single-child requirement.
@@ -28,7 +29,7 @@ import { buttonVariants, type ButtonVariants } from './button.variants';
  * ```
  */
 export interface ButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'color'>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'color' | 'className'>,
   ButtonVariants {
   /** Render as child element (Radix Slot) for composition with `<a>`, Next `<Link>`, etc. Requires a single child. */
   asChild?: boolean;
@@ -43,7 +44,6 @@ export interface ButtonProps
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      className,
       variant,
       size,
       asChild,
@@ -78,7 +78,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         type={asChild
           ? undefined
           : (type ?? 'button')}
-        className={cn(buttonVariants({ variant: resolvedVariant, size: resolvedSize }), className)}
+        className={cn(buttonVariants({ variant: resolvedVariant, size: resolvedSize }))}
         {...rest}
       >
         {leadingIcon}

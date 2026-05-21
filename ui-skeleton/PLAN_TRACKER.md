@@ -46,13 +46,13 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 
 - [x] Create `src/particles/wrapper-frame.variants.ts` exporting `wrapperFrameVariants` (cva) and `WrapperFrameVariants` type with `variant`, `size`, `density`, `tone` axes per the Technical context Section A2
 - [x] Add wrapper-frame particle export to [`src/particles/index.ts`](./src/particles/index.ts)
-- [ ] Add unit tests for the particle under `src/particles/__tests__/wrapper-frame.variants.test.ts`
+- [x] Add unit tests for the particle under `src/particles/__tests__/wrapper-frame.variants.test.ts`
 
 ```text
 # Stage: Atom className refactor — simple atoms (A1 recipe)
 ```
 
-- [ ] Refactor [`src/atoms/Button/Button.tsx`](./src/atoms/Button/Button.tsx) per A1 recipe, update `Button.test.tsx`, `Button.stories.tsx`, `README.md`
+- [x] Refactor [`src/atoms/Button/Button.tsx`](./src/atoms/Button/Button.tsx) per A1 recipe, update `Button.test.tsx`, `Button.stories.tsx`, `README.md`
 - [ ] Refactor [`src/atoms/Badge/`](./src/atoms/Badge/) per A1 recipe (component, tests, story, README)
 - [ ] Refactor [`src/atoms/Toggle/`](./src/atoms/Toggle/) per A1 recipe
 - [ ] Refactor [`src/atoms/Avatar/`](./src/atoms/Avatar/) per A1 recipe
