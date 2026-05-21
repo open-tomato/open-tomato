@@ -1,28 +1,31 @@
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
 
-export const inputVariants = cva(
-  'flex w-full items-center gap-2 rounded-md border bg-background text-sm '
-  + 'transition-colors '
-  + 'focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 '
-  + 'has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-50',
-  {
-    variants: {
-      variant: {
-        default: 'border-input focus-within:ring-ring',
-        error: 'border-destructive focus-within:ring-destructive',
-        success: 'border-emerald-500 focus-within:ring-emerald-500',
-      },
-      size: {
-        sm: 'h-8 px-2.5 text-xs',
-        md: 'h-9 px-3 text-sm',
-        lg: 'h-10 px-3.5 text-base',
-      },
-    },
-    defaultVariants: { variant: 'default', size: 'md' },
-  },
+import { cn } from '@/particles/cn';
+import {
+  wrapperFrameVariants,
+  type WrapperFrameVariants,
+} from '@/particles/wrapper-frame.variants';
+
+/**
+ * Input frame variants. Consumes the shared `wrapperFrameVariants` particle so
+ * Input stays visually aligned with Textarea / NativeSelect / Select, and
+ * layers on the Input-specific `<input>`-disabled handling.
+ *
+ * Axes are inherited from `wrapperFrameVariants`:
+ * - `variant`  — validation intent (default | error | success).
+ * - `size`     — overall scale (sm | md | lg).
+ * - `density`  — vertical compression (comfortable | compact).
+ * - `tone`     — surface treatment (neutral | subtle | inverted).
+ */
+export type InputVariants = WrapperFrameVariants;
+
+const inputDisabledClasses
+  = 'has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-50';
+
+export const inputVariants = (props?: InputVariants): string => cn(
+  wrapperFrameVariants(props),
+  inputDisabledClasses,
 );
-
-export type InputVariants = VariantProps<typeof inputVariants>;
 
 export const inputControlVariants = cva(
   'min-w-0 flex-1 bg-transparent text-foreground outline-none '

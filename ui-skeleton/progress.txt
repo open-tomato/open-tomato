@@ -56,6 +56,10 @@
 - Per-component READMEs: single H1, H2 top-level, H3 nested — no skipped heading levels (`markdown/heading-increment` fails lint).
 - Every fenced code block needs a language tag (`text`, `bash`, `tsx`, `ts`, `css`).
 - Single quotes in `.ts` / `.tsx`.
+- `@stylistic/implicit-arrow-linebreak` forbids a linebreak between `=>` and a wrapped multi-line call. Either keep the body on one line or write `(...) => cn(\n  a,\n  b,\n);` (i.e. start the call on the same line as `=>` and break inside the parens).
+
+## Particle composition pattern
+- When an atom needs the shared `wrapperFrameVariants` particle plus its own element-specific selectors (e.g. Input's `has-[input:disabled]:*`), wrap the particle in a function that returns `cn(particle(props), atomSpecificClasses)` and export `type FooVariants = WrapperFrameVariants`. Do NOT re-declare cva for the same axes — duplication drifts.
 
 ## Package status (Phase 1 → 2)
 - Package is standalone this iteration — NOT in root `packages/package.json` workspaces. `devDependencies` use `file:../shared/<name>` links, not `workspace:^`. Do not "fix" without coordinating a workspace rewrite.
