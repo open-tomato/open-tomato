@@ -67,12 +67,6 @@ describe('Separator', () => {
     expect(screen.getByRole('separator')).not.toHaveAttribute('aria-orientation');
   });
 
-  it('forwards className to the root', () => {
-    const { container } = render(<Separator className="custom-separator" />);
-    expect(container.querySelector('[data-slot="separator"]'))
-      .toHaveClass('custom-separator');
-  });
-
   it('has no a11y violations (decorative default)', async () => {
     const { container } = render(<Separator />);
     expect(await axe(container)).toHaveNoViolations();

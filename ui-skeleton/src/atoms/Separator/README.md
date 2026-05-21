@@ -17,9 +17,10 @@ import { Separator } from '@open-tomato/ui-skeleton';
 | orientation | `'horizontal' \| 'vertical'`      | `'horizontal'` |
 | variant     | `'default' \| 'subtle' \| 'strong'` | `'default'`  |
 | decorative  | `boolean`                         | `true`         |
-| className   | `string` (escape hatch)           | —              |
 
-All other props are forwarded to the underlying Radix Separator root.
+All other props (except `className`) are forwarded to the underlying Radix
+Separator root. `className` is intentionally not part of the public API — use
+the `variant` axis for visual weight and the `orientation` axis for geometry.
 
 ## Variants
 
@@ -53,10 +54,12 @@ The resolved orientation is reflected on the root as
 
 ## Do / Don't
 
-- DO use `variant` to express importance. DON'T pass arbitrary `className`
-  for color overrides; add a new variant if a recurring weight is needed.
+- DO use the `variant` axis to express importance. If a recurring weight is
+  missing, add a new variant rather than reaching for inline overrides.
 - DO use `orientation="vertical"` inside flex/inline layouts; ensure the
   parent has a height so `h-full` resolves to a visible stroke.
 - DO pass `decorative={false}` when the divider conveys real semantic
   structure (e.g. between list groups). DON'T leave `decorative` truthy on
   separators that are required to be announced to assistive tech.
+- DO wrap the separator in a parent container for spacing and positioning —
+  the atom itself does not own layout concerns.

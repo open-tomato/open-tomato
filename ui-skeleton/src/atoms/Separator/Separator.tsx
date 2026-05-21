@@ -12,11 +12,12 @@ type RadixSeparatorProps = React.ComponentPropsWithoutRef<typeof RadixSeparator>
  * an `orientation` axis (horizontal | vertical) and a `variant` axis
  * controlling visual weight (`default | subtle | strong`).
  *
- * @remarks All visual customization MUST go through `orientation` and
- * `variant`. `className` is an escape hatch only and is discouraged in
- * this design system. The wrapper defaults `decorative={true}` to match
- * shadcn; pass `decorative={false}` for a semantically meaningful divider
- * (renders `role="separator"` with `aria-orientation`).
+ * @remarks All visual customization is controlled exclusively through
+ * `orientation` and `variant`. There is no `className` escape hatch — if a
+ * knob is missing, add a variant axis instead. The wrapper defaults
+ * `decorative={true}` to match shadcn; pass `decorative={false}` for a
+ * semantically meaningful divider (renders `role="separator"` with
+ * `aria-orientation`).
  *
  * @example
  * ```tsx
@@ -27,13 +28,12 @@ type RadixSeparatorProps = React.ComponentPropsWithoutRef<typeof RadixSeparator>
  * ```
  */
 export interface SeparatorProps
-  extends Omit<RadixSeparatorProps, 'orientation'>,
+  extends Omit<RadixSeparatorProps, 'orientation' | 'className'>,
   SeparatorVariants {}
 
 export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
   (
     {
-      className,
       orientation,
       variant,
       decorative = true,
@@ -52,7 +52,6 @@ export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
         data-variant={resolvedVariant}
         className={cn(
           separatorVariants({ orientation: resolvedOrientation, variant: resolvedVariant }),
-          className,
         )}
         {...rest}
       />
