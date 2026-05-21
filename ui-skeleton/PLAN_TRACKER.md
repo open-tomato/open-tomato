@@ -92,7 +92,7 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Atom className refactor — multi-part atoms (A4 recipe)
 ```
 
-- [ ] Add `frame` axis to [`src/atoms/ScrollArea/scroll-area.variants.ts`](./src/atoms/ScrollArea/scroll-area.variants.ts) and add `scrollAreaViewportVariants` with `padding` axis
+- [x] Add `frame` axis to [`src/atoms/ScrollArea/scroll-area.variants.ts`](./src/atoms/ScrollArea/scroll-area.variants.ts) and add `scrollAreaViewportVariants` with `padding` axis
 - [ ] Update [`src/atoms/ScrollArea/ScrollArea.tsx`](./src/atoms/ScrollArea/ScrollArea.tsx): strip root `className`, strip `className` from `viewportProps` and `scrollbarProps` bag types, accept new `frame` + `viewportPadding` props
 - [ ] Update ScrollArea test, story, and README to reflect new API (drop className tests, add frame/viewportPadding stories and variant rows)
 
