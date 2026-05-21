@@ -130,8 +130,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Molecule canonical reference — Alert
 ```
 
-- [ ] Create [`src/molecules/Alert/Alert.tsx`](./src/molecules/Alert/Alert.tsx) per Technical context Section C-Alert
-- [ ] Create `src/molecules/Alert/alert.variants.ts` with empty-root cva + `alertHeaderVariants`
+- [x] Create [`src/molecules/Alert/Alert.tsx`](./src/molecules/Alert/Alert.tsx) per Technical context Section C-Alert
+- [x] Create `src/molecules/Alert/alert.variants.ts` with empty-root cva + `alertHeaderVariants`
 - [ ] Create `src/molecules/Alert/Alert.test.tsx` with the five molecule-minimum assertions
 - [ ] Create `src/molecules/Alert/Alert.stories.tsx` with `Default`, `AllVariants`, `WithCustomHeader`, `WithActions` stories
 - [ ] Create `src/molecules/Alert/README.md` with the new `## Composition` section
