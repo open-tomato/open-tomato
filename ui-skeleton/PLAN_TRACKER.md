@@ -53,7 +53,7 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 ```
 
 - [x] Refactor [`src/atoms/Button/Button.tsx`](./src/atoms/Button/Button.tsx) per A1 recipe, update `Button.test.tsx`, `Button.stories.tsx`, `README.md`
-- [ ] Refactor [`src/atoms/Badge/`](./src/atoms/Badge/) per A1 recipe (component, tests, story, README)
+- [x] Refactor [`src/atoms/Badge/`](./src/atoms/Badge/) per A1 recipe (component, tests, story, README)
 - [ ] Refactor [`src/atoms/Toggle/`](./src/atoms/Toggle/) per A1 recipe
 - [ ] Refactor [`src/atoms/Avatar/`](./src/atoms/Avatar/) per A1 recipe
 - [ ] Refactor [`src/atoms/AspectRatio/`](./src/atoms/AspectRatio/) per A1 recipe

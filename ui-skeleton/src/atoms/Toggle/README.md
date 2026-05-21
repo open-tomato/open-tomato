@@ -20,10 +20,11 @@ import { Toggle } from '@open-tomato/ui-skeleton';
 | defaultPressed    | `boolean`                         | `false`     |
 | onPressedChange   | `(pressed: boolean) => void`      | —           |
 | disabled          | `boolean`                         | `false`     |
-| className         | `string` (escape hatch)           | —           |
 
-All other props are forwarded to the underlying Radix Toggle root (a native
-`<button>`), including `aria-label`, `aria-labelledby`, and event handlers.
+All other Radix Toggle root props (except `className`) are forwarded to the
+underlying native `<button>`, including `aria-label`, `aria-labelledby`, and
+event handlers. `className` is not part of the public API — styling is
+controlled exclusively through `variant` and `size`.
 
 ## Variants
 
@@ -55,12 +56,14 @@ test and style hooks. The root also carries `data-slot="toggle"`.
 
 ## Do / Don't
 
-- DO use `variant` and `size` for visual customization. DON'T pass arbitrary
-  `className` for color overrides; add a new variant if a recurring style is
-  needed.
+- DO use `variant` and `size` for visual customization. If a knob is missing,
+  add a variant axis — Toggle has no `className` escape hatch.
+- DO compose Toggle inside parent wrappers that handle layout (spacing,
+  positioning, alignment). The toggle itself does not own its own positioning
+  context.
 - DO provide an `aria-label` for icon-only toggles. DON'T ship a toggle
   without an accessible name.
 - DO use `defaultPressed` for uncontrolled toggles; use `pressed` +
   `onPressedChange` for controlled state. DON'T mix the two — choose one mode.
 - DO use Toggle for a single on / off control. For a group of mutually
-  exclusive or multi-select toggles, prefer a future `ToggleGroup` atom.
+  exclusive or multi-select toggles, prefer the `ToggleGroup` molecule.

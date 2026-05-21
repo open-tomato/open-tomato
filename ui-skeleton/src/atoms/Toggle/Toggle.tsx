@@ -13,8 +13,9 @@ type RadixToggleProps = React.ComponentPropsWithoutRef<typeof RadixToggle>;
  * controls the visual frame (`default | outline`) and `size` controls the
  * geometry (`sm | md | lg`).
  *
- * @remarks All visual customization MUST go through `variant` and `size`.
- * `className` is an escape hatch only and is discouraged in this design system.
+ * @remarks All visual customization is controlled exclusively through
+ * `variant` and `size`. There is no `className` escape hatch — if a knob is
+ * missing, add a variant axis instead.
  *
  * Pressed state is reflected on the rendered button as `data-state="on"` or
  * `data-state="off"` (set by Radix) plus `data-slot="toggle"`,
@@ -27,12 +28,11 @@ type RadixToggleProps = React.ComponentPropsWithoutRef<typeof RadixToggle>;
  * <Toggle variant="outline" size="lg" defaultPressed aria-label="Toggle italic">I</Toggle>
  * ```
  */
-export interface ToggleProps extends RadixToggleProps, ToggleVariants {}
+export interface ToggleProps extends Omit<RadixToggleProps, 'className'>, ToggleVariants {}
 
 export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
   (
     {
-      className,
       variant,
       size,
       ...rest
@@ -47,10 +47,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
         data-slot="toggle"
         data-variant={resolvedVariant}
         data-size={resolvedSize}
-        className={cn(
-          toggleVariants({ variant: resolvedVariant, size: resolvedSize }),
-          className,
-        )}
+        className={cn(toggleVariants({ variant: resolvedVariant, size: resolvedSize }))}
         {...rest}
       />
     );

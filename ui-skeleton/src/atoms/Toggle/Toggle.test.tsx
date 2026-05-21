@@ -75,11 +75,6 @@ describe('Toggle', () => {
     expect(screen.getByRole('button', { name: 'x' })).toBeDisabled();
   });
 
-  it('forwards className to the root', () => {
-    render(<Toggle aria-label="x" className="custom-toggle">B</Toggle>);
-    expect(screen.getByRole('button', { name: 'x' })).toHaveClass('custom-toggle');
-  });
-
   it('has no a11y violations (default)', async () => {
     const { container } = render(<Toggle aria-label="Toggle bold">B</Toggle>);
     expect(await axe(container)).toHaveNoViolations();
