@@ -148,8 +148,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 ```
 
 - [x] Edit cardinal rule #1 to apply to molecules and declare universal `className` compliance
-- [ ] Edit cardinal rule #2 to apply to molecules ("Six files per atom or molecule")
-- [ ] Edit cardinal rule #3 to apply to molecules ("No default exports under `src/atoms/` or `src/molecules/`")
+- [x] Edit cardinal rule #2 to apply to molecules ("Six files per atom or molecule")
+- [x] Edit cardinal rule #3 to apply to molecules ("No default exports under `src/atoms/` or `src/molecules/`")
 - [ ] Add cardinal rule #11 enforcing layer-import direction (molecules import atoms + particles only)
 - [ ] Add `molecule-authoring` row to the skill-index table
 - [ ] Update "Where things live" tree to remove the `# placeholder barrel` comment on `molecules/`
