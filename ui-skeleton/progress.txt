@@ -84,6 +84,11 @@
 - When an atom owns the inline `style` channel to publish runtime-computed values (Skeleton's width/height/size, Progress's indicator translateX), include `'style'` in the `Omit<HTMLAttrs, ...>` clause alongside `'className'`. Otherwise a consumer-supplied `style` prop reaches the DOM via `{...rest}` and silently races with the atom-emitted style object.
 - Dimension props replacing the old `className="h-* w-*"` channel use the shape `width?: string | number; height?: string | number; size?: string | number;` with a `toCss` helper that emits numbers as `${n}px` and passes strings through. `size` overrides both `width` and `height` when provided. Tests assert via `toHaveStyle({ width: '...', height: '...' })`.
 
+## Data-driven molecules (Table and similar large-N cell layouts)
+- For molecules that render N homogeneous cells from an array prop (Table's `headers[]`/`rows[][]`/`footer[]`), prefer styling cells via descendant cva selectors on the root (`[&_th]:px-3 [&_td]:py-3`) over wrapping each cell in a composed atom. Per-cell `<Typography>` wrappers multiply render cost on large data sets; descendant selectors apply the same visual scale axis-by-axis with one cn() call on the root. Reserve atom composition for the SINGLETON slots (Table's `caption` uses Typography variant="caption") where the per-instance cost is one wrapper, not N.
+- `react/no-array-index-key` is NOT enabled in the shared eslint config — positional cells/rows can use array index keys directly without `eslint-disable` comments. The default `react/jsx-key` rule only fires when a key is missing entirely.
+- Scope test queries to a specific table section with `within(container.querySelector('tbody') as HTMLElement).getByRole('cell', ...)` (or `tfoot`) when the same cell text could appear in multiple sections. The `within()` helper from `@testing-library/react` accepts any HTMLElement, not just the bound render container, and pairs well with `data-slot="table-cell"` / `data-slot="table-head"` queries.
+
 ## Package status (Phase 1 → 2)
 - Package is standalone this iteration — NOT in root `packages/package.json` workspaces. `devDependencies` use `file:../shared/<name>` links, not `workspace:^`. Do not "fix" without coordinating a workspace rewrite.
 - `registry.json` is internal-only — never publish; `"homepage": "internal"` signals intent.
