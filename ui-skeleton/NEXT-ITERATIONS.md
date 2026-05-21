@@ -4,27 +4,6 @@ Persistent backlog of work the current iteration deliberately deferred. Each ite
 
 When you finish an item: delete its entry here, update the relevant skill if the resolution changes any guidance, and reflect the change in [AGENTS.md](./AGENTS.md) if it touches a cardinal rule.
 
-## High priority — convention violations to clean up
-
-### 1. Remove public `className` prop from every atom
-
-**What:** All 18 atoms currently accept `className` as a public prop and merge it via `cn(<component>Variants(...), className)`. The canonical Button reference established this pattern, so every other atom inherited it.
-
-**Why this is wrong:** The cardinal rule in [AGENTS.md](./AGENTS.md) is that variants are the only public styling surface. Consumers should not be able to inject arbitrary classes. Internal `cn()` use within atoms (e.g., conditionally composing variant-driven classes) is fine.
-
-**Specific patterns to refactor:**
-
-- **All atoms** — drop the `className` prop from the public props interface; stop destructuring it; stop forwarding it into `cn(...)`.
-- **`Input` / `Textarea` (wrapper-frame atoms)** — these currently document `className` as targeting the visible wrapper rather than the inner control. Replace with explicit variant axes (e.g., `density`, `tone`) for the framing concerns that consumers actually need to tune.
-- **`Skeleton`** — currently documents `className` as the channel for `w-*` / `h-*` / `size-*` sizing. Replace with explicit `width?: string | number` / `height?: string | number` / `size?: string | number` props that emit inline `style` (or with `width` / `height` variant axes if the design system has a fixed set of sizes).
-- **`Card` / `ScrollArea` / any multi-part wrapper** — currently exposes per-part escape-hatch props (`viewportProps`, `scrollbarProps`, `imageProps`, etc.) that include `className`. Strip `className` from those nested prop bags; if a per-part variant is genuinely needed, add a per-part variant axis at the wrapper level (`viewportPadding: 'none' | 'sm' | 'md'`, etc.).
-
-**Suggested approach:** One PR per atom, in the order they were authored. Update tests + stories + README in the same change. Add the new variant axes as you go; don't try to plan the full variant matrix up front.
-
-### 2. Update the atom-authoring skill once #1 ships
-
-The current [atom-authoring](./skills/atom-authoring/SKILL.md) skill states the **target** convention (no public `className`), but Button (and every other atom) still encodes the **old** convention as the canonical reference. Once Button is refactored, audit the skill's "canonical reference" callouts to confirm they describe the new shape.
-
 ## Medium priority — known infrastructure gaps
 
 ### 3. Storybook 8.6 vs Vite 8 peer-dep mismatch
