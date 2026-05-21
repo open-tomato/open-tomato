@@ -44,8 +44,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Atom className refactor — wrapper-frame particle extraction
 ```
 
-- [ ] Create `src/particles/wrapper-frame.variants.ts` exporting `wrapperFrameVariants` (cva) and `WrapperFrameVariants` type with `variant`, `size`, `density`, `tone` axes per the Technical context Section A2
-- [ ] Add wrapper-frame particle export to [`src/particles/index.ts`](./src/particles/index.ts)
+- [x] Create `src/particles/wrapper-frame.variants.ts` exporting `wrapperFrameVariants` (cva) and `WrapperFrameVariants` type with `variant`, `size`, `density`, `tone` axes per the Technical context Section A2
+- [x] Add wrapper-frame particle export to [`src/particles/index.ts`](./src/particles/index.ts)
 - [ ] Add unit tests for the particle under `src/particles/__tests__/wrapper-frame.variants.test.ts`
 
 ```text
