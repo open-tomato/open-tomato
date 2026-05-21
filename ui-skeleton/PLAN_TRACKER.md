@@ -134,8 +134,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 - [x] Create `src/molecules/Alert/alert.variants.ts` with empty-root cva + `alertHeaderVariants`
 - [x] Create `src/molecules/Alert/Alert.test.tsx` with the five molecule-minimum assertions
 - [x] Create `src/molecules/Alert/Alert.stories.tsx` with `Default`, `AllVariants`, `WithCustomHeader`, `WithActions` stories
-- [ ] Create `src/molecules/Alert/README.md` with the new `## Composition` section
-- [ ] Create `src/molecules/Alert/index.ts` with two-line barrel
+- [x] Create `src/molecules/Alert/README.md` with the new `## Composition` section
+- [x] Create `src/molecules/Alert/index.ts` with two-line barrel
 
 ```text
 # Stage: Molecule-authoring skill
