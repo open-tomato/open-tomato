@@ -10,14 +10,16 @@ import { Spinner } from '@open-tomato/ui-skeleton';
 
 ## Props
 
-| Prop      | Type                                                | Default     |
-| --------- | --------------------------------------------------- | ----------- |
-| variant   | `'default' \| 'muted' \| 'primary' \| 'destructive'` | `'default'` |
-| size      | `'sm' \| 'md' \| 'lg'`                              | `'md'`      |
-| label     | `string` (pass `""` for decorative)                 | `'Loading'` |
-| className | `string` (discouraged escape hatch)                 | —           |
+| Prop    | Type                                                | Default     |
+| ------- | --------------------------------------------------- | ----------- |
+| variant | `'default' \| 'muted' \| 'primary' \| 'destructive'` | `'default'` |
+| size    | `'sm' \| 'md' \| 'lg'`                              | `'md'`      |
+| label   | `string` (pass `""` for decorative)                 | `'Loading'` |
 
-All other props are forwarded to the underlying `<div>`. Consumer-supplied `role` and `aria-label` override the defaults described below.
+All other props (except `className`) are forwarded to the underlying `<div>`.
+`className` is intentionally not part of the public API — use the `variant`
+axis for ring color and the `size` axis for dimensions. Consumer-supplied
+`role` and `aria-label` override the defaults described below.
 
 ## Variants
 
@@ -41,10 +43,10 @@ The resolved variants are reflected on the rendered element as `data-slot="spinn
 - Defaults to `role="status"` with `aria-label="Loading"` and a visually hidden `<span class="sr-only">Loading</span>` child so screen readers announce the loading state without extra plumbing from the consumer.
 - Pass `label="Saving"` (or any string) to customize the announcement. Pass `label=""` to render the spinner as purely decorative — the wrapper sets `aria-hidden="true"`, drops the role, and skips the sr-only child. Use this when the spinner sits next to a separately-labelled message (e.g. inside a button whose own text reads "Saving…").
 - Consumers can override `role` and `aria-label` directly (e.g. `role="progressbar"`, `aria-label="Uploading file"`); the props passed in always win over the wrapper defaults.
-- Respect user motion preferences: this component always emits `animate-spin`. Wrap it in a `prefers-reduced-motion` branch (or apply the `motion-reduce:animate-none` class via `className` in your downstream component) if reduced-motion behavior matters for your context.
+- Respect user motion preferences: this component always emits `animate-spin`. Wrap it in a parent that conditionally suppresses motion (or extend the `size` axis with a `motion-reduce:animate-none` rule on the underlying variants) if reduced-motion behavior matters for your context.
 
 ## Do / Don't
 
-- DO use `variant` for ring color and `size` for dimensions. DON'T pass arbitrary `className` to recolor or resize — extend the variants or this component instead.
+- DO use the `variant` axis for ring color and the `size` axis for dimensions. If a recurring color or size is missing, add a new variant rather than reaching for inline overrides.
 - DO use `label=""` when the spinner is purely decorative and the parent already announces loading state. DON'T leave the default `'Loading'` label active inside an already-labelled live region — you'll double-announce.
 - DO compose Spinner inline with text or inside button content. DON'T put arbitrary children inside Spinner — the prop interface forbids `children` because the circular border geometry doesn't compose with inner content.

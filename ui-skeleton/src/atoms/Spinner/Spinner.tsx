@@ -11,10 +11,11 @@ import { spinnerVariants, type SpinnerVariants } from './spinner.variants';
  * `variant` axis drives the ring color (`text-*`) and the `size` axis drives
  * both dimensions and border thickness.
  *
- * @remarks All visual customization MUST go through `variant` and `size`.
- * `className` is an escape hatch only and is discouraged in this design system.
- * Spinner has no underlying Radix primitive — the rendered element is a plain
- * `<div>` so it composes safely inline with text, inside buttons, cards, etc.
+ * @remarks All visual customization is controlled exclusively through
+ * `variant` and `size`. There is no `className` escape hatch — if a knob is
+ * missing, add a variant axis instead. Spinner has no underlying Radix
+ * primitive — the rendered element is a plain `<div>` so it composes safely
+ * inline with text, inside buttons, cards, etc.
  *
  * Accessibility: by default Spinner renders with `role="status"` and an
  * `aria-label` of `'Loading'`, plus a visually hidden `<span class="sr-only">`
@@ -32,7 +33,7 @@ import { spinnerVariants, type SpinnerVariants } from './spinner.variants';
  * ```
  */
 export interface SpinnerProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color' | 'children'>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color' | 'children' | 'className'>,
   SpinnerVariants {
   /**
    * Accessible label announced by screen readers. Defaults to `'Loading'`.
@@ -45,7 +46,6 @@ export interface SpinnerProps
 export const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
   (
     {
-      className,
       variant,
       size,
       label,
@@ -77,7 +77,6 @@ export const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
           : undefined}
         className={cn(
           spinnerVariants({ variant: resolvedVariant, size: resolvedSize }),
-          className,
         )}
         {...rest}
       >
