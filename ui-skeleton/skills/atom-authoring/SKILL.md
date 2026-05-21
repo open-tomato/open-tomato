@@ -103,22 +103,23 @@ Two lines. Nothing else. No side effects, no default exports.
 
 ## The className rule (cardinal)
 
-**Atoms MUST NOT accept `className` as a public prop.** Styling is controlled exclusively through variants.
+**Atoms MUST NOT accept `className` as a public prop.** Styling is controlled exclusively through variants. This is enforced both at the type level (the props interface either does not extend an HTMLAttributes type or explicitly omits `className` from it) and at the runtime level (the `cn()` call inside the component takes no consumer string).
 
 What this means in practice:
 
 - Do NOT include `className` in the public props interface.
 - Do NOT destructure `className` from props.
 - Do NOT pass a consumer-supplied string into `cn(...)`.
+- DO add `'className'` to the existing `Omit<...>` clause when the props interface extends a React HTMLAttributes type. Without the `Omit`, `className` is implicitly inherited and would land on the DOM via `{...rest}`.
 
 What's still fine:
 
 - Inside an atom, `cn()` can compose classes from a base block plus variant-driven conditions (e.g., `cn(baseClasses, isDisabled && 'opacity-50')`).
-- Inline `style={{...}}` is acceptable for values that genuinely need runtime computation (e.g., the inline `transform: 'translateX(-X%)'` on `Progress`'s indicator).
+- Inline `style={{...}}` is acceptable for values that genuinely need runtime computation (e.g., Progress's indicator `translateX`, Skeleton's `width`/`height`/`size` props that emit explicit dimensions).
 
 If a consumer needs a knob the current variants don't cover, that's a signal the variant API is incomplete — add a variant axis, don't open a className escape hatch.
 
-**Existing atoms still violate this rule.** All 18 currently expose `className` because the canonical Button reference encoded the old pattern. The refactor is tracked in [../../NEXT-ITERATIONS.md](../../NEXT-ITERATIONS.md). When you touch an atom that still has the violation, fix it as part of the same change if scope allows; otherwise leave it for the dedicated refactor.
+**Compliance is universal as of Phase 2.** Every atom under `src/atoms/` follows this rule. Button remains the canonical reference — open `src/atoms/Button/Button.tsx` to see the props interface using `Omit<..., 'className'>` and the bare `cn(buttonVariants({...}))` call.
 
 ## Authoring rules
 
