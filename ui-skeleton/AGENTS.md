@@ -1,0 +1,139 @@
+# AGENTS.md — UI Skeleton
+
+Operational entry point for any agent (or human) working in `packages/ui-skeleton/`.
+Read this file first. It points to the deep-dive skills you should load on demand.
+
+## What this package is
+
+A wrapper component library over [shadcn/ui](https://ui.shadcn.com/) + [Radix UI](https://www.radix-ui.com/), styled with [Tailwind CSS v4](https://tailwindcss.com/). Each shadcn primitive (which often exposes 6–10 sub-components) is folded into a **single encapsulated wrapper** with constrained variants, so:
+
+- The downstream agent's context surface stays small (one import per component).
+- Styling stays inside the design system (variants, not arbitrary classes).
+- Components can be generated, updated, or swapped atomically.
+
+For project goals, atomic-design taxonomy, and the consumer-facing description, see [README.md](./README.md).
+
+### Project-specific flavor of atomic design (worth knowing up front)
+
+Most of the taxonomy in [README.md](./README.md) is standard atomic design. The cases that diverge from textbook atomic design and matter for routing decisions:
+
+- **Particles** are not components — they're design primitives (`cn`, variants helpers, tokens, mixins, animations, shadows) that *affect* components.
+- **Atoms** are single-entry wrappers. A "multi-part" shadcn primitive (Card with header/body/footer, Avatar with image/fallback, etc.) still ships as ONE atom that exposes the parts via slot props (`header`, `title`, `fallback`, `viewportProps`, ...), not as sub-component exports.
+- **Atoms-that-look-like-particles** (Typography, Spinner, Kbd) have no shadcn primitive. They follow the exact same six-file atom convention; they just render a plain HTML element instead of wrapping Radix.
+
+When in doubt about which layer something belongs in, default to the more specific (atom > molecule > organism). The placeholder barrels for molecules/organisms/providers/templates/pages exist but are empty this iteration.
+
+## Where things live
+
+```text
+packages/ui-skeleton/
+├── AGENTS.md                   # this file
+├── README.md                   # consumer-facing: project goal, atomic-design taxonomy, atom inventory
+├── NEXT-ITERATIONS.md          # backlog of deferred work and known follow-ups
+├── skills/                     # deep-dive guidance, load on demand
+│   ├── atom-authoring/         # six-file layout, naming, generation procedure
+│   ├── styling/                # Tailwind v4 setup, @theme tokens, palette decisions
+│   ├── cva-variants/           # CVA patterns, variant maps, polymorphism
+│   ├── radix-wrappers/         # Radix primitive integration, Slot, multi-part folding
+│   ├── component-testing/      # Vitest, jest-axe, jsdom polyfills, testing pitfalls
+│   ├── accessibility/          # ARIA, alt, decorative markers, label patterns
+│   ├── build-tooling/          # Bun, Vite library mode, ESLint, TypeScript, monorepo
+│   ├── storybook/              # Storybook 8 setup, manifest, headless verification
+│   └── shadcn-integration/     # registry.json, shadcn CLI, dependency translation
+├── registry.json               # internal shadcn registry manifest (never published)
+├── components.json             # shadcn CLI config
+├── src/
+│   ├── index.ts                # top-level barrel
+│   ├── styles/globals.css      # Tailwind v4 entry + @theme tokens
+│   ├── particles/              # shared helpers: cn, variants, tokens, mixins, shadows, animations
+│   ├── atoms/                  # single-entry wrappers (one directory per atom, 6 files each)
+│   ├── molecules/              # placeholder barrel
+│   ├── organisms/              # placeholder barrel
+│   ├── providers/              # placeholder barrel
+│   ├── templates/              # placeholder barrel
+│   └── pages/                  # placeholder barrel
+└── .storybook/                 # Storybook 8 config (main.ts, preview.ts)
+```
+
+## Cardinal rules (non-negotiable)
+
+1. **Variants are the only public styling surface.** Atoms MUST NOT accept `className` as a public prop. Inside an atom, `cn()` may compose classes from a base block plus variant-driven conditions, but a consumer-supplied class string is not forwarded to the rendered element. See [skills/atom-authoring/SKILL.md](./skills/atom-authoring/SKILL.md) for the contract. (Several existing atoms still expose `className` — these are tracked in [NEXT-ITERATIONS.md](./NEXT-ITERATIONS.md).)
+2. **Six files per atom, no exceptions.** `<Component>.tsx`, `<component>.variants.ts`, `<Component>.test.tsx`, `<Component>.stories.tsx`, `README.md`, `index.ts`. The convention is enforced by tooling and consumer expectations.
+3. **No default exports under `src/atoms/`.** Always named exports via `React.forwardRef`. Set `displayName` after.
+4. **Path alias `@/...` resolves to `src/...`.** Never use deep relative paths like `../../particles/cn`.
+5. **Single quotes in `.ts` / `.tsx`.** ESLint auto-fixes; write that way to keep diffs clean.
+6. **Tests are required.** Minimum three assertions per atom: renders children, applies a variant class for at least one non-default variant, no a11y violations (`await axe(...)`). Coverage threshold: 80% lines / 80% statements / 75% branches / 80% functions.
+7. **Stories are required.** A `Default` story plus an `AllVariants` matrix; `tags: ["autodocs"]` enabled; `argTypes` declared for every variant prop.
+8. **Every atom appears in `registry.json` `items[]`** with kebab-case `name`, `type: registry:ui`, files, and `registryDependencies` listing the npm packages it imports beyond `react` + `@/particles/cn`.
+9. **The `registry.json` is internal-only.** Never publish it to npm or `ui.shadcn.com`. The `"homepage": "internal"` field signals intent.
+10. **The package is standalone this iteration.** It is NOT in the root `packages/package.json` workspaces array. `devDependencies` for the shared configs use `file:../shared/<name>` links, not `workspace:^`. Do not "fix" this without coordinating a workspace rewrite.
+
+## Skill index — when to invoke which
+
+Load a skill before making changes in its domain.
+
+| When you're about to… | Load this skill |
+|---|---|
+| Add a new atom or edit an existing one's files/layout | [atom-authoring](./skills/atom-authoring/SKILL.md) |
+| Touch `globals.css`, add a token, choose a color, write a Tailwind class | [styling](./skills/styling/SKILL.md) |
+| Write or modify a `*.variants.ts` file, design a variant axis | [cva-variants](./skills/cva-variants/SKILL.md) |
+| Wrap a Radix primitive, deal with `Slot` / `Slottable` / `*Indicator` / multi-part | [radix-wrappers](./skills/radix-wrappers/SKILL.md) |
+| Write a `*.test.tsx`, debug a jsdom limitation, configure Vitest | [component-testing](./skills/component-testing/SKILL.md) |
+| Add `aria-*`, label something, build a loading state, deal with axe failures | [accessibility](./skills/accessibility/SKILL.md) |
+| Change `vite.config.ts`, `tsconfig*`, `eslint.config.mjs`, `package.json` deps/scripts, or run `bun ...` | [build-tooling](./skills/build-tooling/SKILL.md) |
+| Add a story, debug Storybook, verify the build manifest | [storybook](./skills/storybook/SKILL.md) |
+| Edit `registry.json`, run `bunx shadcn@latest`, translate shadcn deps | [shadcn-integration](./skills/shadcn-integration/SKILL.md) |
+
+## Day-to-day workflow
+
+### Adding a new atom
+
+1. Open `src/atoms/Button/` and read all six files. **Button is the canonical reference** for file layout, TSDoc style, variant naming, test structure, story structure, README structure.
+2. Load [atom-authoring](./skills/atom-authoring/SKILL.md) and follow the per-atom procedure end-to-end.
+3. Append the new atom to `registry.json` `items[]` per [shadcn-integration](./skills/shadcn-integration/SKILL.md).
+4. Run `bun run check-types && bun run test && bun run lint`. All three must pass before the task is done.
+5. Optional sanity check: `bun run build && bun run build-storybook`.
+
+### Editing an existing atom
+
+1. Read the six files for that atom end-to-end before changing anything.
+2. If you're changing the public API (props, variants), update `<Component>.test.tsx`, `<Component>.stories.tsx`, and `README.md` in the same change. They MUST stay in lockstep.
+3. Update `registry.json` only if you added/removed dependencies or split/merged files.
+4. Same verification chain: types, test, lint.
+
+### Common task scripts
+
+| Script | What it does |
+|---|---|
+| `bun install` | Install / sync dependencies |
+| `bun run check-types` | `tsc --noEmit` |
+| `bun run test` | One-shot Vitest run |
+| `bun run test:coverage` | Vitest with coverage report (HTML + summary) |
+| `bun run test:watch` | Vitest in watch mode |
+| `bun run lint` | `eslint --fix` (auto-mutating, **not** check-only — see [build-tooling](./skills/build-tooling/SKILL.md)) |
+| `bun run build` | Vite library build → `dist/` |
+| `bun run storybook` | Storybook dev server on `:6006` |
+| `bun run build-storybook` | Static Storybook to `storybook-static/` |
+| `bun run shadcn:add <item>` | `bunx shadcn@latest add` — reference only; output never lands in `src/atoms/` unchanged |
+
+## Pitfalls that will bite you
+
+These are the highest-frequency footguns. Each is detailed in its skill, but skim the list before starting work.
+
+- `bun test <path>` is Bun's built-in runner, **not** Vitest. Use `bun run test` or `bunx vitest run` so jsdom + setup load. ([component-testing](./skills/component-testing/SKILL.md))
+- Tailwind v4 **silently drops** utility classes referencing undeclared `@theme` tokens. No build warning. Verify every `bg-*` / `text-*` / `border-*` name has a matching `--color-*` in `globals.css`. ([styling](./skills/styling/SKILL.md))
+- jsdom does not implement `ResizeObserver`. Any Radix primitive that observes size (`ScrollArea`, `Slider`, etc.) throws at render. The polyfill in `vitest.setup.ts` is required. ([component-testing](./skills/component-testing/SKILL.md))
+- Multi-thumb Radix primitives put `role="slider"` on the **thumb**, not the Root. Forward `aria-label` to every thumb or axe + RTL `getByRole` queries fail. ([radix-wrappers](./skills/radix-wrappers/SKILL.md))
+- `Slot` + multiple children throws at runtime when `asChild=true`. Wrap the main child in `<Slottable>` so icon siblings can coexist. ([radix-wrappers](./skills/radix-wrappers/SKILL.md))
+- ESM `.config.{ts,js,mjs}` files don't get `__dirname`. Use `import.meta.dirname` (Node 20.11+, Bun-supported). ([build-tooling](./skills/build-tooling/SKILL.md))
+- `<input>` / `<textarea>` / `<select>` carry a native numeric `size` attribute. Any variant interface extending `*HTMLAttributes` MUST `Omit<..., 'size'>` to allow the categorical `'sm' | 'md' | 'lg'` union. ([cva-variants](./skills/cva-variants/SKILL.md))
+
+## Authority and conflicts
+
+- **AGENTS.md** (this file): operational rules, layout, skill index.
+- **README.md**: project description, atomic-design taxonomy, atom inventory, public-facing.
+- **Skill files**: deep-dive on a specific domain. Load when working in that domain.
+- **NEXT-ITERATIONS.md**: known deferred work, refactor TODOs, follow-ups.
+- **Per-atom README.md**: ground truth for that atom's public API, variants, accessibility notes.
+
+If two persistent docs conflict, this file wins for scope and the relevant skill wins for detail. If you find a real conflict, fix the doc — don't paper over it with workarounds in code.
