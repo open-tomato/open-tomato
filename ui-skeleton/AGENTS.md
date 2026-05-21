@@ -57,7 +57,7 @@ packages/ui-skeleton/
 
 ## Cardinal rules (non-negotiable)
 
-1. **Variants are the only public styling surface.** Atoms MUST NOT accept `className` as a public prop. Inside an atom, `cn()` may compose classes from a base block plus variant-driven conditions, but a consumer-supplied class string is not forwarded to the rendered element. See [skills/atom-authoring/SKILL.md](./skills/atom-authoring/SKILL.md) for the contract. (Several existing atoms still expose `className` — these are tracked in [NEXT-ITERATIONS.md](./NEXT-ITERATIONS.md).)
+1. **Variants are the only public styling surface.** Atoms **and molecules** MUST NOT accept `className` as a public prop. Inside an atom or molecule, `cn()` may compose classes from a base block plus variant-driven conditions, but a consumer-supplied class string is not forwarded to the rendered element. See [skills/atom-authoring/SKILL.md](./skills/atom-authoring/SKILL.md) and [skills/molecule-authoring/SKILL.md](./skills/molecule-authoring/SKILL.md). **As of phase 2, compliance is universal across atoms and molecules.**
 2. **Six files per atom, no exceptions.** `<Component>.tsx`, `<component>.variants.ts`, `<Component>.test.tsx`, `<Component>.stories.tsx`, `README.md`, `index.ts`. The convention is enforced by tooling and consumer expectations.
 3. **No default exports under `src/atoms/`.** Always named exports via `React.forwardRef`. Set `displayName` after.
 4. **Path alias `@/...` resolves to `src/...`.** Never use deep relative paths like `../../particles/cn`.

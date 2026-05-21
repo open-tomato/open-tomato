@@ -141,7 +141,7 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Molecule-authoring skill
 ```
 
-- [ ] Create [`skills/molecule-authoring/SKILL.md`](./skills/molecule-authoring/SKILL.md) following the structure in Technical context Section E (mirror atom-authoring; add composition rule, variant propagation, slot props, trigger pattern, expanded test minimums, README `## Composition` section)
+- [x] Create [`skills/molecule-authoring/SKILL.md`](./skills/molecule-authoring/SKILL.md) following the structure in Technical context Section E (mirror atom-authoring; add composition rule, variant propagation, slot props, trigger pattern, expanded test minimums, README `## Composition` section)
 
 ```text
 # Stage: AGENTS.md updates
