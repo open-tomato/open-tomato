@@ -43,8 +43,34 @@ describe('Skeleton', () => {
     expect(node).toHaveClass('animate-pulse');
   });
 
+  it('emits numeric width and height as px inline styles', () => {
+    render(<Skeleton width={192} height={32} data-testid="skel" />);
+    const node = screen.getByTestId('skel');
+    expect(node).toHaveStyle({ width: '192px', height: '32px' });
+  });
+
+  it('passes string width and height through unchanged', () => {
+    render(<Skeleton width="66%" height="2rem" data-testid="skel" />);
+    const node = screen.getByTestId('skel');
+    expect(node).toHaveStyle({ width: '66%', height: '2rem' });
+  });
+
+  it('lets size override width and height when provided', () => {
+    render(
+      <Skeleton width={10} height={20} size={48} data-testid="skel" />,
+    );
+    const node = screen.getByTestId('skel');
+    expect(node).toHaveStyle({ width: '48px', height: '48px' });
+  });
+
+  it('passes string size through unchanged for both dimensions', () => {
+    render(<Skeleton size="3rem" data-testid="skel" />);
+    const node = screen.getByTestId('skel');
+    expect(node).toHaveStyle({ width: '3rem', height: '3rem' });
+  });
+
   it('has no a11y violations', async () => {
-    const { container } = render(<Skeleton className="h-4 w-32" />);
+    const { container } = render(<Skeleton width={128} height={16} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 });

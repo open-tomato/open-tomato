@@ -15,12 +15,15 @@ const meta: Meta<typeof Skeleton> = {
       control: 'select',
       options: ['pulse', 'wave', 'none'],
     },
-    className: { control: 'text' },
+    width: { control: 'text' },
+    height: { control: 'text' },
+    size: { control: 'text' },
   },
   args: {
     variant: 'rect',
     animate: 'pulse',
-    className: 'h-8 w-48',
+    width: 192,
+    height: 32,
   },
 };
 export default meta;
@@ -35,15 +38,17 @@ export const AllVariants: Story = {
       {(['pulse', 'wave', 'none'] as const).map((animate) => (
         <div key={animate} className="flex flex-col gap-2">
           <span className="text-muted-foreground text-xs uppercase tracking-wide">
-            animate: {animate}
+            animate:
+            {' '}
+            {animate}
           </span>
           <div className="flex items-center gap-4">
-            <Skeleton {...args} variant="rect" animate={animate} className="h-12 w-48" />
-            <Skeleton {...args} variant="circle" animate={animate} className="size-12" />
+            <Skeleton {...args} variant="rect" animate={animate} width={192} height={48} />
+            <Skeleton {...args} variant="circle" animate={animate} size={48} />
             <div className="flex w-48 flex-col gap-2">
-              <Skeleton {...args} variant="text" animate={animate} className="w-full" />
-              <Skeleton {...args} variant="text" animate={animate} className="w-3/4" />
-              <Skeleton {...args} variant="text" animate={animate} className="w-1/2" />
+              <Skeleton {...args} variant="text" animate={animate} width="100%" />
+              <Skeleton {...args} variant="text" animate={animate} width="75%" />
+              <Skeleton {...args} variant="text" animate={animate} width="50%" />
             </div>
           </div>
         </div>
@@ -56,15 +61,15 @@ export const CardPlaceholder: Story = {
   render: (args) => (
     <div className="flex w-72 flex-col gap-3 rounded-md border p-4">
       <div className="flex items-center gap-3">
-        <Skeleton {...args} variant="circle" className="size-10" />
+        <Skeleton {...args} variant="circle" size={40} />
         <div className="flex flex-1 flex-col gap-2">
-          <Skeleton {...args} variant="text" className="w-3/4" />
-          <Skeleton {...args} variant="text" className="w-1/2" />
+          <Skeleton {...args} variant="text" width="75%" />
+          <Skeleton {...args} variant="text" width="50%" />
         </div>
       </div>
-      <Skeleton {...args} variant="rect" className="h-32 w-full" />
-      <Skeleton {...args} variant="text" className="w-full" />
-      <Skeleton {...args} variant="text" className="w-5/6" />
+      <Skeleton {...args} variant="rect" width="100%" height={128} />
+      <Skeleton {...args} variant="text" width="100%" />
+      <Skeleton {...args} variant="text" width="83%" />
     </div>
   ),
 };

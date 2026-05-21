@@ -10,13 +10,15 @@ import { Skeleton } from '@open-tomato/ui-skeleton';
 
 ## Props
 
-| Prop      | Type                                 | Default   |
-| --------- | ------------------------------------ | --------- |
-| variant   | `'rect' \| 'circle' \| 'text'`       | `'rect'`  |
-| animate   | `'pulse' \| 'wave' \| 'none'`        | `'pulse'` |
-| className | `string` (escape hatch — see below)  | —         |
+| Prop    | Type                                     | Default   |
+| ------- | ---------------------------------------- | --------- |
+| variant | `'rect' \| 'circle' \| 'text'`           | `'rect'`  |
+| animate | `'pulse' \| 'wave' \| 'none'`            | `'pulse'` |
+| width   | `string \| number`                       | —         |
+| height  | `string \| number`                       | —         |
+| size    | `string \| number` (overrides w/h)       | —         |
 
-All other props are forwarded to the underlying `<div>`.
+All other props are forwarded to the underlying `<div>`. `className` and `style` are intentionally NOT public — sizing is controlled exclusively through `width` / `height` / `size`.
 
 ## Variants
 
@@ -36,15 +38,15 @@ The resolved variants are reflected on the rendered element as `data-slot="skele
 
 ## Sizing
 
-The `variant` axis only controls shape — it does **not** set width or `rect`/`circle` height. Use Tailwind sizing utilities via `className` to size each skeleton:
+The `variant` axis only controls shape — it does **not** set width or `rect`/`circle` height. Pass explicit dimensions through `width`, `height`, or `size`:
 
 ```tsx
-<Skeleton className="h-8 w-48" />
-<Skeleton variant="circle" className="size-12" />
-<Skeleton variant="text" className="w-2/3" />
+<Skeleton width={192} height={32} />
+<Skeleton variant="circle" size={48} />
+<Skeleton variant="text" width="66%" />
 ```
 
-This is the documented use of `className` for Skeleton — it is not the discouraged escape hatch pattern that applies to color/border/animation overrides.
+Numbers are emitted as `${n}px`; strings (e.g. `'66%'`, `'2rem'`, `'100%'`) pass through unchanged. `size` is shorthand for setting both `width` and `height` to the same value, and overrides them when provided alongside.
 
 ## Accessibility
 
@@ -53,8 +55,8 @@ This is the documented use of `className` for Skeleton — it is not the discour
 
   ```tsx
   <div role="status" aria-live="polite" aria-label="Loading">
-    <Skeleton className="h-4 w-32" />
-    <Skeleton className="h-4 w-24" />
+    <Skeleton width={128} height={16} />
+    <Skeleton width={96} height={16} />
     <span className="sr-only">Loading content</span>
   </div>
   ```
@@ -63,7 +65,8 @@ This is the documented use of `className` for Skeleton — it is not the discour
 
 ## Do / Don't
 
-- DO use `variant` for shape and `animate` for motion. DON'T pass arbitrary `className` to recolor, re-round, or replace the animation — extend the variants or this component instead.
-- DO use `className` for sizing only (`w-*`, `h-*`, `size-*`).
+- DO use `variant` for shape and `animate` for motion.
+- DO use `width` / `height` / `size` to set explicit dimensions.
+- DO compose with parent wrappers when positioning or spacing skeletons inside a layout.
 - DO group multiple skeletons inside a `role="status"` live region when they represent a single loading unit.
 - DON'T render skeletons forever — they are a transient placeholder and should be swapped for real content as soon as data is available.
