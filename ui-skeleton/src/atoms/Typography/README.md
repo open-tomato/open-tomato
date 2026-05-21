@@ -12,16 +12,17 @@ import { Typography } from '@open-tomato/ui-skeleton';
 
 ## Props
 
-| Prop      | Type                                                                                  | Default                            |
-| --------- | ------------------------------------------------------------------------------------- | ---------------------------------- |
-| variant   | `'display' \| 'h1' \| 'h2' \| 'h3' \| 'h4' \| 'body' \| 'caption' \| 'code' \| 'kbd'` | `'body'`                           |
-| as        | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6' \| 'p' \| 'span' \| 'code'`             | mapped from `variant` (see table)  |
-| weight    | `'light' \| 'regular' \| 'medium' \| 'semibold' \| 'bold'`                            | inherited from `variant`           |
-| align     | `'left' \| 'center' \| 'right' \| 'justify'`                                          | inherited                          |
-| children  | `ReactNode`                                                                           | —                                  |
-| className | `string` (discouraged escape hatch)                                                   | —                                  |
+| Prop     | Type                                                                                  | Default                            |
+| -------- | ------------------------------------------------------------------------------------- | ---------------------------------- |
+| variant  | `'display' \| 'h1' \| 'h2' \| 'h3' \| 'h4' \| 'body' \| 'caption' \| 'code' \| 'kbd'` | `'body'`                           |
+| as       | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6' \| 'p' \| 'span' \| 'code'`             | mapped from `variant` (see table)  |
+| weight   | `'light' \| 'regular' \| 'medium' \| 'semibold' \| 'bold'`                            | inherited from `variant`           |
+| align    | `'left' \| 'center' \| 'right' \| 'justify'`                                          | inherited                          |
+| children | `ReactNode`                                                                           | —                                  |
 
-All other props are forwarded to the underlying element.
+All other props are forwarded to the underlying element. `className` is
+intentionally not part of the public API — use `variant`, `weight`, and
+`align` for visual treatment, and `as` to control the rendered tag.
 
 ## Variants
 
@@ -63,8 +64,9 @@ The resolved variant and rendered tag are reflected on the DOM as `data-slot="ty
 
 ## Do / Don't
 
-- DO pick `variant` for visual treatment and `as` for the HTML tag. DON'T pass arbitrary `className` to override font size or weight — extend the variants instead.
+- DO pick `variant` for visual treatment and `as` for the HTML tag. If a recurring size, weight, or color is missing, extend the `variant`, `weight`, or `align` axes rather than reaching for inline overrides.
 - DO override `as` when the heading-outline rules require it (e.g. `variant="h2" as="h1"` for a hero whose H1 reads smaller than the rest of the page).
 - DO use the dedicated `Kbd` atom for keyboard-input semantics. DON'T rely on Typography's `kbd` variant when assistive tech needs to know the content is a key.
+- DO compose Typography inside parent wrappers when you need positioning or spacing — the parent owns layout, the atom owns text styling.
 - DON'T mix `weight` with a `variant` whose default weight is intentional (e.g. `variant="display" weight="light"` defeats the display style); pick a different variant if you need a different weight by default.
 - DON'T use Typography for interactive text (links, buttons) — wrap it inside an appropriate interactive element instead so the activation semantics are correct.

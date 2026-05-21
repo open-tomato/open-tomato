@@ -46,10 +46,11 @@ const variantToTag: Record<TypographyVariant, TypographyAs> = {
  * the element so the document outline stays correct regardless of the
  * visual hierarchy.
  *
- * @remarks All visual customization MUST go through `variant`, `weight`, and
- * `align`. `className` is an escape hatch only and is discouraged in this
- * design system. Typography has no underlying Radix primitive — composes
- * safely inside paragraphs, headings, cards, lists, etc.
+ * @remarks All visual customization is controlled exclusively through
+ * `variant`, `weight`, and `align`. There is no `className` escape hatch — if
+ * a knob is missing, add a variant axis instead. Typography has no underlying
+ * Radix primitive — composes safely inside paragraphs, headings, cards,
+ * lists, etc.
  *
  * For keyboard-input semantics, prefer the dedicated `Kbd` atom (renders a
  * native `<kbd>`). The `kbd` *variant* here is a typographic style applied
@@ -65,7 +66,7 @@ const variantToTag: Record<TypographyVariant, TypographyAs> = {
  * ```
  */
 export interface TypographyProps
-  extends Omit<React.HTMLAttributes<HTMLElement>, 'color'>,
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'color' | 'className'>,
   TypographyVariants {
   /**
    * The HTML element to render. Defaults to a sensible tag based on
@@ -77,7 +78,7 @@ export interface TypographyProps
 }
 
 export const Typography = React.forwardRef<HTMLElement, TypographyProps>(
-  ({ as, variant, weight, align, className, ...rest }, ref) => {
+  ({ as, variant, weight, align, ...rest }, ref) => {
     const resolvedVariant: TypographyVariant = variant ?? 'body';
     const resolvedAs: TypographyAs = as ?? variantToTag[resolvedVariant];
     const Component = resolvedAs as React.ElementType;
@@ -90,7 +91,6 @@ export const Typography = React.forwardRef<HTMLElement, TypographyProps>(
         data-as={resolvedAs}
         className={cn(
           typographyVariants({ variant: resolvedVariant, weight, align }),
-          className,
         )}
         {...rest}
       />
