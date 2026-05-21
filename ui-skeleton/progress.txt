@@ -69,3 +69,7 @@
 ## Package status (Phase 1 → 2)
 - Package is standalone this iteration — NOT in root `packages/package.json` workspaces. `devDependencies` use `file:../shared/<name>` links, not `workspace:^`. Do not "fix" without coordinating a workspace rewrite.
 - `registry.json` is internal-only — never publish; `"homepage": "internal"` signals intent.
+
+## Plan tracker convention
+- `PLAN.md` is the immutable original plan; `PLAN_TRACKER.md` is the live `[x]`-checkmark tracker (initially a copy of PLAN.md). When marking a task complete, edit PLAN_TRACKER.md only — never modify PLAN.md.
+- A refactor that completes multiple PLAN sub-tasks (e.g. component + test + story + README) is often landed as one bundled refactor commit, followed by per-sub-task `chore: mark X task complete in plan tracker` commits. Check the actual source files before assuming an unchecked tracker line means the work is incomplete.

@@ -86,7 +86,7 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 - [x] Add `'style'` to the props interface `Omit<...>` clause so consumers cannot supply a raw `style` prop that races with the emitted inline styles
 - [x] Update Skeleton test (assertions for px-emission of numeric props and pass-through of string props)
 - [x] Update Skeleton story (drop className argType, add width/height/size argTypes)
-- [ ] Rewrite Skeleton README `## Sizing` section to use the new props
+- [x] Rewrite Skeleton README `## Sizing` section to use the new props
 
 ```text
 # Stage: Atom className refactor — multi-part atoms (A4 recipe)
