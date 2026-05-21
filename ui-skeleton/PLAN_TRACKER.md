@@ -82,8 +82,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Atom className refactor — Skeleton sizing (A3 recipe)
 ```
 
-- [ ] Replace `className` channel with `width?: string | number`, `height?: string | number`, `size?: string | number` props on [`src/atoms/Skeleton/Skeleton.tsx`](./src/atoms/Skeleton/Skeleton.tsx)
-- [ ] Add `'style'` to the props interface `Omit<...>` clause so consumers cannot supply a raw `style` prop that races with the emitted inline styles
+- [x] Replace `className` channel with `width?: string | number`, `height?: string | number`, `size?: string | number` props on [`src/atoms/Skeleton/Skeleton.tsx`](./src/atoms/Skeleton/Skeleton.tsx)
+- [x] Add `'style'` to the props interface `Omit<...>` clause so consumers cannot supply a raw `style` prop that races with the emitted inline styles
 - [ ] Update Skeleton test (assertions for px-emission of numeric props and pass-through of string props)
 - [ ] Update Skeleton story (drop className argType, add width/height/size argTypes)
 - [ ] Rewrite Skeleton README `## Sizing` section to use the new props
