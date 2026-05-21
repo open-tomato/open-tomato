@@ -160,8 +160,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Remaining molecules — stateless composition
 ```
 
-- [ ] Create [`src/molecules/ButtonGroup/`](./src/molecules/ButtonGroup/) per Section D #2 (composes Button via `React.cloneElement` for size/variant propagation)
-- [ ] Create [`src/molecules/Item/`](./src/molecules/Item/) per Section D #7 (polymorphic `as` axis)
+- [x] Create [`src/molecules/ButtonGroup/`](./src/molecules/ButtonGroup/) per Section D #2 (composes Button via `React.cloneElement` for size/variant propagation)
+- [x] Create [`src/molecules/Item/`](./src/molecules/Item/) per Section D #7 (polymorphic `as` axis)
 - [ ] Create [`src/molecules/Table/`](./src/molecules/Table/) per Section D #13 (slot props for caption/headers/rows/footer)
 
 ```text
