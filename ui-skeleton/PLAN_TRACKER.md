@@ -38,7 +38,7 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 
 - [x] Read [`AGENTS.md`](./AGENTS.md), [`NEXT-ITERATIONS.md`](./NEXT-ITERATIONS.md), and [`skills/atom-authoring/SKILL.md`](./skills/atom-authoring/SKILL.md) end-to-end before any code change
 - [x] Confirm phase 1 baseline: `bun install && bun run check-types && bun run test && bun run build && bun run build-storybook` all exit 0 from [`packages/ui-skeleton/`](./)
-- [ ] Confirm `bun run lint` failures are limited to the pre-existing [`README.md`](./README.md) heading violations and not in atom code
+- [x] Confirm `bun run lint` failures are limited to the pre-existing [`README.md`](./README.md) heading violations and not in atom code
 
 ```text
 # Stage: Atom className refactor — wrapper-frame particle extraction
