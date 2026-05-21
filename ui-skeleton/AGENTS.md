@@ -96,6 +96,16 @@ Load a skill before making changes in its domain.
 4. Run `bun run check-types && bun run test && bun run lint`. All three must pass before the task is done.
 5. Optional sanity check: `bun run build && bun run build-storybook`.
 
+### Adding a new molecule
+
+1. Open `src/molecules/Alert/` and read all six files. **Alert is the canonical reference** for molecule layout, slot-prop vocabulary, variant propagation (lookup tables from the molecule's axis to each composed atom's axis), and `data-*` test hooks.
+2. Load [molecule-authoring](./skills/molecule-authoring/SKILL.md) and follow the per-molecule procedure end-to-end.
+3. Import atoms via `@/atoms/<Name>` and particles via `@/particles/<name>`. **Never** import another molecule or any upward layer — the ESLint `no-restricted-imports` guard in `eslint.config.mjs` blocks it. If your candidate composes another molecule, promote it to organism instead (cardinal rule #11).
+4. Do not accept `className` as a public prop, and do not pass `className` into composed atoms (atoms reject it both at the type level and at runtime). If a knob is missing, add a variant axis — to your molecule, or to the composed atom — rather than opening an escape hatch.
+5. Append the new molecule to `registry.json` `items[]` per [shadcn-integration](./skills/shadcn-integration/SKILL.md). Internal `@/atoms/*` imports are NOT listed in `registryDependencies` — only npm packages the molecule pulls in beyond `react` + `@/particles/cn`.
+6. Run `bun run check-types && bun run test && bun run lint`. All three must pass before the task is done.
+7. Optional sanity check: `bun run build && bun run build-storybook`.
+
 ### Editing an existing atom
 
 1. Read the six files for that atom end-to-end before changing anything.
