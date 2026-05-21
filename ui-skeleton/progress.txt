@@ -60,6 +60,7 @@
 
 ## Particle composition pattern
 - When an atom needs the shared `wrapperFrameVariants` particle plus its own element-specific selectors (e.g. Input's `has-[input:disabled]:*`), wrap the particle in a function that returns `cn(particle(props), atomSpecificClasses)` and export `type FooVariants = WrapperFrameVariants`. Do NOT re-declare cva for the same axes — duplication drifts.
+- To "substitute" a single particle axis branch (e.g. Textarea swapping `h-7` for `min-h-7` in density=compact), pass the neutral value (`density: 'comfortable'`) to the particle so its branch emits nothing, then append the atom-specific replacement string conditionally in `cn(...)`. Avoids tailwind-merge mismatches across `h-*`/`min-h-*` groups and keeps the substitution intentional rather than additive.
 
 ## Package status (Phase 1 → 2)
 - Package is standalone this iteration — NOT in root `packages/package.json` workspaces. `devDependencies` use `file:../shared/<name>` links, not `workspace:^`. Do not "fix" without coordinating a workspace rewrite.

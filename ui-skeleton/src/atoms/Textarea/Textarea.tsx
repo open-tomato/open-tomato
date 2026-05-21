@@ -6,27 +6,32 @@ import { textareaVariants, type TextareaVariants } from './textarea.variants';
 
 /**
  * Textarea — single encapsulated wrapper over a native `<textarea>` with
- * constrained `variant` and `size` axes and an optional `autoResize` mode.
+ * constrained `variant`, `size`, `density`, and `tone` axes and an optional
+ * `autoResize` mode.
  *
- * @remarks All visual customization MUST go through `variant` and `size`.
- * `className` is an escape hatch only and is discouraged in this design system.
+ * @remarks All visual customization MUST go through the variant axes
+ * (`variant`, `size`, `density`, `tone`). All native textarea attributes
+ * (`name`, `value`, `placeholder`, `rows`, `cols`, `aria-*`, etc.) and the
+ * forwarded `ref` are applied to the underlying `<textarea>` element.
  *
  * When `variant="error"`, the textarea automatically receives
  * `aria-invalid="true"` unless the caller passes `aria-invalid` explicitly.
  *
- * When `autoResize` is `true`, the textarea grows vertically to fit its content
- * (manual user-drag resize and the inner scrollbar are disabled). When the
- * component is controlled, the height re-adjusts whenever `value` changes.
+ * When `autoResize` is `true`, the textarea grows vertically to fit its
+ * content (manual user-drag resize and the inner scrollbar are disabled).
+ * When the component is controlled, the height re-adjusts whenever `value`
+ * changes.
  *
  * @example
  * ```tsx
  * <Textarea placeholder="Write a comment…" />
  * <Textarea variant="error" defaultValue="too short" />
  * <Textarea size="lg" autoResize defaultValue="Grows as you type…" />
+ * <Textarea density="compact" tone="subtle" placeholder="Filter rows" />
  * ```
  */
 export interface TextareaProps
-  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'>,
+  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'size' | 'className'>,
   TextareaVariants {
   /** When true, the textarea grows vertically to fit its content; user resize and inner scrolling are disabled. */
   autoResize?: boolean;
@@ -35,9 +40,10 @@ export interface TextareaProps
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   (
     {
-      className,
       variant,
       size,
+      density,
+      tone,
       autoResize,
       onChange,
       value,
@@ -49,6 +55,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ) => {
     const resolvedVariant = variant ?? 'default';
     const resolvedSize = size ?? 'md';
+    const resolvedDensity = density ?? 'comfortable';
+    const resolvedTone = tone ?? 'neutral';
     const resolvedAriaInvalid = ariaInvalid ?? (resolvedVariant === 'error'
       ? true
       : undefined);
@@ -94,6 +102,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         data-slot="textarea"
         data-variant={resolvedVariant}
         data-size={resolvedSize}
+        data-density={resolvedDensity}
+        data-tone={resolvedTone}
         data-auto-resize={autoResize
           ? ''
           : undefined}
@@ -101,10 +111,12 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         value={value}
         defaultValue={defaultValue}
         onChange={handleChange}
-        className={cn(
-          textareaVariants({ variant: resolvedVariant, size: resolvedSize }),
-          className,
-        )}
+        className={cn(textareaVariants({
+          variant: resolvedVariant,
+          size: resolvedSize,
+          density: resolvedDensity,
+          tone: resolvedTone,
+        }))}
         {...rest}
       />
     );

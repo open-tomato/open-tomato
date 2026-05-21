@@ -24,24 +24,55 @@ describe('Textarea', () => {
 
   it('applies the size class for lg', () => {
     render(<Textarea aria-label="x" size="lg" />);
-    expect(screen.getByRole('textbox', { name: 'x' })).toHaveClass('min-h-[100px]');
+    expect(screen.getByRole('textbox', { name: 'x' })).toHaveClass('h-10');
   });
 
-  it('exposes resolved variant and size via data attributes', () => {
-    render(<Textarea aria-label="x" variant="success" size="sm" />);
+  it('exposes resolved variant, size, density, and tone via data attributes', () => {
+    render(
+      <Textarea aria-label="x" variant="success" size="sm" density="compact" tone="subtle" />,
+    );
     const el = screen.getByRole('textbox', { name: 'x' });
     expect(el).toHaveAttribute('data-variant', 'success');
     expect(el).toHaveAttribute('data-size', 'sm');
+    expect(el).toHaveAttribute('data-density', 'compact');
+    expect(el).toHaveAttribute('data-tone', 'subtle');
     expect(el).toHaveAttribute('data-slot', 'textarea');
   });
 
-  it('defaults to default/md when variants are omitted', () => {
+  it('defaults to default/md/comfortable/neutral when variants are omitted', () => {
     render(<Textarea aria-label="x" />);
     const el = screen.getByRole('textbox', { name: 'x' });
     expect(el).toHaveAttribute('data-variant', 'default');
     expect(el).toHaveAttribute('data-size', 'md');
+    expect(el).toHaveAttribute('data-density', 'comfortable');
+    expect(el).toHaveAttribute('data-tone', 'neutral');
     expect(el).toHaveClass('border-input');
-    expect(el).toHaveClass('min-h-[80px]');
+    expect(el).toHaveClass('h-9');
+  });
+
+  it('propagates density=compact via the substituted min-h class', () => {
+    render(<Textarea aria-label="x" density="compact" />);
+    const el = screen.getByRole('textbox', { name: 'x' });
+    expect(el).toHaveAttribute('data-density', 'compact');
+    expect(el).toHaveClass('[&]:min-h-7');
+    expect(el).toHaveClass('py-0');
+    expect(el).not.toHaveClass('[&]:h-7');
+  });
+
+  it('propagates tone=subtle to the textarea class', () => {
+    render(<Textarea aria-label="x" tone="subtle" />);
+    const el = screen.getByRole('textbox', { name: 'x' });
+    expect(el).toHaveAttribute('data-tone', 'subtle');
+    expect(el).toHaveClass('border-0');
+    expect(el).toHaveClass('bg-muted/40');
+  });
+
+  it('propagates tone=inverted to the textarea class', () => {
+    render(<Textarea aria-label="x" tone="inverted" />);
+    const el = screen.getByRole('textbox', { name: 'x' });
+    expect(el).toHaveAttribute('data-tone', 'inverted');
+    expect(el).toHaveClass('bg-foreground');
+    expect(el).toHaveClass('text-background');
   });
 
   it('automatically sets aria-invalid when variant=error', () => {

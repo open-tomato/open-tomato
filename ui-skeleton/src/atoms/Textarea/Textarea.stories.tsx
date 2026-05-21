@@ -15,6 +15,14 @@ const meta: Meta<typeof Textarea> = {
       control: 'select',
       options: ['sm', 'md', 'lg'],
     },
+    density: {
+      control: 'select',
+      options: ['comfortable', 'compact'],
+    },
+    tone: {
+      control: 'select',
+      options: ['neutral', 'subtle', 'inverted'],
+    },
     disabled: { control: 'boolean' },
     autoResize: { control: 'boolean' },
     placeholder: { control: 'text' },
@@ -23,6 +31,8 @@ const meta: Meta<typeof Textarea> = {
   args: {
     variant: 'default',
     size: 'md',
+    density: 'comfortable',
+    tone: 'neutral',
     placeholder: 'Write something…',
     disabled: false,
     autoResize: false,
@@ -48,6 +58,31 @@ export const AllVariants: Story = {
               placeholder={`${variant} / ${size}`}
             />
           ))}
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const DensityToneMatrix: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-4">
+      {(['comfortable', 'compact'] as const).map((density) => (
+        <div key={density} className="flex flex-col gap-2">
+          <div className="text-xs font-medium text-muted-foreground">
+            density: {density}
+          </div>
+          <div className="flex flex-col gap-2">
+            {(['neutral', 'subtle', 'inverted'] as const).map((tone) => (
+              <Textarea
+                key={`${density}-${tone}`}
+                {...args}
+                density={density}
+                tone={tone}
+                placeholder={`${density} / ${tone}`}
+              />
+            ))}
+          </div>
         </div>
       ))}
     </div>
