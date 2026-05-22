@@ -25,15 +25,6 @@ When you finish an item: delete its entry here, update the relevant skill if the
 
 **Suggested approach (if a flatter `dist/` is ever required):** Set `output.preserveModules: true` (one file per source module, larger surface) or `output.manualChunks: () => null` (everything inlined into entries, larger bundles). Both have tradeoffs; pick based on the concrete consumer need.
 
-### 5. Wire `package.json` `exports` map to the multi-entry build output
-
-**What:** The current `package.json` `exports` is a single `"."` mapping to `./src/index.ts`. The `vite build` output produces:
-
-- JS files flattened per entry: `dist/atoms/Button.js`, `dist/particles.js`.
-- `vite-plugin-dts` declarations preserve source structure: `dist/atoms/Button/Button.d.ts` + `dist/atoms/Button/index.d.ts`.
-
-**Suggested approach:** Add subpath exports for at least `.`, `./particles`, and each atom (e.g. `./atoms/Button`). The `import` path points at the flat JS file; the `types` path points at the nested `index.d.ts`. They will NOT share a common stem — that's expected. Same trap applies to any future entry added to `vite.config.ts` `build.lib.entry`.
-
 ### 6. Workspace registration
 
 **What:** `packages/ui-skeleton/` is NOT registered in the root `packages/package.json` workspaces array this iteration. `devDependencies` for `@open-tomato/eslint-config` and `@open-tomato/typescript-config` use `file:../shared/<name>` links instead of `workspace:^`.
