@@ -69,7 +69,6 @@ Typography
 Alert
 Button Group
 Collapsible
-Combobox
 Context Menu
 Hover Card
 Input OTP
@@ -90,6 +89,7 @@ Data Table
 Date Picker
 Breadcrumb
 Calendar
+Combobox
 Command
 Dialog
 Drawer
