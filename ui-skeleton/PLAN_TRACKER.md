@@ -214,8 +214,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 ```
 
 - [x] Move `Calendar` from `### Molecules` to `### Organisms` in [`README.md`](./README.md)
-- [ ] Move `Combobox` from `### Molecules` to `### Organisms` in [`README.md`](./README.md)
-- [ ] Annotate the README's atomic-design section noting the audit happened in phase 2 if the existing notes feel stale
+- [x] Move `Combobox` from `### Molecules` to `### Organisms` in [`README.md`](./README.md)
+- [x] Annotate the README's atomic-design section noting the audit happened in phase 2 if the existing notes feel stale
 
 ```text
 # Stage: Final verification
