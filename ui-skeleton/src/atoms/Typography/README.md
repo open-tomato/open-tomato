@@ -14,7 +14,7 @@ import { Typography } from '@open-tomato/ui-skeleton';
 
 | Prop     | Type                                                                                  | Default                            |
 | -------- | ------------------------------------------------------------------------------------- | ---------------------------------- |
-| variant  | `'display' \| 'h1' \| 'h2' \| 'h3' \| 'h4' \| 'body' \| 'caption' \| 'code' \| 'kbd'` | `'body'`                           |
+| variant  | `'display' \| 'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'body' \| 'caption' \| 'code' \| 'kbd'` | `'body'`                   |
 | as       | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6' \| 'p' \| 'span' \| 'code'`             | mapped from `variant` (see table)  |
 | weight   | `'light' \| 'regular' \| 'medium' \| 'semibold' \| 'bold'`                            | inherited from `variant`           |
 | align    | `'left' \| 'center' \| 'right' \| 'justify'`                                          | inherited                          |
@@ -33,6 +33,7 @@ intentionally not part of the public API — use `variant`, `weight`, and
 | `h2`      | 3xl, bold, tight tracking + leading                     | `h2`         |
 | `h3`      | 2xl, semibold, tight tracking + snug leading            | `h3`         |
 | `h4`      | xl, semibold, tight tracking + snug leading             | `h4`         |
+| `h5`      | lg, semibold, tight tracking + snug leading             | `h5`         |
 | `body`    | base, relaxed leading                                   | `p`          |
 | `caption` | xs, normal leading, `text-muted-foreground`             | `span`       |
 | `code`    | inline `font-mono` chip with `bg-muted`                 | `code`       |

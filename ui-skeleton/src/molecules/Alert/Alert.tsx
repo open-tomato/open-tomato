@@ -86,7 +86,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
           <div data-slot="alert-titles">
             {title !== undefined
               ? (
-                <Typography as="div" variant={titleVariantForSize[resolvedSize]}>
+                <Typography variant={titleVariantForSize[resolvedSize]}>
                   {title}
                 </Typography>
               )

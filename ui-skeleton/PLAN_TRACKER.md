@@ -221,8 +221,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Final verification
 ```
 
-- [ ] `bun install`
-- [ ] `bun run check-types`
+- [x] `bun install`
+- [x] `bun run check-types`
 - [ ] `bun run lint`
 - [ ] `bun run test`
 - [ ] `bun run test:coverage` — confirm 80/80/75/80 thresholds hold package-wide

@@ -8,6 +8,7 @@ export const typographyVariants = cva('text-foreground', {
       h2: 'text-3xl font-bold tracking-tight leading-tight',
       h3: 'text-2xl font-semibold tracking-tight leading-snug',
       h4: 'text-xl font-semibold tracking-tight leading-snug',
+      h5: 'text-lg font-semibold tracking-tight leading-snug',
       body: 'text-base leading-relaxed',
       caption: 'text-xs leading-normal text-muted-foreground',
       code: 'font-mono text-sm bg-muted rounded px-1.5 py-0.5',
