@@ -227,7 +227,7 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 - [x] `bun run test`
 - [x] `bun run test:coverage` — confirm 80/80/75/80 thresholds hold package-wide
 - [x] `bun run build` — confirm `dist/molecules/<Each>.js` files emitted, `dist/molecules/<Each>/index.d.ts` declarations preserved, `dist/molecules.js` layer barrel exists
-- [ ] `bun run build-storybook` — confirm `storybook-static/index.json` includes all 15 molecules
+- [x] `bun run build-storybook` — confirm `storybook-static/index.json` includes all 15 molecules
 - [ ] Run the consumer-side import verification snippets from Technical context Section G3 against a scratch directory or sibling package
 
 ---
