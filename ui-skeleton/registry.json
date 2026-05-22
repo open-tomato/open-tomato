@@ -164,6 +164,141 @@
         { "path": "src/atoms/Typography/typography.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": []
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/Alert/Alert.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/Alert/alert.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["lucide-react"]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/ButtonGroup/ButtonGroup.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/ButtonGroup/button-group.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/Collapsible/Collapsible.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/Collapsible/collapsible.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-collapsible"]
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/ContextMenu/ContextMenu.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/ContextMenu/context-menu.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-context-menu", "lucide-react"]
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/HoverCard/HoverCard.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/HoverCard/hover-card.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-hover-card"]
+    },
+    {
+      "name": "input-otp",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/InputOTP/InputOTP.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/InputOTP/input-otp.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["input-otp"]
+    },
+    {
+      "name": "item",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/Item/Item.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/Item/item.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "native-select",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/NativeSelect/NativeSelect.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/NativeSelect/native-select.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["lucide-react"]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/Popover/Popover.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/Popover/popover.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-popover"]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/RadioGroup/RadioGroup.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/RadioGroup/radio-group.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-radio-group"]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/Select/Select.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/Select/select.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-select", "lucide-react"]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/Switch/Switch.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/Switch/switch.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-switch"]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/Table/Table.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/Table/table.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/ToggleGroup/ToggleGroup.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/ToggleGroup/toggle-group.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-toggle-group"]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/molecules/Tooltip/Tooltip.tsx", "type": "registry:ui" },
+        { "path": "src/molecules/Tooltip/tooltip.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-tooltip"]
     }
   ]
 }
