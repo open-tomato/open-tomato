@@ -187,8 +187,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Remaining molecules — specialty
 ```
 
-- [ ] Create [`src/molecules/NativeSelect/`](./src/molecules/NativeSelect/) per Section D #8 (wrapper-frame particle, `appearance-none` + chevron)
-- [ ] Create [`src/molecules/InputOTP/`](./src/molecules/InputOTP/) per Section D #6 (uses `input-otp` package; `inputMode="numeric"`, `autoComplete="one-time-code"`)
+- [x] Create [`src/molecules/NativeSelect/`](./src/molecules/NativeSelect/) per Section D #8 (wrapper-frame particle, `appearance-none` + chevron)
+- [x] Create [`src/molecules/InputOTP/`](./src/molecules/InputOTP/) per Section D #6 (uses `input-otp` package; `inputMode="numeric"`, `autoComplete="one-time-code"`)
 
 ```text
 # Stage: Registry + barrel + build wiring
