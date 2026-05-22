@@ -194,8 +194,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: Registry + barrel + build wiring
 ```
 
-- [ ] Append 15 molecule entries to [`registry.json`](./registry.json) per Technical context Section G2 with the listed `registryDependencies`
-- [ ] Confirm `bun -e "const r = await Bun.file('registry.json').json(); console.log(r.items.length)"` reports `33`
+- [x] Append 15 molecule entries to [`registry.json`](./registry.json) per Technical context Section G2 with the listed `registryDependencies`
+- [x] Confirm `bun -e "const r = await Bun.file('registry.json').json(); console.log(r.items.length)"` reports `33`
 - [ ] Replace [`src/molecules/index.ts`](./src/molecules/index.ts) placeholder with the 15-line real barrel
 - [ ] Remove the `eslint-disable-next-line import/export -- placeholder barrel until molecules ship` comment on the `./molecules` re-export in [`src/index.ts`](./src/index.ts)
 - [ ] Add `molecules` const + per-molecule entry expansion in [`vite.config.ts`](./vite.config.ts) `build.lib.entry` per Technical context Section G1
