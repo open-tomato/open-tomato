@@ -25,6 +25,24 @@ const atoms = [
   'Typography',
 ] as const;
 
+const molecules = [
+  'Alert',
+  'ButtonGroup',
+  'Collapsible',
+  // 'ContextMenu', // re-add once the ContextMenu molecule task unblocks
+  'HoverCard',
+  'InputOTP',
+  'Item',
+  'NativeSelect',
+  'Popover',
+  'RadioGroup',
+  'Select',
+  'Switch',
+  'Table',
+  'ToggleGroup',
+  'Tooltip',
+] as const;
+
 const rootDir = import.meta.dirname;
 
 export default defineConfig({
@@ -46,6 +64,12 @@ export default defineConfig({
           atoms.map((a) => [
             `atoms/${a}`,
             resolve(rootDir, `src/atoms/${a}/index.ts`),
+          ]),
+        ),
+        ...Object.fromEntries(
+          molecules.map((m) => [
+            `molecules/${m}`,
+            resolve(rootDir, `src/molecules/${m}/index.ts`),
           ]),
         ),
       },
