@@ -198,8 +198,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 - [x] Confirm `bun -e "const r = await Bun.file('registry.json').json(); console.log(r.items.length)"` reports `33`
 - [x] Replace [`src/molecules/index.ts`](./src/molecules/index.ts) placeholder with the 15-line real barrel
 - [x] Remove the `eslint-disable-next-line import/export -- placeholder barrel until molecules ship` comment on the `./molecules` re-export in [`src/index.ts`](./src/index.ts)
-- [ ] Add `molecules` const + per-molecule entry expansion in [`vite.config.ts`](./vite.config.ts) `build.lib.entry` per Technical context Section G1
-- [ ] Add `atoms` and `molecules` layer-barrel entries (`src/atoms/index.ts` and `src/molecules/index.ts`) to the same entry map
+- [x] Add `molecules` const + per-molecule entry expansion in [`vite.config.ts`](./vite.config.ts) `build.lib.entry` per Technical context Section G1
+- [x] Add `atoms` and `molecules` layer-barrel entries (`src/atoms/index.ts` and `src/molecules/index.ts`) to the same entry map
 
 ```text
 # Stage: package.json exports map (NEXT-ITERATIONS #5)
