@@ -205,8 +205,8 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 # Stage: package.json exports map (NEXT-ITERATIONS #5)
 ```
 
-- [ ] Replace the single-entry `exports` in [`package.json`](./package.json) with the full subpath exports object per Technical context Section G3 (root, `./particles`, `./atoms`, per-atom × 18, `./molecules`, per-molecule × 15)
-- [ ] Note: `import` and `types` paths do NOT share a stem — `dist/atoms/Button.js` is a sibling of `dist/atoms/Button/index.d.ts`. Verify per-entry
+- [x] Replace the single-entry `exports` in [`package.json`](./package.json) with the full subpath exports object per Technical context Section G3 (root, `./particles`, `./atoms`, per-atom × 18, `./molecules`, per-molecule × 15)
+- [x] Note: `import` and `types` paths do NOT share a stem — `dist/atoms/Button.js` is a sibling of `dist/atoms/Button/index.d.ts`. Verify per-entry
 - [ ] Remove NEXT-ITERATIONS #5 entry from [`NEXT-ITERATIONS.md`](./NEXT-ITERATIONS.md)
 
 ```text
