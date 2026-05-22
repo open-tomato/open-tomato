@@ -68,7 +68,6 @@ Typography
 ### Molecules
 Alert
 Button Group
-Calendar
 Collapsible
 Combobox
 Context Menu
@@ -90,6 +89,7 @@ Accordion
 Data Table
 Date Picker
 Breadcrumb
+Calendar
 Command
 Dialog
 Drawer

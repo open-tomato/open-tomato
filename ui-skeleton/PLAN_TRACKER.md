@@ -207,13 +207,13 @@ Out of scope: organisms, providers, templates, pages, design-system stylesheet i
 
 - [x] Replace the single-entry `exports` in [`package.json`](./package.json) with the full subpath exports object per Technical context Section G3 (root, `./particles`, `./atoms`, per-atom × 18, `./molecules`, per-molecule × 15)
 - [x] Note: `import` and `types` paths do NOT share a stem — `dist/atoms/Button.js` is a sibling of `dist/atoms/Button/index.d.ts`. Verify per-entry
-- [ ] Remove NEXT-ITERATIONS #5 entry from [`NEXT-ITERATIONS.md`](./NEXT-ITERATIONS.md)
+- [x] Remove NEXT-ITERATIONS #5 entry from [`NEXT-ITERATIONS.md`](./NEXT-ITERATIONS.md)
 
 ```text
 # Stage: Taxonomy + README updates
 ```
 
-- [ ] Move `Calendar` from `### Molecules` to `### Organisms` in [`README.md`](./README.md)
+- [x] Move `Calendar` from `### Molecules` to `### Organisms` in [`README.md`](./README.md)
 - [ ] Move `Combobox` from `### Molecules` to `### Organisms` in [`README.md`](./README.md)
 - [ ] Annotate the README's atomic-design section noting the audit happened in phase 2 if the existing notes feel stale
 
