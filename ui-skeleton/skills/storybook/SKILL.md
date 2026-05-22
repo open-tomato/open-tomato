@@ -233,3 +233,21 @@ Combining the static build artifacts gives a complete end-to-end check that desi
 Combining the three confirms the render path end-to-end: tokens → utilities → applied classes. Faster, more rigorous, and CI-friendly compared to eyeballing colors in a browser.
 
 This is also how to catch the [silent-token-drop trap](../styling/SKILL.md) in CI — if `.bg-card` is missing from `preview-*.css` despite atoms referencing it, Tailwind dropped the class because `--color-card` isn't declared.
+
+## Layer-coverage verification
+
+`storybook-static/index.json` is the source of truth for which components actually shipped a story. The `entries` object is keyed by story id, and each entry's `title` field is the per-component grouping label (e.g. `"Molecules/Alert"`) set via the story file's `meta.title` export.
+
+Verify layer coverage (e.g. "all 15 molecules ship a story") by reading `index.json`, NOT by counting files on disk — a component with the variants file but no `*.stories.tsx` (i.e. a BLOCKED sibling) silently produces zero entries with no build failure. `build-storybook` does NOT fail when a layer barrel re-exports a directory whose `*.stories.tsx` is missing; the gap is only visible in `index.json`.
+
+One-liner verification pattern (reusable for any layer — split on `/` to grab the per-component slug, diff against the expected list):
+
+```bash
+bun -e 'const idx = await Bun.file("storybook-static/index.json").json();
+const want = ["Alert","ButtonGroup","Switch", /* ... full list ... */];
+const have = new Set(Object.values(idx.entries).map(e => e.title?.split("/")[1]).filter(Boolean));
+const missing = want.filter(w => !have.has(w));
+console.log(missing.length ? "MISSING: " + missing.join(",") : "all " + want.length + " present");'
+```
+
+Pairs with the [layer-barrel hygiene](../build-tooling/SKILL.md) convention: a missing entry in `index.json` for a known-BLOCKED component is expected; a missing entry for a fully-authored component is the bug.

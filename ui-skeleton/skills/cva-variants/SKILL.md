@@ -184,6 +184,52 @@ For CVA axes where every variant key maps to a single utility class (e.g. `weigh
 
 Reserve `src/particles/` for **cross-component** class strings (focus rings, disabled states, animation tokens that aren't pure utility classes) where dedup across multiple atoms matters.
 
+## Particle composition pattern (Input, Textarea, NativeSelect)
+
+When an atom needs the shared `wrapperFrameVariants` particle plus its own element-specific selectors (e.g. Input's `has-[input:disabled]:*`, Textarea's per-density min-height), do NOT re-declare a sibling cva with the same axes — duplication drifts. Instead, wrap the particle in a function that returns `cn(particle(props), atomSpecificClasses)` and re-export the variant type:
+
+```ts
+import { wrapperFrameVariants, type WrapperFrameVariants } from '@/particles/wrapper-frame.variants';
+import { cn } from '@/particles/cn';
+
+export const inputVariants = (props: InputVariants) =>
+  cn(
+    wrapperFrameVariants(props),
+    'has-[input:disabled]:opacity-50 has-[input:disabled]:cursor-not-allowed',
+  );
+
+export type InputVariants = WrapperFrameVariants;
+```
+
+To "substitute" a single particle axis branch (e.g. Textarea swapping `h-7` for `min-h-7` in `density='compact'`), pass the neutral value (`density: 'comfortable'`) to the particle so its branch emits nothing, then append the atom-specific replacement string conditionally in `cn(...)`. This avoids `tailwind-merge` mismatches across `h-*` / `min-h-*` groups (which live in different merge groups and would otherwise both survive) and keeps the substitution intentional rather than additive.
+
+## Segmented-control compound variants (ButtonGroup, ToggleGroup)
+
+Wrapper molecules that collapse neighboring child borders into a single segmented look (`attached` axis) MUST express the neighbor-sibling Tailwind selectors as cva `compoundVariants` keyed on `orientation` + `attached`, not bake them into each composed child atom. Pattern:
+
+```ts
+compoundVariants: [
+  {
+    orientation: 'horizontal',
+    attached: true,
+    class:
+      '[&>*]:rounded-none [&>*:first-child]:rounded-l-md [&>*:last-child]:rounded-r-md ' +
+      '[&>*:not(:first-child)]:-ml-px ' +
+      '[&>*:focus-visible]:relative [&>*:focus-visible]:z-10',
+  },
+  {
+    orientation: 'vertical',
+    attached: true,
+    class:
+      '[&>*]:rounded-none [&>*:first-child]:rounded-t-md [&>*:last-child]:rounded-b-md ' +
+      '[&>*:not(:first-child)]:-mt-px ' +
+      '[&>*:focus-visible]:relative [&>*:focus-visible]:z-10',
+  },
+],
+```
+
+The `[&>*:focus-visible]:relative` + `z-10` pair is mandatory — without it, the focused child's ring is clipped by the next sibling's negative margin and the visual focus indicator disappears.
+
 ## Polymorphic atoms (Typography-style)
 
 For atoms that render as one of N possible HTML tags (Typography being the canonical example), keep the `as` prop constrained to a **closed string union** rather than the generic `<T extends ElementType>` dance.
@@ -223,6 +269,34 @@ export const typographyVariantToTag: Record<TypographyVariant, TypographyAs> = {
 The component defaults `as` via `as ?? typographyVariantToTag[resolvedVariant]` so consumers get correct semantics for free, but can override when document outline rules require divergence (e.g. `variant="h2" as="h1"`).
 
 Reflect both on the DOM as `data-variant` and `data-as` so downstream code and tests can read the resolved values.
+
+### Cross-element-type polymorphism (`AllHTMLAttributes`)
+
+When a polymorphic component's `as` prop spans elements with DIVERGENT attribute surfaces (e.g. Item's `'div' | 'li' | 'button' | 'a'` accepts `href` for `a`, `type` / `disabled` for `button`), extend `React.AllHTMLAttributes<HTMLElement>` instead of `React.HTMLAttributes<HTMLElement>`. `AllHTMLAttributes` is React's union-of-all-HTML-element-attrs type — it surfaces `href`, `target`, `rel`, `type`, `disabled`, `name`, `value`, etc. on the same props interface without needing a discriminated union.
+
+The cost is that consumer-supplied attrs are NOT narrowed per-element: a `href` on `as='div'` type-checks but renders as an invalid DOM attribute. Document supported per-element attrs in the README rather than encoding them as a discriminated union — the runtime cost of a stray attribute is just a React warning, not a render failure.
+
+### `Omit` clause for polymorphic props
+
+`AllHTMLAttributes` carries `size?: number` (form attribute), `color?: string`, plus the categorical-collision suspects from the table above. The `Omit<...>` clause on a polymorphic props interface must include at minimum `'title' | 'className' | 'size' | 'color' | 'as'`:
+
+- `'as'` collides with the polymorphic prop the interface declares itself.
+- `'size'` / `'color'` / `'title'` collide as documented in the categorical-axis table.
+- `'className'` is the cardinal rule.
+
+### Inject `type='button'` when polymorphic renders a native `<button>`
+
+When a polymorphic component may render as `<button>` (e.g. Item with `as='button'`), inject `type='button'` by default to prevent accidental form submission. Spread the injection BEFORE `{...rest}` so consumers can still override to `type='submit'` when the row genuinely lives inside a `<form>`:
+
+```tsx
+const buttonTypeProps = resolvedAs === 'button' ? { type: 'button' as const } : {};
+
+return <Component {...buttonTypeProps} {...rest} />;
+```
+
+### Typography children inside polymorphic roots
+
+When the polymorphic root may render as `<button>` or `<a>`, force any composed Typography's `as` prop to `'span'`. Typography's default tag mapping (e.g. `variant='body'` → `<p>`, `variant='h4'` → `<h4>`) produces invalid HTML — `<p>` and `<h*>` cannot appear inside `<button>` per the HTML spec. The runtime tolerates it but axe and screen readers do not.
 
 ### Variant name vs. atom name collision
 

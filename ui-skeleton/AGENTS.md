@@ -113,6 +113,15 @@ Load a skill before making changes in its domain.
 3. Update `registry.json` only if you added/removed dependencies or split/merged files.
 4. Same verification chain: types, test, lint.
 
+### Plan tracker convention
+
+- `PLAN.md` is the **immutable** original plan; `PLAN_TRACKER.md` is the live `[x]`-checkmark tracker (initially a copy of PLAN.md). When marking a task complete, edit `PLAN_TRACKER.md` only — never modify `PLAN.md`.
+- A refactor that completes multiple PLAN sub-tasks (component + test + story + README) is often landed as one bundled refactor commit, followed by per-sub-task `chore: mark X task complete in plan tracker` commits. Check the actual source files before assuming an unchecked tracker line means the work is incomplete.
+
+### Documentation drift — annotate, don't rewrite
+
+When a Phase tightens a cardinal rule that contradicts narrative prose elsewhere (e.g. `README.md`'s `## Atomic Design System` section's "className should be avoided as much as possible" wording is now a hard rule; the "molecule could include other molecules" allowance is now blocked by ESLint), annotate the original prose with a dated audit note rather than rewriting it. The original framing remains useful as historical context. Pattern: a `**Phase N audit (YYYY):**` bullet referencing the corresponding `AGENTS.md` cardinal rules. Keeps the diff small and surfaces drift incrementally rather than as a single large doc rewrite.
+
 ### Common task scripts
 
 | Script | What it does |

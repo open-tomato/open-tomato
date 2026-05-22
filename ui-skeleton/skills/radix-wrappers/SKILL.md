@@ -79,7 +79,7 @@ When testing or styling, find the inner element by the `className` / data-attrib
 
 For multi-part Radix wrappers where consumers may need to pass per-part attributes (`viewportProps` for ScrollArea's viewport, `imageProps` for Avatar's image), expose escape-hatch props typed as `Omit<RadixSubProps, 'children' | 'controlled-by-wrapper-keys'>`.
 
-**Important:** per the [../atom-authoring/SKILL.md](../atom-authoring/SKILL.md) className rule, these per-part props MUST NOT include `className` either. The current atoms violate this — refactor tracked in [../../NEXT-ITERATIONS.md](../../NEXT-ITERATIONS.md). If the consumer needs to tune a per-part visual, add a per-part variant axis at the wrapper level instead.
+**Important: per-part bag props MUST also `Omit` `'className'`.** Per the [../atom-authoring/SKILL.md](../atom-authoring/SKILL.md) className rule, atoms reject `className` on the public API; per-part bag props that forward `{...bag}` to an inner sub-component re-open the same escape hatch if they don't omit it. The omission applies universally: Avatar's `imageProps`, ScrollArea's `viewportProps` / `scrollbarProps`, Select / Popover / Tooltip / HoverCard `contentProps` and `triggerProps`, and any future per-part bag. Same rule for molecule-layer per-part bags. If the consumer needs to tune a per-part visual, add a per-part variant axis at the wrapper level instead.
 
 Document in the README which prop targets which DOM node.
 

@@ -279,6 +279,41 @@ The ESLint markdown plugin enforces:
 
 Auto-format does NOT fix heading-level rules (the linter can't disambiguate intended structure). Fix heading levels by hand.
 
+#### Nested fences require four backticks on the outer block
+
+To embed a fenced code block INSIDE another fenced block (e.g. a `markdown` example that itself contains a `ts` snippet), the outer fence MUST use four backticks. Three-backtick outer + three-backtick inner causes the inner closing fence to terminate the outer block early, then the next ``` opens a language-less block and trips `markdown/fenced-code-language`. Pattern:
+
+````text
+````markdown
+## Composition
+
+```ts
+const x = 1;
+```
+````
+````
+
+The same trick applies anywhere a doc shows a code block that itself contains a code block.
+
+### `@stylistic/implicit-arrow-linebreak`
+
+Forbids a linebreak between `=>` and a wrapped multi-line call body. Either keep the body on one line or start the call on the same line as `=>` and break inside the parens:
+
+```ts
+// Lint-hostile:
+const fn = (x: Props) =>
+  cn(
+    a(x),
+    b(x),
+  );
+
+// Lint-friendly:
+const fn = (x: Props) => cn(
+  a(x),
+  b(x),
+);
+```
+
 ### `globalThis` is not in the default globals
 
 Add `/* global globalThis */` at the top of `vitest.setup.ts` (or other setup files) to suppress `no-undef` without disabling the rule package-wide.
@@ -297,6 +332,73 @@ Add a per-line `// eslint-disable-next-line import/export -- placeholder barrel 
 - (Older issue) `vite.config.ts` — `no-undef` on `__dirname`, fixed by switching to `import.meta.dirname`.
 
 Verify per-file paths in lint output to confirm only these (not new component code) are flagged. Tracked in [../../NEXT-ITERATIONS.md](../../NEXT-ITERATIONS.md).
+
+### `storybook-static/` is not ignored by the shared base — append locally
+
+The shared `@open-tomato/eslint-config` base ignores `dist/**`, `build/**`, `node_modules/**` but NOT `storybook-static/**`. The package's local `eslint.config.mjs` spreads the base config and appends `{ ignores: ['storybook-static/**'] }` so `bun run lint` stays clean after `bun run build-storybook`. If you add a sibling package, extend its eslint config the same way (`export default [...baseConfig, { ignores: ['storybook-static/**'] }]`) instead of relying on `--ignore-pattern` flags or deleting the build output between runs.
+
+### Verifying a `no-restricted-imports` layer guard
+
+`no-restricted-imports` matches purely on the import-path string — the target does NOT need to resolve to a real file. To verify a new layer-import guard, drop a temp file under the guarded directory that imports a non-existent path (e.g. `import type { Foo } from '@/molecules/X'`) and run `bun run lint`; the guard fires before any unresolved-import rule complains. Useful when introducing organism / template / page guards before those layers have code.
+
+## Layer barrel hygiene (when a sibling component is blocked)
+
+The shared `@open-tomato/eslint-config/react` base enables `import/no-unresolved`, so a layer-barrel `export * from './X'` line whose target directory lacks an `index.ts` fails `bun run lint` BEFORE typecheck. When a sibling task is `[BLOCKED]` (no `index.ts` yet authored) but a downstream barrel needs to land, comment out just that one export with a re-add note rather than skipping the line — preserves the barrel's intended shape and makes the gap visible to the next agent. Same rule for `src/atoms/index.ts` and future `src/organisms/index.ts` barrels.
+
+Same hygiene applies to the `molecules` / `atoms` / future-layer string-literal tuples in `vite.config.ts` `build.lib.entry`. Vite resolves every listed entry at build time; a listed-but-missing `index.ts` blows up the rollup pass. When a sibling component is blocked, comment out its entry in the `as const` tuple with a re-add note (do NOT delete it — the comment signals to the next agent that the gap is intentional and that both the entry tuple AND the layer barrel need an update when the component unblocks). The two surfaces (barrel + entry tuple) stay in lock-step.
+
+`package.json` `exports` is the THIRD lock-step surface alongside the barrel and the vite entry tuple. JSON has no comment syntax, so a blocked sibling cannot leave its trail there — instead, simply omit the blocked subpath entry and rely on the existing comments in `vite.config.ts` and the layer barrel to signal that the next agent must add the matching `exports` entry when unblocking. Verify completeness after every build:
+
+```bash
+bun -e "const p = await Bun.file('package.json').json(); const fs = require('node:fs'); for (const [k,v] of Object.entries(p.exports)) for (const c of ['types','import']) if (!fs.existsSync(v[c].replace('./',''))) console.log('MISSING',k,c);"
+```
+
+The intentional-omission across all three surfaces is the canonical signal that a sibling component is blocked. The runtime verification for a CORRECTLY omitted subpath returns `ERR_MODULE_NOT_FOUND` (Bun) or `ERR_PACKAGE_PATH_NOT_EXPORTED` (Node strict ESM) — both indicate the export is unavailable; the distinction is runtime-engine semantics, not a defect. Confirm via:
+
+```bash
+bun -e "try { await import('@open-tomato/ui-skeleton/sub/Path'); } catch (e) { console.log(e.code ?? e.message.slice(0,80)); }"
+```
+
+## Package exports — stem mismatch and key ordering
+
+Vite library mode with `entryFileNames: '[name].js'` and an entry-map keyed `'atoms/Button'` emits the JS as a FLAT file (`dist/atoms/Button.js`), while `vite-plugin-dts` preserves source-tree structure and emits types NESTED (`dist/atoms/Button/index.d.ts`, sibling to the source `index.ts`). The `package.json` per-entry exports MUST account for this — `"import": "./dist/atoms/Button.js"` and `"types": "./dist/atoms/Button/index.d.ts"` for the same subpath. Same pattern for layer barrels: `"./atoms"` → import `./dist/atoms.js`, types `./dist/atoms/index.d.ts`. Root `.` is the exception (both flat siblings at `dist/index.{js,d.ts}`).
+
+Conditional-exports key order matters for TypeScript module resolution under `moduleResolution: 'bundler' | 'node16' | 'nodenext'`: **`types` MUST come BEFORE `import`** in each subpath's object literal. TypeScript walks the conditions object top-down and stops at the first matching key. With `import` first, TS picks the `.js` path and tries to resolve types from a sibling `.d.ts` (which won't exist for flat-emitted JS).
+
+### Per-entry verification (three orthogonal checks)
+
+Each catches a different failure mode:
+
+1. **File existence** (`fs.existsSync(...)`) — catches stem-mismatch typos.
+2. **Key ordering** (`Object.keys(v).indexOf('types') < indexOf('import')`) — catches the TS-resolves-wrong-file bug.
+3. **Runtime resolution from a scratch consumer.** From any scratch directory with a `file:` dep on the package, run `bun install`, then `bun -e "const m = await import('@open-tomato/ui-skeleton/atoms/Button'); console.log(m.Button.displayName)"`. Repeat per subpath. `ERR_PACKAGE_PATH_NOT_EXPORTED` means the entry is missing from the map; resolving to `undefined` means the stem is wrong. The package's `"private": true` does NOT block this — `bun install` honors `file:` deps regardless.
+
+## KNOWN ISSUE: layer-barrel dts type resolution
+
+**Runtime works; types fail under `nodenext` and partially under `bundler`.**
+
+The runtime side of per-subpath imports (`@pkg/atoms/Button`, `@pkg/molecules/Alert`) AND layer-barrel imports (`@pkg/atoms`, `@pkg/molecules`, `@pkg`) all resolve correctly under `bun -e` and surface the expected `displayName`. The TYPE side is more nuanced:
+
+- The layer-barrel `.d.ts` files (`dist/atoms/index.d.ts`, `dist/molecules/index.d.ts`, `dist/index.d.ts`) re-export children with bare relative paths (`export * from './Button';`).
+- When TypeScript resolves `./Button` from inside `dist/atoms/index.d.ts`, it sees a flat sibling `dist/atoms/Button.js` (the Vite-emitted per-component JS) BEFORE it falls back to the directory `dist/atoms/Button/index.d.ts`. The `.js` file has no sibling `.d.ts` at the flat layer, so TS resolves to a typeless module and reports "has no exported member 'Button'".
+- Reproducible under `moduleResolution: 'bundler'` (the package's own resolution mode) AND under `nodenext` (which additionally breaks per-subpath imports because per-component barrels also use bare relative paths).
+- Trace evidence: `tsc --traceResolution` shows `'AspectRatio.js' exists - use it as a name resolution result` followed by no type lookup.
+
+Per-component subpath imports (`from '@pkg/atoms/Button'`) DO type-resolve correctly under `bundler` because the per-component barrel re-exports a SIBLING `./Button` resolved to `dist/atoms/Button/Button.d.ts` — and that sibling exists.
+
+### Three viable fixes (pick one when this becomes the active task)
+
+- (a) Instruct `vite-plugin-dts` to emit flat sibling `.d.ts` files matching the JS layout (`dist/atoms/Button.d.ts` as a true sibling of `Button.js`). Usually `vite-plugin-dts` options `entryRoot` + `outDir` + `rollupTypes` produce this.
+- (b) Hand-author layer barrels with explicit paths (`export * from './Button/index'` or `from './Button/Button'`). Friction-heavy; doesn't scale.
+- (c) Eliminate the flat per-component JS layout entirely by removing per-component entries from `vite.config.ts` `build.lib.entry` and routing all consumers through the layer barrels — breaks the `@pkg/atoms/Button` subpath but matches how many libraries ship (radix-ui, mui).
+
+### Verification commands for any future fix
+
+- **Bundler runtime:** `bun -e` import (current passing baseline).
+- **Bundler type-resolution:** from a scratch consumer dir, `bunx --bun typescript@5.9.3 --noEmit -p tsconfig.json` against a `smoke.ts` that imports from all three surface levels (`/atoms/Button`, `/atoms`, root).
+- **NodeNext type-resolution:** same smoke.ts with `moduleResolution: 'nodenext'`.
+
+Until fixed, consumers should either (a) use per-component subpath imports (`@pkg/atoms/Button`) for type-safe imports, OR (b) accept that layer-barrel runtime works fine and add `// @ts-expect-error` at the import. Document this constraint prominently when the package becomes externally consumed.
 
 ## PostCSS
 

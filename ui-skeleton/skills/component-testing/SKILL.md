@@ -98,7 +98,22 @@ if (typeof globalThis.ResizeObserver === 'undefined') {
     disconnect = () => {};
   } as unknown as typeof ResizeObserver;
 }
+
+// Radix Select / Listbox / Combobox primitives call these on focused items
+// when the listbox opens or while pointer interactions move between items.
+// jsdom implements none of them — the missing-method TypeError fires inside
+// a commit-phase effect, unmounts the test render mid-frame, and downstream
+// queries fail with confusing `root.getElementById is not a function` errors
+// from `dom-accessibility-api`. Polyfill as no-ops.
+if (typeof Element !== 'undefined') {
+  Element.prototype.scrollIntoView ??= () => {};
+  Element.prototype.hasPointerCapture ??= () => false;
+  Element.prototype.setPointerCapture ??= () => {};
+  Element.prototype.releasePointerCapture ??= () => {};
+}
 ```
+
+Required for any Select / Combobox / Listbox-style portaled menu. Popover / Tooltip / HoverCard / ContextMenu do NOT need these polyfills because they don't scroll-into-view their content.
 
 ### Why the `/* global globalThis */` comment
 
@@ -214,6 +229,45 @@ Add additional tests for atom-specific concerns:
 `bunx vitest run` returns exit 1 with `No test files found` when the package has no `*.test.*` files yet — this is **normal** during scaffolding, not a config failure. Confirms the config loaded and resolved successfully.
 
 Same applies to `tsc --noEmit` on an empty package: TS18003 (`No inputs were found`) is expected during scaffolding and goes away once source files exist.
+
+## Portal-based molecules — query with `screen.findByRole`
+
+Radix Popover, Tooltip, HoverCard, ContextMenu, and Select all render their Content into a `RadixPortal` that targets `document.body` — OUTSIDE the test's bound `container`. `getByRole(...)` against the destructured `container` misses portaled content and throws. The fix:
+
+- Use `screen.findByRole(...)` (the `screen.find*` family searches `document.body` and awaits async open).
+- For Tooltip specifically, pass `delayDuration={0}` on the molecule prop so the 300ms hover delay doesn't race the awaited query.
+- `data-side` / `data-align` emitted by Radix after collision detection are queryable AFTER the `findByRole` resolves — molecule axes are the consumer's REQUEST; the resolved value may differ if there's no room.
+
+## Tooltip's visually-hidden a11y twin (duplicate text rendering)
+
+Radix Tooltip renders its body content TWICE in the DOM when open:
+
+1. Inside the visible `[data-slot=tooltip-content]` div.
+2. Inside a nested visually-hidden `<span role="tooltip">` used as the `aria-describedby` target.
+
+`screen.findByText('...')` collides with both copies and throws "Found multiple elements". Scope queries:
+
+```ts
+const visibleContent = await waitFor(() =>
+  document.querySelector('[data-slot="tooltip-content"]') as HTMLElement,
+);
+const text = within(visibleContent).getAllByText('Save')[0];
+```
+
+Same gotcha applies to any future Radix wrapper that emits a visually-hidden a11y twin.
+
+## axe `region` rule for portaled content
+
+axe's `region` rule fails on Tooltip a11y tests because Radix portals the Content to `document.body` — OUTSIDE any `<main>` landmark the test wraps the render in. `role="dialog"` (Popover) is auto-exempted by axe so Popover passes naturally; `role="tooltip"` is NOT exempted.
+
+For component-isolation tests, disable the rule per-test:
+
+```ts
+const results = await axe(baseElement, { rules: { region: { enabled: false } } });
+expect(results).toHaveNoViolations();
+```
+
+The consumer's app shell provides the landmark in real usage — the portaled tooltip sitting above page flow is by design.
 
 ## Vitest reporter caveat
 

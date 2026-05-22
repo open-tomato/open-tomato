@@ -121,6 +121,16 @@ If a consumer needs a knob the current variants don't cover, that's a signal the
 
 **Compliance is universal as of Phase 2.** Every atom under `src/atoms/` follows this rule. Button remains the canonical reference — open `src/atoms/Button/Button.tsx` to see the props interface using `Omit<..., 'className'>` and the bare `cn(buttonVariants({...}))` call.
 
+### Per-part bag props (`imageProps`, `viewportProps`, `contentProps`, ...)
+
+Atoms that expose escape-hatch bags forwarding to an inner sub-component (Avatar's `imageProps` → `Avatar.Image`, ScrollArea's `viewportProps` / `scrollbarProps`, future portal-based molecule `contentProps` / `triggerProps`) MUST `Omit<..., 'className'>` on every bag's type. Without the omit, a consumer-supplied `className` string reaches the inner part via `{...bag}` and re-opens the escape hatch one DOM level below — silently bypassing the cardinal rule that fires on the outer props interface. The same `Omit` clause should also drop any positioning / `children` keys the wrapper itself controls (e.g. `side`, `align` on `RadixPopover.Content`).
+
+## Inline-style atoms (Skeleton, Progress, and similar)
+
+Atoms that own the inline `style` channel to publish runtime-computed values (Skeleton's `width` / `height` / `size`, Progress's indicator `translateX`) MUST also include `'style'` in the `Omit<HTMLAttrs, ...>` clause alongside `'className'`. Otherwise a consumer-supplied `style` prop reaches the DOM via `{...rest}` and silently races with the atom-emitted style object.
+
+Dimension props that replaced an old `className="h-* w-*"` channel use the shape `width?: string | number; height?: string | number; size?: string | number;` with a small `toCss` helper that emits numbers as `${n}px` and passes strings through. `size` overrides both `width` and `height` when provided. Tests assert via `toHaveStyle({ width: '...', height: '...' })`.
+
 ## Authoring rules
 
 - **Types colocated** in `<Component>.tsx` for atoms. Split into a separate `<Component>.types.ts` only when discriminated unions are shared with other components (molecule level and up).
