@@ -89,7 +89,7 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 ### 3.3 Phase 3 close-out
 
 - [x] Run end-of-phase gates: `bun run test:coverage` (verify 80 / 80 / 75 / 80 thresholds hold), `bun run build` (verify per-organism entries land under `dist/organisms/`), `bun run build-storybook` (verify every organism appears in the static manifest at `/index.json`).
-- [ ] Append a dated Phase 3 close-out audit note to `README.md` "Atomic Design System" section reflecting completion of the organism layer and the Date Picker → template promotion.
+- [x] Append a dated Phase 3 close-out audit note to `README.md` "Atomic Design System" section reflecting completion of the organism layer and the Date Picker → template promotion.
 
 ---
 
@@ -97,7 +97,7 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 
 ### 4.0 Prep
 
-- [ ] Author `skills/template-authoring/SKILL.md` mirroring `skills/organism-authoring/SKILL.md`. Document: templates MAY compose `@/organisms/*` + `@/molecules/*` + `@/atoms/*` + `@/particles/*`; MUST NOT import `@/templates/*` + `@/pages/*` + `@/providers/*`. Document the README's loose use of "Templates" (NavigationMenu / Sheet / Sidebar / Tabs frame the page surface — this deviates from textbook atomic design) and the deviation. Tabs is the canonical reference. Public `className` is still blocked; layout-level granularity flows through variant axes only.
+- [x] Author `skills/template-authoring/SKILL.md` mirroring `skills/organism-authoring/SKILL.md`. Document: templates MAY compose `@/organisms/*` + `@/molecules/*` + `@/atoms/*` + `@/particles/*`; MUST NOT import `@/templates/*` + `@/pages/*` + `@/providers/*`. Document the README's loose use of "Templates" (NavigationMenu / Sheet / Sidebar / Tabs frame the page surface — this deviates from textbook atomic design) and the deviation. Tabs is the canonical reference. Public `className` is still blocked; layout-level granularity flows through variant axes only.
 - [ ] Add an ESLint `no-restricted-imports` block in `eslint.config.mjs` keyed off `files: ['src/templates/**/*.{ts,tsx}']` that blocks `@/templates/*`, `@/pages/*`, `@/providers/*` and allows `@/organisms/*`, `@/molecules/*`, `@/atoms/*`, `@/particles/*`. Verify via throwaway file as before.
 - [ ] Update `AGENTS.md` cardinal rule #11 with the template row, the skill-index table with a `template-authoring` row, the "Day-to-day workflow" section with an "Adding a new template" subsection, and the documentation-drift section with a Phase 4 audit bullet.
 - [ ] Update `README.md` with a dated Phase 4 audit bullet; move Date Picker from "Organisms" to "Templates" in the inventory.
