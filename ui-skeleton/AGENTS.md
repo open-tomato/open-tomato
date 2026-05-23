@@ -67,7 +67,7 @@ packages/ui-skeleton/
 8. **Every atom appears in `registry.json` `items[]`** with kebab-case `name`, `type: registry:ui`, files, and `registryDependencies` listing the npm packages it imports beyond `react` + `@/particles/cn`.
 9. **The `registry.json` is internal-only.** Never publish it to npm or `ui.shadcn.com`. The `"homepage": "internal"` field signals intent.
 10. **The package is standalone this iteration.** It is NOT in the root `packages/package.json` workspaces array. `devDependencies` for the shared configs use `file:../shared/<name>` links, not `workspace:^`. Do not "fix" this without coordinating a workspace rewrite.
-11. **Layer-import direction is one-way.** Molecules import atoms and particles only — never other molecules, organisms, templates, pages, or providers. Atoms import particles only — never other atoms or upward layers. Enforced at lint-time by `no-restricted-imports` blocks in `eslint.config.mjs`. When a candidate composes another molecule, promote it to organism instead.
+11. **Layer-import direction is one-way.** Organisms import molecules, atoms, and particles only — never other organisms, templates, pages, or providers. Molecules import atoms and particles only — never other molecules, organisms, templates, pages, or providers. Atoms import particles only — never other atoms or upward layers. Enforced at lint-time by `no-restricted-imports` blocks in `eslint.config.mjs`. When a candidate composes another molecule, promote it to organism instead.
 
 ## Skill index — when to invoke which
 
