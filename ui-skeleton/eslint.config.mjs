@@ -38,4 +38,25 @@ export default [
       }],
     },
   },
+  {
+    files: ['src/organisms/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [
+          {
+            group: ['@/organisms/*', '../organisms/*', './**/organisms/*'],
+            message: 'Organisms MUST NOT import other organisms. Promote to template instead.',
+          },
+          {
+            group: [
+              '@/templates/*', '../templates/*', './**/templates/*',
+              '@/pages/*', '../pages/*', './**/pages/*',
+              '@/providers/*', '../providers/*', './**/providers/*',
+            ],
+            message: 'Organisms MUST NOT import upward layers.',
+          },
+        ],
+      }],
+    },
+  },
 ];
