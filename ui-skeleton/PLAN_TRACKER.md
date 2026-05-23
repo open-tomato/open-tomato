@@ -41,8 +41,8 @@ Tasks are listed as individual `- [ ]` checkboxes in execution order so [ralph.s
 - [x] Update `AGENTS.md` cardinal rule #11 (layer-import direction): add the organism row — "Organisms import molecules, atoms, and particles only — never other organisms, templates, pages, or providers."
 - [x] Update `AGENTS.md` skill-index table with a new row pointing at `skills/organism-authoring/SKILL.md`.
 - [x] Update `AGENTS.md` "Day-to-day workflow" section with an "Adding a new organism" subsection mirroring the molecule subsection.
-- [ ] Update `README.md` "Atomic Design System" section with a dated Phase 3 audit bullet (annotate, do not rewrite the original prose).
-- [ ] Add `organisms: resolve(rootDir, 'src/organisms/index.ts')` to `vite.config.ts` `build.lib.entry`, and re-export `./organisms` from `src/index.ts`.
+- [x] Update `README.md` "Atomic Design System" section with a dated Phase 3 audit bullet (annotate, do not rewrite the original prose).
+- [x] Add `organisms: resolve(rootDir, 'src/organisms/index.ts')` to `vite.config.ts` `build.lib.entry`, and re-export `./organisms` from `src/index.ts`.
 
 ### 3.1 Canonical organism
 
