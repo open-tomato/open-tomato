@@ -84,11 +84,11 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 
 **Data-driven (lands last):**
 
-- [ ] Hand-write the DataTable organism six files under `src/organisms/DataTable/`. Composes Table (molecule) + Pagination (organism) + Checkbox (atom) + internal sort/filter/selection state. Generic over a row type via `<T>` on the props interface. Props: `data: T[]`, `columns: ColumnDef<T>[]`, `pageSize`, `sortable`, `filterable`, `selectable`. Variants: `size`, `density`. Columns descriptor: `{ id, header, accessor, sortable?, filterable?, cell? }`. Test sort, filter, page, and selection flows. No external `registryDependencies` beyond what composed components already pull in.
+- [x] Hand-write the DataTable organism six files under `src/organisms/DataTable/`. Composes Table (molecule) + Pagination (organism) + Checkbox (atom) + internal sort/filter/selection state. Generic over a row type via `<T>` on the props interface. Props: `data: T[]`, `columns: ColumnDef<T>[]`, `pageSize`, `sortable`, `filterable`, `selectable`. Variants: `size`, `density`. Columns descriptor: `{ id, header, accessor, sortable?, filterable?, cell? }`. Test sort, filter, page, and selection flows. No external `registryDependencies` beyond what composed components already pull in.
 
 ### 3.3 Phase 3 close-out
 
-- [ ] Run end-of-phase gates: `bun run test:coverage` (verify 80 / 80 / 75 / 80 thresholds hold), `bun run build` (verify per-organism entries land under `dist/organisms/`), `bun run build-storybook` (verify every organism appears in the static manifest at `/index.json`).
+- [x] Run end-of-phase gates: `bun run test:coverage` (verify 80 / 80 / 75 / 80 thresholds hold), `bun run build` (verify per-organism entries land under `dist/organisms/`), `bun run build-storybook` (verify every organism appears in the static manifest at `/index.json`).
 - [ ] Append a dated Phase 3 close-out audit note to `README.md` "Atomic Design System" section reflecting completion of the organism layer and the Date Picker → template promotion.
 
 ---

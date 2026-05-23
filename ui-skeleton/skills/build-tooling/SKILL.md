@@ -227,7 +227,8 @@ Same approach applies to any new ESM `.config.{ts,js,mjs}` file in this package.
 
 - `build.lib.entry` is a `Record<string, string>` (key = chunk name, value = absolute path).
 - `output.entryFileNames: '[name].js'` + `output.preserveModules: false` emits one file per entry (e.g. `index.js`, `particles.js`, `atoms/Button.js`).
-- Per-atom entries can be generated programmatically via `Object.fromEntries(names.map(...))`.
+- Per-component entries can be generated programmatically via `Object.fromEntries(names.map(...))`.
+- When adding a new layer (organisms, templates, providers): wire BOTH the barrel entry (`organisms: ...src/organisms/index.ts`) AND the per-component entries (`Object.fromEntries(organisms.map(...))`). The barrel alone produces only `dist/organisms.js` + declarations under `dist/organisms/<Name>/` — the per-component JS files at `dist/organisms/<Name>.js` (matching the atoms/molecules layout) require the explicit per-component entries.
 
 ### Externalize peers
 

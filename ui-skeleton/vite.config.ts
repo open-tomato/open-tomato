@@ -43,6 +43,26 @@ const molecules = [
   'Tooltip',
 ] as const;
 
+const organisms = [
+  'Accordion',
+  'AlertDialog',
+  'Breadcrumb',
+  'Calendar',
+  'Combobox',
+  'Command',
+  'DataTable',
+  'Dialog',
+  'Drawer',
+  'DropdownMenu',
+  'Empty',
+  'Field',
+  'InputGroup',
+  'Menubar',
+  'Pagination',
+  'Resizable',
+  'Sonner',
+] as const;
+
 const rootDir = import.meta.dirname;
 
 export default defineConfig({
@@ -73,6 +93,12 @@ export default defineConfig({
           molecules.map((m) => [
             `molecules/${m}`,
             resolve(rootDir, `src/molecules/${m}/index.ts`),
+          ]),
+        ),
+        ...Object.fromEntries(
+          organisms.map((o) => [
+            `organisms/${o}`,
+            resolve(rootDir, `src/organisms/${o}/index.ts`),
           ]),
         ),
       },
