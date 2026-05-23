@@ -380,6 +380,15 @@
         { "path": "src/organisms/Dialog/dialog.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-dialog"]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/DropdownMenu/DropdownMenu.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/DropdownMenu/dropdown-menu.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-dropdown-menu"]
     }
   ]
 }

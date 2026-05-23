@@ -3,6 +3,7 @@ export * from './AlertDialog';
 export * from './Breadcrumb';
 export * from './Dialog';
 export * from './Drawer';
+export * from './DropdownMenu';
 export * from './Empty';
 export * from './Field';
 export * from './InputGroup';
