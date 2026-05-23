@@ -77,6 +77,7 @@ Load a skill before making changes in its domain.
 |---|---|
 | Add a new atom or edit an existing one's files/layout | [atom-authoring](./skills/atom-authoring/SKILL.md) |
 | Add a new molecule or edit an existing one's files/layout | [molecule-authoring](./skills/molecule-authoring/SKILL.md) |
+| Add a new organism or edit an existing one's files/layout | [organism-authoring](./skills/organism-authoring/SKILL.md) |
 | Touch `globals.css`, add a token, choose a color, write a Tailwind class | [styling](./skills/styling/SKILL.md) |
 | Write or modify a `*.variants.ts` file, design a variant axis | [cva-variants](./skills/cva-variants/SKILL.md) |
 | Wrap a Radix primitive, deal with `Slot` / `Slottable` / `*Indicator` / multi-part | [radix-wrappers](./skills/radix-wrappers/SKILL.md) |

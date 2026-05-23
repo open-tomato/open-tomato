@@ -4,7 +4,7 @@ We shared the plan and all the tasks so you know the context of the overall proj
 
 If you discover general findings relevant to future tasks, append them to `progress.txt`. Only include findings that apply broadly, not task-specific details.
 
-After completing the task, append any new findings to `progress.txt` that match these criteria:
+After completing the task, append any new relevant findings to `progress.txt` or the relevant skill linked in there that matches these criteria:
 * Suggested skills that are found related to the problem space (e.g. "I found that X is useful for Y")
 * Patterns discovered (e.g. "this codebase uses X for Y")
 * Gotchas encountered (e.g. "don't forget to update Z when changing W")  
@@ -17,3 +17,6 @@ After completing a task, commit all changes:
 * Commit with a short descriptive message summarizing what was done
 * Fix any linting or formatting issues if `bun lint` is available
 * Do not include Claude attribution in the commit message
+
+Final step (mandatory):
+* Before ending this iteration, invoke the `/learn-eval` skill via the Skill tool to capture any reusable patterns from this session. Do not return control until `/learn-eval` has completed.
