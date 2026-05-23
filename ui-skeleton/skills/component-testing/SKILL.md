@@ -192,6 +192,12 @@ Match the exact CSS string Radix / JSX emits. jsdom doesn't normalize `translate
 
 Hidden icons (`aria-hidden`) are still counted by the accName algorithm if they contain text content — only non-text glyphs are skipped.
 
+### Regex name matching: substrings collide across similar labels
+
+When the rendered tree has many elements whose accessible names share a numeric or alphabetic substring, a permissive regex matches them all. The Calendar organism's day buttons are the canonical case — `react-day-picker` labels them with the full long-form date (`"Saturday, June 15th, 2024"`), and `/5th, 2024/i` matches `5th`, `15th`, AND `25th` simultaneously, so `getByRole('button', { name: /5th, 2024/i })` throws "multiple elements found". Same trap for `/3rd, 2024/` matching both `3rd` and `23rd`.
+
+**Fix:** prefer the full exact aria-label string (`name: 'Saturday, June 15th, 2024'`) over a substring regex. Reserve regex matching for the genuine partial-match cases (icon + text), not for "shorter is easier to type".
+
 ### `<label>` association in tests
 
 `jsx-a11y/label-has-associated-control` is a **static-analysis** rule and does NOT see through custom components. `<label><Input/></label>` errors at lint time even though `<Input>` does render an `<input>` at runtime.

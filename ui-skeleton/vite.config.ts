@@ -90,6 +90,7 @@ export default defineConfig({
         'sonner',
         'cmdk',
         'react-resizable-panels',
+        'react-day-picker',
       ],
       output: {
         preserveModules: false,

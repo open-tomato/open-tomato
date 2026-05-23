@@ -425,6 +425,15 @@
         { "path": "src/organisms/Resizable/resizable.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["react-resizable-panels", "lucide-react"]
+    },
+    {
+      "name": "calendar",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Calendar/Calendar.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Calendar/calendar.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["react-day-picker", "lucide-react"]
     }
   ]
 }
