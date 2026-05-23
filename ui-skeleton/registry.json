@@ -353,6 +353,15 @@
         { "path": "src/organisms/Breadcrumb/breadcrumb.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["lucide-react"]
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/AlertDialog/AlertDialog.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/AlertDialog/alert-dialog.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-alert-dialog"]
     }
   ]
 }

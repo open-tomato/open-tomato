@@ -1,4 +1,5 @@
 export * from './Accordion';
+export * from './AlertDialog';
 export * from './Breadcrumb';
 export * from './Empty';
 export * from './Field';
