@@ -59,4 +59,24 @@ export default [
       }],
     },
   },
+  {
+    files: ['src/templates/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [
+          {
+            group: ['@/templates/*', '../templates/*', './**/templates/*'],
+            message: 'Templates MUST NOT import other templates. Lift shared treatment to a particle instead.',
+          },
+          {
+            group: [
+              '@/pages/*', '../pages/*', './**/pages/*',
+              '@/providers/*', '../providers/*', './**/providers/*',
+            ],
+            message: 'Templates MUST NOT import upward layers.',
+          },
+        ],
+      }],
+    },
+  },
 ];
