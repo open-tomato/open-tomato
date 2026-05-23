@@ -326,6 +326,15 @@
         { "path": "src/organisms/Field/field.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": []
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/InputGroup/InputGroup.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/InputGroup/input-group.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
     }
   ]
 }

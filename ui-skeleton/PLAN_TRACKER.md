@@ -55,8 +55,8 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 **Composition-only (no Radix):**
 
 - [x] Hand-write the Empty organism six files under `src/organisms/Empty/`. Minimal "no content yet" surface composing Card (atom) + Typography (atom) + optional `actions` slot. Variants: `size` axis (`sm | md | lg`) and `tone` axis (`neutral | info`). No Radix dependency, no portal, no state.
-- [ ] Hand-write the Field organism six files under `src/organisms/Field/`. Composes Label (atom) + Input (atom) + optional Typography description / error message. Slot props: `label`, `description`, `error`, `leading`, `trailing`. Variants: `size`, `invalid`. Generate the `id`/`htmlFor` pairing via `React.useId()` with an `id` prop override.
-- [ ] Hand-write the InputGroup organism six files under `src/organisms/InputGroup/`. Composes Input (atom) + leading/trailing slot atoms (Button, Kbd, Avatar, etc.). Slot props: `leading`, `trailing`. Variants: `size`, `invalid`. Use the wrapper-frame particle for the shared border treatment around the input + slots.
+- [x] Hand-write the Field organism six files under `src/organisms/Field/`. Composes Label (atom) + Input (atom) + optional Typography description / error message. Slot props: `label`, `description`, `error`, `leading`, `trailing`. Variants: `size`, `invalid`. Generate the `id`/`htmlFor` pairing via `React.useId()` with an `id` prop override.
+- [x] Hand-write the InputGroup organism six files under `src/organisms/InputGroup/`. Composes Input (atom) + leading/trailing slot atoms (Button, Kbd, Avatar, etc.). Slot props: `leading`, `trailing`. Variants: `size`, `invalid`. Use the wrapper-frame particle for the shared border treatment around the input + slots.
 - [ ] Hand-write the Pagination organism six files under `src/organisms/Pagination/`. Composes ButtonGroup (molecule) + Button (atom) + lucide-react chevron icons. Props: `page`, `pageCount`, `onPageChange`, `siblingCount`, `showFirstLast`. Variants: `size`, `align`. Compute the displayed range (current ± siblings, plus ellipses, plus first/last) in a pure helper at the top of the component file.
 
 **Static items[]-driven:**
