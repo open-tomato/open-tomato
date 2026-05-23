@@ -335,6 +335,15 @@
         { "path": "src/organisms/InputGroup/input-group.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": []
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Pagination/Pagination.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Pagination/pagination.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["lucide-react"]
     }
   ]
 }
