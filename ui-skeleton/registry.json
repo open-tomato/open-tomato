@@ -443,6 +443,15 @@
         { "path": "src/organisms/Combobox/combobox.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": []
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/DataTable/DataTable.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/DataTable/data-table.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["lucide-react"]
     }
   ]
 }
