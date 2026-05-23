@@ -479,6 +479,15 @@
         { "path": "src/templates/Sheet/sheet.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": []
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/templates/Sidebar/Sidebar.tsx", "type": "registry:ui" },
+        { "path": "src/templates/Sidebar/sidebar.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
     }
   ]
 }
