@@ -130,6 +130,31 @@ The git repository root is `packages/` (not the monorepo root above it). Paths i
 
 Running `tsc --noEmit` against an empty package (no `src/` yet) emits TS18003 (`No inputs were found`). This is expected during scaffolding and not a config error — once source files exist it goes away.
 
+### TS4023 when re-exporting from a third-party library
+
+`declaration: true` is set on the shared base config, so `tsc --noEmit` still runs declaration-emit type checks even when it never writes a `.d.ts` to disk. A failure that only surfaces during declaration emit looks like:
+
+```text
+src/organisms/<Foo>/<Foo>.tsx(N,M): error TS4023: Exported variable 'bar' has or is using name 'InternalThing' from external module ".../node_modules/<library>" but cannot be named.
+```
+
+The cause: a local `const bar = libraryBar` aliases a value whose inferred type references a type that the upstream library does NOT include in its public exports (e.g. sonner's `toast.promise` references `PromiseIExtendedResult`, which sonner's `index.d.ts` keeps internal). Declaration emit has to materialise the inferred type and cannot name the unexported symbol.
+
+Workaround: re-export the value directly from the source module instead of aliasing through a local const.
+
+```ts
+// Triggers TS4023 — declaration emit must inline the inferred type.
+import { toast as sonnerToast } from 'sonner';
+export const toast = sonnerToast;
+
+// Clean — the .d.ts references sonner's declaration directly.
+export { toast } from 'sonner';
+```
+
+The direct re-export keeps the type reference indirect — the emitted `.d.ts` writes `export { toast } from 'sonner'` and TypeScript never has to expand the type at the boundary. Same trick applies to any third-party value whose public type signature reaches into unexported helper types (often the case for builder objects, fluent APIs, and helpers with deep generic chains).
+
+If the re-export must live alongside a component file (so `react-refresh/only-export-components` flags the non-component export), move the re-export to the directory's `index.ts` barrel rather than the component file. The barrel is not a Fast Refresh boundary, so the rule does not apply there. This is the precedent applied by `src/organisms/Sonner/index.ts` for sonner's `toast` and `useSonner` re-exports.
+
 ## Vite library mode
 
 `vite.config.ts` configures multi-entry library mode:

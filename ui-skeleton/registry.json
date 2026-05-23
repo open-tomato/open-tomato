@@ -398,6 +398,15 @@
         { "path": "src/organisms/Menubar/menubar.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-menubar"]
+    },
+    {
+      "name": "sonner",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Sonner/Sonner.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Sonner/sonner.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["sonner"]
     }
   ]
 }

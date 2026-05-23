@@ -257,6 +257,27 @@ Radix Popover, Tooltip, HoverCard, ContextMenu, and Select all render their Cont
 - For Tooltip specifically, pass `delayDuration={0}` on the molecule prop so the 300ms hover delay doesn't race the awaited query.
 - `data-side` / `data-align` emitted by Radix after collision detection are queryable AFTER the `findByRole` resolves — molecule axes are the consumer's REQUEST; the resolved value may differ if there's no room.
 
+## Lazy-mounting host DOM — fire the trigger before asserting attributes
+
+Some libraries do NOT render their host DOM until the first imperative call queues a payload. Sonner is the canonical case: `<Toaster />` renders nothing until `toast(...)` is called for the first time, at which point sonner mounts a `<section data-sonner-toaster>` lazily. Bare-render assertions on the host fail with `expected null not to be null` because the host is still un-mounted.
+
+Pattern for testing variant propagation on lazy-mounting hosts:
+
+```ts
+render(<Sonner position="top-center" />);
+
+act(() => {
+  toast('Anchored.');
+});
+
+await screen.findByText('Anchored.');
+const section = document.querySelector('[data-sonner-toaster]');
+expect(section).toHaveAttribute('data-y-position', 'top');
+expect(section).toHaveAttribute('data-x-position', 'center');
+```
+
+`afterEach(() => act(() => toast.dismiss()))` is mandatory for sonner tests because the toast queue is a global singleton — toasts queued in one test leak into the next and cause `findByText` matches to resolve against stale text. The same pattern applies to any future singleton-state organism (e.g. a future `Hotkey` provider that registers handlers globally).
+
 ## Tooltip's visually-hidden a11y twin (duplicate text rendering)
 
 Radix Tooltip renders its body content TWICE in the DOM when open:

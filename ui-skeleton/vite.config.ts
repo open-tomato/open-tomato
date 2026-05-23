@@ -87,6 +87,7 @@ export default defineConfig({
         'clsx',
         'tailwind-merge',
         'vaul',
+        'sonner',
       ],
       output: {
         preserveModules: false,
