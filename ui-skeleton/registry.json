@@ -317,6 +317,15 @@
         { "path": "src/organisms/Empty/empty.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": []
+    },
+    {
+      "name": "field",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Field/Field.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Field/field.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
     }
   ]
 }
