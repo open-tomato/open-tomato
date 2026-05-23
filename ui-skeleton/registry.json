@@ -452,6 +452,15 @@
         { "path": "src/organisms/DataTable/data-table.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["lucide-react"]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/templates/Tabs/Tabs.tsx", "type": "registry:ui" },
+        { "path": "src/templates/Tabs/tabs.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-tabs"]
     }
   ]
 }
