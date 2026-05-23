@@ -344,6 +344,15 @@
         { "path": "src/organisms/Pagination/pagination.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["lucide-react"]
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Breadcrumb/Breadcrumb.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Breadcrumb/breadcrumb.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["lucide-react"]
     }
   ]
 }
