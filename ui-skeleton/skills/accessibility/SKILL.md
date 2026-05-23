@@ -217,3 +217,19 @@ Use `sr-only` for any visually-hidden label text (Spinner's `sr-only` label, ico
 ```
 
 The runtime label-association still works either way.
+
+Another recurring case is `jsx-a11y/click-events-have-key-events` (and its sibling `jsx-a11y/no-static-element-interactions`) firing on `<li role="option" onClick={…}>` rows inside an `aria-activedescendant` listbox. In that pattern keyboard focus parks on the search Input (or the combobox trigger), not on each option — pressing Enter is handled by the focused element's `onKeyDown`, not by per-row listeners. Adding a stub `onKeyDown` to satisfy the rule would create a phantom interactive surface that confuses screen readers.
+
+**Fix:** apply a focused, justified disable on the option row and link to where keyboard activation actually lives:
+
+```tsx
+// eslint-disable-next-line jsx-a11y/click-events-have-key-events -- aria-activedescendant pattern parks focus on the search Input; keyboard activation lives there (Enter in handleSearchKeyDown), not per-option.
+<li
+  role="option"
+  onClick={() => handleSelectValue(item.value)}
+  onMouseEnter={() => setFocusedValue(item.value)}
+  …
+>
+```
+
+Combobox is the canonical reference. The same exception applies to any listbox / autocomplete / custom-select / tree-grid that uses `aria-activedescendant` to project focus onto a non-tabbable child.
