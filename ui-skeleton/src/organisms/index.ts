@@ -2,6 +2,7 @@ export * from './Accordion';
 export * from './AlertDialog';
 export * from './Breadcrumb';
 export * from './Calendar';
+export * from './Combobox';
 export * from './Command';
 export * from './Dialog';
 export * from './Drawer';

@@ -434,6 +434,15 @@
         { "path": "src/organisms/Calendar/calendar.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["react-day-picker", "lucide-react"]
+    },
+    {
+      "name": "combobox",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Combobox/Combobox.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Combobox/combobox.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
     }
   ]
 }

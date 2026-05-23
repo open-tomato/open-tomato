@@ -79,8 +79,8 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 
 **Heavy stateful:**
 
-- [ ] Hand-write the Calendar organism six files under `src/organisms/Calendar/`. Wraps `react-day-picker`. Owns the date-grid state (this is why it's an organism, not a molecule — Phase 2 audit reclassified it). Props: `mode` (`single | range | multiple`), `selected`, `onSelect`, `defaultMonth`, `disabled`, `fromDate`, `toDate`. Variants: `size`. Test selection in each mode. `registryDependencies: ["react-day-picker"]`.
-- [ ] Hand-write the Combobox organism six files under `src/organisms/Combobox/`. Composes Popover (molecule) + Input (atom) + items[] list with type-ahead filter state. Props: `value`, `onValueChange`, `placeholder`, `searchPlaceholder`, `emptyMessage`. Variants: `size`. Items[] descriptor `{ value, label, keywords?, disabled? }`. Test the open/close + filter + selection flow. Use `screen.findByRole('listbox')`. No external `registryDependencies` beyond what Popover already pulls in.
+- [x] Hand-write the Calendar organism six files under `src/organisms/Calendar/`. Wraps `react-day-picker`. Owns the date-grid state (this is why it's an organism, not a molecule — Phase 2 audit reclassified it). Props: `mode` (`single | range | multiple`), `selected`, `onSelect`, `defaultMonth`, `disabled`, `fromDate`, `toDate`. Variants: `size`. Test selection in each mode. `registryDependencies: ["react-day-picker"]`.
+- [x] Hand-write the Combobox organism six files under `src/organisms/Combobox/`. Composes Popover (molecule) + Input (atom) + items[] list with type-ahead filter state. Props: `value`, `onValueChange`, `placeholder`, `searchPlaceholder`, `emptyMessage`. Variants: `size`. Items[] descriptor `{ value, label, keywords?, disabled? }`. Test the open/close + filter + selection flow. Use `screen.findByRole('listbox')`. No external `registryDependencies` beyond what Popover already pulls in.
 
 **Data-driven (lands last):**
 
