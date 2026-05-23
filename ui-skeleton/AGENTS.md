@@ -107,6 +107,17 @@ Load a skill before making changes in its domain.
 6. Run `bun run check-types && bun run test && bun run lint`. All three must pass before the task is done.
 7. Optional sanity check: `bun run build && bun run build-storybook`.
 
+### Adding a new organism
+
+1. Open `src/organisms/Accordion/` and read all six files. **Accordion is the canonical reference** for organism layout, slot-prop vocabulary, variant propagation (lookup tables from the organism's axis to each composed molecule's or atom's axis), and `data-*` test hooks. It is also the canonical organism-composes-molecule demo (composing `@/molecules/Collapsible`).
+2. Load [organism-authoring](./skills/organism-authoring/SKILL.md) and follow the per-organism procedure end-to-end.
+3. Import molecules via `@/molecules/<Name>`, atoms via `@/atoms/<Name>`, and particles via `@/particles/<name>`. **Never** import another organism or any upward layer (templates, pages, providers) — the ESLint `no-restricted-imports` guard in `eslint.config.mjs` blocks it. If your candidate composes another organism, promote it to template instead (cardinal rule #11).
+4. Do not accept `className` as a public prop, and do not pass `className` into composed molecules or atoms (both reject it at the type level and at runtime). If a knob is missing, add a variant axis — to your organism, or to the composed molecule/atom — rather than opening an escape hatch.
+5. Append the new organism to `registry.json` `items[]` per [shadcn-integration](./skills/shadcn-integration/SKILL.md). Internal `@/molecules/*` and `@/atoms/*` imports are NOT listed in `registryDependencies` — only npm packages the organism pulls in beyond `react` + `@/particles/cn`.
+6. For portal-based organisms (Dialog, AlertDialog, Drawer, DropdownMenu, Menubar, Sonner, Command), tests MUST call `await axe(document.body)` rather than `await axe(container)` — Radix portals into `document.body`, and a container-scoped axe scan misses the portaled content. Use `screen.findByRole(...)` for the portaled surface.
+7. Run `bun run check-types && bun run test && bun run lint`. All three must pass before the task is done.
+8. Optional sanity check: `bun run build && bun run build-storybook`.
+
 ### Editing an existing atom
 
 1. Read the six files for that atom end-to-end before changing anything.

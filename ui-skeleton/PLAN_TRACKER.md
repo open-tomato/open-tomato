@@ -39,8 +39,8 @@ Tasks are listed as individual `- [ ]` checkboxes in execution order so [ralph.s
 - [x] Add an ESLint `no-restricted-imports` block in `eslint.config.mjs` keyed off `files: ['src/organisms/**/*.{ts,tsx}']` that blocks `@/organisms/*`, `@/templates/*`, `@/pages/*`, `@/providers/*` (and their relative-path equivalents) and allows `@/molecules/*`, `@/atoms/*`, `@/particles/*`. Verify by writing a temporary throwaway file that imports across the blocked boundary, running `bun run lint`, confirming it errors, and discarding the throwaway.
 - [x] Update `AGENTS.md` cardinal rule #1 (className): extend "atoms and molecules" to "atoms, molecules, and organisms"; append a dated Phase 3 audit annotation following the documentation-drift pattern from the file.
 - [x] Update `AGENTS.md` cardinal rule #11 (layer-import direction): add the organism row — "Organisms import molecules, atoms, and particles only — never other organisms, templates, pages, or providers."
-- [ ] Update `AGENTS.md` skill-index table with a new row pointing at `skills/organism-authoring/SKILL.md`.
-- [ ] Update `AGENTS.md` "Day-to-day workflow" section with an "Adding a new organism" subsection mirroring the molecule subsection.
+- [x] Update `AGENTS.md` skill-index table with a new row pointing at `skills/organism-authoring/SKILL.md`.
+- [x] Update `AGENTS.md` "Day-to-day workflow" section with an "Adding a new organism" subsection mirroring the molecule subsection.
 - [ ] Update `README.md` "Atomic Design System" section with a dated Phase 3 audit bullet (annotate, do not rewrite the original prose).
 - [ ] Add `organisms: resolve(rootDir, 'src/organisms/index.ts')` to `vite.config.ts` `build.lib.entry`, and re-export `./organisms` from `src/index.ts`.
 
