@@ -30,6 +30,7 @@ The set is enforced by tooling (registry.json schema, downstream consumers, the 
 - PascalCase filename matching the directory name.
 - **No default exports.** Use a named export wrapped in `React.forwardRef`.
 - Set `<Component>.displayName = "<Component>";` immediately after `forwardRef`.
+- **Generic-over-T organisms (DataTable, future list-of-T renderers) use a plain function + cast instead of `forwardRef`.** React's `forwardRef` types collapse the generic parameter on the way out, so the canonical pattern is to author `<Component>Impl<T>(props: <Component>Props<T>): React.JSX.Element` as a plain function and bind the public export through a one-step `as` assertion: `export const <Component> = <Component>Impl as <T>(props: <Component>Props<T>) => React.JSX.Element;`. Refs are not forwarded in this mode — the trade-off is intentional, since the consumer can take refs to internal slots (per-row checkboxes, the filter input, pagination buttons) via cell renderers when needed. Document the no-ref behavior in the README. `react/display-name` is off in the package's ESLint config so the cast pattern lints cleanly without further annotation.
 - TSDoc on the exported component: one-line summary, `@remarks` (call out variant-propagation lookup tables, which molecules and atoms are composed, and any internal state / context the organism owns), `@example`.
 - Props declared as a named `interface <Component>Props` that extends the rendered root element's attrs (or the Radix root primitive's props) **plus** the `VariantProps` derived from the variants file.
 - **No `className` in the props interface.** Add `'className'` to the `Omit<...>` clause on every HTMLAttributes-derived parent type. The className rule (cardinal) below has the full rationale.
@@ -350,6 +351,15 @@ For Command specifically: the `cmdk` library's `<CommandInput />` already wires 
 Calendar owns the date-grid state via `react-day-picker` — the library handles month rendering, selection coordination, and keyboard navigation. The organism's job is variant propagation (`size` axis), accessible labeling, and exposing the controlled-passthrough API (`mode`, `selected`, `onSelect`, `defaultMonth`, `disabled`, `fromDate`, `toDate`). Test selection in each `mode` (`single`, `range`, `multiple`); each mode changes the `onSelect` signature so the test fixture differs per mode.
 
 DataTable is the heaviest organism in the iteration. It composes Table (molecule) + Pagination (organism) + Checkbox (atom) + internal sort/filter/selection state, generic over a row type `<T>` on the props interface. The `ColumnDef<T>` discriminated union — `{ id, header, accessor, sortable?, filterable?, cell? }` — is wide enough to warrant a dedicated `DataTable.types.ts` file (sanctioned exception to the colocated-types rule above). Test sort, filter, page, and selection flows; the variant axes (`size`, `density`) propagate to Table's descendant-selector cell styling via lookup tables. No external `registryDependencies` — Table, Pagination, and Checkbox already pull in what they need.
+
+**DataTable cannot import the `Pagination` organism** — the layer guard blocks organism-to-organism imports. Compose pagination inline using `ButtonGroup` + `Button` + lucide chevron icons; reach for the standalone `Pagination` organism only from a wrapping template, never from inside another organism. Re-implementing prev/next/page-indicator inline is the documented escape for this single case; the alternative (lifting a shared range helper to a particle) is overkill for the simple footer DataTable needs.
+
+**`data-slot` passed via `{...rest}` overrides the composed molecule's own `data-slot`.** Molecules (Table, Card, ButtonGroup, etc.) set `data-slot="<molecule>-root"` BEFORE spreading `{...rest}`, so any `data-slot` attribute the organism forwards to the molecule wins. Two consequences:
+
+1. When the organism wants to label its composed surface (e.g. `<Table data-slot="data-table-table" />`), the molecule's `data-slot="table-root"` is silently replaced — tests that query the molecule by its native `data-slot` will fail. Update tests to expect the organism's override.
+2. When the organism should NOT override (i.e. it only wants to *add* a label), omit `data-slot` from the molecule invocation and query the molecule via its native attribute (`[data-slot="table-root"]`) plus a descendant selector inside the organism root (`[data-slot="data-table-root"] [data-slot="table-root"]`).
+
+Pick deliberately; both are valid. Document the override decision in the README's `## Composition` section so consumers know which `data-slot` to query against.
 
 ### Composition-only with internal state (Accordion)
 
