@@ -309,6 +309,29 @@ expect(results).toHaveNoViolations();
 
 The consumer's app shell provides the landmark in real usage — the portaled tooltip sitting above page flow is by design.
 
+## axe `aria-required-children` rule for `cmdk`
+
+`cmdk` renders `CommandSeparator` with `role="separator"` as a direct sibling of `role="option"` items inside the `role="listbox"`. That placement trips axe's `aria-required-children` rule ("Element has children which are not allowed: [role=separator]") because the listbox role only permits option-shaped children.
+
+The separator placement is intentional in cmdk — the library uses it for keyboard-traversal semantics — so the fix in tests is to disable the rule alongside `region` for the component-isolation scan:
+
+```ts
+expect(await axe(container, {
+  rules: {
+    region: { enabled: false },
+    'aria-required-children': { enabled: false },
+  },
+})).toHaveNoViolations();
+```
+
+Applies to any `cmdk`-wrapping organism (Command today, future Combobox if it composes Command). The consumer's app shell provides the surrounding landmark in real usage, and the separator stays mandatory for cmdk's selection model.
+
+Bonus cmdk quirks worth knowing while authoring tests:
+
+- The standalone `Command` root has NO `role="dialog"` — only the `CommandDialog` form (which wraps Radix Dialog) does. Query the root via `[data-slot="..."]` or via the child `role="combobox"` / `role="listbox"` instead.
+- Each `CommandGroup` renders as a `role="presentation"` wrapper AND a nested `role="group"` element (cmdk-group + cmdk-group-items). `getAllByRole('group')` returns the inner element per group descriptor.
+- cmdk auto-mounts / unmounts the `CommandEmpty` based on the filter; exercise it by typing a no-match query into the input rather than asserting on initial render.
+
 ## Roving-focus keyboard navigation — drive directly, don't tab
 
 Radix composite widgets that wrap a `RovingFocusGroup` (Menubar, NavigationMenu, Tabs, Toolbar, ToggleGroup, RadioGroup) expose a SINGLE tab stop and use Arrow keys to move between siblings. `userEvent.tab()` skips between widgets, not within them — testing internal navigation requires programmatic focus + raw keyboard events:
