@@ -299,6 +299,15 @@
         { "path": "src/molecules/Tooltip/tooltip.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-tooltip"]
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Accordion/Accordion.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Accordion/accordion.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-accordion"]
     }
   ]
 }
