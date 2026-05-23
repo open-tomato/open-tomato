@@ -288,6 +288,30 @@ expect(results).toHaveNoViolations();
 
 The consumer's app shell provides the landmark in real usage — the portaled tooltip sitting above page flow is by design.
 
+## Roving-focus keyboard navigation — drive directly, don't tab
+
+Radix composite widgets that wrap a `RovingFocusGroup` (Menubar, NavigationMenu, Tabs, Toolbar, ToggleGroup, RadioGroup) expose a SINGLE tab stop and use Arrow keys to move between siblings. `userEvent.tab()` skips between widgets, not within them — testing internal navigation requires programmatic focus + raw keyboard events:
+
+```ts
+const triggers = screen.getAllByRole('menuitem'); // or 'tab', 'radio', etc.
+const first = triggers[0]!;
+const second = triggers[1]!;
+
+first.focus();
+await user.keyboard('{ArrowRight}'); // ArrowLeft to reverse; ArrowDown/ArrowUp for vertical orientation
+expect(second).toHaveFocus();
+
+await user.keyboard('{End}');   // last enabled member
+await user.keyboard('{Home}');  // first enabled member
+```
+
+Notes:
+
+- The destructured `[a, b, c] = getAllByRole(...)` is typed `HTMLElement | undefined` under `noUncheckedIndexedAccess`. Either use `triggers[i]!` non-null assertions or assert `triggers.length`.
+- Radix `loop` defaults to `false` on most primitives — pressing ArrowRight on the last trigger stays put unless the consumer opted in. Test the loop behaviour explicitly if it matters.
+- Disabled members are skipped by the roving-focus group; assert the next ENABLED sibling, not the next DOM sibling.
+- `Home` / `End` jump to the first / last ENABLED member.
+
 ## Vitest reporter caveat
 
 Avoid `--reporter=basic` for Vitest 4 smoke tests. It tries to resolve `basic` as a custom reporter module and crashes. Use the default reporter (no flag) for config-load checks.
