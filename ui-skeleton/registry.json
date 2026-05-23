@@ -461,6 +461,15 @@
         { "path": "src/templates/Tabs/tabs.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-tabs"]
+    },
+    {
+      "name": "navigation-menu",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/templates/NavigationMenu/NavigationMenu.tsx", "type": "registry:ui" },
+        { "path": "src/templates/NavigationMenu/navigation-menu.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-navigation-menu", "lucide-react"]
     }
   ]
 }

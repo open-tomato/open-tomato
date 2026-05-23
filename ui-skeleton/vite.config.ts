@@ -63,6 +63,11 @@ const organisms = [
   'Sonner',
 ] as const;
 
+const templates = [
+  'NavigationMenu',
+  'Tabs',
+] as const;
+
 const rootDir = import.meta.dirname;
 
 export default defineConfig({
@@ -100,6 +105,12 @@ export default defineConfig({
           organisms.map((o) => [
             `organisms/${o}`,
             resolve(rootDir, `src/organisms/${o}/index.ts`),
+          ]),
+        ),
+        ...Object.fromEntries(
+          templates.map((t) => [
+            `templates/${t}`,
+            resolve(rootDir, `src/templates/${t}/index.ts`),
           ]),
         ),
       },
