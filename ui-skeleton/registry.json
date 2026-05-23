@@ -371,6 +371,15 @@
         { "path": "src/organisms/Drawer/drawer.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["vaul"]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Dialog/Dialog.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Dialog/dialog.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-dialog"]
     }
   ]
 }
