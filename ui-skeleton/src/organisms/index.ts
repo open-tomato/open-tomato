@@ -7,4 +7,5 @@ export * from './DropdownMenu';
 export * from './Empty';
 export * from './Field';
 export * from './InputGroup';
+export * from './Menubar';
 export * from './Pagination';

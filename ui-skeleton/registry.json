@@ -389,6 +389,15 @@
         { "path": "src/organisms/DropdownMenu/dropdown-menu.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-dropdown-menu"]
+    },
+    {
+      "name": "menubar",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Menubar/Menubar.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Menubar/menubar.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-menubar"]
     }
   ]
 }
