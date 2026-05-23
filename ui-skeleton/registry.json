@@ -308,6 +308,15 @@
         { "path": "src/organisms/Accordion/accordion.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-accordion"]
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Empty/Empty.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Empty/empty.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
     }
   ]
 }
