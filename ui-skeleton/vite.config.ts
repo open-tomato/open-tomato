@@ -86,6 +86,7 @@ export default defineConfig({
         'class-variance-authority',
         'clsx',
         'tailwind-merge',
+        'vaul',
       ],
       output: {
         preserveModules: false,

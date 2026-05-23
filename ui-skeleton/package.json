@@ -188,7 +188,8 @@
     "input-otp": "^1.4.2",
     "lucide-react": "^1.16.0",
     "shadcn": "^4.7.0",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "vaul": "^1.1.2"
   },
   "peerDependencies": {
     "react": "^19.0.0",

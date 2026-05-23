@@ -42,3 +42,24 @@ if (typeof globalThis.Element !== 'undefined') {
     globalThis.Element.prototype.releasePointerCapture = vi.fn();
   }
 }
+
+/**
+ * jsdom does not implement `window.matchMedia`. vaul calls it on mount to
+ * detect reduced-motion / pointer-coarse preferences and throws
+ * `matchMedia is not a function` inside the commit-phase effect when the
+ * Drawer's Content first opens. Stub it as a media-query-shaped object so
+ * the vaul mount path completes in the test environment.
+ */
+if (typeof globalThis.window !== 'undefined'
+  && typeof globalThis.window.matchMedia !== 'function') {
+  globalThis.window.matchMedia = vi.fn((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })) as unknown as typeof globalThis.window.matchMedia;
+}

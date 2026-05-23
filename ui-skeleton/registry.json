@@ -362,6 +362,15 @@
         { "path": "src/organisms/AlertDialog/alert-dialog.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-alert-dialog"]
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Drawer/Drawer.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Drawer/drawer.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["vaul"]
     }
   ]
 }

@@ -111,9 +111,28 @@ if (typeof Element !== 'undefined') {
   Element.prototype.setPointerCapture ??= () => {};
   Element.prototype.releasePointerCapture ??= () => {};
 }
+
+// vaul (Drawer organism) and any other gesture/breakpoint-aware library
+// calls `window.matchMedia(...)` on mount to detect reduced-motion /
+// pointer-coarse preferences. jsdom doesn't implement it; the missing
+// function throws inside the commit-phase effect when the Drawer's
+// Content first opens. Stub it as a media-query-shaped no-op so the mount
+// path completes.
+if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
+  window.matchMedia = ((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  })) as unknown as typeof window.matchMedia;
+}
 ```
 
-Required for any Select / Combobox / Listbox-style portaled menu. Popover / Tooltip / HoverCard / ContextMenu do NOT need these polyfills because they don't scroll-into-view their content.
+Required for any Select / Combobox / Listbox-style portaled menu. Popover / Tooltip / HoverCard / ContextMenu do NOT need these polyfills because they don't scroll-into-view their content. The `matchMedia` polyfill is required for any `vaul`-based organism (Drawer) and any library that branches on `prefers-reduced-motion` or `pointer: coarse` at mount.
 
 ### Why the `/* global globalThis */` comment
 
