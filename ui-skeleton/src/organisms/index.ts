@@ -1,6 +1,7 @@
 export * from './Accordion';
 export * from './AlertDialog';
 export * from './Breadcrumb';
+export * from './Command';
 export * from './Dialog';
 export * from './Drawer';
 export * from './DropdownMenu';

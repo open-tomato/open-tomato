@@ -88,6 +88,7 @@ export default defineConfig({
         'tailwind-merge',
         'vaul',
         'sonner',
+        'cmdk',
       ],
       output: {
         preserveModules: false,

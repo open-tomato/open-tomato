@@ -407,6 +407,15 @@
         { "path": "src/organisms/Sonner/sonner.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["sonner"]
+    },
+    {
+      "name": "command",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Command/Command.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Command/command.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["cmdk"]
     }
   ]
 }
