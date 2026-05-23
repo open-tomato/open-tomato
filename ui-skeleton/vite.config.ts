@@ -65,6 +65,7 @@ const organisms = [
 
 const templates = [
   'NavigationMenu',
+  'Sheet',
   'Tabs',
 ] as const;
 

@@ -470,6 +470,15 @@
         { "path": "src/templates/NavigationMenu/navigation-menu.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["@radix-ui/react-navigation-menu", "lucide-react"]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/templates/Sheet/Sheet.tsx", "type": "registry:ui" },
+        { "path": "src/templates/Sheet/sheet.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": []
     }
   ]
 }
