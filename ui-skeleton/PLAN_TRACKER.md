@@ -100,8 +100,8 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 - [x] Author `skills/template-authoring/SKILL.md` mirroring `skills/organism-authoring/SKILL.md`. Document: templates MAY compose `@/organisms/*` + `@/molecules/*` + `@/atoms/*` + `@/particles/*`; MUST NOT import `@/templates/*` + `@/pages/*` + `@/providers/*`. Document the README's loose use of "Templates" (NavigationMenu / Sheet / Sidebar / Tabs frame the page surface — this deviates from textbook atomic design) and the deviation. Tabs is the canonical reference. Public `className` is still blocked; layout-level granularity flows through variant axes only.
 - [x] Add an ESLint `no-restricted-imports` block in `eslint.config.mjs` keyed off `files: ['src/templates/**/*.{ts,tsx}']` that blocks `@/templates/*`, `@/pages/*`, `@/providers/*` and allows `@/organisms/*`, `@/molecules/*`, `@/atoms/*`, `@/particles/*`. Verify via throwaway file as before.
 - [x] Update `AGENTS.md` cardinal rule #11 with the template row, the skill-index table with a `template-authoring` row, the "Day-to-day workflow" section with an "Adding a new template" subsection, and the documentation-drift section with a Phase 4 audit bullet.
-- [ ] Update `README.md` with a dated Phase 4 audit bullet; move Date Picker from "Organisms" to "Templates" in the inventory.
-- [ ] Add `templates: resolve(rootDir, 'src/templates/index.ts')` to `vite.config.ts` `build.lib.entry`, and re-export `./templates` from `src/index.ts`.
+- [x] Update `README.md` with a dated Phase 4 audit bullet; move Date Picker from "Organisms" to "Templates" in the inventory.
+- [x] Add `templates: resolve(rootDir, 'src/templates/index.ts')` to `vite.config.ts` `build.lib.entry`, and re-export `./templates` from `src/index.ts`.
 
 ### 4.1 Canonical template
 
