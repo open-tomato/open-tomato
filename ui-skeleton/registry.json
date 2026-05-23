@@ -488,6 +488,15 @@
         { "path": "src/templates/Sidebar/sidebar.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": []
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/templates/DatePicker/DatePicker.tsx", "type": "registry:ui" },
+        { "path": "src/templates/DatePicker/date-picker.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["lucide-react"]
     }
   ]
 }

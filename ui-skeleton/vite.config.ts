@@ -64,6 +64,7 @@ const organisms = [
 ] as const;
 
 const templates = [
+  'DatePicker',
   'NavigationMenu',
   'Sheet',
   'Sidebar',
