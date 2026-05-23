@@ -10,4 +10,5 @@ export * from './Field';
 export * from './InputGroup';
 export * from './Menubar';
 export * from './Pagination';
+export * from './Resizable';
 export * from './Sonner';

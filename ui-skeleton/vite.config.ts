@@ -89,6 +89,7 @@ export default defineConfig({
         'vaul',
         'sonner',
         'cmdk',
+        'react-resizable-panels',
       ],
       output: {
         preserveModules: false,

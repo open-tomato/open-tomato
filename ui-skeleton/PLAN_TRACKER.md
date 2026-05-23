@@ -74,8 +74,8 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 
 **Stateful + Radix (non-portal-style):**
 
-- [ ] Hand-write the Command organism six files under `src/organisms/Command/`. Wraps `cmdk`. Composes Input (atom) for the search field. Items[] discriminated union with `{ type: 'item', value, label, keywords?, leading?, trailing?, shortcut?, onSelect? }`, `{ type: 'separator' }`, `{ type: 'group', heading, items: [...] }`, `{ type: 'empty', label }`. Variants: `size`. Test the type-ahead filter and keyboard selection. `registryDependencies: ["cmdk"]`.
-- [ ] Hand-write the Resizable organism six files under `src/organisms/Resizable/`. Wraps `react-resizable-panels`. Items[] descriptor `{ type: 'panel', id, defaultSize, minSize?, maxSize?, content }` and `{ type: 'handle', withHandle? }`. Variants: `direction` (`horizontal | vertical`). Handle decoration when `withHandle` is true. `registryDependencies: ["react-resizable-panels"]`.
+- [x] Hand-write the Command organism six files under `src/organisms/Command/`. Wraps `cmdk`. Composes Input (atom) for the search field. Items[] discriminated union with `{ type: 'item', value, label, keywords?, leading?, trailing?, shortcut?, onSelect? }`, `{ type: 'separator' }`, `{ type: 'group', heading, items: [...] }`, `{ type: 'empty', label }`. Variants: `size`. Test the type-ahead filter and keyboard selection. `registryDependencies: ["cmdk"]`.
+- [x] Hand-write the Resizable organism six files under `src/organisms/Resizable/`. Wraps `react-resizable-panels`. Items[] descriptor `{ type: 'panel', id, defaultSize, minSize?, maxSize?, content }` and `{ type: 'handle', withHandle? }`. Variants: `direction` (`horizontal | vertical`). Handle decoration when `withHandle` is true. `registryDependencies: ["react-resizable-panels"]`.
 
 **Heavy stateful:**
 

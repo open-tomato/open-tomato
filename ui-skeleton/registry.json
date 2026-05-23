@@ -416,6 +416,15 @@
         { "path": "src/organisms/Command/command.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["cmdk"]
+    },
+    {
+      "name": "resizable",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/organisms/Resizable/Resizable.tsx", "type": "registry:ui" },
+        { "path": "src/organisms/Resizable/resizable.variants.ts", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["react-resizable-panels", "lucide-react"]
     }
   ]
 }
