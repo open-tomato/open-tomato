@@ -71,6 +71,8 @@ const templates = [
   'Tabs',
 ] as const;
 
+const providers = ['Direction'] as const;
+
 const rootDir = import.meta.dirname;
 
 export default defineConfig({
@@ -115,6 +117,12 @@ export default defineConfig({
           templates.map((t) => [
             `templates/${t}`,
             resolve(rootDir, `src/templates/${t}/index.ts`),
+          ]),
+        ),
+        ...Object.fromEntries(
+          providers.map((p) => [
+            `providers/${p}`,
+            resolve(rootDir, `src/providers/${p}/index.ts`),
           ]),
         ),
       },

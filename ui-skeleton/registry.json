@@ -497,6 +497,14 @@
         { "path": "src/templates/DatePicker/date-picker.variants.ts", "type": "registry:ui" }
       ],
       "registryDependencies": ["lucide-react"]
+    },
+    {
+      "name": "direction",
+      "type": "registry:ui",
+      "files": [
+        { "path": "src/providers/Direction/Direction.tsx", "type": "registry:ui" }
+      ],
+      "registryDependencies": ["@radix-ui/react-direction"]
     }
   ]
 }
