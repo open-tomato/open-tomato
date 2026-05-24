@@ -35,14 +35,6 @@ When you finish an item: delete its entry here, update the relevant skill if the
 
 ## Low priority — small polish
 
-### 8. Animated indeterminate state for `Progress`
-
-**What:** When `Progress` receives `value={null}` or `value={undefined}`, Radix sets `data-state="indeterminate"` on the root and the indicator parks at `translateX(-100%)` (off-screen).
-
-**Status:** Visually static. Acceptable for now; many design systems wait until they have a use case before designing the animation.
-
-**Suggested approach:** Add a `@keyframes` block + `--animate-*` token + `data-[state=indeterminate]:animate-*` class on the indicator's cva block. Document the design intent (loop direction, duration) in the Progress README.
-
 ### 9. Sibling design-system stylesheet integration
 
 **What:** The sibling `../design-system/colors_and_type.css` is referenced manually in the project notes but not imported by `globals.css` in this iteration. Tokens are mirrored locally in `src/styles/globals.css`.
