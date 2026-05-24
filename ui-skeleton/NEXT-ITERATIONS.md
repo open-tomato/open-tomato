@@ -35,15 +35,6 @@ When you finish an item: delete its entry here, update the relevant skill if the
 
 ## Low priority — small polish
 
-### 7. Pre-existing lint errors
-
-`bun lint` exits 1 because of two pre-existing files that are NOT caused by atom scaffolding:
-
-- `README.md` — markdown heading-level / multiple-H1 violations.
-- `vite.config.ts` — used to flag `no-undef` on `__dirname`. Fixed by switching to `import.meta.dirname` (see [build-tooling](./skills/build-tooling/SKILL.md) for the pattern).
-
-**Suggested approach:** A dedicated cleanup task. Verify per-file paths in lint output to confirm only these two files (not new component code) are flagged.
-
 ### 8. Animated indeterminate state for `Progress`
 
 **What:** When `Progress` receives `value={null}` or `value={undefined}`, Radix sets `data-state="indeterminate"` on the root and the indicator parks at `translateX(-100%)` (off-screen).
