@@ -160,6 +160,13 @@ Tailwind v4 ships these by default — no `@theme` additions needed:
 | Cross-component class helpers (focus ring, disabled state, ...) | `src/particles/mixins.ts` |
 | Class merging | `cn()` from `src/particles/cn.ts` |
 
-## Where this does NOT live
+## Design-system stylesheet integration
 
-The sibling `../design-system/colors_and_type.css` is referenced manually in upstream notes but is NOT imported into `globals.css` this iteration. Tokens are mirrored locally. Workspace-level integration is deferred — see [../../NEXT-ITERATIONS.md](../../NEXT-ITERATIONS.md).
+`src/styles/globals.css` `@import`s the sibling `../../../../design-system/colors_and_type.css` immediately after `@import "tailwindcss";`. That file is the single source of truth for the raw palette scale (`--red-*`, `--green-*`, `--cream-*`, `--char-*`), semantic non-Tailwind tokens (`--bg`, `--fg1`, `--primary`, `--accent`, ...), the type families (`--font-display`, `--font-body`, ...), spacing, radii, shadows, and the light/dark theme switch via `[data-theme="dark"]`.
+
+Two important consequences:
+
+- **`@theme { }` stays the authority for Tailwind utility generation.** Tailwind only consumes tokens with its prefixed names (`--color-*`, `--font-*`, `--shadow-*`, `--animate-*`, `--radius-*`) declared inside `@theme`. The design-system file uses unprefixed names (`--primary`, `--bg`, `--font-display`), so importing it does NOT auto-create `.bg-primary` from `--primary`. Tailwind utilities continue to map to the `--color-*` tokens declared in the local `@theme` block.
+- **Raw `var(--token)` references work everywhere.** Any selector, arbitrary value, or `@layer` rule can reach into the design-system tokens directly: `style={{ color: 'var(--fg1)' }}`, `className="bg-[var(--bg)]"`, etc. Prefer adding a `--color-<name>` alias inside `@theme` (e.g. `--color-primary: var(--primary)`) when a token needs first-class Tailwind utility treatment.
+
+The `@import` must come BEFORE `@theme { }` so the design-system custom properties exist when downstream rules reference them. The design-system file's own remote `@import url("https://fonts.googleapis.com/...")` is hoisted by Vite at bundle time.

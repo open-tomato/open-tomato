@@ -160,8 +160,8 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 ### 6.3 Items #6 + #9 — Workspace registration + sibling stylesheet
 
 - [x] Add `packages/ui-skeleton` to the root `packages/package.json` workspaces array.
-- [ ] Rewrite the two `file:../shared/<name>` deps in `package.json` (`@open-tomato/eslint-config`, `@open-tomato/typescript-config`) back to `workspace:^`. Verify `bun install` from the monorepo root resolves cleanly.
-- [ ] Import `../design-system/colors_and_type.css` directly into `src/styles/globals.css` (single source of truth via the workspace alias). Verify Tailwind v4 still picks up `@theme` tokens and that no atom or molecule references a now-undeclared color name.
+- [x] Rewrite the two `file:../shared/<name>` deps in `package.json` (`@open-tomato/eslint-config`, `@open-tomato/typescript-config`) back to `workspace:^`. Verify `bun install` from the monorepo root resolves cleanly.
+- [x] Import `../design-system/colors_and_type.css` directly into `src/styles/globals.css` (single source of truth via the workspace alias). Verify Tailwind v4 still picks up `@theme` tokens and that no atom or molecule references a now-undeclared color name.
 - [ ] Update `AGENTS.md` cardinal rule #10 (standalone-this-iteration) to reflect the new workspace-integrated state. Add a dated annotation noting Phase 6.3 closed the standalone-mode deviation.
 - [ ] Delete items #6 and #9 from `NEXT-ITERATIONS.md`.
 
