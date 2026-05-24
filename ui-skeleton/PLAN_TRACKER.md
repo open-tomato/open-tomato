@@ -155,11 +155,11 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 - [x] Add a `data-[state=indeterminate]:animate-*` class to Progress's indicator cva block in `src/atoms/Progress/progress.variants.ts`.
 - [x] Document loop direction + duration in `src/atoms/Progress/README.md` (Accessibility / Behavior section).
 - [x] Add an `Indeterminate` story to `src/atoms/Progress/Progress.stories.tsx`.
-- [ ] Delete item #8 from `NEXT-ITERATIONS.md`.
+- [x] Delete item #8 from `NEXT-ITERATIONS.md`.
 
 ### 6.3 Items #6 + #9 — Workspace registration + sibling stylesheet
 
-- [ ] Add `packages/ui-skeleton` to the root `packages/package.json` workspaces array.
+- [x] Add `packages/ui-skeleton` to the root `packages/package.json` workspaces array.
 - [ ] Rewrite the two `file:../shared/<name>` deps in `package.json` (`@open-tomato/eslint-config`, `@open-tomato/typescript-config`) back to `workspace:^`. Verify `bun install` from the monorepo root resolves cleanly.
 - [ ] Import `../design-system/colors_and_type.css` directly into `src/styles/globals.css` (single source of truth via the workspace alias). Verify Tailwind v4 still picks up `@theme` tokens and that no atom or molecule references a now-undeclared color name.
 - [ ] Update `AGENTS.md` cardinal rule #10 (standalone-this-iteration) to reflect the new workspace-integrated state. Add a dated annotation noting Phase 6.3 closed the standalone-mode deviation.
