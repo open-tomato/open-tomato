@@ -91,6 +91,7 @@ export default defineConfig({
         atoms: resolve(rootDir, 'src/atoms/index.ts'),
         molecules: resolve(rootDir, 'src/molecules/index.ts'),
         organisms: resolve(rootDir, 'src/organisms/index.ts'),
+        providers: resolve(rootDir, 'src/providers/index.ts'),
         templates: resolve(rootDir, 'src/templates/index.ts'),
         ...Object.fromEntries(
           atoms.map((a) => [

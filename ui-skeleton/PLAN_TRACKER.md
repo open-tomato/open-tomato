@@ -128,8 +128,8 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 - [x] Author `skills/provider-authoring/SKILL.md`. Document: file shape may collapse below six files when variants and stories don't apply (`<Provider>.tsx`, `<Provider>.test.tsx`, optional `<Provider>.stories.tsx`, `README.md`, `index.ts`) — state this is the only sanctioned deviation from the six-file rule and the exact conditions; providers expose context, not visual output (no rendered DOM beyond `children`, no `className` surface); providers MAY import only `@/particles/*`.
 - [x] Add an ESLint `no-restricted-imports` block in `eslint.config.mjs` keyed off `files: ['src/providers/**/*.{ts,tsx}']` that blocks `@/atoms/*`, `@/molecules/*`, `@/organisms/*`, `@/templates/*`, `@/pages/*`, `@/providers/*` and allows only `@/particles/*`. Verify via throwaway file as before.
 - [x] Update `AGENTS.md` cardinal rule #11 with the provider row, skill-index with a `provider-authoring` row, "Day-to-day workflow" with an "Adding a new provider" subsection.
-- [ ] Update `README.md` with a dated Phase 5 audit bullet.
-- [ ] Add `providers: resolve(rootDir, 'src/providers/index.ts')` to `vite.config.ts` `build.lib.entry`, and re-export `./providers` from `src/index.ts`.
+- [x] Update `README.md` with a dated Phase 5 audit bullet.
+- [x] Add `providers: resolve(rootDir, 'src/providers/index.ts')` to `vite.config.ts` `build.lib.entry`, and re-export `./providers` from `src/index.ts`.
 
 ### 5.1 Direction provider
 
