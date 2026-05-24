@@ -309,7 +309,7 @@ Auto-format does NOT fix heading-level rules (the linter can't disambiguate inte
 
 To embed a fenced code block INSIDE another fenced block (e.g. a `markdown` example that itself contains a `ts` snippet), the outer fence MUST use four backticks. Three-backtick outer + three-backtick inner causes the inner closing fence to terminate the outer block early, then the next ``` opens a language-less block and trips `markdown/fenced-code-language`. Pattern:
 
-````text
+`````text
 ````markdown
 ## Composition
 
@@ -317,7 +317,7 @@ To embed a fenced code block INSIDE another fenced block (e.g. a `markdown` exam
 const x = 1;
 ```
 ````
-````
+`````
 
 The same trick applies anywhere a doc shows a code block that itself contains a code block.
 

@@ -133,11 +133,11 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 
 ### 5.1 Direction provider
 
-- [ ] Hand-write the Direction provider files under `src/providers/Direction/`: `Direction.tsx`, `Direction.test.tsx`, `README.md`, `index.ts` (no variants file, optional stories). Wraps `@radix-ui/react-direction` `DirectionProvider`. Public prop: `dir: 'ltr' | 'rtl'` with `'ltr'` default. TSDoc + README document the RTL effect in downstream Radix primitives (Popover `side` flip, Slider thumb direction, ContextMenu alignment). Test: renders children, applies the correct `dir` on context (verify via a test-only `useDirection()` consumer), no a11y violations. Append to `registry.json` with `registryDependencies: ["@radix-ui/react-direction"]`. Re-export from `src/providers/index.ts` and `src/index.ts`.
+- [x] Hand-write the Direction provider files under `src/providers/Direction/`: `Direction.tsx`, `Direction.test.tsx`, `README.md`, `index.ts` (no variants file, optional stories). Wraps `@radix-ui/react-direction` `DirectionProvider`. Public prop: `dir: 'ltr' | 'rtl'` with `'ltr'` default. TSDoc + README document the RTL effect in downstream Radix primitives (Popover `side` flip, Slider thumb direction, ContextMenu alignment). Test: renders children, applies the correct `dir` on context (verify via a test-only `useDirection()` consumer), no a11y violations. Append to `registry.json` with `registryDependencies: ["@radix-ui/react-direction"]`. Re-export from `src/providers/index.ts` and `src/index.ts`.
 
 ### 5.2 Phase 5 close-out
 
-- [ ] Run end-of-phase gates: `bun run check-types && bun run test && bun run lint && bun run build && bun run build-storybook`. Append a dated Phase 5 close-out audit note to `README.md`.
+- [x] Run end-of-phase gates: `bun run check-types && bun run test && bun run lint && bun run build && bun run build-storybook`. Append a dated Phase 5 close-out audit note to `README.md`.
 
 ---
 
