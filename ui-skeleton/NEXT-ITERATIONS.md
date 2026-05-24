@@ -25,24 +25,3 @@ When you finish an item: delete its entry here, update the relevant skill if the
 
 **Suggested approach (if a flatter `dist/` is ever required):** Set `output.preserveModules: true` (one file per source module, larger surface) or `output.manualChunks: () => null` (everything inlined into entries, larger bundles). Both have tradeoffs; pick based on the concrete consumer need.
 
-### 6. Workspace registration
-
-**What:** `packages/ui-skeleton/` is NOT registered in the root `packages/package.json` workspaces array this iteration. `devDependencies` for `@open-tomato/eslint-config` and `@open-tomato/typescript-config` use `file:../shared/<name>` links instead of `workspace:^`.
-
-**Status:** Deliberate — this iteration ran the package as standalone so install works without workspace setup.
-
-**Suggested approach (when ready):** Add `packages/ui-skeleton` to the root workspaces array, then rewrite the two `file:` links back to `workspace:^`. Verify `bun install` from the monorepo root still resolves cleanly. Touch nothing else.
-
-## Low priority — small polish
-
-### 9. Sibling design-system stylesheet integration
-
-**What:** The sibling `../design-system/colors_and_type.css` is referenced manually in the project notes but not imported by `globals.css` in this iteration. Tokens are mirrored locally in `src/styles/globals.css`.
-
-**Suggested approach:** When workspace registration (#6) lands, decide whether to:
-
-- Import the sibling stylesheet directly (single source of truth, requires bundler config for cross-package CSS).
-- Codegen `globals.css` from the sibling file at build time (decouples runtime).
-- Keep mirroring manually with a CI check that the two stay in sync.
-
-Pick based on how often the design system file changes.
