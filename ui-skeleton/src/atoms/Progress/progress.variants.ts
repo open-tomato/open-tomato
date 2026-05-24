@@ -23,7 +23,7 @@ export const progressVariants = cva(
 export type ProgressVariants = VariantProps<typeof progressVariants>;
 
 export const progressIndicatorVariants = cva(
-  'h-full w-full flex-1 transition-transform duration-300 ease-out',
+  'h-full w-full flex-1 transition-transform duration-300 ease-out data-[state=indeterminate]:animate-progress-indeterminate',
   {
     variants: {
       variant: {

@@ -151,8 +151,8 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 
 ### 6.2 Item #8 — Animated indeterminate state for Progress
 
-- [ ] Add a `@keyframes` block and a corresponding `--animate-*` token to `src/styles/globals.css` for the Progress indeterminate loop.
-- [ ] Add a `data-[state=indeterminate]:animate-*` class to Progress's indicator cva block in `src/atoms/Progress/progress.variants.ts`.
+- [x] Add a `@keyframes` block and a corresponding `--animate-*` token to `src/styles/globals.css` for the Progress indeterminate loop.
+- [x] Add a `data-[state=indeterminate]:animate-*` class to Progress's indicator cva block in `src/atoms/Progress/progress.variants.ts`.
 - [ ] Document loop direction + duration in `src/atoms/Progress/README.md` (Accessibility / Behavior section).
 - [ ] Add an `Indeterminate` story to `src/atoms/Progress/Progress.stories.tsx`.
 - [ ] Delete item #8 from `NEXT-ITERATIONS.md`.
