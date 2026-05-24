@@ -64,35 +64,31 @@ For library packages, `react` / `react-dom` belong in `peerDependencies` (broad 
 
 Edit `package.json` manually — don't use `bun add --peer` plus a separate dep add. Easier to keep the two ranges aligned by hand.
 
-## Monorepo layout and file links
+## Monorepo layout and workspace deps
 
-This package is **standalone this iteration** — it is NOT registered in the root `packages/package.json` workspaces array.
+This package is registered in the root `packages/package.json` workspaces array (as `ui-skeleton`). Run `bun install` from `packages/` (not from `packages/ui-skeleton/`) so the workspace resolver wires sibling packages correctly.
 
 ### Sibling shared packages
 
-Sibling shared packages live under `packages/shared/<name>/`, not `packages/<name>/`. From `packages/ui-skeleton/` the relative path is `../shared/<name>`.
+Sibling shared packages live under `packages/shared/<name>/`, not `packages/<name>/`. The two siblings this package consumes:
 
-The two siblings this package consumes:
+- `@open-tomato/eslint-config` — at `shared/eslint-config`. Exposes subpath exports `./base`, `./next`, `./react`. Choose the right one in `eslint.config.mjs`. Already lists `eslint-plugin-storybook` as a dep, so Storybook lint integration does not require adding it to this package.
+- `@open-tomato/typescript-config` — at `shared/typescript-config`. Exposes subpath exports `./base`, `./react`, `./next` (note the JSON filename is `nextjs.json` but the export key is `./next`). The shared `base` already sets `moduleResolution: 'bundler'`, `target: 'ES2022'`, and `lib: ['es2022', 'DOM', 'DOM.Iterable']` — package-level overrides for these in `tsconfig.json` are redundant but harmless when the values match.
 
-- `@open-tomato/eslint-config` — at `../shared/eslint-config`. Exposes subpath exports `./base`, `./next`, `./react`. Choose the right one in `eslint.config.mjs`. Already lists `eslint-plugin-storybook` as a dep, so Storybook lint integration does not require adding it to this package.
-- `@open-tomato/typescript-config` — at `../shared/typescript-config`. Exposes subpath exports `./base`, `./react`, `./next` (note the JSON filename is `nextjs.json` but the export key is `./next`). The shared `base` already sets `moduleResolution: 'bundler'`, `target: 'ES2022'`, and `lib: ['es2022', 'DOM', 'DOM.Iterable']` — package-level overrides for these in `tsconfig.json` are redundant but harmless when the values match.
+### `workspace:^` convention
 
-### `file:` link convention
-
-`package.json` `devDependencies` reference both with `file:` links:
+`package.json` `devDependencies` reference both with `workspace:^` (matches the convention used by every other workspace package — see `service/*/package.json`):
 
 ```json
 {
   "devDependencies": {
-    "@open-tomato/eslint-config": "file:../shared/eslint-config",
-    "@open-tomato/typescript-config": "file:../shared/typescript-config"
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^"
   }
 }
 ```
 
-This works because `@open-tomato/eslint-config` already depends on `@open-tomato/typescript-config` via `file:../typescript-config` (precedent for the file-link approach).
-
-When workspace registration lands (see [../../NEXT-ITERATIONS.md](../../NEXT-ITERATIONS.md)), these get rewritten back to `workspace:^`.
+Bun resolves these via the root workspaces array; the lockfile records them as `@open-tomato/<name>@workspace:shared/<name>`. Do NOT reintroduce `file:../shared/<name>` links — they bypass the workspace resolver and were only used during the standalone iteration before workspace registration landed.
 
 ### Git root caveat
 
