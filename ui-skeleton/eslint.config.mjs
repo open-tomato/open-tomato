@@ -79,4 +79,27 @@ export default [
       }],
     },
   },
+  {
+    files: ['src/providers/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [
+          {
+            group: ['@/providers/*', '../providers/*', './**/providers/*'],
+            message: 'Providers MUST NOT import other providers.',
+          },
+          {
+            group: [
+              '@/atoms/*', '../atoms/*', './**/atoms/*',
+              '@/molecules/*', '../molecules/*', './**/molecules/*',
+              '@/organisms/*', '../organisms/*', './**/organisms/*',
+              '@/templates/*', '../templates/*', './**/templates/*',
+              '@/pages/*', '../pages/*', './**/pages/*',
+            ],
+            message: 'Providers MAY import only @/particles/* — no atoms, molecules, organisms, templates, or pages.',
+          },
+        ],
+      }],
+    },
+  },
 ];
