@@ -147,7 +147,7 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 
 - [x] Fix `README.md` markdown heading-level / multiple-H1 violations to make `bun lint` exit 0 cleanly. No new `eslint-disable` comments. Verify the only file that flagged before (`README.md`) now passes.
 - [x] Switch `vite.config.ts` from `__dirname` to `import.meta.dirname` (pattern documented in `skills/build-tooling/SKILL.md`). May already be in place after Phase 3.0 — verify and skip if already done. Confirm `bun lint` exits 0 across the whole package.
-- [ ] Delete item #7 from `NEXT-ITERATIONS.md`.
+- [x] Delete item #7 from `NEXT-ITERATIONS.md`.
 
 ### 6.2 Item #8 — Animated indeterminate state for Progress
 

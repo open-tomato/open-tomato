@@ -19,6 +19,7 @@
   --radius: 0.5rem;
   --animate-spin: spin 1s linear infinite;
   --animate-wave: skeleton-wave 1.6s ease-in-out infinite;
+  --animate-progress-indeterminate: progress-indeterminate 1.5s ease-in-out infinite;
   --shadow-elev-1: 0 1px 2px oklch(0 0 0 / 0.08);
   --shadow-elev-2: 0 4px 8px oklch(0 0 0 / 0.10);
 }
@@ -26,6 +27,11 @@
 @keyframes skeleton-wave {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
+}
+
+@keyframes progress-indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
 }
 
 @layer base {
