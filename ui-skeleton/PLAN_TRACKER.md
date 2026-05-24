@@ -117,7 +117,7 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 ### 4.3 Phase 4 close-out
 
 - [x] Run end-of-phase gates: `bun run test:coverage`, `bun run build`, `bun run build-storybook`. Verify every template entry lands under `dist/templates/`.
-- [ ] Append a dated Phase 4 close-out audit note to `README.md` "Atomic Design System" section.
+- [x] Append a dated Phase 4 close-out audit note to `README.md` "Atomic Design System" section.
 
 ---
 
@@ -125,7 +125,7 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 
 ### 5.0 Prep
 
-- [ ] Author `skills/provider-authoring/SKILL.md`. Document: file shape may collapse below six files when variants and stories don't apply (`<Provider>.tsx`, `<Provider>.test.tsx`, optional `<Provider>.stories.tsx`, `README.md`, `index.ts`) — state this is the only sanctioned deviation from the six-file rule and the exact conditions; providers expose context, not visual output (no rendered DOM beyond `children`, no `className` surface); providers MAY import only `@/particles/*`.
+- [x] Author `skills/provider-authoring/SKILL.md`. Document: file shape may collapse below six files when variants and stories don't apply (`<Provider>.tsx`, `<Provider>.test.tsx`, optional `<Provider>.stories.tsx`, `README.md`, `index.ts`) — state this is the only sanctioned deviation from the six-file rule and the exact conditions; providers expose context, not visual output (no rendered DOM beyond `children`, no `className` surface); providers MAY import only `@/particles/*`.
 - [ ] Add an ESLint `no-restricted-imports` block in `eslint.config.mjs` keyed off `files: ['src/providers/**/*.{ts,tsx}']` that blocks `@/atoms/*`, `@/molecules/*`, `@/organisms/*`, `@/templates/*`, `@/pages/*`, `@/providers/*` and allows only `@/particles/*`. Verify via throwaway file as before.
 - [ ] Update `AGENTS.md` cardinal rule #11 with the provider row, skill-index with a `provider-authoring` row, "Day-to-day workflow" with an "Adding a new provider" subsection.
 - [ ] Update `README.md` with a dated Phase 5 audit bullet.
