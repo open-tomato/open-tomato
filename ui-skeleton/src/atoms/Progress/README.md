@@ -55,9 +55,15 @@ land without breaking the public variant API.
 - Always provide an accessible name via `aria-label` or `aria-labelledby` so
   the bar's purpose is announced.
 - Pass `value={null}` (or omit) to signal indeterminate progress; Radix sets
-  `data-state="indeterminate"` and the wrapper parks the indicator at
-  `translateX(-100%)` (off-screen). Pair with an accessible status message —
-  this wrapper does not render an animated indeterminate state.
+  `data-state="indeterminate"` and the indicator runs a continuous left-to-right
+  sweep via the `--animate-progress-indeterminate` token: a `1.5s` loop with an
+  `ease-in-out` curve, repeating infinitely. The keyframe slides the indicator
+  from `translateX(-100%)` (off-screen left) to `translateX(400%)` (off-screen
+  right), so the bar appears to traverse the full track each cycle. The
+  animation respects the user agent's `prefers-reduced-motion` setting through
+  Tailwind's built-in motion utilities. Pair with an accessible status message
+  (`role="status"` or `aria-live="polite"`) so screen reader users are informed
+  that work is in progress — the visual sweep alone is not an accessible signal.
 - `value` is clamped to `[0, max]` before the indicator transform is computed,
   so out-of-range inputs do not visually overflow the track.
 - Use `getValueLabel` to customize the human-readable label of the current
@@ -75,5 +81,6 @@ land without breaking the public variant API.
 - DO supply an `aria-label` (or `aria-labelledby`) so the bar has an
   accessible name. DON'T rely on surrounding text alone.
 - DO use `value={null}` for indeterminate progress and wrap the bar in your
-  own status region — this wrapper does not render an animated indeterminate
-  state.
+  own status region — the wrapper drives a `1.5s` left-to-right sweep via the
+  `--animate-progress-indeterminate` token, but the visual loop alone is not
+  an accessible signal.
