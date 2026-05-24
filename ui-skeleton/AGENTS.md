@@ -67,7 +67,7 @@ packages/ui-skeleton/
 8. **Every atom appears in `registry.json` `items[]`** with kebab-case `name`, `type: registry:ui`, files, and `registryDependencies` listing the npm packages it imports beyond `react` + `@/particles/cn`.
 9. **The `registry.json` is internal-only.** Never publish it to npm or `ui.shadcn.com`. The `"homepage": "internal"` field signals intent.
 10. **The package is standalone this iteration.** It is NOT in the root `packages/package.json` workspaces array. `devDependencies` for the shared configs use `file:../shared/<name>` links, not `workspace:^`. Do not "fix" this without coordinating a workspace rewrite.
-11. **Layer-import direction is one-way.** Templates import organisms, molecules, atoms, and particles only — never other templates, pages, or providers. Organisms import molecules, atoms, and particles only — never other organisms, templates, pages, or providers. Molecules import atoms and particles only — never other molecules, organisms, templates, pages, or providers. Atoms import particles only — never other atoms or upward layers. Enforced at lint-time by `no-restricted-imports` blocks in `eslint.config.mjs`. When a candidate composes another molecule, promote it to organism instead; when a template would compose another template, lift the shared treatment to `@/particles/*` (e.g. `anchored-surface.variants.ts`) and have both templates consume the particle.
+11. **Layer-import direction is one-way.** Templates import organisms, molecules, atoms, and particles only — never other templates, pages, or providers. Organisms import molecules, atoms, and particles only — never other organisms, templates, pages, or providers. Molecules import atoms and particles only — never other molecules, organisms, templates, pages, or providers. Atoms import particles only — never other atoms or upward layers. Providers import particles only — never atoms, molecules, organisms, templates, pages, or other providers. Enforced at lint-time by `no-restricted-imports` blocks in `eslint.config.mjs`. When a candidate composes another molecule, promote it to organism instead; when a template would compose another template, lift the shared treatment to `@/particles/*` (e.g. `anchored-surface.variants.ts`) and have both templates consume the particle.
 
 ## Skill index — when to invoke which
 
@@ -79,6 +79,7 @@ Load a skill before making changes in its domain.
 | Add a new molecule or edit an existing one's files/layout | [molecule-authoring](./skills/molecule-authoring/SKILL.md) |
 | Add a new organism or edit an existing one's files/layout | [organism-authoring](./skills/organism-authoring/SKILL.md) |
 | Add a new template or edit an existing one's files/layout | [template-authoring](./skills/template-authoring/SKILL.md) |
+| Add a new provider or edit an existing one's files/layout | [provider-authoring](./skills/provider-authoring/SKILL.md) |
 | Touch `globals.css`, add a token, choose a color, write a Tailwind class | [styling](./skills/styling/SKILL.md) |
 | Write or modify a `*.variants.ts` file, design a variant axis | [cva-variants](./skills/cva-variants/SKILL.md) |
 | Wrap a Radix primitive, deal with `Slot` / `Slottable` / `*Indicator` / multi-part | [radix-wrappers](./skills/radix-wrappers/SKILL.md) |
@@ -129,6 +130,16 @@ Load a skill before making changes in its domain.
 6. For portal-based templates (Sheet, NavigationMenu's viewport-based Content), tests MUST call `await axe(document.body)` rather than `await axe(container)` — Radix portals into `document.body`, and a container-scoped axe scan misses the portaled content. Use `screen.findByRole(...)` for the portaled surface.
 7. Run `bun run check-types && bun run test && bun run lint`. All three must pass before the task is done.
 8. Optional sanity check: `bun run build && bun run build-storybook`.
+
+### Adding a new provider
+
+1. Open `src/providers/Direction/` and read all files. **Direction is the canonical reference** for provider layout — a sanctioned deviation from the six-file rule (variants file omitted, stories optional) — and for the pure-context-wrapper pattern that exposes app-tree-wide context without competing with the visual layers for styling surface.
+2. Load [provider-authoring](./skills/provider-authoring/SKILL.md) and follow the per-provider procedure end-to-end. The skill is the only sanctioned source for the collapsed file convention and the conditions under which it applies.
+3. Import particles via `@/particles/<name>` only. **Never** import an atom, molecule, organism, template, page, or another provider — the ESLint `no-restricted-imports` guard in `eslint.config.mjs` blocks it (cardinal rule #11). If a provider needs anything from a visual layer, the candidate is not a pure context wrapper — re-evaluate the layer rather than reaching for `eslint-disable`.
+4. Providers expose context, not visual output. There is no rendered DOM beyond `children` (wrapped in zero or more invisible Context providers), no `className` surface, and no `React.forwardRef` wrapper (no ref-target element exists). If a knob is missing, expose it as a scalar / union prop that flows straight through to the wrapped library; do NOT add a variants file or a wrapping element.
+5. Append the new provider to `registry.json` `items[]` per [shadcn-integration](./skills/shadcn-integration/SKILL.md). Internal `@/particles/*` imports are NOT listed in `registryDependencies` — only npm packages the provider pulls in beyond `react`.
+6. Run `bun run check-types && bun run test && bun run lint`. All three must pass before the task is done.
+7. Optional sanity check: `bun run build && bun run build-storybook`.
 
 ### Editing an existing atom
 
