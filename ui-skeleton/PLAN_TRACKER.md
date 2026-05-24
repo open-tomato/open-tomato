@@ -167,7 +167,7 @@ Each task follows the same procedure: read `src/organisms/Accordion/` six files 
 
 ### 6.4 Items #3 + #4 — Storybook/Vite peer-dep and hashed chunks (document-only)
 
-- [ ] Re-verify items #3 (Storybook 8.6 vs Vite 8 peer-dep) and #4 (Vite library build hashed shared chunks) are still warnings only and not failures. Run `bun install` and `bun run build` from a clean checkout to confirm. If either has graduated to a real failure, append a follow-up plan section to this file (NOTE: this would be the only sanctioned edit to `PLAN.md` post-execution-start — the alternative is to open a fresh plan).
+- [x] Re-verify items #3 (Storybook 8.6 vs Vite 8 peer-dep) and #4 (Vite library build hashed shared chunks) are still warnings only and not failures. Run `bun install` and `bun run build` from a clean checkout to confirm. If either has graduated to a real failure, append a follow-up plan section to this file (NOTE: this would be the only sanctioned edit to `PLAN.md` post-execution-start — the alternative is to open a fresh plan).
 - [ ] Update `NEXT-ITERATIONS.md` items #3 and #4 with a dated "Re-verified YYYY-MM-DD: still warning, no functional impact" note. Do not chase minor-version Storybook bumps speculatively (see `skills/storybook/SKILL.md` note about not auto-bumping `@storybook/addon-*`).
 
 ---
