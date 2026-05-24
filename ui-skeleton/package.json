@@ -206,8 +206,8 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@open-tomato/eslint-config": "file:../shared/eslint-config",
-    "@open-tomato/typescript-config": "file:../shared/typescript-config",
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
     "@storybook/addon-a11y": "^8",
     "@storybook/addon-essentials": "^8",
     "@storybook/addon-interactions": "^8",
