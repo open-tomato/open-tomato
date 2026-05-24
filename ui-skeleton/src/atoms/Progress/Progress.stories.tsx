@@ -46,7 +46,19 @@ export const Destructive: Story = {
 };
 
 export const Indeterminate: Story = {
-  args: { value: null },
+  args: { value: null, 'aria-label': 'Loading, please wait' },
+  render: (args) => (
+    <div className="flex w-72 flex-col gap-4">
+      {(['default', 'success', 'warning', 'destructive'] as const).map((variant) => (
+        <Progress
+          key={variant}
+          {...args}
+          variant={variant}
+          aria-label={`${variant} indeterminate`}
+        />
+      ))}
+    </div>
+  ),
 };
 
 export const AllVariants: Story = {
