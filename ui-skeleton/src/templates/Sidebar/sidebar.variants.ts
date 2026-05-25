@@ -2,33 +2,43 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 /**
  * Root frame for the Sidebar template. Renders as an `<aside>` landmark
- * that anchors to the left or right viewport edge. The `collapsed` boolean
- * axis flips the rail between the persistent expanded state (rail width
- * `16rem`) and the mobile-collapsed slide-out state (rail visually
- * translated off-screen via a side-aware transform). The `side` axis flips
- * the anchoring edge AND the slide-out direction; the `density` axis tunes
- * the rail's internal vertical rhythm without changing its width.
+ * that anchors to the left or right viewport edge. The `mode` tri-state
+ * axis is the single source of truth for the rail's visibility:
  *
- * The `collapsed` axis is intentionally a single source of truth for both
- * the desktop-persistent and mobile-slide-out modes — see the README's
- * "Two-branch" section for why the template does not use Sheet for the
- * mobile branch (template-composes-template is BLOCKED by the layer
- * guard, and the simple transform-based slide-out keeps the template
- * self-contained until a future iteration lifts the shared
- * anchored-surface treatment to `src/particles/anchored-surface.variants.ts`).
+ * - `expanded` — full 264px rail, all content visible and interactive.
+ * - `rail`     — 64px icon-only rail; content stays in the AT tree and
+ *                remains keyboard-focusable. Visual labels collapse via
+ *                the descriptor slots, not via `aria-hidden`.
+ * - `hidden`   — rail slid off-screen via a side-aware `translate-x`
+ *                transform; the entire `<aside>` is removed from the AT
+ *                tree (`aria-hidden="true"`) and made inert
+ *                (`pointer-events-none`). This is the mobile-menu hide
+ *                mode.
+ *
+ * The visibility-state distinction matters for accessibility: stamping
+ * `aria-hidden` on the icon-rail branch would create "ghost focusable"
+ * anchors (focus lands on links AT cannot announce — WCAG 4.1.2). The
+ * three states are not orthogonal capabilities; they are exhaustive
+ * values on the same visibility axis.
+ *
+ * The `side` axis flips the anchoring edge AND the slide-out direction
+ * (only meaningful in `mode='hidden'`). The `density` axis tunes the
+ * rail's internal vertical rhythm (nav-link height + padding) without
+ * changing its width or its header/footer band heights.
  */
 export const sidebarVariants = cva(
-  // Always-visible base: fixed-position rail with focus-ring + transition
+  // Always-visible base: column-flex rail with focus-ring + transition
   // tokens so the slide-out animation reads as a deliberate motion choice
   // rather than a layout-shifting jump.
   'flex h-full shrink-0 flex-col border-border bg-background '
-  + 'text-foreground transition-[transform,width] duration-200 ease-out '
+  + 'text-foreground transition-[transform,width] duration-base ease-out '
   + 'focus-within:outline-none',
   {
     variants: {
-      collapsed: {
-        true: 'w-0 overflow-hidden pointer-events-none',
-        false: 'w-64 pointer-events-auto',
+      mode: {
+        expanded: 'w-sidebar pointer-events-auto translate-x-0',
+        rail: 'w-sidebar-rail pointer-events-auto translate-x-0',
+        hidden: 'w-0 overflow-hidden pointer-events-none',
       },
       side: {
         left: 'border-r',
@@ -40,29 +50,14 @@ export const sidebarVariants = cva(
       },
     },
     compoundVariants: [
-      {
-        collapsed: true,
-        side: 'left',
-        class: '-translate-x-full',
-      },
-      {
-        collapsed: true,
-        side: 'right',
-        class: 'translate-x-full',
-      },
-      {
-        collapsed: false,
-        side: 'left',
-        class: 'translate-x-0',
-      },
-      {
-        collapsed: false,
-        side: 'right',
-        class: 'translate-x-0',
-      },
+      // Only the `hidden` branch needs the side-aware slide-out — the
+      // `expanded` and `rail` branches bake `translate-x-0` into their
+      // own variant value.
+      { mode: 'hidden', side: 'left', class: '-translate-x-full' },
+      { mode: 'hidden', side: 'right', class: 'translate-x-full' },
     ],
     defaultVariants: {
-      collapsed: false,
+      mode: 'expanded',
       side: 'left',
       density: 'comfortable',
     },
@@ -73,20 +68,23 @@ export type SidebarVariants = VariantProps<typeof sidebarVariants>;
 
 /**
  * Header band. Renders inside `<header>` at the top of the rail. The
- * `density` axis tunes the vertical padding so compact rails feel tighter
- * than comfortable ones — the horizontal padding stays constant to keep
- * the header content aligned with the nav list below.
+ * height is fixed to the design-system `--header-h` token (64px) so the
+ * rail's header landmark aligns horizontally with the page Topbar above
+ * sibling layout regions. The `mode` axis controls the horizontal
+ * padding so the rail branch centers brand content while the expanded
+ * branch left-aligns it.
  */
 export const sidebarHeaderVariants = cva(
-  'flex shrink-0 items-center gap-2 border-b border-border px-4',
+  'flex h-header shrink-0 items-center gap-2 border-b border-border',
   {
     variants: {
-      density: {
-        compact: 'h-12',
-        comfortable: 'h-14',
+      mode: {
+        expanded: 'px-5 justify-start',
+        rail: 'px-0 justify-center',
+        hidden: 'px-0',
       },
     },
-    defaultVariants: { density: 'comfortable' },
+    defaultVariants: { mode: 'expanded' },
   },
 );
 
@@ -151,8 +149,15 @@ export const sidebarNavLinkIconVariants = cva('inline-flex size-4 shrink-0');
 
 /**
  * Footer band. Renders inside `<footer>` at the bottom of the rail.
- * Mirrors the header's density-driven height so the rail feels balanced
- * top-to-bottom.
+ * Height tracks the `density` axis; horizontal padding is fixed so the
+ * footer content aligns with the header content above it.
+ *
+ * NOTE: the footer band is intentionally not `mode`-aware in this
+ * iteration. The demo's bottom bar is a second nav region (separator +
+ * link list), not a footer-landmark band — so promoting the footer to
+ * the same mode-driven width treatment as the header would be premature.
+ * Revisit if a future demo surface uses `<footer>` as an account / sign-
+ * out tile that needs to center in the rail branch.
  */
 export const sidebarFooterVariants = cva(
   'flex shrink-0 items-center gap-2 border-t border-border px-4',

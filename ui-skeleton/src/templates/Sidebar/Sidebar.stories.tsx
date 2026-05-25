@@ -41,7 +41,10 @@ const meta: Meta<typeof Sidebar> = {
   component: Sidebar,
   tags: ['autodocs'],
   argTypes: {
-    collapsed: { control: 'boolean' },
+    mode: {
+      control: 'inline-radio',
+      options: ['expanded', 'rail', 'hidden'],
+    },
     side: {
       control: 'inline-radio',
       options: ['left', 'right'],
@@ -52,7 +55,7 @@ const meta: Meta<typeof Sidebar> = {
     },
   },
   args: {
-    collapsed: false,
+    mode: 'expanded',
     side: 'left',
     density: 'comfortable',
     nav: navItems,
@@ -67,9 +70,9 @@ const meta: Meta<typeof Sidebar> = {
           <Typography variant="h4">Workspace</Typography>
           <Typography variant="body">
             The Sidebar template frames the left or right edge of the
-            application surface. The `collapsed` axis slides the rail
-            off-screen for the mobile-collapsed state without unmounting
-            the content.
+            application surface. The `mode` axis switches between the
+            full-width rail, the icon-only rail, and the mobile-hide
+            slide-out — all sharing the same {'`<aside>`'} DOM.
           </Typography>
         </main>
       </div>
@@ -82,8 +85,12 @@ type Story = StoryObj<typeof Sidebar>;
 
 export const Default: Story = {};
 
-export const Collapsed: Story = {
-  args: { collapsed: true },
+export const Rail: Story = {
+  args: { mode: 'rail' },
+};
+
+export const Hidden: Story = {
+  args: { mode: 'hidden' },
 };
 
 export const RightSide: Story = {
@@ -103,8 +110,8 @@ export const RightSide: Story = {
   ],
 };
 
-export const RightCollapsed: Story = {
-  args: { side: 'right', collapsed: true },
+export const RightHidden: Story = {
+  args: { side: 'right', mode: 'hidden' },
   decorators: [
     (Story) => (
       <div className="flex h-[28rem] w-full overflow-hidden rounded-md border border-border bg-background">
@@ -112,7 +119,7 @@ export const RightCollapsed: Story = {
           <Typography variant="h4">Workspace</Typography>
           <Typography variant="body">
             Right-anchored rail slid off the right edge for the
-            mobile-collapsed state.
+            mobile-hide state.
           </Typography>
         </main>
         <Story />

@@ -39,8 +39,8 @@ describe('Sidebar', () => {
     expect(root?.tagName).toBe('ASIDE');
     expect(root).toHaveAttribute('data-side', 'left');
     expect(root).toHaveAttribute('data-density', 'comfortable');
+    expect(root).toHaveAttribute('data-mode', 'expanded');
     expect(root).toHaveAttribute('data-state', 'expanded');
-    expect(root).not.toHaveAttribute('data-collapsed');
     expect(root).not.toHaveAttribute('aria-hidden');
 
     // Three landmark slots inside the rail.
@@ -126,10 +126,10 @@ describe('Sidebar', () => {
     expect(root).toHaveAttribute('data-density', 'compact');
   });
 
-  it('flips to the mobile-collapsed state when collapsed=true and stamps aria-hidden + data-collapsed', () => {
+  it('flips to the mobile-hide state when mode="hidden" and stamps aria-hidden + data-mode', () => {
     const { container } = render(
       <Sidebar
-        collapsed
+        mode="hidden"
         header={<span data-testid="brand">Acme</span>}
         nav={baseNav}
         footer={<span data-testid="user-menu">Sign out</span>}
@@ -138,24 +138,45 @@ describe('Sidebar', () => {
     );
 
     const root = container.querySelector('[data-slot="sidebar-root"]');
-    expect(root).toHaveAttribute('data-collapsed', '');
-    expect(root).toHaveAttribute('data-state', 'collapsed');
+    expect(root).toHaveAttribute('data-mode', 'hidden');
+    expect(root).toHaveAttribute('data-state', 'hidden');
     expect(root).toHaveAttribute('aria-hidden', 'true');
 
-    // Content still mounted in the DOM — collapse animates via CSS
-    // transform, not unmounting — so consumers can rehydrate without
-    // losing focus state when the rail re-expands. `aria-hidden=true`
-    // on the parent <aside> drops descendant links from the
-    // accessibility tree, so query by selector to confirm the anchors
-    // remain in the DOM despite being inert.
+    // Content still mounted in the DOM — the hidden mode animates via
+    // CSS transform, not unmounting — so consumers can rehydrate
+    // without losing focus state when the rail re-expands.
+    // `aria-hidden=true` on the parent <aside> drops descendant links
+    // from the accessibility tree, so query by selector to confirm the
+    // anchors remain in the DOM despite being inert.
     expect(screen.getByTestId('brand')).toBeInTheDocument();
     expect(screen.getByTestId('user-menu')).toBeInTheDocument();
     expect(container.querySelectorAll('[data-slot="sidebar-nav-link"]')).toHaveLength(3);
   });
 
+  it('keeps the icon-rail in the accessibility tree when mode="rail" (no aria-hidden, links still focusable)', () => {
+    const { container } = render(
+      <Sidebar
+        mode="rail"
+        header={<span data-testid="brand">Acme</span>}
+        nav={baseNav}
+        navAriaLabel="Primary"
+      />,
+    );
+
+    const root = container.querySelector('[data-slot="sidebar-root"]');
+    expect(root).toHaveAttribute('data-mode', 'rail');
+    expect(root).toHaveAttribute('data-state', 'rail');
+    // The rail branch must NOT stamp aria-hidden — labels collapse
+    // visually but icons remain focusable and announceable. Stamping
+    // aria-hidden here would create "ghost focusable" anchors (WCAG
+    // 4.1.2: focus lands on links AT cannot announce).
+    expect(root).not.toHaveAttribute('aria-hidden');
+    expect(screen.getAllByRole('link')).toHaveLength(3);
+  });
+
   it('exposes the resolved variant values via the SidebarContext + useSidebar hook', () => {
     const consumed: Array<{
-      collapsed: boolean;
+      mode: string;
       side: string;
       density: string;
     }> = [];
@@ -163,15 +184,12 @@ describe('Sidebar', () => {
     function Consumer() {
       const value = useSidebar();
       consumed.push({ ...value });
-      return <span data-testid="context-consumer">{value.collapsed
-        ? 'collapsed'
-        : 'expanded'}
-      </span>;
+      return <span data-testid="context-consumer">{value.mode}</span>;
     }
 
     render(
       <Sidebar
-        collapsed
+        mode="hidden"
         side="right"
         density="compact"
         nav={baseNav}
@@ -179,9 +197,9 @@ describe('Sidebar', () => {
       />,
     );
 
-    expect(screen.getByTestId('context-consumer')).toHaveTextContent('collapsed');
+    expect(screen.getByTestId('context-consumer')).toHaveTextContent('hidden');
     expect(consumed.at(-1)).toEqual({
-      collapsed: true,
+      mode: 'hidden',
       side: 'right',
       density: 'compact',
     });
@@ -250,10 +268,25 @@ describe('Sidebar', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it('has no a11y violations in the mobile-collapsed state (content slid off-screen, aria-hidden=true)', async () => {
+  it('has no a11y violations in the mobile-hide state (content slid off-screen, aria-hidden=true)', async () => {
     const { container } = render(
       <Sidebar
-        collapsed
+        mode="hidden"
+        header={<span>Acme</span>}
+        nav={baseNav}
+        footer={<span>Sign out</span>}
+        navAriaLabel="Primary"
+        aria-label="Application sidebar"
+      />,
+    );
+
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no a11y violations in the icon-rail state (rail remains in the AT tree)', async () => {
+    const { container } = render(
+      <Sidebar
+        mode="rail"
         header={<span>Acme</span>}
         nav={baseNav}
         footer={<span>Sign out</span>}

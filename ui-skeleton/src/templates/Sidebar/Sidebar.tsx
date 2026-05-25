@@ -22,6 +22,7 @@ import {
   type SidebarVariants,
 } from './sidebar.variants';
 
+type ResolvedMode = NonNullable<SidebarVariants['mode']>;
 type ResolvedSide = NonNullable<SidebarVariants['side']>;
 type ResolvedDensity = NonNullable<SidebarVariants['density']>;
 
@@ -64,12 +65,15 @@ export interface SidebarNavItem {
  * inside `<Sidebar>` can read the resolved variant values via
  * {@link useSidebar} so they do not need to thread the same props down
  * through their own component tree. The context is read-only; consumers
- * own the `collapsed` boolean and drive it through the public
- * `collapsed` prop.
+ * own the `mode` value and drive it through the public `mode` prop.
+ *
+ * Deeply-nested children typically branch on `mode === 'rail'` to
+ * collapse text labels into icon-only treatments while the rail remains
+ * keyboard-focusable.
  */
 export interface SidebarContextValue {
-  /** Resolved `collapsed` axis (after default substitution). */
-  collapsed: boolean;
+  /** Resolved `mode` axis (after default substitution). */
+  mode: ResolvedMode;
   /** Resolved `side` axis. */
   side: ResolvedSide;
   /** Resolved `density` axis. */
@@ -100,37 +104,39 @@ export const useSidebar = (): SidebarContextValue => {
  * items, and a footer band stacked vertically inside it.
  *
  * @remarks
- * Two-branch behavior. The `collapsed` boolean axis is the single source
- * of truth for both the desktop-persistent and mobile-collapsed states.
- * The desktop branch (`collapsed=false`) renders the rail at its full
- * width with all slots visible. The mobile-collapsed branch
- * (`collapsed=true`) slides the rail off-screen via a side-aware
- * `translate-x` transform and stamps `aria-hidden="true"` so AT users do
- * not encounter the off-screen content. The two branches share the same
- * `<aside>` DOM — there is no separate mobile-overlay element — which
- * keeps the template self-contained and inside the template-composes-
- * template ban (cardinal rule #11).
+ * Three-mode behavior. The `mode` tri-state axis is the single source of
+ * truth for the rail's visibility. The desktop branch (`mode='expanded'`)
+ * renders the rail at its full 264px width with all slots visible. The
+ * desktop icon-rail branch (`mode='rail'`) narrows the rail to 64px so
+ * labels collapse but icons remain interactive AND in the accessibility
+ * tree — labels disappear visually via the descriptor slots, not via
+ * `aria-hidden`. The mobile-hide branch (`mode='hidden'`) slides the
+ * rail off-screen via a side-aware `translate-x` transform and stamps
+ * `aria-hidden="true"` + `pointer-events-none` so AT users and keyboard
+ * users do not encounter the off-screen content. All three branches
+ * share the same `<aside>` DOM — there is no separate mobile-overlay
+ * element — which keeps the template self-contained and inside the
+ * template-composes-template ban (cardinal rule #11).
  *
  * The template-composes-template ban explicitly forbids importing the
  * Sheet template here. The PLAN's "if Sheet composition is needed, lift
  * the shared anchored-surface treatment to
  * `src/particles/anchored-surface.variants.ts`" is the sanctioned escape
  * for any future iteration that needs Sheet's modal-overlay semantics
- * (focus trap, portal, scrim) on the mobile branch. This iteration's
- * mobile-collapsed branch uses a pure CSS slide-out — sufficient for a
- * persistent nav rail; insufficient for surfaces that need a modal
- * dismissal flow.
+ * (focus trap, portal, scrim) on the hidden branch. This iteration's
+ * hidden branch uses a pure CSS slide-out — sufficient for a persistent
+ * nav rail; insufficient for surfaces that need a modal dismissal flow.
  *
- * All visual customization flows through `collapsed`, `side`, and
- * `density`. There is no `className` escape hatch. Layout-level
- * granularity (rail width, link padding, header height) is captured by
- * variant axes per the template-authoring skill.
+ * All visual customization flows through `mode`, `side`, and `density`.
+ * There is no `className` escape hatch. Layout-level granularity (rail
+ * width, link padding, header height) is captured by variant axes per
+ * the template-authoring skill.
  *
  * Sidebar exposes a `SidebarContext` and a `useSidebar` hook so deeply-
  * nested children (e.g. a custom header avatar, a collapse toggle inside
- * the footer) can read the resolved `collapsed` / `side` / `density`
- * without prop-drilling. The context is read-only — consumers own the
- * `collapsed` boolean and drive it through the public `collapsed` prop.
+ * the footer) can read the resolved `mode` / `side` / `density` without
+ * prop-drilling. The context is read-only — consumers own the `mode`
+ * value and drive it through the public `mode` prop.
  *
  * @example
  * ```tsx
@@ -144,8 +150,10 @@ export const useSidebar = (): SidebarContextValue => {
  *   footer={<Button variant="ghost">Sign out</Button>}
  * />
  *
+ * <Sidebar mode="rail" nav={items} />
+ *
  * <Sidebar
- *   collapsed
+ *   mode="hidden"
  *   side="right"
  *   density="compact"
  *   nav={items}
@@ -188,7 +196,7 @@ export interface SidebarProps
 export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
   (
     {
-      collapsed,
+      mode,
       side,
       density,
       header,
@@ -200,18 +208,18 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
     },
     ref,
   ) => {
-    const resolvedCollapsed = collapsed ?? false;
+    const resolvedMode: ResolvedMode = mode ?? 'expanded';
     const resolvedSide: ResolvedSide = side ?? 'left';
     const resolvedDensity: ResolvedDensity = density ?? 'comfortable';
     const resolvedNavLabel = navAriaLabel ?? 'Sidebar navigation';
 
     const contextValue = React.useMemo<SidebarContextValue>(
       () => ({
-        collapsed: resolvedCollapsed,
+        mode: resolvedMode,
         side: resolvedSide,
         density: resolvedDensity,
       }),
-      [resolvedCollapsed, resolvedSide, resolvedDensity],
+      [resolvedMode, resolvedSide, resolvedDensity],
     );
 
     return (
@@ -219,20 +227,16 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
         <aside
           ref={ref}
           data-slot="sidebar-root"
-          data-collapsed={resolvedCollapsed
-            ? ''
-            : undefined}
+          data-mode={resolvedMode}
           data-side={resolvedSide}
           data-density={resolvedDensity}
-          data-state={resolvedCollapsed
-            ? 'collapsed'
-            : 'expanded'}
+          data-state={resolvedMode}
           aria-label={ariaLabel}
-          aria-hidden={resolvedCollapsed
+          aria-hidden={resolvedMode === 'hidden'
             ? true
             : undefined}
           className={cn(sidebarVariants({
-            collapsed: resolvedCollapsed,
+            mode: resolvedMode,
             side: resolvedSide,
             density: resolvedDensity,
           }))}
@@ -242,7 +246,7 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             ? (
               <header
                 data-slot="sidebar-header"
-                className={cn(sidebarHeaderVariants({ density: resolvedDensity }))}
+                className={cn(sidebarHeaderVariants({ mode: resolvedMode }))}
               >
                 {header}
               </header>
