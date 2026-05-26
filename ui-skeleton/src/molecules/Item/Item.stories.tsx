@@ -18,6 +18,7 @@ const meta: Meta<typeof Item> = {
       options: ['sm', 'md', 'lg'],
     },
     interactive: { control: 'boolean' },
+    active: { control: 'boolean' },
     title: { control: 'text' },
     description: { control: 'text' },
   },
@@ -25,6 +26,7 @@ const meta: Meta<typeof Item> = {
     as: 'div',
     size: 'md',
     interactive: false,
+    active: false,
     title: 'Settings',
     description: 'Configure your account preferences.',
   },
@@ -82,6 +84,54 @@ export const AsAnchor: Story = {
   render: (args) => <Item {...args} href="#profile" />,
 };
 
+const NavGlyph = (): React.ReactElement => (
+  <span
+    aria-hidden
+    className="inline-flex size-4 items-center justify-center"
+  >
+    ◆
+  </span>
+);
+
+export const NavRow: Story = {
+  name: 'As nav row (active)',
+  args: {
+    as: 'button',
+    interactive: true,
+    active: true,
+    title: 'Dashboard',
+    description: undefined,
+    leading: <NavGlyph />,
+  },
+  render: (args) => <Item {...args} />,
+};
+
+export const NavList: Story = {
+  name: 'As nav list (one active)',
+  render: () => {
+    const items = [
+      { label: 'Dashboard', active: true },
+      { label: 'Projects', active: false },
+      { label: 'Reports', active: false },
+      { label: 'Settings', active: false },
+    ];
+    return (
+      <nav aria-label="Primary" className="flex w-56 flex-col gap-1">
+        {items.map((item) => (
+          <Item
+            key={item.label}
+            as="button"
+            interactive
+            active={item.active}
+            leading={<NavGlyph />}
+            title={item.label}
+          />
+        ))}
+      </nav>
+    );
+  },
+};
+
 export const InList: Story = {
   render: () => (
     <ul className="m-0 list-none p-0">
@@ -111,6 +161,14 @@ export const AllVariants: Story = {
             description="Hover and focus styling applied"
             leading={<LeadingIcon />}
             trailing={<TrailingChevron />}
+          />
+          <Item
+            as="button"
+            size={size}
+            interactive
+            active
+            title={`Active nav / ${size}`}
+            leading={<NavGlyph />}
           />
         </div>
       ))}

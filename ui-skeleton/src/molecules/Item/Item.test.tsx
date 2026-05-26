@@ -86,6 +86,52 @@ describe('Item', () => {
     expect(root).not.toHaveAttribute('data-interactive');
   });
 
+  it('omits data-active by default', () => {
+    render(<Item title="Default" />);
+    const root = screen.getByText('Default').closest('[data-slot="item-root"]');
+    expect(root).not.toHaveAttribute('data-active');
+  });
+
+  it('stamps data-active="" and applies active token classes when active', () => {
+    render(<Item title="Selected" active />);
+    const root = screen.getByText('Selected').closest('[data-slot="item-root"]');
+    expect(root).toHaveAttribute('data-active', '');
+    expect(root).toHaveClass('bg-accent');
+    expect(root).toHaveClass('text-accent-foreground');
+  });
+
+  it('applies muted text class for inactive rows', () => {
+    render(<Item title="Quiet" />);
+    const root = screen.getByText('Quiet').closest('[data-slot="item-root"]');
+    expect(root).toHaveClass('text-muted-foreground');
+  });
+
+  it('composes active + interactive + as="button" into a nav-row shape', () => {
+    render(
+      <Item
+        as="button"
+        interactive
+        active
+        leading={<span data-testid="nav-icon" aria-hidden>★</span>}
+        title="Dashboard"
+      />,
+    );
+    const root = screen.getByRole('button', { name: 'Dashboard' });
+    expect(root.tagName).toBe('BUTTON');
+    expect(root).toHaveAttribute('data-active', '');
+    expect(root).toHaveAttribute('data-interactive', '');
+    expect(root).toHaveClass('bg-accent');
+    expect(root).toHaveClass('cursor-pointer');
+    expect(screen.getByTestId('nav-icon')).toBeInTheDocument();
+  });
+
+  it('has no a11y violations as an active nav-row button', async () => {
+    const { container } = render(
+      <Item as="button" interactive active title="Dashboard" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
   it('has no a11y violations as a non-interactive div', async () => {
     const { container } = render(
       <Item leading={<span>L</span>} title="Settings" description="Configure" />,

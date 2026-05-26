@@ -18,10 +18,10 @@ export type ItemAs = 'div' | 'li' | 'button' | 'a';
  * horizontal row with leading / title / description / trailing slots and a
  * polymorphic `as` axis (`'div' | 'li' | 'button' | 'a'`).
  *
- * @remarks All visual customization flows through `size`, `interactive`, and
- * `as`. There is no `className` escape hatch and no `className` is forwarded
- * to the composed `Typography` atom — variant propagation lives in the
- * `titleVariantForSize` and `titleWeightForSize` lookup tables below.
+ * @remarks All visual customization flows through `size`, `interactive`,
+ * `active`, and `as`. There is no `className` escape hatch and no `className`
+ * is forwarded to the composed `Typography` atom — variant propagation lives
+ * in the `titleVariantForSize` and `titleWeightForSize` lookup tables below.
  *
  * The `interactive` axis applies hover/focus styling but does NOT inject
  * semantic interactivity (role, tabIndex, onClick). When `as='button'` or
@@ -34,6 +34,8 @@ export type ItemAs = 'div' | 'li' | 'button' | 'a';
  * <Item leading={<Icon />} title="Settings" description="Configure" trailing={<Chevron />} />
  *
  * <Item as="button" interactive size="lg" leading={<Icon />} title="Sign in" />
+ *
+ * <Item as="button" interactive active leading={<Icon />} title="Dashboard" />
  *
  * <ul>
  *   <Item as="li" title="One" />
@@ -75,6 +77,7 @@ export const Item = React.forwardRef<HTMLElement, ItemProps>(
       as,
       size,
       interactive,
+      active,
       leading,
       title,
       description,
@@ -87,6 +90,7 @@ export const Item = React.forwardRef<HTMLElement, ItemProps>(
     const resolvedAs: ItemAs = as ?? 'div';
     const resolvedSize = size ?? 'md';
     const resolvedInteractive = interactive ?? false;
+    const resolvedActive = active ?? false;
     const Component = resolvedAs as React.ElementType;
 
     const buttonTypeProps = resolvedAs === 'button'
@@ -107,9 +111,13 @@ export const Item = React.forwardRef<HTMLElement, ItemProps>(
         data-interactive={resolvedInteractive
           ? ''
           : undefined}
+        data-active={resolvedActive
+          ? ''
+          : undefined}
         className={cn(itemVariants({
           size: resolvedSize,
           interactive: resolvedInteractive,
+          active: resolvedActive,
         }))}
         {...rest}
       >
@@ -125,13 +133,14 @@ export const Item = React.forwardRef<HTMLElement, ItemProps>(
                     as="span"
                     variant={titleVariantForSize[resolvedSize]}
                     weight={titleWeightForSize[resolvedSize]}
+                    color="inherit"
                   >
                     {title}
                   </Typography>
                 )
                 : null}
               {description !== undefined
-                ? <Typography as="span" variant="caption">{description}</Typography>
+                ? <Typography as="span" variant="caption" color="inherit">{description}</Typography>
                 : null}
               {children}
             </div>

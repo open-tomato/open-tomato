@@ -179,6 +179,7 @@ describe('Sidebar', () => {
       mode: string;
       side: string;
       density: string;
+      floating: boolean;
     }> = [];
 
     function Consumer() {
@@ -192,6 +193,7 @@ describe('Sidebar', () => {
         mode="hidden"
         side="right"
         density="compact"
+        floating
         nav={baseNav}
         header={<Consumer />}
       />,
@@ -202,6 +204,7 @@ describe('Sidebar', () => {
       mode: 'hidden',
       side: 'right',
       density: 'compact',
+      floating: true,
     });
   });
 

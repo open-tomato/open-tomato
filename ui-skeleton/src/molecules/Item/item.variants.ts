@@ -16,8 +16,12 @@ export const itemVariants = cva(
           + 'disabled:cursor-not-allowed disabled:opacity-50',
         false: '',
       },
+      active: {
+        true: 'bg-accent text-accent-foreground font-medium',
+        false: 'text-muted-foreground',
+      },
     },
-    defaultVariants: { size: 'md', interactive: false },
+    defaultVariants: { size: 'md', interactive: false, active: false },
   },
 );
 

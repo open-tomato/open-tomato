@@ -29,8 +29,19 @@ export const typographyVariants = cva('text-foreground', {
       right: 'text-right',
       justify: 'text-justify',
     },
+    // `color: 'inherit'` lets composing molecules (e.g. Item's active
+    // state) drive the text color via the parent's text-* class.
+    // `default` keeps the base `text-foreground` so standalone usage in
+    // body context is unchanged. The axis is declared LAST so cva
+    // applies its class after the variant axis — tailwind-merge then
+    // resolves `text-inherit` over any earlier `text-*` for color
+    // inheritance to actually take effect.
+    color: {
+      default: '',
+      inherit: 'text-inherit',
+    },
   },
-  defaultVariants: { variant: 'body' },
+  defaultVariants: { variant: 'body', color: 'default' },
 });
 
 export type TypographyVariants = VariantProps<typeof typographyVariants>;

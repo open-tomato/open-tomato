@@ -79,7 +79,7 @@ export interface TypographyProps
 }
 
 export const Typography = React.forwardRef<HTMLElement, TypographyProps>(
-  ({ as, variant, weight, align, ...rest }, ref) => {
+  ({ as, variant, weight, align, color, ...rest }, ref) => {
     const resolvedVariant: TypographyVariant = variant ?? 'body';
     const resolvedAs: TypographyAs = as ?? variantToTag[resolvedVariant];
     const Component = resolvedAs as React.ElementType;
@@ -91,7 +91,7 @@ export const Typography = React.forwardRef<HTMLElement, TypographyProps>(
         data-variant={resolvedVariant}
         data-as={resolvedAs}
         className={cn(
-          typographyVariants({ variant: resolvedVariant, weight, align }),
+          typographyVariants({ variant: resolvedVariant, weight, align, color }),
         )}
         {...rest}
       />

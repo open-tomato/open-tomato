@@ -19,6 +19,7 @@ import { Item } from '@open-tomato/ui-skeleton';
 | as           | `'div' \| 'li' \| 'button' \| 'a'`    | `'div'` |
 | size         | `'sm' \| 'md' \| 'lg'`                | `'md'`  |
 | interactive  | `boolean`                             | `false` |
+| active       | `boolean`                             | `false` |
 | leading      | `ReactNode`                           | —       |
 | title        | `ReactNode`                           | —       |
 | description  | `ReactNode`                           | —       |
@@ -43,12 +44,50 @@ All other props are forwarded to the rendered root element. When `as='button'`,
 | `false`     | Plain row, no hover / focus styling                                 |
 | `true`      | `cursor-pointer`, `hover:bg-muted/50`, focus ring, rounded corners, disabled fade |
 
+| active  | Effect                                                                 |
+| ------- | ---------------------------------------------------------------------- |
+| `false` | `text-muted-foreground` — quieter foreground for inactive rows         |
+| `true`  | `bg-accent`, `text-accent-foreground`, `font-medium` — current-row emphasis |
+
 The resolved variants are reflected on the rendered root as
-`data-as="<tag>"`, `data-size="<name>"`, and `data-interactive=""` (present
-only when true) for downstream styling and testing. The wrapper exposes
-`data-slot="item-root"`. Internal slots use `data-slot="item-leading"`,
-`"item-content"`, and `"item-trailing"`. The composed Typography exposes
-`data-variant` for the title and description.
+`data-as="<tag>"`, `data-size="<name>"`, `data-interactive=""` (present only
+when true), and `data-active=""` (present only when true) for downstream
+styling and testing. This mirrors the `data-[active]` pattern that the
+`Sidebar` template already uses for current-route highlighting, so an
+`Item`-based nav row and a `Sidebar` nav link can be styled with the same
+attribute selectors. The wrapper exposes `data-slot="item-root"`. Internal
+slots use `data-slot="item-leading"`, `"item-content"`, and
+`"item-trailing"`. The composed Typography exposes `data-variant` for the
+title and description.
+
+## Use as a nav row
+
+The `active` axis lets `Item` stand in for a dedicated nav-item molecule.
+Pair it with `as="button"` (or `as="a"` for routing) and `interactive` to get
+focus ring, hover affordance, and current-row emphasis without introducing a
+new component:
+
+```tsx
+<nav aria-label="Primary">
+  {items.map((item) => (
+    <Item
+      key={item.id}
+      as="button"
+      interactive
+      active={item.id === currentId}
+      leading={<Icon name={item.icon} aria-hidden />}
+      title={collapsed ? undefined : item.label}
+      onClick={() => navigate(item.id)}
+    />
+  ))}
+</nav>
+```
+
+`collapsed` is a container-level concern, not an Item axis: in a collapsed
+rail, pass `title={undefined}` so `Item`'s existing absent-content branch
+renders an icon-only row. For full-rail rendering, pass the label. The
+`Sidebar` template owns the `collapsed` axis end-to-end and is the canonical
+host for this pattern.
 
 ## Composition
 

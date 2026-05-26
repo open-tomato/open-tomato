@@ -1,5 +1,10 @@
 @import "tailwindcss";
-@import "../../../../design-system/colors_and_type.css";
+/* Layer the design-system base styles into `base` so Tailwind utility
+   classes (which live in the higher-priority `utilities` layer) can
+   override element-level defaults like `a { color: var(--accent) }`
+   and `a { text-decoration: underline }`. Without the layer assignment
+   these rules are unlayered and beat utilities outright. */
+@import "../../../../design-system/colors_and_type.css" layer(base);
 
 @theme {
   /* Color tokens — bridged to the design-system semantic vars defined in

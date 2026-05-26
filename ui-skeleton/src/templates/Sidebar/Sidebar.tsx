@@ -58,6 +58,14 @@ export interface SidebarNavItem {
    * derive activeness from URL — the consumer wires it from their router.
    */
   active?: boolean;
+  /**
+   * Optional click handler forwarded to the rendered `<a>`. Use when the
+   * consumer needs to intercept navigation — SPA routers (Next/Link via
+   * onClick), state-driven demos, or modal-style nav. The handler runs
+   * BEFORE the browser follows `href`; call `event.preventDefault()` to
+   * suppress default navigation entirely.
+   */
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 /**
@@ -78,6 +86,8 @@ export interface SidebarContextValue {
   side: ResolvedSide;
   /** Resolved `density` axis. */
   density: ResolvedDensity;
+  /** Resolved `floating` axis. */
+  floating: boolean;
 }
 
 const SidebarContext = React.createContext<SidebarContextValue | null>(null);
@@ -199,6 +209,7 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
       mode,
       side,
       density,
+      floating,
       header,
       nav,
       footer,
@@ -211,6 +222,7 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
     const resolvedMode: ResolvedMode = mode ?? 'expanded';
     const resolvedSide: ResolvedSide = side ?? 'left';
     const resolvedDensity: ResolvedDensity = density ?? 'comfortable';
+    const resolvedFloating: boolean = floating ?? false;
     const resolvedNavLabel = navAriaLabel ?? 'Sidebar navigation';
 
     const contextValue = React.useMemo<SidebarContextValue>(
@@ -218,9 +230,16 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
         mode: resolvedMode,
         side: resolvedSide,
         density: resolvedDensity,
+        floating: resolvedFloating,
       }),
-      [resolvedMode, resolvedSide, resolvedDensity],
+      [resolvedMode, resolvedSide, resolvedDensity, resolvedFloating],
     );
+    console.log({
+      resolvedMode,
+      resolvedSide,
+      resolvedDensity,
+      resolvedFloating,
+    });
 
     return (
       <SidebarContext.Provider value={contextValue}>
@@ -230,6 +249,9 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
           data-mode={resolvedMode}
           data-side={resolvedSide}
           data-density={resolvedDensity}
+          data-floating={resolvedFloating
+            ? ''
+            : undefined}
           data-state={resolvedMode}
           aria-label={ariaLabel}
           aria-hidden={resolvedMode === 'hidden'
@@ -239,17 +261,18 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             mode: resolvedMode,
             side: resolvedSide,
             density: resolvedDensity,
+            floating: resolvedFloating,
           }))}
           {...rest}
         >
           {header !== undefined && header !== null
             ? (
-              <header
+              <div
                 data-slot="sidebar-header"
                 className={cn(sidebarHeaderVariants({ mode: resolvedMode }))}
               >
                 {header}
-              </header>
+              </div>
             )
             : null}
           <nav
@@ -272,6 +295,7 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                   >
                     <a
                       href={item.href}
+                      onClick={item.onClick}
                       data-slot="sidebar-nav-link"
                       data-active={isActive
                         ? ''
@@ -316,7 +340,10 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             ? (
               <footer
                 data-slot="sidebar-footer"
-                className={cn(sidebarFooterVariants({ density: resolvedDensity }))}
+                className={cn(sidebarFooterVariants({
+                  density: resolvedDensity,
+                  mode: resolvedMode,
+                }))}
               >
                 {footer}
               </footer>
