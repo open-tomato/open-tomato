@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 const atoms = [
   'AspectRatio',
@@ -76,9 +77,22 @@ const providers = ['Direction'] as const;
 const rootDir = import.meta.dirname;
 
 export default defineConfig({
+  server:{
+    open: true,
+    port: 5175,
+    watch: {
+      usePolling: true,
+      interval: 300,
+    },
+  },
   plugins: [
+    tsconfigPaths(),
     react(),
-    dts({ include: ['src'], tsconfigPath: './tsconfig.build.json' }),
+    dts({
+      include: ['src'], 
+      // outDir: 'dist/types',
+      // rollupTypes: true,
+      tsconfigPath: './tsconfig.build.json' }),
   ],
   resolve: {
     alias: {

@@ -169,7 +169,7 @@ export const sidebarNavLinkVariants = cva(
  * consumer-supplied node so it lines up on the text baseline regardless
  * of density.
  */
-export const sidebarNavLinkIconVariants = cva('inline-flex size-4 shrink-0');
+export const sidebarNavLinkIconVariants = cva('inline-flex size-5 shrink-0');
 
 /**
  * Footer band. Renders inside `<footer>` at the bottom of the rail.

@@ -7,15 +7,19 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 
 import { Sidebar, type SidebarNavItem } from '@/templates/Sidebar';
 
-import { Icon } from './assets/mock-primitives';
-import { SEED_AGENTS, NAV_ITEMS, NAV_SECONDARY, TITLE_MAP } from './mock-data';
+import { SidebarFooter, SidebarHeader, WorkspaceSelector, ToggleSidebar } from './components';
+import { SEED_AGENTS, NAV_ITEMS, TITLE_MAP } from './mock-data';
+import { SessionsPage } from './pages';
 import { PlaceholderPage } from './PlaceHolderPage';
-import { SidebarHeader, SidebarFooter } from './Sidebar';
+import { SessionComposer } from './SessionComposer';
 import { Topbar } from './Topbar';
 import { useViewport, type Viewport } from './useViewport';
-
 type Mode = NonNullable<Parameters<typeof Sidebar>[0]['mode']>;
-
+interface HandleNewSessionParams {
+  goal: string;
+  budget: string;
+  model: string;
+}
 function naturalModeFor(viewport: Viewport): Mode {
   if (viewport === 'mobile') return 'hidden';
   if (viewport === 'tablet') return 'rail';
@@ -57,6 +61,23 @@ export function DemoApp() {
   const isMobile = viewport === 'mobile';
   const isOverlayOpen = isMobile && mode === 'expanded';
 
+  const handleNewSession = ({ goal, budget, model }: HandleNewSessionParams) => {
+    const id = 'agent-' + Math.random().toString(36)
+      .slice(2, 6);
+    const name = goal.split(' ').slice(0, 3)
+      .join('-')
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '');
+    setAgents(a => [{
+      id, name: name || 'new-session',
+      status: 'running',
+      goal,
+      model, tokens: 0, tokensMax: parseInt(budget, 10), tools: 3, elapsed: '0s', files: 0,
+      color: 'var(--accent)',
+    }, ...a]);
+    setComposerOpen(false);
+  };
+
   const toggleMode = useCallback(() => {
     if (isMobile) {
       setMode(m => (m === 'hidden'
@@ -77,18 +98,20 @@ export function DemoApp() {
     if (isMobile) closeMobileMenu();
   }, [isMobile, closeMobileMenu]);
 
-  const navItems = useMemo<SidebarNavItem[]>(() => NAV_ITEMS.map((item) => ({
-    id: item.id,
-    label: item.label,
-    href: `#${item.id}`,
-    active: active === item.id,
-    leading: <Icon name={item.icon as Parameters<typeof Icon>[0]['name']} size={18} />,
+  const navItems = useMemo<SidebarNavItem[]>(() => NAV_ITEMS.map(({
+    id, label, Icon,
+  }) => ({
+    id,
+    label,
+    href: `#${id}`,
+    active: active === id,
+    leading: <Icon size={24} />,
     onClick: (event) => {
       event.preventDefault();
-      handleNavigate(item.id);
+      handleNavigate(id);
     },
   })), [active, handleNavigate]);
-
+  
   return (
     <div style={{ display: 'flex', height: '100vh', background: 'var(--bg)' }}>
       <Sidebar
@@ -98,14 +121,14 @@ export function DemoApp() {
         nav={navItems}
         footer={(
           <SidebarFooter
-            secondary={NAV_SECONDARY}
             active={active}
             onNavigate={handleNavigate}
-            onToggleMode={toggleMode}
           />
         )}
         aria-label="Application navigation"
-      />
+      >
+        <WorkspaceSelector isCompact={mode !== 'expanded'} />
+      </Sidebar>
       {isOverlayOpen && (
         <div
           role="button"
@@ -142,9 +165,17 @@ export function DemoApp() {
             {(active === 'tools' || active === 'usage' || active === 'docs' || active === 'settings') && (
               <PlaceholderPage label={TITLE_MAP[active as keyof typeof TITLE_MAP].t} />
             )}
+            {active === 'sessions' && <SessionsPage agents={agents} onAgentClick={setLogsAgent} />}
+
           </div>
         </div>
       </main>
+      <ToggleSidebar isCompact={mode === 'rail'} onToggleMode={toggleMode} size="sm" />
+      <SessionComposer
+        open={composerOpen}
+        onClose={() => setComposerOpen(false)}
+        onSubmit={handleNewSession}
+      />
     </div>
 
   );

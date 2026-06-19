@@ -7,15 +7,18 @@
  * convention; the disable matches the precedent set by AppContextProvider
  * / AuthProvider in `packages/shared/eslint-config/AGENTS.md`.
  */
+
+import { LucideIcon } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '@/particles/cn';
 
+import { ButtonNavItem } from './components/ButtonNavItem';
 import {
   sidebarFooterVariants,
   sidebarHeaderVariants,
   sidebarNavLinkIconVariants,
-  sidebarNavLinkVariants,
+  // sidebarNavLinkVariants,
   sidebarNavListVariants,
   sidebarNavVariants,
   sidebarVariants,
@@ -44,14 +47,14 @@ export interface SidebarNavItem {
    * inside an `aria-hidden` span sized by {@link sidebarNavLinkIconVariants}
    * — decorative because the link's accessible name comes from `label`.
    */
-  leading?: React.ReactNode;
+  leading?: React.ElementType<LucideIcon> | React.ReactNode;
   /**
    * Optional trailing slot (badge, count, chevron). Rendered raw inside an
    * `aria-hidden` span when it should not contribute to the accessible
    * name; consumers can opt in to an announced trailing slot by passing a
    * `<span aria-hidden={false}>` themselves.
    */
-  trailing?: React.ReactNode;
+  trailing?: React.ElementType<LucideIcon> | React.ReactNode;
   /**
    * Marks the link as the currently-active route. Stamps `data-active=""`
    * + `aria-current="page"` on the rendered `<a>`. The template does NOT
@@ -65,7 +68,7 @@ export interface SidebarNavItem {
    * BEFORE the browser follows `href`; call `event.preventDefault()` to
    * suppress default navigation entirely.
    */
-  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 /**
@@ -173,7 +176,7 @@ export const useSidebar = (): SidebarContextValue => {
 export interface SidebarProps
   extends Omit<
     React.HTMLAttributes<HTMLElement>,
-    'className' | 'children'
+    'className'
   >,
   SidebarVariants {
   /**
@@ -214,6 +217,7 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
       nav,
       footer,
       navAriaLabel,
+      children,
       'aria-label': ariaLabel,
       ...rest
     },
@@ -234,12 +238,6 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
       }),
       [resolvedMode, resolvedSide, resolvedDensity, resolvedFloating],
     );
-    console.log({
-      resolvedMode,
-      resolvedSide,
-      resolvedDensity,
-      resolvedFloating,
-    });
 
     return (
       <SidebarContext.Provider value={contextValue}>
@@ -275,66 +273,75 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
               </div>
             )
             : null}
+          {children}
           <nav
             data-slot="sidebar-nav"
             aria-label={resolvedNavLabel}
             className={cn(sidebarNavVariants({ density: resolvedDensity }))}
           >
-            <ul
+            <div
               data-slot="sidebar-nav-list"
               className={cn(sidebarNavListVariants())}
             >
-              {nav.map((item, index) => {
-                const key = item.id ?? item.href ?? `sidebar-nav-${index}`;
-                const isActive = item.active === true;
+              {nav.map(({
+                id, label, href, leading: LeadingNode, active, onClick, trailing: TrailingNode,
+              }, index) => {
+                const key = id ?? href ?? `sidebar-nav-${index}`;
+                const isActive = active === true;
 
                 return (
-                  <li
+                  <ButtonNavItem
                     key={key}
-                    data-slot="sidebar-nav-item"
-                  >
-                    <a
-                      href={item.href}
-                      onClick={item.onClick}
-                      data-slot="sidebar-nav-link"
-                      data-active={isActive
-                        ? ''
-                        : undefined}
-                      aria-current={isActive
-                        ? 'page'
-                        : undefined}
-                      className={cn(sidebarNavLinkVariants({ density: resolvedDensity }))}
-                    >
-                      {item.leading !== undefined
-                        ? (
-                          <span
-                            aria-hidden
-                            data-slot="sidebar-nav-link-leading"
-                            className={cn(sidebarNavLinkIconVariants())}
-                          >
-                            {item.leading}
-                          </span>
-                        )
-                        : null}
-                      <span data-slot="sidebar-nav-link-label" className="flex-1 truncate">
-                        {item.label}
-                      </span>
-                      {item.trailing !== undefined
-                        ? (
-                          <span
-                            aria-hidden
-                            data-slot="sidebar-nav-link-trailing"
-                            className={cn(sidebarNavLinkIconVariants())}
-                          >
-                            {item.trailing}
-                          </span>
-                        )
-                        : null}
-                    </a>
-                  </li>
+                    // href={href}
+                    onClick={onClick}
+                    leading={LeadingNode}
+                    trailing={TrailingNode}
+                    active={isActive}
+                    collapsed={resolvedMode === 'rail'}
+                    label={label}
+                  />
+                  // <li
+                  //   key={key}
+                  //   data-slot="sidebar-nav-item"
+                  // >
+                  //   <a
+                  //     href={href}
+                  //     onClick={onClick}
+                  //     data-slot="sidebar-nav-link"
+                  //     data-active={isActive
+                  //       ? ''
+                  //       : undefined}
+                  //     aria-current={isActive
+                  //       ? 'page'
+                  //       : undefined}
+                  //     className={cn(sidebarNavLinkVariants({ density: resolvedDensity }))}
+                  //   >
+                  //     {LeadingNode && React.isValidElement(LeadingNode) && (
+                  //       <span
+                  //         aria-hidden
+                  //         data-slot="sidebar-nav-link-leading"
+                  //         className={cn(sidebarNavLinkIconVariants())}
+                  //       >
+                  //         {LeadingNode}
+                  //       </span>
+                  //     )}
+                  //     <span data-slot="sidebar-nav-link-label" className="flex-1 truncate">
+                  //       {label}
+                  //     </span>
+                  //     {TrailingNode && React.isValidElement(TrailingNode) && (
+                  //       <span
+                  //         aria-hidden
+                  //         data-slot="sidebar-nav-link-trailing"
+                  //         className={cn(sidebarNavLinkIconVariants())}
+                  //       >
+                  //         {TrailingNode}
+                  //       </span>
+                  //     )}
+                  //   </a>
+                  // </li>
                 );
               })}
-            </ul>
+            </div>
           </nav>
           {footer !== undefined && footer !== null
             ? (

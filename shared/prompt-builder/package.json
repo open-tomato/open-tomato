@@ -9,7 +9,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@open-tomato/types": "file:../types",
+    "@open-tomato/types": "workspace:^",
     "gpt-tokenizer": "^3.4.0"
   },
   "scripts": {
@@ -19,8 +19,8 @@
     "docs:generate": "typedoc"
   },
   "devDependencies": {
-    "@open-tomato/eslint-config": "file:../eslint-config",
-    "@open-tomato/typescript-config": "file:../typescript-config",
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
     "eslint": "^9.39.4",
     "typedoc": "^0.28.17",
     "typescript": "^5.9.3",

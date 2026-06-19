@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "open-tomato/packages" }],
+  "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [],
   "linked": [],
@@ -28,6 +28,7 @@
     "@open-tomato/worker-protocol",
     "@open-tomato/notifications-plugin-anthropic",
     "@open-tomato/notifications-plugin-executor",
-    "@open-tomato/notifications-plugin-tech-tree"
+    "@open-tomato/notifications-plugin-tech-tree",
+    "@open-tomato/ui-skeleton"
   ]
 }

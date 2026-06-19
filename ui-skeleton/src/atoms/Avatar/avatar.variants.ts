@@ -28,6 +28,10 @@ export const avatarVariants = cva(
         circle: 'rounded-full',
         square: 'rounded-md',
       },
+      fallback: { 
+        true: 'bg-accent text-accent-foreground',
+        false: '',
+      },
     },
     defaultVariants: { size: 'md', shape: 'circle' },
   },
@@ -38,5 +42,5 @@ export type AvatarVariants = VariantProps<typeof avatarVariants>;
 export const avatarImageVariants = cva('aspect-square size-full object-cover');
 
 export const avatarFallbackVariants = cva(
-  'flex size-full items-center justify-center font-medium uppercase leading-none',
+  'flex size-full items-center justify-center font-bold uppercase leading-none',
 );

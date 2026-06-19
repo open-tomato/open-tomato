@@ -34,7 +34,7 @@ type RadixAvatarFallbackProps = React.ComponentPropsWithoutRef<typeof RadixAvata
  */
 export interface AvatarProps
   extends Omit<RadixAvatarProps, 'children' | 'className'>,
-  AvatarVariants {
+  Omit<AvatarVariants, 'fallback'> {
   /** Image URL to display. When omitted, only the fallback is rendered. */
   src?: string;
   /** Accessible label for the image. Required when `src` is provided. */
@@ -72,7 +72,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         ref={ref}
         data-size={resolvedSize}
         data-shape={resolvedShape}
-        className={cn(avatarVariants({ size: resolvedSize, shape: resolvedShape }))}
+        className={cn(avatarVariants({ size: resolvedSize, shape: resolvedShape, fallback: !!fallback }))}
         {...rest}
       >
         {src

@@ -1,3 +1,8 @@
+
+import {
+  Zap, Bot, Book, Cpu, LayoutDashboard, List, Terminal, Settings,
+  type LucideIcon,
+} from 'lucide-react';
 const SEED_AGENTS = [
   {
     id: 'agent-7d2f', name: 'auth-refactor',
@@ -45,17 +50,23 @@ const SEED_TASKS = [
   { id: 6, title: 'Compost stale context after 24h idle', status: 'todo', priority: 'medium', owner: 'agent', eta: 'this month', tag: 'experiment' },
 ];
 
-const NAV_ITEMS = [
-  { id: 'overview', label: 'Overview', icon: 'home' },
-  { id: 'sessions', label: 'Sessions', icon: 'terminal' },
-  { id: 'agents', label: 'Agents', icon: 'bot' },
-  { id: 'roadmap', label: 'Roadmap', icon: 'list' },
-  { id: 'tools', label: 'Tools', icon: 'cpu' },
-  { id: 'usage', label: 'Usage', icon: 'zap' },
+interface NavItem {
+  id: string;
+  label: string;
+  Icon: LucideIcon;
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { id: 'overview', label: 'Overview', Icon: LayoutDashboard },
+  { id: 'sessions', label: 'Sessions', Icon: Terminal },
+  { id: 'agents', label: 'Agents', Icon: Bot },
+  { id: 'roadmap', label: 'Roadmap', Icon: List },
+  { id: 'tools', label: 'Tools', Icon: Cpu },
+  { id: 'usage', label: 'Usage', Icon: Zap },
 ];
-const NAV_SECONDARY = [
-  { id: 'docs', label: 'Docs', icon: 'book' },
-  { id: 'settings', label: 'Settings', icon: 'settings' },
+const NAV_SECONDARY: NavItem[] = [
+  { id: 'docs', label: 'Docs', Icon: Book },
+  { id: 'settings', label: 'Settings', Icon: Settings },
 ];
 
 const TITLE_MAP = {

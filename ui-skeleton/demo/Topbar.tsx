@@ -18,7 +18,9 @@ interface TopbarProps {
    */
   onOpenMenu?: () => void;
 }
+
 function Topbar({ title, subtitle, theme, onToggleTheme, onNewSession, onOpenMenu }: TopbarProps) {
+
   return (
     <header style={{
       height: 'var(--header-h)',
@@ -31,10 +33,10 @@ function Topbar({ title, subtitle, theme, onToggleTheme, onNewSession, onOpenMen
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
       flexShrink: 0,
-      position: 'sticky',
       top: 0,
-      zIndex: 10,
     }}>
+      {/* <ToggleSidebar isCompact={mode === 'rail'} onToggleMode={onToggleSidebar} size="sm" /> */}
+
       {onOpenMenu && (
         <Button
           leadingIcon="list"

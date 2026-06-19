@@ -1,12 +1,21 @@
 {
   "extends": "@open-tomato/typescript-config/base",
   "compilerOptions": {
-    "baseUrl": ".",
     "jsx": "react-jsx",
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2022"
+    ],
     "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
-  }
+  },
+  "include": [
+    "src",
+    "demo"
+  ]
 }

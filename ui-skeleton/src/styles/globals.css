@@ -13,6 +13,7 @@
      `border-border`, …) alongside raw CSS-var consumers. */
   --color-background: var(--bg);
   --color-foreground: var(--fg1);
+  --color-secondary-foreground: var(--fg2);
   --color-card: var(--surface-1);
   --color-card-foreground: var(--fg1);
   --color-popover: var(--surface-2);
@@ -49,21 +50,33 @@
 }
 
 @keyframes skeleton-wave {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @keyframes progress-indeterminate {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(400%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(400%);
+  }
 }
 
 @layer base {
+
   *,
   ::before,
   ::after {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground antialiased;
   }
