@@ -24,9 +24,9 @@ class TestRobotService extends BaseRobotService {
       this.shutdownSignal,
     );
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   async sendCheckin(sessionId: string, message: string): Promise<void> {
+    console.log(`Check-in for session ${sessionId}: ${message}`);
     // no-op
   }
 

@@ -3,8 +3,8 @@ import type { ClientsMap, TypedClient } from '@open-tomato/service-core';
 
 import process from 'node:process';
 
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp';
 import { createServiceLogger } from '@open-tomato/service-core';
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 import { startHealthServer } from './health.js';
 import { MCPConfigSchema } from './schema.js';

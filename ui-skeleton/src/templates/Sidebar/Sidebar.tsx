@@ -8,7 +8,6 @@
  * / AuthProvider in `packages/shared/eslint-config/AGENTS.md`.
  */
 
-import { LucideIcon } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '@/particles/cn';
@@ -47,14 +46,14 @@ export interface SidebarNavItem {
    * inside an `aria-hidden` span sized by {@link sidebarNavLinkIconVariants}
    * — decorative because the link's accessible name comes from `label`.
    */
-  leading?: React.ElementType<LucideIcon> | React.ReactNode;
+  leading?: React.ReactNode;
   /**
    * Optional trailing slot (badge, count, chevron). Rendered raw inside an
    * `aria-hidden` span when it should not contribute to the accessible
    * name; consumers can opt in to an announced trailing slot by passing a
    * `<span aria-hidden={false}>` themselves.
    */
-  trailing?: React.ElementType<LucideIcon> | React.ReactNode;
+  trailing?: React.ReactNode;
   /**
    * Marks the link as the currently-active route. Stamps `data-active=""`
    * + `aria-current="page"` on the rendered `<a>`. The template does NOT

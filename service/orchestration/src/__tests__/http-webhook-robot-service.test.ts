@@ -24,7 +24,7 @@ function createMockServer(): {
 } {
   const requests: ReceivedRequest[] = [];
   let responseStatus = 200;
-  let server: Server | undefined;
+  let server: Server<undefined> | undefined;
 
   return {
     requests,

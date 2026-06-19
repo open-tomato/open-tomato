@@ -12,6 +12,10 @@ export const badgeVariants = cva(
         outline: 'border-border bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground',
         destructive: 'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/90',
         success: 'border-transparent bg-green-500 text-white hover:bg-green-600 ',
+        neutral: '',
+        warning: '',
+        info: '',
+        danger: '',
       },
       size: {
         sm: 'h-5 px-2 text-[10px] leading-none',

@@ -1,5 +1,5 @@
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp';
 import type { Logger, LoggerOptions, ClientsMap, TypedClient } from '@open-tomato/service-core';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 export type { ClientsMap };
 

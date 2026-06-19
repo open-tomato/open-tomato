@@ -31,7 +31,7 @@ export function DemoApp() {
   const [theme, setTheme] = useState<Theme>('light');
   const [active, setActive] = useState('overview');
   const [composerOpen, setComposerOpen] = useState(false);
-  const [logsAgent, setLogsAgent] = useState(null);
+  const [, setLogsAgent] = useState(null);
   const [agents, setAgents] = useState(SEED_AGENTS);
 
   const viewport = useViewport();

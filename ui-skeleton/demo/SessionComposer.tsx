@@ -1,4 +1,5 @@
-/* global React, Icon, Button, IconButton, Badge */
+// @ts-nocheck -- TBD/in-progress implementation example; excluded from type-checking
+/* eslint-disable */
 import { useState } from 'react';
 
 import { Button } from '@/atoms/Button';

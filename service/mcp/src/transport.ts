@@ -4,8 +4,8 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { randomUUID } from 'node:crypto';
 import process from 'node:process';
 
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio';
+import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp';
 
 /**
  * Resolves the MCP transport mode from the environment.

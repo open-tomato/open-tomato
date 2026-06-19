@@ -29,7 +29,7 @@ function createOutboundSink(): {
   stop: () => void;
   requests: ReceivedRequest[];
 } {
-  let server: Server | undefined;
+  let server: Server<undefined> | undefined;
   const requests: ReceivedRequest[] = [];
   return {
     requests,

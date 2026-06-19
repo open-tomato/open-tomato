@@ -1,3 +1,5 @@
+// @ts-nocheck -- TBD/in-progress implementation example; excluded from type-checking
+/* eslint-disable */
 import { Badge } from '@/atoms/Badge';
 import { Button } from '@/atoms/Button';
 export function SessionsPage({ agents, onAgentClick }) {
@@ -27,6 +29,10 @@ export function SessionsPage({ agents, onAgentClick }) {
             borderBottom: '1px solid var(--border-soft)',
             cursor: 'pointer',
             alignItems: 'center',
+            background: 'transparent',
+            border: 'none',
+            textAlign: 'left',
+            font: 'inherit',
           }}>
             <div>
               <div style={{ fontWeight: 600, fontSize: 14 }}>{a.name}</div>

@@ -1,6 +1,6 @@
 import type { MCPContext } from './types.js';
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp';
 import type { LoggerOptions, TypedClient } from '@open-tomato/service-core';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 import { z } from 'zod';
 
