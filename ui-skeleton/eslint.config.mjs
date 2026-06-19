@@ -3,7 +3,11 @@ import baseConfig from '@open-tomato/eslint-config/react';
 /** @type {import("eslint").Linter.Config} */
 export default [
   ...baseConfig,
-  { ignores: ['storybook-static/**'] },
+  // `demo/` is a local, in-progress example surface — not part of the
+  // published package (every `exports` entry maps to `dist/` built from
+  // `src/`). It is intentionally excluded from linting while it remains
+  // a scratch space; lint `src/` for the shippable component library.
+  { ignores: ['storybook-static/**', 'demo/**'] },
   {
     files: ['src/molecules/**/*.{ts,tsx}'],
     rules: {

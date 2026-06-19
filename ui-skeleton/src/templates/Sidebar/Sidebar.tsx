@@ -12,12 +12,11 @@ import * as React from 'react';
 
 import { cn } from '@/particles/cn';
 
-import { ButtonNavItem } from './components/ButtonNavItem';
 import {
   sidebarFooterVariants,
   sidebarHeaderVariants,
   sidebarNavLinkIconVariants,
-  // sidebarNavLinkVariants,
+  sidebarNavLinkVariants,
   sidebarNavListVariants,
   sidebarNavVariants,
   sidebarVariants,
@@ -67,7 +66,7 @@ export interface SidebarNavItem {
    * BEFORE the browser follows `href`; call `event.preventDefault()` to
    * suppress default navigation entirely.
    */
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }
 
 /**
@@ -278,7 +277,7 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             aria-label={resolvedNavLabel}
             className={cn(sidebarNavVariants({ density: resolvedDensity }))}
           >
-            <div
+            <ul
               data-slot="sidebar-nav-list"
               className={cn(sidebarNavListVariants())}
             >
@@ -289,58 +288,48 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                 const isActive = active === true;
 
                 return (
-                  <ButtonNavItem
+                  <li
                     key={key}
-                    // href={href}
-                    onClick={onClick}
-                    leading={LeadingNode}
-                    trailing={TrailingNode}
-                    active={isActive}
-                    collapsed={resolvedMode === 'rail'}
-                    label={label}
-                  />
-                  // <li
-                  //   key={key}
-                  //   data-slot="sidebar-nav-item"
-                  // >
-                  //   <a
-                  //     href={href}
-                  //     onClick={onClick}
-                  //     data-slot="sidebar-nav-link"
-                  //     data-active={isActive
-                  //       ? ''
-                  //       : undefined}
-                  //     aria-current={isActive
-                  //       ? 'page'
-                  //       : undefined}
-                  //     className={cn(sidebarNavLinkVariants({ density: resolvedDensity }))}
-                  //   >
-                  //     {LeadingNode && React.isValidElement(LeadingNode) && (
-                  //       <span
-                  //         aria-hidden
-                  //         data-slot="sidebar-nav-link-leading"
-                  //         className={cn(sidebarNavLinkIconVariants())}
-                  //       >
-                  //         {LeadingNode}
-                  //       </span>
-                  //     )}
-                  //     <span data-slot="sidebar-nav-link-label" className="flex-1 truncate">
-                  //       {label}
-                  //     </span>
-                  //     {TrailingNode && React.isValidElement(TrailingNode) && (
-                  //       <span
-                  //         aria-hidden
-                  //         data-slot="sidebar-nav-link-trailing"
-                  //         className={cn(sidebarNavLinkIconVariants())}
-                  //       >
-                  //         {TrailingNode}
-                  //       </span>
-                  //     )}
-                  //   </a>
-                  // </li>
+                    data-slot="sidebar-nav-item"
+                  >
+                    <a
+                      href={href}
+                      onClick={onClick}
+                      data-slot="sidebar-nav-link"
+                      data-active={isActive
+                        ? ''
+                        : undefined}
+                      aria-current={isActive
+                        ? 'page'
+                        : undefined}
+                      className={cn(sidebarNavLinkVariants({ density: resolvedDensity }))}
+                    >
+                      {React.isValidElement(LeadingNode) && (
+                        <span
+                          aria-hidden
+                          data-slot="sidebar-nav-link-leading"
+                          className={cn(sidebarNavLinkIconVariants())}
+                        >
+                          {LeadingNode}
+                        </span>
+                      )}
+                      <span data-slot="sidebar-nav-link-label" className="flex-1 truncate">
+                        {label}
+                      </span>
+                      {React.isValidElement(TrailingNode) && (
+                        <span
+                          aria-hidden
+                          data-slot="sidebar-nav-link-trailing"
+                          className={cn(sidebarNavLinkIconVariants())}
+                        >
+                          {TrailingNode}
+                        </span>
+                      )}
+                    </a>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </nav>
           {footer !== undefined && footer !== null
             ? (
