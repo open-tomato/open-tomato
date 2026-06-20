@@ -1,6 +1,6 @@
 {
-  "name": "@open-tomato/config",
-  "description": "YAML configuration loader with Zod schema validation",
+  "name": "@open-tomato/agents-config",
+  "description": "Agent/orchestrator YAML configuration loader with Zod schema validation",
   "publishConfig": {
     "access": "public"
   },

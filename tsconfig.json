@@ -1,6 +1,7 @@
 {
   "extends": "./shared/typescript-config/base.json",
   "include": [
+    "agents/**/*",
     "shared/**/*",
     "service/**/*",
     "notifications/**/*",

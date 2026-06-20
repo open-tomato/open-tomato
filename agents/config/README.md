@@ -1,11 +1,11 @@
-# @open-tomato/config
+# @open-tomato/agents-config
 
 YAML-based configuration loader for the Open Tomato orchestrator. Validates config at startup with Zod schemas, applies environment variable overrides, and resolves hat collections from files or built-in presets.
 
 ## Quick Start
 
 ```typescript
-import { loadConfig, ConfigValidationError } from '@open-tomato/config';
+import { loadConfig, ConfigValidationError } from '@open-tomato/agents-config';
 
 try {
   const config = await loadConfig({
