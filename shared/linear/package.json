@@ -1,0 +1,27 @@
+{
+  "name": "@open-tomato/linear",
+  "description": "Linear API client wrapper for projects, issues, and workflows",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
+  "type": "module",
+  "private": false,
+  "scripts": {
+    "lint": "eslint --fix"
+  },
+  "dependencies": {
+    "@linear/sdk": "^76.0.0"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
+    "@types/node": "^20.11.1",
+    "typescript": "^5.9.3"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./auth-node": "./src/auth-node.ts",
+    "./auth-browser": "./src/auth-browser.ts"
+  }
+}

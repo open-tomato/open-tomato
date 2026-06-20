@@ -1,0 +1,32 @@
+{
+  "name": "@open-tomato/agent-memory",
+  "description": "File-based agent memory store with markdown serialization and locking",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
+  "type": "module",
+  "private": false,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "docs:generate": "typedoc",
+    "lint": "eslint --fix",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "proper-lockfile": "^4.1.2"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
+    "@types/proper-lockfile": "^4.1.4",
+    "eslint": "^9.39.4",
+    "globals": "^16.0.0",
+    "typescript": "^5.9.3",
+    "typedoc": "^0.28.17",
+    "vitest": "^3.0.0"
+  }
+}

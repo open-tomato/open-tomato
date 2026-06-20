@@ -1,0 +1,31 @@
+event_loop:
+  iterations: 5
+  runtime_ms: 60000
+  cost_limit_usd: 2.0
+  completion_promise: 'all tasks done'
+  required_events:
+    - task.complete
+  enforce_hat_scope: true
+
+cli:
+  backend: anthropic
+  prompt_mode: oneshot
+
+core:
+  specs_dir: ./specs
+  scratchpad: ./.scratch
+
+memories:
+  inject_mode: prepend
+  budget: 4096
+
+skills:
+  dirs:
+    - ./skills
+
+features:
+  parallel: true
+  auto_merge: false
+
+robot:
+  enabled: false

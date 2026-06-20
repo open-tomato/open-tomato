@@ -1,0 +1,12 @@
+{
+  "extends": "@open-tomato/typescript-config/base",
+  "compilerOptions": {
+    "paths": {
+      "@open-tomato/logger": ["./src/index.ts"],
+      "@open-tomato/logger/browser": ["./src/browser.ts"],
+      "@open-tomato/logger/node": ["./src/node.ts"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

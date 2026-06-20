@@ -1,0 +1,27 @@
+{
+  "name": "@open-tomato/loop-safety",
+  "description": "Loop termination utilities for safe agent execution",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
+  "type": "module",
+  "private": false,
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "eslint --fix",
+    "test": "bun test",
+    "docs:generate": "typedoc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
+    "eslint": "^9.39.4",
+    "typedoc": "^0.28.17",
+    "typescript": "^5.9.3"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@open-tomato/notifications-plugin-tech-tree",
+  "description": "Tech-tree node tracking and dispatch notification client",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
+  "private": false,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint --fix"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
+    "@types/node": "^22.13.5",
+    "eslint": "^9.39.4",
+    "typescript": "^5.9.3"
+  }
+}

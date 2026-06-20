@@ -1,0 +1,239 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@open-tomato/loop-safety</title><meta name="description" content="Documentation for @open-tomato/loop-safety"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">@open-tomato/loop-safety</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>@open-tomato/loop-safety</h1></div><div class="tsd-panel tsd-typography"><h1 id="bifemecanicoloop-safety" class="tsd-anchor-link">@open-tomato/loop-safety<a href="#bifemecanicoloop-safety" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>Loop safety mechanisms for the orchestration event loop. Detects and terminates runaway loops caused by thrashing agents, stale repeated outputs, malformed JSONL, consecutive failures, and budget overruns.</p>
+<h2 id="overview" class="tsd-anchor-link">Overview<a href="#overview" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The package exposes five focused detectors and a central <code>TerminationChecker</code> that composes them. Each detector is stateful but side-effect-free — state changes only through explicit method calls, and no detector depends on another at construction time.</p>
+<pre><code class="text">TerminationChecker
+├── BudgetTracker       — cumulative API cost limit
+├── FailureTracker      — consecutive process failure count
+├── StaleDetector       — identical event signature repetition
+├── ThrottleTracker     — abandoned task redispatch (thrashing)
+└── BackpressureValidator — consecutive malformed JSONL
+    + workspaceExists() — filesystem check for the git worktree
+</code><button type="button">Copy</button></pre>
+
+<h2 id="detectors" class="tsd-anchor-link">Detectors<a href="#detectors" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="budgettracker" class="tsd-anchor-link">BudgetTracker<a href="#budgettracker" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Accumulates API cost across loop iterations and signals when the configured maximum is exceeded.</p>
+<pre><code class="typescript"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">BudgetTracker</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@open-tomato/loop-safety&#39;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">budget</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">BudgetTracker</span><span class="hl-1">({ </span><span class="hl-2">maxCostUsd:</span><span class="hl-1"> </span><span class="hl-7">1.00</span><span class="hl-1"> })</span><br/><span class="hl-2">budget</span><span class="hl-1">.</span><span class="hl-6">addCost</span><span class="hl-1">(</span><span class="hl-7">0.25</span><span class="hl-1">)</span><br/><span class="hl-2">budget</span><span class="hl-1">.</span><span class="hl-6">isExceeded</span><span class="hl-1">() </span><span class="hl-8">// false</span><br/><span class="hl-2">budget</span><span class="hl-1">.</span><span class="hl-6">addCost</span><span class="hl-1">(</span><span class="hl-7">0.80</span><span class="hl-1">)</span><br/><span class="hl-2">budget</span><span class="hl-1">.</span><span class="hl-6">isExceeded</span><span class="hl-1">() </span><span class="hl-8">// true</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="failuretracker" class="tsd-anchor-link">FailureTracker<a href="#failuretracker" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Counts consecutive process failures. A successful event resets the counter to zero.</p>
+<pre><code class="typescript"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">FailureTracker</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@open-tomato/loop-safety&#39;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">tracker</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">FailureTracker</span><span class="hl-1">({ </span><span class="hl-2">maxConsecutiveFailures:</span><span class="hl-1"> </span><span class="hl-7">3</span><span class="hl-1"> })</span><br/><span class="hl-2">tracker</span><span class="hl-1">.</span><span class="hl-6">recordFailure</span><span class="hl-1">() </span><span class="hl-8">// 1</span><br/><span class="hl-2">tracker</span><span class="hl-1">.</span><span class="hl-6">recordFailure</span><span class="hl-1">() </span><span class="hl-8">// 2</span><br/><span class="hl-2">tracker</span><span class="hl-1">.</span><span class="hl-6">recordSuccess</span><span class="hl-1">() </span><span class="hl-8">// resets to 0</span><br/><span class="hl-2">tracker</span><span class="hl-1">.</span><span class="hl-6">recordFailure</span><span class="hl-1">() </span><span class="hl-8">// 1</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="staledetector" class="tsd-anchor-link">StaleDetector<a href="#staledetector" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Detects loops where consecutive events share the same <code>(topic, source, payloadFingerprint)</code> signature. The default threshold is <strong>3</strong>. The <code>task.complete</code> topic is excluded by default.</p>
+<pre><code class="typescript"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">StaleDetector</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@open-tomato/loop-safety&#39;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">detector</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">StaleDetector</span><span class="hl-1">({ </span><span class="hl-2">threshold:</span><span class="hl-1"> </span><span class="hl-7">3</span><span class="hl-1"> })</span><br/><span class="hl-2">detector</span><span class="hl-1">.</span><span class="hl-6">record</span><span class="hl-1">(</span><span class="hl-3">&#39;agent.output&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;agentA&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;abc123&#39;</span><span class="hl-1">) </span><span class="hl-8">// false</span><br/><span class="hl-2">detector</span><span class="hl-1">.</span><span class="hl-6">record</span><span class="hl-1">(</span><span class="hl-3">&#39;agent.output&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;agentA&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;abc123&#39;</span><span class="hl-1">) </span><span class="hl-8">// false</span><br/><span class="hl-2">detector</span><span class="hl-1">.</span><span class="hl-6">record</span><span class="hl-1">(</span><span class="hl-3">&#39;agent.output&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;agentA&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;abc123&#39;</span><span class="hl-1">) </span><span class="hl-8">// true — threshold reached</span><br/><span class="hl-2">detector</span><span class="hl-1">.</span><span class="hl-6">resetOnHatActivation</span><span class="hl-1">()                      </span><span class="hl-8">// clears counter</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="throttletracker" class="tsd-anchor-link">ThrottleTracker<a href="#throttletracker" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Tracks tasks that are repeatedly blocked and redispatched. A task becomes &quot;abandoned&quot; after <code>blockThreshold</code> blocks (default <strong>3</strong>). When <code>redispatchThreshold</code> abandoned tasks are redispatched (default <strong>3</strong>), <code>isThrashing()</code> returns <code>true</code>.</p>
+<pre><code class="typescript"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">ThrottleTracker</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@open-tomato/loop-safety&#39;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">tracker</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">ThrottleTracker</span><span class="hl-1">({ </span><span class="hl-2">blockThreshold:</span><span class="hl-1"> </span><span class="hl-7">3</span><span class="hl-1">, </span><span class="hl-2">redispatchThreshold:</span><span class="hl-1"> </span><span class="hl-7">3</span><span class="hl-1"> })</span><br/><span class="hl-2">tracker</span><span class="hl-1">.</span><span class="hl-6">recordBlock</span><span class="hl-1">(</span><span class="hl-3">&#39;task-1&#39;</span><span class="hl-1">)   </span><span class="hl-8">// false (1st block)</span><br/><span class="hl-2">tracker</span><span class="hl-1">.</span><span class="hl-6">recordBlock</span><span class="hl-1">(</span><span class="hl-3">&#39;task-1&#39;</span><span class="hl-1">)   </span><span class="hl-8">// false (2nd block)</span><br/><span class="hl-2">tracker</span><span class="hl-1">.</span><span class="hl-6">recordBlock</span><span class="hl-1">(</span><span class="hl-3">&#39;task-1&#39;</span><span class="hl-1">)   </span><span class="hl-8">// true  — task-1 is now abandoned</span><br/><span class="hl-2">tracker</span><span class="hl-1">.</span><span class="hl-6">recordRedispatch</span><span class="hl-1">(</span><span class="hl-3">&#39;task-1&#39;</span><span class="hl-1">)</span><br/><span class="hl-2">tracker</span><span class="hl-1">.</span><span class="hl-6">isThrashing</span><span class="hl-1">()           </span><span class="hl-8">// depends on redispatch threshold</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="backpressurevalidator" class="tsd-anchor-link">BackpressureValidator<a href="#backpressurevalidator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Validates raw JSONL lines and build evidence payloads. Three consecutive malformed JSONL lines trigger the threshold.</p>
+<pre><code class="typescript"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">BackpressureValidator</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@open-tomato/loop-safety&#39;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">validator</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">BackpressureValidator</span><span class="hl-1">()</span><br/><span class="hl-2">validator</span><span class="hl-1">.</span><span class="hl-6">validateJsonl</span><span class="hl-1">(</span><span class="hl-3">&#39;{&quot;event&quot;:&quot;ok&quot;}&#39;</span><span class="hl-1">)  </span><span class="hl-8">// null — valid</span><br/><span class="hl-2">validator</span><span class="hl-1">.</span><span class="hl-6">validateJsonl</span><span class="hl-1">(</span><span class="hl-3">&#39;not json&#39;</span><span class="hl-1">)        </span><span class="hl-8">// &quot;Unexpected token...&quot; — error string</span><br/><span class="hl-2">validator</span><span class="hl-1">.</span><span class="hl-6">recordMalformed</span><span class="hl-1">()               </span><span class="hl-8">// increments counter</span><br/><span class="hl-2">validator</span><span class="hl-1">.</span><span class="hl-6">recordValid</span><span class="hl-1">()                   </span><span class="hl-8">// resets counter</span><br/><span class="hl-2">validator</span><span class="hl-1">.</span><span class="hl-6">validateBuildEvidence</span><span class="hl-1">({ </span><span class="hl-2">tests:</span><span class="hl-1"> </span><span class="hl-3">&#39;pass&#39;</span><span class="hl-1">, </span><span class="hl-2">lint:</span><span class="hl-1"> </span><span class="hl-3">&#39;pass&#39;</span><span class="hl-1"> }) </span><span class="hl-8">// null — valid</span><br/><span class="hl-2">validator</span><span class="hl-1">.</span><span class="hl-6">validateBuildEvidence</span><span class="hl-1">({ </span><span class="hl-2">tests:</span><span class="hl-1"> </span><span class="hl-3">&#39;fail&#39;</span><span class="hl-1"> })               </span><span class="hl-8">// reason string</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="terminationchecker" class="tsd-anchor-link">TerminationChecker<a href="#terminationchecker" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>TerminationChecker</code> composes all detectors and evaluates the decision tree on every call to <code>check(iteration)</code>.</p>
+<h3 id="decision-tree-order" class="tsd-anchor-link">Decision Tree Order<a href="#decision-tree-order" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The first condition that matches wins. The order is:</p>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Reason</th>
+<th>Exit Code</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>MaxCost</code></td>
+<td>2</td>
+<td>Accumulated cost ≥ <code>maxCostUsd</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>MaxIterations</code></td>
+<td>2</td>
+<td><code>iteration</code> ≥ <code>maxIterations</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>MaxRuntime</code></td>
+<td>2</td>
+<td>Elapsed time &gt; <code>maxRuntimeMs</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>ConsecutiveFailures</code></td>
+<td>1</td>
+<td>Consecutive failures ≥ <code>maxConsecutiveFailures</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>LoopStale</code></td>
+<td>1</td>
+<td>Stale threshold reached via <code>recordEvent()</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>LoopThrashing</code></td>
+<td>1</td>
+<td><code>ThrottleTracker.isThrashing()</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>ValidationFailure</code></td>
+<td>1</td>
+<td>Malformed JSONL threshold reached via <code>validateJsonl()</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>WorkspaceGone</code></td>
+<td>1</td>
+<td><code>workspaceExists()</code> returns <code>false</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td>—</td>
+<td>—</td>
+<td><code>{ shouldTerminate: false }</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="routing-events-through-terminationchecker" class="tsd-anchor-link">Routing Events Through TerminationChecker<a href="#routing-events-through-terminationchecker" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>StaleDetector</code> and <code>BackpressureValidator</code> signal state via return values, not polling methods. Route all loop events through the checker's delegation methods so the decision tree can act on them:</p>
+<pre><code class="typescript"><span class="hl-8">// On every loop event</span><br/><span class="hl-2">checker</span><span class="hl-1">.</span><span class="hl-6">recordEvent</span><span class="hl-1">(</span><span class="hl-2">topic</span><span class="hl-1">, </span><span class="hl-2">source</span><span class="hl-1">, </span><span class="hl-2">payloadFingerprint</span><span class="hl-1">)</span><br/><br/><span class="hl-8">// On every raw JSONL line received from an agent</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">error</span><span class="hl-1"> = </span><span class="hl-2">checker</span><span class="hl-1">.</span><span class="hl-6">validateJsonl</span><span class="hl-1">(</span><span class="hl-2">rawLine</span><span class="hl-1">)</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="configuration-and-usage" class="tsd-anchor-link">Configuration and Usage<a href="#configuration-and-usage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="typescript"><span class="hl-0">import</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-2">TerminationChecker</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">BudgetTracker</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">FailureTracker</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">StaleDetector</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">ThrottleTracker</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">BackpressureValidator</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">createWorkspaceExistsCheck</span><span class="hl-1">,</span><br/><span class="hl-1">} </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@open-tomato/loop-safety&#39;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">checker</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">TerminationChecker</span><span class="hl-1">(</span><br/><span class="hl-1">  {</span><br/><span class="hl-1">    </span><span class="hl-2">maxIterations:</span><span class="hl-1"> </span><span class="hl-7">100</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-2">maxRuntimeMs:</span><span class="hl-1"> </span><span class="hl-7">30</span><span class="hl-1"> * </span><span class="hl-7">60</span><span class="hl-1"> * </span><span class="hl-7">1000</span><span class="hl-1">, </span><span class="hl-8">// 30 minutes</span><br/><span class="hl-1">    </span><span class="hl-2">maxCostUsd:</span><span class="hl-1"> </span><span class="hl-7">5.00</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-2">maxConsecutiveFailures:</span><span class="hl-1"> </span><span class="hl-7">3</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-2">startTime:</span><span class="hl-1"> </span><span class="hl-2">Date</span><span class="hl-1">.</span><span class="hl-6">now</span><span class="hl-1">(),</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">BudgetTracker</span><span class="hl-1">({ </span><span class="hl-2">maxCostUsd:</span><span class="hl-1"> </span><span class="hl-7">5.00</span><span class="hl-1"> }),</span><br/><span class="hl-1">  </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">FailureTracker</span><span class="hl-1">({ </span><span class="hl-2">maxConsecutiveFailures:</span><span class="hl-1"> </span><span class="hl-7">3</span><span class="hl-1"> }),</span><br/><span class="hl-1">  </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">StaleDetector</span><span class="hl-1">({ </span><span class="hl-2">threshold:</span><span class="hl-1"> </span><span class="hl-7">3</span><span class="hl-1"> }),</span><br/><span class="hl-1">  </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">ThrottleTracker</span><span class="hl-1">({ </span><span class="hl-2">blockThreshold:</span><span class="hl-1"> </span><span class="hl-7">3</span><span class="hl-1">, </span><span class="hl-2">redispatchThreshold:</span><span class="hl-1"> </span><span class="hl-7">3</span><span class="hl-1"> }),</span><br/><span class="hl-1">  </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">BackpressureValidator</span><span class="hl-1">(),</span><br/><span class="hl-1">  </span><span class="hl-6">createWorkspaceExistsCheck</span><span class="hl-1">(</span><span class="hl-3">&#39;/path/to/workspace&#39;</span><span class="hl-1">),</span><br/><span class="hl-1">)</span><br/><br/><span class="hl-8">// In the loop body</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-2">checker</span><span class="hl-1">.</span><span class="hl-6">check</span><span class="hl-1">(</span><span class="hl-2">iteration</span><span class="hl-1">)</span><br/><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">result</span><span class="hl-1">.</span><span class="hl-2">shouldTerminate</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-6">error</span><span class="hl-1">(</span><span class="hl-3">`Loop stopped: </span><span class="hl-4">${</span><span class="hl-2">result</span><span class="hl-9">.</span><span class="hl-2">reason</span><span class="hl-4">}</span><span class="hl-3"> — </span><span class="hl-4">${</span><span class="hl-2">result</span><span class="hl-9">.</span><span class="hl-2">detail</span><span class="hl-4">}</span><span class="hl-3">`</span><span class="hl-1">)</span><br/><span class="hl-1">  </span><span class="hl-2">process</span><span class="hl-1">.</span><span class="hl-6">exit</span><span class="hl-1">(</span><span class="hl-2">result</span><span class="hl-1">.</span><span class="hl-2">exitCode</span><span class="hl-1">)</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="termination-reasons-and-exit-codes" class="tsd-anchor-link">Termination Reasons and Exit Codes<a href="#termination-reasons-and-exit-codes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Reason</th>
+<th>Exit Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Completed</code></td>
+<td>0</td>
+<td>All tasks done (set externally by the caller)</td>
+</tr>
+<tr>
+<td><code>MaxIterations</code></td>
+<td>2</td>
+<td>Iteration count hit the configured limit</td>
+</tr>
+<tr>
+<td><code>MaxRuntime</code></td>
+<td>2</td>
+<td>Elapsed wall-clock time exceeded the limit</td>
+</tr>
+<tr>
+<td><code>MaxCost</code></td>
+<td>2</td>
+<td>Cumulative API cost exceeded the budget</td>
+</tr>
+<tr>
+<td><code>ConsecutiveFailures</code></td>
+<td>1</td>
+<td>Too many consecutive process failures</td>
+</tr>
+<tr>
+<td><code>LoopThrashing</code></td>
+<td>1</td>
+<td>Abandoned tasks redispatched too many times</td>
+</tr>
+<tr>
+<td><code>LoopStale</code></td>
+<td>1</td>
+<td>Consecutive identical event signatures</td>
+</tr>
+<tr>
+<td><code>ValidationFailure</code></td>
+<td>1</td>
+<td>Consecutive malformed JSONL lines</td>
+</tr>
+<tr>
+<td><code>WorkspaceGone</code></td>
+<td>1</td>
+<td>Git worktree deleted while loop was running</td>
+</tr>
+<tr>
+<td><code>Interrupted</code></td>
+<td>130</td>
+<td>SIGINT or SIGTERM received</td>
+</tr>
+</tbody>
+</table>
+<h2 id="default-thresholds" class="tsd-anchor-link">Default Thresholds<a href="#default-thresholds" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Configured via</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Block threshold (per task)</td>
+<td>3</td>
+<td><code>ThrottleTrackerConfig.blockThreshold</code></td>
+</tr>
+<tr>
+<td>Redispatch threshold</td>
+<td>3</td>
+<td><code>ThrottleTrackerConfig.redispatchThreshold</code></td>
+</tr>
+<tr>
+<td>Stale detection threshold</td>
+<td>3</td>
+<td><code>StaleDetectorConfig.threshold</code></td>
+</tr>
+<tr>
+<td>Malformed JSONL threshold</td>
+<td>3</td>
+<td>hardcoded in <code>BackpressureValidator</code></td>
+</tr>
+<tr>
+<td>Max consecutive failures</td>
+<td>—</td>
+<td><code>TerminationCheckerConfig.maxConsecutiveFailures</code></td>
+</tr>
+<tr>
+<td>Max iterations</td>
+<td>—</td>
+<td><code>TerminationCheckerConfig.maxIterations</code></td>
+</tr>
+<tr>
+<td>Max runtime</td>
+<td>—</td>
+<td><code>TerminationCheckerConfig.maxRuntimeMs</code></td>
+</tr>
+<tr>
+<td>Max cost</td>
+<td>—</td>
+<td><code>TerminationCheckerConfig.maxCostUsd</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="api-reference" class="tsd-anchor-link">API Reference<a href="#api-reference" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>TypeDoc output is generated by running:</p>
+<pre><code class="sh"><span class="hl-6">bun</span><span class="hl-1"> </span><span class="hl-3">docs:generate</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The generated HTML is written to <code>docs/</code> within this package.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#bifemecanicoloop-safety"><span>@open-tomato/loop-<wbr/>safety</span></a><ul><li><a href="#overview"><span>Overview</span></a></li><li><a href="#detectors"><span>Detectors</span></a></li><li><ul><li><a href="#budgettracker"><span>Budget<wbr/>Tracker</span></a></li><li><a href="#failuretracker"><span>Failure<wbr/>Tracker</span></a></li><li><a href="#staledetector"><span>Stale<wbr/>Detector</span></a></li><li><a href="#throttletracker"><span>Throttle<wbr/>Tracker</span></a></li><li><a href="#backpressurevalidator"><span>Backpressure<wbr/>Validator</span></a></li></ul></li><li><a href="#terminationchecker"><span>Termination<wbr/>Checker</span></a></li><li><ul><li><a href="#decision-tree-order"><span>Decision <wbr/>Tree <wbr/>Order</span></a></li><li><a href="#routing-events-through-terminationchecker"><span>Routing <wbr/>Events <wbr/>Through <wbr/>Termination<wbr/>Checker</span></a></li><li><a href="#configuration-and-usage"><span>Configuration and <wbr/>Usage</span></a></li></ul></li><li><a href="#termination-reasons-and-exit-codes"><span>Termination <wbr/>Reasons and <wbr/>Exit <wbr/>Codes</span></a></li><li><a href="#default-thresholds"><span>Default <wbr/>Thresholds</span></a></li><li><a href="#api-reference"><span>API <wbr/>Reference</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">@open-tomato/loop-safety</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

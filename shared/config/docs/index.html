@@ -1,0 +1,89 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@open-tomato/config</title><meta name="description" content="Documentation for @open-tomato/config"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">@open-tomato/config</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>@open-tomato/config</h1></div><div class="tsd-panel tsd-typography"><h1 id="bifemecanicoconfig" class="tsd-anchor-link">@open-tomato/config<a href="#bifemecanicoconfig" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>YAML-based configuration loader for the Open Tomato orchestrator. Validates config at startup with Zod schemas, applies environment variable overrides, and resolves hat collections from files or built-in presets.</p>
+<h2 id="quick-start" class="tsd-anchor-link">Quick Start<a href="#quick-start" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="typescript"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">loadConfig</span><span class="hl-1">, </span><span class="hl-2">ConfigValidationError</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@open-tomato/config&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">try</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">config</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-6">loadConfig</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-2">configPath:</span><span class="hl-1"> </span><span class="hl-3">&#39;./orchestrator.yml&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  });</span><br/><br/><span class="hl-1">  </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-6">log</span><span class="hl-1">(</span><span class="hl-3">&#39;Backend:&#39;</span><span class="hl-1">, </span><span class="hl-2">config</span><span class="hl-1">.</span><span class="hl-2">cli</span><span class="hl-1">.</span><span class="hl-2">backend</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-6">log</span><span class="hl-1">(</span><span class="hl-3">&#39;Max iterations:&#39;</span><span class="hl-1">, </span><span class="hl-2">config</span><span class="hl-1">.</span><span class="hl-2">event_loop</span><span class="hl-1">.</span><span class="hl-2">iterations</span><span class="hl-1">);</span><br/><span class="hl-1">} </span><span class="hl-0">catch</span><span class="hl-1"> (</span><span class="hl-2">err</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-0">if</span><span class="hl-1"> (</span><span class="hl-2">err</span><span class="hl-1"> </span><span class="hl-4">instanceof</span><span class="hl-1"> </span><span class="hl-7">ConfigValidationError</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-6">error</span><span class="hl-1">(</span><span class="hl-2">err</span><span class="hl-1">.</span><span class="hl-2">message</span><span class="hl-1">); </span><span class="hl-8">// Human-readable Zod issue lines</span><br/><span class="hl-1">    </span><span class="hl-2">process</span><span class="hl-1">.</span><span class="hl-6">exit</span><span class="hl-1">(</span><span class="hl-9">1</span><span class="hl-1">);</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">  </span><span class="hl-0">throw</span><span class="hl-1"> </span><span class="hl-2">err</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="with-hat-collections" class="tsd-anchor-link">With hat collections<a href="#with-hat-collections" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="typescript"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">config</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-6">loadConfig</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">configPath:</span><span class="hl-1"> </span><span class="hl-3">&#39;./orchestrator.yml&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-8">// Mix built-in presets with local files — merged left-to-right</span><br/><span class="hl-1">  </span><span class="hl-2">hatSources:</span><span class="hl-1"> [</span><span class="hl-3">&#39;builtin:wave-review&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;./custom-hats.yml&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-8">// config.hatCollection is now set</span><br/><span class="hl-0">for</span><span class="hl-1"> (</span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">hat</span><span class="hl-1"> </span><span class="hl-4">of</span><span class="hl-1"> </span><span class="hl-2">config</span><span class="hl-1">.</span><span class="hl-2">hatCollection</span><span class="hl-1">?.</span><span class="hl-2">hats</span><span class="hl-1"> ?? []) {</span><br/><span class="hl-1">  </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-6">log</span><span class="hl-1">(</span><span class="hl-2">hat</span><span class="hl-1">.</span><span class="hl-2">id</span><span class="hl-1">, </span><span class="hl-2">hat</span><span class="hl-1">.</span><span class="hl-2">triggers</span><span class="hl-1">);</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="with-runtime-env-overrides" class="tsd-anchor-link">With runtime env overrides<a href="#with-runtime-env-overrides" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="typescript"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">config</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-6">loadConfig</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">configPath:</span><span class="hl-1"> </span><span class="hl-3">&#39;./orchestrator.yml&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-8">// These take final precedence over process.env and the YAML file</span><br/><span class="hl-1">  </span><span class="hl-2">envOverride:</span><span class="hl-1"> { </span><span class="hl-2">MAX_TURNS:</span><span class="hl-1"> </span><span class="hl-3">&#39;5&#39;</span><span class="hl-1">, </span><span class="hl-2">BACKEND:</span><span class="hl-1"> </span><span class="hl-3">&#39;openai&#39;</span><span class="hl-1"> },</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="minimal-config-file" class="tsd-anchor-link">Minimal config file<a href="#minimal-config-file" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>All sections are optional — defaults are applied for any omitted field.</p>
+<pre><code class="yaml"><span class="hl-8"># orchestrator.yml</span><br/><span class="hl-10">event_loop</span><span class="hl-1">:</span><br/><span class="hl-1">  </span><span class="hl-10">iterations</span><span class="hl-1">: </span><span class="hl-9">20</span><br/><span class="hl-1">  </span><span class="hl-10">cost_limit_usd</span><span class="hl-1">: </span><span class="hl-9">5.00</span><br/><br/><span class="hl-10">cli</span><span class="hl-1">:</span><br/><span class="hl-1">  </span><span class="hl-10">backend</span><span class="hl-1">: </span><span class="hl-11">anthropic</span><br/><span class="hl-1">  </span><span class="hl-10">prompt_mode</span><span class="hl-1">: </span><span class="hl-11">oneshot</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="built-in-presets" class="tsd-anchor-link">Built-in presets<a href="#built-in-presets" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Specifier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>builtin:wave-review</code></td>
+<td>Scatter-gather code-review hat collection</td>
+</tr>
+<tr>
+<td><code>builtin:sequential</code></td>
+<td>Single-hat sequential workflow</td>
+</tr>
+</tbody>
+</table>
+<h2 id="environment-variable-overrides" class="tsd-anchor-link">Environment variable overrides<a href="#environment-variable-overrides" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Config field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BACKEND</code></td>
+<td><code>cli.backend</code></td>
+</tr>
+<tr>
+<td><code>MAX_TURNS</code></td>
+<td><code>event_loop.iterations</code></td>
+</tr>
+<tr>
+<td><code>TIMEOUT_S</code></td>
+<td><code>event_loop.runtime_ms</code> (converted to ms)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="error-types" class="tsd-anchor-link">Error types<a href="#error-types" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>When thrown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ConfigValidationError</code></td>
+<td>Schema validation fails; <code>.message</code> contains readable Zod issue lines</td>
+</tr>
+<tr>
+<td><code>ConfigSemanticError</code></td>
+<td>Passes schema but fails a semantic check (e.g. unresolvable bot token)</td>
+</tr>
+<tr>
+<td><code>YamlFileNotFoundError</code></td>
+<td><code>configPath</code> does not exist on disk</td>
+</tr>
+<tr>
+<td><code>YamlParseError</code></td>
+<td>File exists but contains invalid YAML</td>
+</tr>
+</tbody>
+</table>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#bifemecanicoconfig"><span>@open-tomato/config</span></a><ul><li><a href="#quick-start"><span>Quick <wbr/>Start</span></a></li><li><ul><li><a href="#with-hat-collections"><span>With hat collections</span></a></li><li><a href="#with-runtime-env-overrides"><span>With runtime env overrides</span></a></li></ul></li><li><a href="#minimal-config-file"><span>Minimal config file</span></a></li><li><a href="#built-in-presets"><span>Built-<wbr/>in presets</span></a></li><li><a href="#environment-variable-overrides"><span>Environment variable overrides</span></a></li><li><a href="#error-types"><span>Error types</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">@open-tomato/config</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

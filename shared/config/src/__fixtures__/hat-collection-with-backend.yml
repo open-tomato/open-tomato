@@ -1,0 +1,40 @@
+version: '1'
+hats:
+  - id: planner
+    triggers:
+      - project:start
+    publishes:
+      - plan:ready
+    instructions: |
+      You are the project planner.
+    concurrency: 1
+    aggregate: false
+
+  - id: executor
+    triggers:
+      - plan:ready
+    publishes:
+      - task:done
+    instructions: |
+      You are the executor with a named backend override.
+    backend: gemini
+    concurrency: 2
+    aggregate: false
+
+  - id: reporter
+    triggers:
+      - task:done
+    publishes: []
+    instructions: |
+      You are the reporter with a custom backend descriptor.
+    backend:
+      name: my-custom-llm
+      command: /usr/local/bin/my-llm
+      args:
+        - --json
+      promptMode: stdin
+      outputFormat: stream-json
+      envVars:
+        MY_API_KEY: secret
+    concurrency: 1
+    aggregate: true

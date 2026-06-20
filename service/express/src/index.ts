@@ -1,0 +1,15 @@
+export { createService } from './create-service';
+export type { ServiceConfig, ResolvedServiceConfig } from './schema';
+export type { ServiceHandle, ServiceContext, ClientsMap } from './types';
+export { createDependency, createHttpClient } from '@open-tomato/service-core';
+export type { Dependency, TypedDependency, DepsMap, TypedClient, ServicePlugin } from '@open-tomato/service-core';
+export type {
+  ControlConfig,
+  DependencyControlStatus,
+  ClientControlStatus,
+  ControlStatusResponse,
+  PausableDependency,
+  RestartableDependency,
+  HealthDetailProvider,
+} from './control/types';
+export { isPausableDependency, isRestartableDependency, isHealthDetailProvider } from './control/types';

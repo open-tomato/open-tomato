@@ -1,0 +1,188 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@open-tomato/prompt-builder</title><meta name="description" content="Documentation for @open-tomato/prompt-builder"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">@open-tomato/prompt-builder</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>@open-tomato/prompt-builder</h1></div><div class="tsd-panel tsd-typography"><h1 id="bifemecanicoprompt-builder" class="tsd-anchor-link">@open-tomato/prompt-builder<a href="#bifemecanicoprompt-builder" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>Assembles structured, token-aware prompts for the agent loop. Prompts are built each iteration from an ordered 10-section pipeline fed by live sources: memory store, skill registry, event bus, hat topology, guardrails, and the persisted objective.</p>
+<h2 id="installation" class="tsd-anchor-link">Installation<a href="#installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="bash"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@open-tomato/prompt-builder</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="overview" class="tsd-anchor-link">Overview<a href="#overview" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Prompts are not static strings — they are assembled dynamically each iteration from ordered sections. The assembly follows a fixed 10-section pipeline. Sections are rendered sequentially and joined with double newlines; sections that produce empty output are silently omitted.</p>
+<h2 id="the-10-section-pipeline" class="tsd-anchor-link">The 10-Section Pipeline<a href="#the-10-section-pipeline" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="section-1-auto-injected-skills" class="tsd-anchor-link">Section 1 — Auto-Injected Skills<a href="#section-1-auto-injected-skills" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>XML-tagged blocks injected at the top of every prompt. Includes memory data, tool documentation, the robot interaction skill, and any custom skills sourced from <code>PromptContext.skills</code>. Each skill is wrapped in its own XML tag (e.g., <code>&lt;memory_data&gt;…&lt;/memory_data&gt;</code>) so the model can parse skill boundaries unambiguously.</p>
+<h3 id="section-2-core-prompt" class="tsd-anchor-link">Section 2 — Core Prompt<a href="#section-2-core-prompt" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Four structured sub-blocks rendered in order:</p>
+<ul>
+<li><strong>ORIENTATION</strong> — Agent identity and a fresh-context reminder, ensuring the agent does not carry implicit assumptions from previous turns.</li>
+<li><strong>SCRATCHPAD</strong> — A designated space for intermediate reasoning steps.</li>
+<li><strong>STATE MANAGEMENT</strong> — Instructions for how to persist and restore state across iterations.</li>
+<li><strong>GUARDRAILS</strong> — Behavioral rules encoded as RFC 2119 numbered entries (see <a href="#guardrailsregistry"><code>GuardrailsRegistry</code></a> below).</li>
+</ul>
+<h3 id="section-3-skill-index" class="tsd-anchor-link">Section 3 — Skill Index<a href="#section-3-skill-index" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>A compact Markdown table listing every available skill with three columns: <code>id</code>, <code>name</code>, and a one-line description. This gives the agent a quick reference to all capabilities without embedding the full skill documentation inline.</p>
+<h3 id="section-4-objective" class="tsd-anchor-link">Section 4 — Objective<a href="#section-4-objective" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The user's original goal, verbatim. This section <strong>persists unchanged across all iterations</strong> — the objective is never cleared or modified during a session. The caller is responsible for providing the same value on every <code>build()</code> call.</p>
+<h3 id="section-5-robot-guidance" class="tsd-anchor-link">Section 5 — Robot Guidance<a href="#section-5-robot-guidance" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>A numbered list of human guidance messages sourced from <code>PromptContext.robotGuidance</code>. The <strong>caller is responsible for clearing this list</strong> after prompt assembly; the section itself does not mutate the context. When the array is empty the section produces no output.</p>
+<h3 id="section-6-pending-events" class="tsd-anchor-link">Section 6 — Pending Events<a href="#section-6-pending-events" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>A formatted list of events the agent must handle, prefixed with the instruction &quot;You MUST handle the following events:&quot;. Sourced from <code>PromptContext.pendingEvents</code>. When the array is empty the section produces no output.</p>
+<h3 id="section-7-workflow" class="tsd-anchor-link">Section 7 — Workflow<a href="#section-7-workflow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The workflow rendered depends on how many hats are active:</p>
+<table>
+<thead>
+<tr>
+<th>Active hats</th>
+<th>Workflow</th>
+<th>Steps</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&gt; 1</code> (multi-hat)</td>
+<td>PLAN → DELEGATE</td>
+<td>Decompose objective into tasks, emit delegation events. Includes a fast-path hint for direct delegation when no decomposition is needed.</td>
+</tr>
+<tr>
+<td><code>≤ 1</code> (solo)</td>
+<td>STUDY → PLAN → IMPLEMENT → VERIFY → REPEAT</td>
+<td>Full iterative loop: study the objective and events, plan steps, implement, verify against acceptance criteria, repeat if needed.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-8-hats-section" class="tsd-anchor-link">Section 8 — Hats Section<a href="#section-8-hats-section" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Three components rendered in order:</p>
+<ol>
+<li><strong>Topology table</strong> — Markdown table with columns: Hat ID, Role, Publishes, Subscribes.</li>
+<li><strong>Data-flow description</strong> — Textual summary of how events flow between hats, derived from publish/subscribe topic matching.</li>
+<li><strong>Active-hat instructions</strong> — Full instruction text for each hat, <strong>filtered to only the hats listed in <code>activeHatIds</code></strong>. Instructions for inactive hats are never included, keeping the prompt focused.</li>
+</ol>
+<p>Reachability validation is performed when more than one hat is active: each active hat must be able to reach at least one other hat or a terminal via published topics.</p>
+<h3 id="section-9-event-writing" class="tsd-anchor-link">Section 9 — Event Writing<a href="#section-9-event-writing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Static rules governing how the agent should emit events. This section has no dynamic content — it renders identically regardless of context.</p>
+<h3 id="section-10-done" class="tsd-anchor-link">Section 10 — Done<a href="#section-10-done" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>A completion checklist the agent must satisfy before declaring an iteration complete. Includes task verification steps such as confirming the objective is met, all pending events have been handled, and required state has been persisted.</p>
+<hr>
+<h2 id="token-budget-strategy" class="tsd-anchor-link">Token Budget Strategy<a href="#token-budget-strategy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The assembled prompt targets <strong>40–60% of the usable context window</strong> (~176 K tokens). Staying within this range — the &quot;smart zone&quot; — leaves sufficient room for the model's reasoning and response without wasting context on oversized prompts.</p>
+<h3 id="how-truncation-works" class="tsd-anchor-link">How truncation works<a href="#how-truncation-works" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Memory blocks are the only variable-length content that may exceed budget. Truncation follows two rules:</p>
+<ol>
+<li><strong>Block boundary</strong> — content is split on double newlines (<code>\n\n</code>). A block is included only if it fits entirely; no block is split mid-sentence.</li>
+<li><strong>Greedy accumulation</strong> — blocks are added in priority order until the next candidate would exceed the budget, then loading stops.</li>
+</ol>
+<h3 id="_" class="tsd-anchor-link"><code>TokenBudgetManager</code><a href="#_" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Tracks per-section token consumption. Sections report their token count after rendering via <code>consume()</code>; the manager accumulates totals and exposes two helpers:</p>
+<ul>
+<li><code>remaining()</code> — tokens left in the total budget (clamped to 0).</li>
+<li><code>withinSmartZone()</code> — returns <code>true</code> when total consumed tokens fall within <code>[targetMinPercent, targetMaxPercent]</code> of <code>totalTokens</code>.</li>
+</ul>
+<p>Use <code>buildWithBudget()</code> instead of <code>build()</code> when you need consumption tracking:</p>
+<pre><code class="typescript"><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">budget</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">TokenBudgetManager</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-5">totalTokens:</span><span class="hl-1"> </span><span class="hl-6">176_000</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">targetMinPercent:</span><span class="hl-1"> </span><span class="hl-6">40</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">targetMaxPercent:</span><span class="hl-1"> </span><span class="hl-6">60</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-0">maxForSection</span><span class="hl-5">:</span><span class="hl-1"> () </span><span class="hl-3">=&gt;</span><span class="hl-1"> </span><span class="hl-6">10_000</span><span class="hl-1">,</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">prompt</span><span class="hl-1"> = </span><span class="hl-7">await</span><span class="hl-1"> </span><span class="hl-5">builder</span><span class="hl-1">.</span><span class="hl-0">buildWithBudget</span><span class="hl-1">(</span><span class="hl-5">context</span><span class="hl-1">, </span><span class="hl-5">budget</span><span class="hl-1">);</span><br/><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">budget</span><span class="hl-1">.</span><span class="hl-0">remaining</span><span class="hl-1">());       </span><span class="hl-8">// tokens left</span><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">budget</span><span class="hl-1">.</span><span class="hl-0">withinSmartZone</span><span class="hl-1">()); </span><span class="hl-8">// true if 40–60 % filled</span>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h2 id="public-api" class="tsd-anchor-link">Public API<a href="#public-api" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="_-1" class="tsd-anchor-link"><code>PromptBuilder</code><a href="#_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Accepts an ordered array of <code>PromptSection</code> instances and assembles them into a single prompt string.</p>
+<pre><code class="typescript"><span class="hl-7">import</span><span class="hl-1"> { </span><span class="hl-5">PromptBuilder</span><span class="hl-1">, </span><span class="hl-5">createDefaultPromptBuilder</span><span class="hl-1"> } </span><span class="hl-7">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@open-tomato/prompt-builder&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-8">// Use the default 10-section pipeline</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">builder</span><span class="hl-1"> = </span><span class="hl-0">createDefaultPromptBuilder</span><span class="hl-1">();</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">prompt</span><span class="hl-1"> = </span><span class="hl-7">await</span><span class="hl-1"> </span><span class="hl-5">builder</span><span class="hl-1">.</span><span class="hl-0">build</span><span class="hl-1">(</span><span class="hl-5">context</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="_-2" class="tsd-anchor-link"><code>createDefaultPromptBuilder(overrides?)</code><a href="#_-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Factory that wires all 10 sections in the correct order. Each section can be replaced independently for testing or custom deployments:</p>
+<pre><code class="typescript"><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">builder</span><span class="hl-1"> = </span><span class="hl-0">createDefaultPromptBuilder</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-5">objective:</span><span class="hl-1"> </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">MyCustomObjectiveSection</span><span class="hl-1">(),</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="interface" class="tsd-anchor-link"><code>PromptSection</code> interface<a href="#interface" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="typescript"><span class="hl-3">interface</span><span class="hl-1"> </span><span class="hl-9">PromptSection</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">name</span><span class="hl-1">: </span><span class="hl-9">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">render</span><span class="hl-1">(</span><span class="hl-5">context</span><span class="hl-1">: </span><span class="hl-9">PromptContext</span><span class="hl-1">): </span><span class="hl-9">string</span><span class="hl-1"> | </span><span class="hl-9">Promise</span><span class="hl-1">&lt;</span><span class="hl-9">string</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="type" class="tsd-anchor-link"><code>PromptContext</code> type<a href="#type" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Contains all live data sources consumed during assembly:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hatId</code></td>
+<td><code>string</code></td>
+<td>The current hat identity</td>
+</tr>
+<tr>
+<td><code>objective</code></td>
+<td><code>string</code></td>
+<td>User's original goal (persists across iterations)</td>
+</tr>
+<tr>
+<td><code>robotGuidance</code></td>
+<td><code>string[]</code></td>
+<td>Human guidance messages (caller clears after assembly)</td>
+</tr>
+<tr>
+<td><code>pendingEvents</code></td>
+<td><code>PendingEvent[]</code></td>
+<td>Events the agent must handle this iteration</td>
+</tr>
+<tr>
+<td><code>memories</code></td>
+<td><code>MemoryBlock[]</code></td>
+<td>Memory blocks to inject in Section 1</td>
+</tr>
+<tr>
+<td><code>skills</code></td>
+<td><code>SkillManifest[]</code></td>
+<td>Skills available for Section 1 and Section 3</td>
+</tr>
+<tr>
+<td><code>guardrails</code></td>
+<td><code>GuardrailsRegistry</code></td>
+<td>RFC 2119 rules rendered in Section 2</td>
+</tr>
+<tr>
+<td><code>hats</code></td>
+<td><code>HatDefinition[]</code></td>
+<td>Full hat topology for Section 8</td>
+</tr>
+<tr>
+<td><code>activeHatIds</code></td>
+<td><code>string[]</code></td>
+<td>Hats active this iteration (drives Section 7 and Section 8 filtering)</td>
+</tr>
+<tr>
+<td><code>tokenBudget</code></td>
+<td><code>TokenBudget</code></td>
+<td>Budget parameters used by <code>buildWithBudget</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_-3" class="tsd-anchor-link"><code>TokenBudgetManager</code><a href="#_-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Tracks consumed tokens per section and exposes <code>remaining()</code> and <code>withinSmartZone()</code>.</p>
+<h3 id="_-4" class="tsd-anchor-link"><code>GuardrailsRegistry</code><a href="#_-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Append-only ordered list of RFC 2119 guardrail rules. Rules cannot be removed once added, ensuring the GUARDRAILS block is never empty. Use <code>defaultGuardrails()</code> for the baseline set:</p>
+<pre><code class="typescript"><span class="hl-7">import</span><span class="hl-1"> { </span><span class="hl-5">defaultGuardrails</span><span class="hl-1"> } </span><span class="hl-7">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@open-tomato/prompt-builder&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">registry</span><span class="hl-1"> = </span><span class="hl-0">defaultGuardrails</span><span class="hl-1">();</span><br/><span class="hl-5">registry</span><span class="hl-1">.</span><span class="hl-0">add</span><span class="hl-1">({ </span><span class="hl-5">level:</span><span class="hl-1"> </span><span class="hl-2">&#39;MUST&#39;</span><span class="hl-1">, </span><span class="hl-5">rule:</span><span class="hl-1"> </span><span class="hl-2">&#39;Ask for confirmation before deleting data.&#39;</span><span class="hl-1"> });</span><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">registry</span><span class="hl-1">.</span><span class="hl-0">toPromptText</span><span class="hl-1">());</span><br/><span class="hl-8">// 1. MUST: Complete only the task described in the OBJECTIVE section…</span><br/><span class="hl-8">// …</span><br/><span class="hl-8">// 8. MUST: Ask for confirmation before deleting data.</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The default set includes seven baseline rules covering scope, secrecy, state persistence, destructive actions, minimal side-effects, event handling, and topic constraints.</p>
+<h3 id="_-5" class="tsd-anchor-link"><code>HatTopologyRenderer</code><a href="#_-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Renders the hat topology table, validates reachability, and filters instructions to active hats:</p>
+<pre><code class="typescript"><span class="hl-7">import</span><span class="hl-1"> { </span><span class="hl-5">HatTopologyRenderer</span><span class="hl-1"> } </span><span class="hl-7">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@open-tomato/prompt-builder&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">renderer</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">HatTopologyRenderer</span><span class="hl-1">();</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">table</span><span class="hl-1"> = </span><span class="hl-5">renderer</span><span class="hl-1">.</span><span class="hl-0">renderTable</span><span class="hl-1">(</span><span class="hl-5">hats</span><span class="hl-1">);</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">filtered</span><span class="hl-1"> = </span><span class="hl-5">renderer</span><span class="hl-1">.</span><span class="hl-0">filterInstructions</span><span class="hl-1">(</span><span class="hl-5">hats</span><span class="hl-1">, </span><span class="hl-5">activeHatIds</span><span class="hl-1">);</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">result</span><span class="hl-1"> = </span><span class="hl-5">renderer</span><span class="hl-1">.</span><span class="hl-0">validateReachability</span><span class="hl-1">(</span><span class="hl-5">topology</span><span class="hl-1">, </span><span class="hl-5">activeHatIds</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="_-6" class="tsd-anchor-link"><code>BudgetedMemoryLoader</code><a href="#_-6" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Wraps a raw memory source and stops loading blocks once the token budget is exhausted. Truncation happens at block boundaries; the <code>tokenCount</code> on returned blocks always reflects the actual (possibly truncated) content.</p>
+<pre><code class="typescript"><span class="hl-7">import</span><span class="hl-1"> { </span><span class="hl-5">BudgetedMemoryLoader</span><span class="hl-1"> } </span><span class="hl-7">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@open-tomato/prompt-builder&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">loader</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">BudgetedMemoryLoader</span><span class="hl-1">(</span><span class="hl-5">rawSource</span><span class="hl-1">, </span><span class="hl-5">counter</span><span class="hl-1">);</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">blocks</span><span class="hl-1"> = </span><span class="hl-7">await</span><span class="hl-1"> </span><span class="hl-5">loader</span><span class="hl-1">.</span><span class="hl-0">load</span><span class="hl-1">(</span><span class="hl-5">maxTokens</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="and" class="tsd-anchor-link"><code>XmlSkillFormatter</code> and <code>SkillIndexFormatter</code><a href="#and" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Format skill manifests for Section 1 (XML-wrapped) and Section 3 (Markdown table) respectively.</p>
+<hr>
+<h2 id="architecture-notes" class="tsd-anchor-link">Architecture Notes<a href="#architecture-notes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><strong>Shared types</strong> (<code>GuardrailRule</code>, <code>HatDefinition</code>, <code>HatTopology</code>, <code>MemoryBlock</code>, <code>PendingEvent</code>, <code>SkillManifest</code>) live in <code>@open-tomato/types</code> and are re-exported from this package for convenience.</li>
+<li><strong>Prompt-assembly internals</strong> (<code>PromptSection</code>, <code>PromptContext</code>, <code>TokenBudget</code>) are defined locally in <code>src/types/</code>.</li>
+<li>The tokenizer uses <code>gpt-tokenizer</code> (cl100k_base, ~±5% approximation for Claude) with a character-based fallback (~4 chars/token).</li>
+</ul>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#bifemecanicoprompt-builder"><span>@open-tomato/prompt-<wbr/>builder</span></a><ul><li><a href="#installation"><span>Installation</span></a></li><li><a href="#overview"><span>Overview</span></a></li><li><a href="#the-10-section-pipeline"><span>The 10-<wbr/>Section <wbr/>Pipeline</span></a></li><li><ul><li><a href="#section-1-auto-injected-skills"><span>Section 1 — <wbr/>Auto-<wbr/>Injected <wbr/>Skills</span></a></li><li><a href="#section-2-core-prompt"><span>Section 2 — <wbr/>Core <wbr/>Prompt</span></a></li><li><a href="#section-3-skill-index"><span>Section 3 — <wbr/>Skill <wbr/>Index</span></a></li><li><a href="#section-4-objective"><span>Section 4 — <wbr/>Objective</span></a></li><li><a href="#section-5-robot-guidance"><span>Section 5 — <wbr/>Robot <wbr/>Guidance</span></a></li><li><a href="#section-6-pending-events"><span>Section 6 — <wbr/>Pending <wbr/>Events</span></a></li><li><a href="#section-7-workflow"><span>Section 7 — <wbr/>Workflow</span></a></li><li><a href="#section-8-hats-section"><span>Section 8 — <wbr/>Hats <wbr/>Section</span></a></li><li><a href="#section-9-event-writing"><span>Section 9 — <wbr/>Event <wbr/>Writing</span></a></li><li><a href="#section-10-done"><span>Section 10 — <wbr/>Done</span></a></li></ul></li><li><a href="#token-budget-strategy"><span>Token <wbr/>Budget <wbr/>Strategy</span></a></li><li><ul><li><a href="#how-truncation-works"><span>How truncation works</span></a></li><li><a href="#_"><span></span></a></li></ul></li><li><a href="#public-api"><span>Public <wbr/>API</span></a></li><li><ul><li><a href="#_-1"><span></span></a></li><li><a href="#_-2"><span></span></a></li><li><a href="#interface"><span> interface</span></a></li><li><a href="#type"><span> type</span></a></li><li><a href="#_-3"><span></span></a></li><li><a href="#_-4"><span></span></a></li><li><a href="#_-5"><span></span></a></li><li><a href="#_-6"><span></span></a></li><li><a href="#and"><span> and </span></a></li></ul></li><li><a href="#architecture-notes"><span>Architecture <wbr/>Notes</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">@open-tomato/prompt-builder</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
