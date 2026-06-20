@@ -1,8 +1,12 @@
 {
   "name": "@open-tomato/mcp",
-  "version": "0.0.0",
+  "description": "Model Context Protocol server factory with health endpoints",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
   "type": "module",
-  "private": true,
+  "private": false,
   "main": "./src/index.ts",
   "scripts": {
     "build": "tsc --noEmit",

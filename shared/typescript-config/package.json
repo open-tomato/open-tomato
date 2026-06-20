@@ -1,6 +1,6 @@
 {
   "name": "@open-tomato/typescript-config",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared TypeScript base / React / Next.js tsconfig presets for @open-tomato packages.",
   "license": "MIT",
   "private": false,
@@ -28,6 +28,7 @@
     "react.json",
     "nextjs.json",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ]
 }

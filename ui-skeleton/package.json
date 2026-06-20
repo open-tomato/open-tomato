@@ -1,7 +1,11 @@
 {
   "name": "@open-tomato/ui-skeleton",
-  "version": "0.0.1",
-  "private": true,
+  "description": "Radix UI + Tailwind component library with particles to organisms",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
+  "private": false,
   "type": "module",
   "exports": {
     ".": {

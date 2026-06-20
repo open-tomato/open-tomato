@@ -1,8 +1,12 @@
 {
   "name": "@open-tomato/prompt-builder",
-  "version": "0.1.0",
+  "description": "Token-aware prompt assembly from memory, skills, and events",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
   "type": "module",
-  "private": true,
+  "private": false,
   "main": "src/index.ts",
   "types": "src/index.ts",
   "exports": {

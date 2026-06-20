@@ -1,8 +1,12 @@
 {
   "name": "@open-tomato/cache",
-  "version": "0.0.0",
+  "description": "React Query provider with Redis server cache support",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
   "type": "module",
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "bun run build:browser && bun run build:server && bun run build:types",
     "postbuild": "grep -q 'ioredis' ./dist/browser.js && { echo 'ERROR: ioredis leaked into browser bundle' >&2; exit 1; } || exit 0",

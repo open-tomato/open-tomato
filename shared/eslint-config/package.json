@@ -1,8 +1,12 @@
 {
   "name": "@open-tomato/eslint-config",
-  "version": "0.0.0",
+  "description": "ESLint and TypeScript configurations for the monorepo",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
   "type": "module",
-  "private": true,
+  "private": false,
   "exports": {
     ".": "./base.mjs",
     "./base": "./base.mjs",

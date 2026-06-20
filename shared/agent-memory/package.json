@@ -1,8 +1,12 @@
 {
   "name": "@open-tomato/agent-memory",
-  "version": "0.1.0",
+  "description": "File-based agent memory store with markdown serialization and locking",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
   "type": "module",
-  "private": true,
+  "private": false,
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts"

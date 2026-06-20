@@ -126,17 +126,37 @@ packages.
 
 ## Creating a new publishable package (graduation)
 
-1. Remove the package's `REFACTOR_NEEDED.md`.
-2. Edit the package's `package.json`:
-   - `"private": false`.
-   - Add/verify `description`, `license`, `repository`, `homepage`, `bugs`.
-   - Add `"publishConfig": { "access": "public" }`.
-   - Add `"files": [...]` restricting tarball contents.
-3. Write/expand `README.md` with: purpose, install, minimal usage example.
-4. Remove the package name from the `ignore` list in `.changeset/config.json`.
-5. Add a changeset declaring the initial minor (for pre-1.0) or major
-   (for post-1.0) bump.
-6. Open a PR. The rest is the regular flow.
+The mechanical un-gating is automated by `scripts/graduate.ts`:
+
+```bash
+# one package (by path or name)
+bun scripts/graduate.ts shared/logger --set-version 0.1.0
+# or every still-gated package at once
+bun scripts/graduate.ts --all --set-version 0.1.0 --dry-run   # preview
+bun scripts/graduate.ts --all --set-version 0.1.0             # apply
+```
+
+It (1) deletes `REFACTOR_NEEDED.md`, (2) sets `"private": false`, (3) sets the
+version baseline, (4) ensures `"publishConfig": { "access": "public" }`, and
+(5) removes the package from the `ignore` list in `.changeset/config.json`.
+
+Then, **per package, by hand** (content the tool can't infer):
+
+- Add/verify `description`, `license`, `repository`, `homepage`, `bugs`.
+- Add `"files": [...]` to restrict tarball contents (otherwise tests/configs
+  ship too).
+- Write/expand `README.md`: purpose, install, minimal usage example.
+- Confirm the entry point exists — `exports["."]` / `main` must point at a real
+  file (`publint` enforces this; the publish driver skips packages that fail).
+
+**Initial release vs. ongoing.** For a first publish, set the `0.1.0` baseline
+directly (as above) — `changeset version` does *relative* bumps with internal-
+dependency cascades and can't land everyone on a uniform `0.1.0`. After the
+first release, every change goes through the normal changeset flow at the top
+of this doc, and `bun run publish:local`'s preflight enforces the
+changed-must-bump rule. (Run the initial graduation publish with the driver
+directly — `bun scripts/publish-packages.ts --yes` — since there are no
+changesets yet; preflight's `--skip-changeset` covers the same case.)
 
 ## Troubleshooting
 

@@ -16,10 +16,11 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "test:scripts": "bun test scripts/",
+    "changeset:add": "bun scripts/add-changeset.ts",
     "preflight": "bun scripts/preflight.ts",
     "prepublish:check": "turbo run build check-types test lint && bun scripts/preflight.ts",
-    "publish:dry": "turbo run build check-types test lint && bun scripts/preflight.ts && bun scripts/publish-packages.ts --dry-run",
-    "publish:local": "turbo run build check-types test lint && bun scripts/preflight.ts && bun scripts/publish-packages.ts --yes",
+    "publish:dry": "turbo run build check-types test lint && bun scripts/preflight.ts --skip-changeset && bun scripts/publish-packages.ts --dry-run",
+    "publish:local": "turbo run build check-types test lint && bun scripts/preflight.ts --skip-changeset && bun scripts/publish-packages.ts --yes",
     "release": "changeset publish"
   },
   "devDependencies": {

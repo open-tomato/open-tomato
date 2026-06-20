@@ -75,7 +75,7 @@ describe('GET /_control/status — integration', () => {
     expect(res.headers['content-type']).toMatch(/application\/json/);
     expect(res.body).toMatchObject({
       serviceId: 'int-service',
-      version: '0.0.0',
+      version: expect.stringMatching(/^\d+\.\d+\.\d+/),
       status: 'degraded',
       dependencies: {
         db: { status: 'running' },

@@ -1,8 +1,12 @@
 {
   "name": "@open-tomato/task-store",
-  "version": "0.1.0",
+  "description": "File-based task store with exclusive locking and state validation",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
   "type": "module",
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "tsc --noEmit",
     "lint": "eslint --fix",

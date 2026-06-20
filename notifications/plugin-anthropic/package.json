@@ -1,7 +1,11 @@
 {
   "name": "@open-tomato/notifications-plugin-anthropic",
-  "version": "0.1.0",
-  "private": true,
+  "description": "Claude Code event notification plugin",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
+  "private": false,
   "type": "module",
   "exports": {
     ".": "./src/index.ts"

@@ -1,8 +1,12 @@
 {
   "name": "@open-tomato/service-core",
-  "version": "0.0.0",
+  "description": "Core service framework with dependency injection and HTTP clients",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
   "type": "module",
-  "private": true,
+  "private": false,
   "scripts": {
     "lint": "eslint --fix",
     "test": "bun test",

@@ -28,6 +28,7 @@ import {
   isPublicRegistryUrl,
   resolveScopeRegistry,
 } from "./registry";
+import { gitChangedRelPaths } from "./git";
 import {
   expectedPackageName,
   internalDeps,
@@ -266,6 +267,9 @@ export interface PreflightOptions {
   changedRelPaths?: string[] | null;
   pendingBumpNames?: string[];
   lookupDeprecation?: DeprecationResolver | null;
+  /** Skip the changed-must-bump check (e.g. an initial graduation that sets the
+   *  baseline version directly rather than via a changeset). */
+  skipChangeset?: boolean;
 }
 
 export function runPreflight(opts: PreflightOptions): PreflightReport {
@@ -280,7 +284,9 @@ export function runPreflight(opts: PreflightOptions): PreflightReport {
     ...checkNoFileRefs(packages),
   ];
 
-  if (opts.changedRelPaths == null) {
+  if (opts.skipChangeset) {
+    // intentionally skipped (e.g. initial graduation)
+  } else if (opts.changedRelPaths == null) {
     findings.push(
       warn("changesets", "could not determine changed files (no git base) — skipping changed-must-bump check."),
     );
@@ -309,31 +315,6 @@ export function defaultNpmrcPaths(root: string): string[] {
     join(root, "..", ".npmrc"),
     join(process.env.HOME ?? "", ".npmrc"),
   ];
-}
-
-function gitChangedRelPaths(root: string, base: string): string[] | null {
-  try {
-    const committed = execFileSync("git", ["diff", "--name-only", `${base}...HEAD`], {
-      cwd: root,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    });
-    const working = execFileSync("git", ["diff", "--name-only", "HEAD"], {
-      cwd: root,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    });
-    const untracked = execFileSync(
-      "git",
-      ["ls-files", "--others", "--exclude-standard"],
-      { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
-    );
-    return [...committed.split("\n"), ...working.split("\n"), ...untracked.split("\n")]
-      .map((l) => l.trim())
-      .filter(Boolean);
-  } catch {
-    return null;
-  }
 }
 
 function changesetPendingNames(root: string): string[] {
@@ -395,6 +376,7 @@ function main(argv: string[]): void {
   const root = resolve(process.cwd());
   const asJson = argv.includes("--json");
   const skipDeprecation = argv.includes("--skip-deprecation");
+  const skipChangeset = argv.includes("--skip-changeset");
   const baseIdx = argv.indexOf("--base");
   const base = baseIdx !== -1 ? argv[baseIdx + 1] : "main";
   const regIdx = argv.indexOf("--registry");
@@ -406,8 +388,9 @@ function main(argv: string[]): void {
 
   const report = runPreflight({
     root,
-    changedRelPaths: gitChangedRelPaths(root, base),
-    pendingBumpNames: changesetPendingNames(root),
+    skipChangeset,
+    changedRelPaths: skipChangeset ? undefined : gitChangedRelPaths(root, base),
+    pendingBumpNames: skipChangeset ? undefined : changesetPendingNames(root),
     lookupDeprecation: skipDeprecation ? null : npmViewDeprecation(registry),
   });
 

@@ -1,8 +1,12 @@
 {
   "name": "@open-tomato/linear",
-  "version": "0.0.0",
+  "description": "Linear API client wrapper for projects, issues, and workflows",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
   "type": "module",
-  "private": true,
+  "private": false,
   "scripts": {
     "lint": "eslint --fix"
   },

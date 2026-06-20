@@ -1,8 +1,12 @@
 {
   "name": "@open-tomato/logger",
-  "version": "0.0.0",
+  "description": "Pino logger with platform-specific Node.js and browser bundles",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
   "type": "module",
-  "private": true,
+  "private": false,
   "main": "./dist/node.js",
   "types": "./dist/node.d.ts",
   "exports": {

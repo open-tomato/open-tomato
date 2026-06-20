@@ -49,7 +49,9 @@ describe('GET /_control/status', () => {
     expect(res.body).toMatchObject({
       serviceId: 'my-service',
       status: 'running',
-      version: '0.0.0',
+      // Status reports the live package version (readServiceVersion); assert the
+      // shape, not a frozen literal, so release bumps don't break this test.
+      version: expect.stringMatching(/^\d+\.\d+\.\d+/),
       dependencies: {
         db: { status: 'running' },
       },

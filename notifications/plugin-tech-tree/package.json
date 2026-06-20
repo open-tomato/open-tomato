@@ -1,7 +1,11 @@
 {
   "name": "@open-tomato/notifications-plugin-tech-tree",
-  "version": "0.0.1",
-  "private": true,
+  "description": "Tech-tree node tracking and dispatch notification client",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
+  "private": false,
   "type": "module",
   "exports": {
     ".": "./src/index.ts"

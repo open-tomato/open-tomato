@@ -124,14 +124,19 @@ function publishOne(stageDir: string, opts: PublishOptions): void {
   execFileSync("bun", args, { cwd: stageDir, stdio: "inherit" });
 }
 
-function run(opts: PublishOptions): { name: string; version: string }[] {
+interface PublishRunResult {
+  published: { name: string; version: string }[];
+  failed: { name: string; version: string; error: string }[];
+}
+
+function run(opts: PublishOptions): PublishRunResult {
   const eligible = listWorkspacePackages(opts.root).filter((p) => p.eligible);
   const set = computePublishSet(eligible, publishedVersionsViaNpm(opts.registry));
   const ordered = topoSortByInternalDeps(set);
 
   if (ordered.length === 0) {
     console.error("[publish] nothing to publish — every eligible package is already on the registry.");
-    return [];
+    return { published: [], failed: [] };
   }
 
   const mode = opts.dryRun ? "DRY RUN" : "PUBLISH";
@@ -141,17 +146,33 @@ function run(opts: PublishOptions): { name: string; version: string }[] {
   }
 
   const published: { name: string; version: string }[] = [];
+  const failed: { name: string; version: string; error: string }[] = [];
   for (const pkg of ordered) {
-    console.error(`[publish] staging ${pkg.name}@${pkg.version}`);
-    const stageDir = prepare({
-      packagePath: pkg.dir,
-      stagingRoot: opts.stagingRoot,
-      workspaceRoot: opts.root,
-    });
-    publishOne(stageDir, opts);
-    published.push({ name: pkg.name, version: pkg.version });
+    try {
+      console.error(`[publish] staging ${pkg.name}@${pkg.version}`);
+      const stageDir = prepare({
+        packagePath: pkg.dir,
+        stagingRoot: opts.stagingRoot,
+        workspaceRoot: opts.root,
+      });
+      publishOne(stageDir, opts);
+      published.push({ name: pkg.name, version: pkg.version });
+    } catch (error) {
+      // Don't abort the batch — record and continue so one broken package
+      // doesn't block the other 21.
+      const message = error instanceof Error ? error.message : String(error);
+      failed.push({ name: pkg.name, version: pkg.version, error: message });
+      console.error(`[publish] FAILED ${pkg.name}@${pkg.version}: ${message}`);
+    }
   }
-  return published;
+
+  console.error(
+    `\n[publish] done: ${published.length} ${opts.dryRun ? "staged" : "published"}, ${failed.length} failed.`,
+  );
+  if (failed.length > 0) {
+    for (const f of failed) console.error(`  - ${f.name}@${f.version}: ${f.error}`);
+  }
+  return { published, failed };
 }
 
 function main(argv: string[]): void {
@@ -171,7 +192,7 @@ function main(argv: string[]): void {
     console.error("[publish] no --yes flag — running as a dry run. Re-run with --yes to publish for real.\n");
   }
 
-  const published = run({
+  const { published, failed } = run({
     root,
     registry,
     stagingRoot: resolve(root, ".staging"),
@@ -180,7 +201,8 @@ function main(argv: string[]): void {
   });
 
   // Machine-readable result on stdout (parity with the CI changesets action).
-  console.log(JSON.stringify(published));
+  console.log(JSON.stringify({ published, failed }));
+  if (failed.length > 0) process.exit(1);
 }
 
 if (import.meta.main) main(process.argv.slice(2));
