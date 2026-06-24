@@ -1,0 +1,26 @@
+{
+  "name": "@open-tomato/cli-core",
+  "description": "Pure TypeScript contracts (CliContext, CliCommand, CliEvent, CliOutput) plus assembleContext helper for tomato/tomatops command consumers",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.0",
+  "type": "module",
+  "private": false,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint --fix",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
+    "@types/node": "^22.13.5",
+    "eslint": "^9.39.4",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.0"
+  }
+}

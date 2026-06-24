@@ -1,0 +1,12 @@
+# Phase 8 — open-tomato progress notes
+
+Append broadly-applicable findings only. Skip task-specific details.
+
+## Findings
+
+- Shared packages live under `packages/shared/*` and are auto-registered via the root `workspaces` glob in `package.json` — no need to manually edit the root for new members.
+- Standard devDependency pins in shared packages: `eslint ^9.39.4`, `typescript ^5.9.3`, `vitest ^3.0.0`, `@types/node ^22.13.5`, plus `@open-tomato/eslint-config` and `@open-tomato/typescript-config` at `workspace:^`.
+- Convention for pure-TS shared packages (no build step): `main` and `exports["."]` both point to `./src/index.ts`; `type: "module"`; `private: false`; `publishConfig.access: "public"`.
+- Standard `scripts` in shared packages: `"lint": "eslint --fix"` and `"test": "vitest run"`. Build scripts only appear when a package ships pre-bundled output (e.g. `logger`).
+- Root scripts of note: `bun run preflight`, `bun run publish:dry`, `bun run publish:local`, `bun run changeset:add` (wrapper around the changeset CLI accepting `--level` and `--summary`/`--pkg name:level` flags).
+- `globals ^16.0.0` is commonly listed as a devDep alongside `eslint` in shared packages (see `errors`, `logger`) — add it if eslint config requires it; the task spec is authoritative when it doesn't list it.
