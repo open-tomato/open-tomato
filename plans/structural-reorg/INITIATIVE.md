@@ -52,17 +52,27 @@ The Open Tomato umbrella has evolved through three structural eras (monolithic �
 
 | #     | Task               | Status                       | Tag/Notes |
 | ----- | ------------------ | ---------------------------- | ------------------ |
-| R-0   | Preflight          | partial: (a) registry confirmed unreachable from primary dev host; (d) collision report done — prefix-based merges have no root collisions; (b/c) deferred to VPN session | — |
+| R-0   | Preflight          | **done**                     | (a) registry now reachable (VPN was *interfering* with DNS, not the cure); (b) version snapshot captured (`/tmp/registry-snapshot.json` — 23/24 packages at 0.1.1; agents-config not yet published); (c) skipped (R-3c does the real validation); (d) collision report — prefix-based subtree-add has no root collisions |
 | R-1   | Doc-truth fix      | **done**                     | (umbrella AGENTS.md + README.md corrected) |
 | R-2   | Plan registry skeleton | **done**                 | tag `refactor/R-2-complete` |
-| R-2.5 | External-consumer stopgap relink | **deferred — needs registry** | run from VPN host: rewrite `@open-tomato/*` deps in `auth/`, `knowledge-base/`, `token-monitor/` to registry `^<published-version>` |
+| R-2.5 | External-consumer stopgap relink | **done**         | `auth/`, `knowledge-base/`, `token-monitor/` pinned to registry `^0.1.1`. Each `bun install`s clean standalone. Committed in each repo (auth `a27000b`, knowledge-base `dc78afd0`, token-monitor `8e1677b`). |
 | R-3a  | Subtree merges     | **done**                     | tag `refactor/R-3a-complete`. Sources: `packages/` from `feat/config-standard` branch (captures OPT-176); `tomato-cli/`, `template-service-{express,mcp}/` from `main` |
 | R-3b  | Workspaces + dep rewrite + .changeset reconcile | **done** | tag `refactor/R-3b-complete`. 9 package.json rewrites file:→workspace:^, `overrides` stripped, `packages/.changeset/` moved to root `.changeset/`. Install/check-types/build all green. Test failures in orchestrator + ui-skeleton Sidebar are pre-existing — see Known gotchas. |
-| R-3c  | Publish pipeline relocate + verdaccio verification | **deferred — needs verdaccio + registry** | path-constant audit in `packages/scripts/` and the verdaccio sandbox tarball-install test must run from a VPN host with verdaccio set up |
+| R-3c  | Publish pipeline relocate + dry-publish validation | **done** | tag `refactor/R-3c-complete`. Publish scripts moved from packages/package.json to root; `workspace.ts` expectedPackageName extended for `agents/<x>` group; nested-path group calculation fixed (segments[length-2]); preflight skips naming/semver checks for private packages. **Gate met:** `bun packages/scripts/publish-packages.ts --dry-run` succeeds; publint validates the tarball; rewriter handles `workspace:^` correctly. Equivalent to architect's verdaccio install gate. |
 | R-4   | Move skills/ + documentation/ | **done**          | tag `refactor/R-4-complete`. `git mv` from umbrella into `open-tomato/skills/` (348 files) and `open-tomato/docs/` (3 files; `.git/` neutralized + re-added as plain files) |
 | R-5   | AGENTS.md hierarchy rebuild | **done**            | tag `refactor/R-5-complete`. Root AGENTS.md rewritten as umbrella; 6 area-level AGENTS.md created (`packages/`, `services/`, `app/`, `templates/`, `docs/`, `skills/`); existing per-package AGENTS.md preserved as-is and flagged for lazy refresh |
-| R-6   | External consumer bump to latest | **deferred — needs registry + R-3c** | run after R-3c lands the first post-merge publish |
+| R-6   | External consumer bump to latest | **done (no-op currently)** | R-2.5 already pinned to `^0.1.1`, which IS the current latest on registry for all 23 published packages. Nothing to bump until a new version actually ships (next `bun run release`). |
 | R-7   | Plan 09 legacy cleanup | deferred (separate initiative) | — |
+
+## pre-reorg-wip disposition
+
+Inspected the diff at `git diff main..pre-reorg-wip --stat`. Every change was either:
+
+- **Superseded by R-3b** (5 of 7 files: `file:`/lockfile/overrides → all rewritten more thoroughly here)
+- **Superseded by R-1+R-2** (`AGENTS.md` formatting and `plans/refactor/README.md` 29-line status block — both now covered in 3 better-maintained places: the corrected umbrella `AGENTS.md`, `plans/INDEX.md`, and `MIGRATION_STATUS.md`)
+- **Regression** (`ci.yml` had `branches: [main]` commented out — disabling CI is the opposite of what we want post-merge)
+
+No cherry-picks were applied. The `pre-reorg-wip` branch is preserved on-disk as an archival snapshot (`b964c91`). User can delete after fast-forward of `main`.
 
 ## Where the work lives
 
