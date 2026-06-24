@@ -1,0 +1,28 @@
+{
+  "extends": "@open-tomato/typescript-config/base",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2022"
+    ],
+    "types": [
+      "node",
+      "bun",
+      "jest",
+      "@testing-library/jest-dom"
+    ],
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "demo",
+    "./vitest.config.ts"
+  ]
+}

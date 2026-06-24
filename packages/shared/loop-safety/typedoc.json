@@ -1,0 +1,10 @@
+{
+  "entryPoints": ["src/termination/index.ts"],
+  "out": "docs",
+  "tsconfig": "tsconfig.json",
+  "readme": "README.md",
+  "name": "@open-tomato/loop-safety",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "includeVersion": false
+}

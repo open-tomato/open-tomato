@@ -1,0 +1,13 @@
+version: '1'
+hats:
+  - id: worker
+    triggers:
+      - task:start
+    publishes:
+      - task:done
+    instructions: |
+      You are a sequential task worker. Process the incoming task:start event completely
+      before emitting task:done. Work through the task step-by-step, producing a clear
+      summary of what was done and any outputs generated.
+    concurrency: 1
+    aggregate: false

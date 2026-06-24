@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationDir": "./dist",
+    "skipLibCheck": true
+  },
+  "include": ["src/browser.ts", "src/server.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}

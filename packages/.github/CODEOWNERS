@@ -1,0 +1,13 @@
+# Each line is a file pattern followed by one or more owners.
+# Patterns match using gitignore syntax; later matches override earlier ones.
+
+# Default owner for the whole repo
+*                                  @markost
+
+# Release mechanics — require maintainer review on any change
+/.changeset/                       @markost
+/.github/workflows/                @markost
+/scripts/prepare-publish.ts        @markost
+/scripts/publish-all.ts            @markost
+/VERSIONING.md                     @markost
+/RELEASING.md                      @markost

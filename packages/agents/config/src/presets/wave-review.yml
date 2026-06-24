@@ -1,0 +1,49 @@
+version: '1'
+hats:
+  - id: dispatcher
+    triggers:
+      - code:submitted
+    publishes:
+      - security:check
+      - quality:check
+    instructions: |
+      You are the review dispatcher. A code submission has arrived.
+      Fan out the review work by emitting a security:check event and a quality:check event
+      so the specialist reviewers can run in parallel.
+    concurrency: 1
+    aggregate: false
+
+  - id: security-reviewer
+    triggers:
+      - security:check
+    publishes:
+      - review:done
+    instructions: |
+      You are the security reviewer. Examine the submitted code for security vulnerabilities,
+      including injection flaws, insecure defaults, hardcoded secrets, and OWASP Top 10 issues.
+      Emit a review:done event containing your findings and a severity rating (low/medium/high/critical).
+    concurrency: 1
+    aggregate: false
+
+  - id: quality-reviewer
+    triggers:
+      - quality:check
+    publishes:
+      - review:done
+    instructions: |
+      You are the code quality reviewer. Examine the submitted code for readability, maintainability,
+      test coverage, and adherence to best practices. Emit a review:done event containing your
+      findings and a quality score (1–10).
+    concurrency: 1
+    aggregate: false
+
+  - id: aggregator
+    triggers:
+      - review:done
+    publishes: []
+    instructions: |
+      You are the review aggregator. Collect the results from all specialist reviewers and
+      produce a unified review report that summarises the security findings and quality score.
+      Present actionable next steps for the development team.
+    concurrency: 1
+    aggregate: true

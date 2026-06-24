@@ -1,0 +1,30 @@
+{
+  "name": "@open-tomato/worker-protocol",
+  "description": "HTTP, CLI, and SSE contract between executor and task-worker",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
+  "type": "module",
+  "private": false,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint --fix",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
+    "eslint": "^9.39.4",
+    "globals": "^16.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.0",
+    "zod": "^3.25.67"
+  }
+}

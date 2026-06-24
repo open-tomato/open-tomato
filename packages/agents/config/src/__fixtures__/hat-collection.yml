@@ -1,0 +1,34 @@
+version: '1'
+hats:
+  - id: planner
+    triggers:
+      - project:start
+    publishes:
+      - plan:ready
+    instructions: |
+      You are the project planner. Break down the incoming task into subtasks
+      and emit a plan:ready event with a structured task list.
+    concurrency: 1
+    aggregate: false
+
+  - id: executor
+    triggers:
+      - plan:ready
+    publishes:
+      - task:done
+    instructions: |
+      You are the executor. Carry out the plan produced by the planner and
+      emit a task:done event summarising what was accomplished.
+    backend: gemini
+    concurrency: 2
+    aggregate: false
+
+  - id: reporter
+    triggers:
+      - task:done
+    publishes: []
+    instructions: |
+      You are the reporter. Collect the results from all executor runs and
+      produce a final summary report.
+    concurrency: 1
+    aggregate: true

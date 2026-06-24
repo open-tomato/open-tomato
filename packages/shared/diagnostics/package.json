@@ -1,0 +1,24 @@
+{
+  "name": "@open-tomato/diagnostics",
+  "description": "Diagnostic event collection for agent output, orchestration, and performance",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.1",
+  "type": "module",
+  "private": false,
+  "exports": {
+    ".": "./src/diagnostics/index.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "eslint --fix",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
+    "eslint": "^9.39.4",
+    "typescript": "^5.9.3"
+  }
+}
