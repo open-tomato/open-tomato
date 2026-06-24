@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "check-types": "tsc --noEmit",
-    "lint": "echo '[lint] deferred \u2014 shared eslint-config devDeps not resolvable via file: ref (see AGENTS.md)' && exit 0",
+    "lint": "echo '[lint] deferred — shared eslint-config devDeps not resolvable via file: ref (see AGENTS.md)' && exit 0",
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests"
   },
@@ -16,8 +16,8 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@open-tomato/eslint-config": "file:../../packages/shared/eslint-config",
-    "@open-tomato/typescript-config": "file:../../packages/shared/typescript-config",
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.0",

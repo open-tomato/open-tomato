@@ -10,7 +10,6 @@
     "types": [
       "node",
       "bun",
-      "jest",
       "@testing-library/jest-dom"
     ],
     "moduleResolution": "bundler",
@@ -24,5 +23,12 @@
     "src",
     "demo",
     "./vitest.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.stories.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ]
 }

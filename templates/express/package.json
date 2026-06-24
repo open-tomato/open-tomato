@@ -12,14 +12,14 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@open-tomato/express": "file:../packages/service/express",
-    "@open-tomato/service-core": "file:../packages/service/service-core",
+    "@open-tomato/express": "workspace:^",
+    "@open-tomato/service-core": "workspace:^",
     "express": "^4.21.2",
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@open-tomato/eslint-config": "file:../packages/shared/eslint-config",
-    "@open-tomato/typescript-config": "file:../packages/shared/typescript-config",
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
     "@types/express": "^4.17.21",
     "@types/node": "^22.13.5",
     "@types/supertest": "^6.0.2",

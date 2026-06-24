@@ -4,7 +4,18 @@
   "private": true,
   "type": "module",
   "packageManager": "bun@1.3.9",
-  "workspaces": ["app", "services/*", "types"],
+  "workspaces": [
+    "app",
+    "services/*",
+    "types",
+    "cli",
+    "templates/*",
+    "packages/shared/*",
+    "packages/service/*",
+    "packages/notifications/*",
+    "packages/agents/*",
+    "packages/ui-skeleton"
+  ],
   "scripts": {
     "build": "turbo run build",
     "check-types": "turbo run check-types",
@@ -14,15 +25,13 @@
     "test": "turbo run test"
   },
   "devDependencies": {
-    "@open-tomato/eslint-config": "file:../packages/shared/eslint-config",
-    "@open-tomato/typescript-config": "file:../packages/shared/typescript-config",
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
     "@types/bun": "latest",
     "turbo": "^2.5.0",
     "typescript": "^5.9.3"
   },
-  "overrides": {
-    "@open-tomato/typescript-config": "file:../packages/shared/typescript-config",
-    "@open-tomato/eslint-config": "file:../packages/shared/eslint-config"
-  },
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  }
 }
