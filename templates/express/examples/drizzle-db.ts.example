@@ -1,0 +1,106 @@
+// Opt-in example: Drizzle + Postgres integration.
+//
+// This single file shows the three pieces you need to wire Drizzle into a
+// service built on `@open-tomato/express`. When you adopt it:
+//   1. `bun add drizzle-orm pg` and `bun add -d drizzle-kit @types/pg`
+//   2. Split the snippets below into their conventional locations:
+//        src/db/index.ts     (createDbDependency — Section 1)
+//        src/db/schema.ts    (table definitions    — Section 2)
+//        src/db/users.ts     (repository queries   — Section 3)
+//        drizzle/0000_init.sql (SQL migration      — Section 4)
+//        drizzle.config.ts   (drizzle-kit config   — Section 5)
+//   3. Wire the dependency into `createService`:
+//
+//        import { createDbDependency } from './db/index.js';
+//        const dbDep = createDbDependency(process.env.DATABASE_URL!);
+//        await createService({
+//          serviceId: '...',
+//          dependencies: [dbDep],
+//          register(app, { deps }) {
+//            const db = deps.get(dbDep);
+//            app.get('/users', async (_req, res) => {
+//              res.json(await listUsers(db));
+//            });
+//          },
+//        });
+
+// ---------------------------------------------------------------------------
+// 1. Client dependency — src/db/index.ts
+// ---------------------------------------------------------------------------
+
+import type { TypedDependency } from '@open-tomato/service-core';
+
+import { createDependency } from '@open-tomato/service-core';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
+
+import * as schema from './schema.js';
+
+export type Db = ReturnType<typeof drizzle<typeof schema>>;
+
+export function createDbDependency(connectionString: string): TypedDependency<Db> {
+  const pool = new Pool({ connectionString, max: 10 });
+  const db = drizzle({ client: pool, schema });
+
+  return createDependency({
+    name: 'postgres',
+    client: db,
+    async onStart() {
+      // Probe the connection eagerly so startup fails fast if DB is unreachable
+      const probe = await pool.connect();
+      probe.release();
+    },
+    async onStop() {
+      await pool.end();
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// 2. Schema — src/db/schema.ts
+// ---------------------------------------------------------------------------
+
+import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  email: text('email').notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// ---------------------------------------------------------------------------
+// 3. Repository query — src/db/users.ts
+// ---------------------------------------------------------------------------
+
+import type { Db as UserDb } from './index.js';
+
+export async function listUsers(db: UserDb) {
+  return db.select().from(users);
+}
+
+// ---------------------------------------------------------------------------
+// 4. Migration — drizzle/0000_init.sql
+// ---------------------------------------------------------------------------
+//
+// CREATE TABLE "users" (
+//   "id" serial PRIMARY KEY NOT NULL,
+//   "email" text NOT NULL UNIQUE,
+//   "created_at" timestamp DEFAULT now() NOT NULL
+// );
+//
+// Generate new migrations with: `bun drizzle-kit generate`
+// Apply them with:               `bun drizzle-kit migrate`
+
+// ---------------------------------------------------------------------------
+// 5. drizzle-kit config — drizzle.config.ts
+// ---------------------------------------------------------------------------
+//
+// import process from 'node:process';
+// import { defineConfig } from 'drizzle-kit';
+//
+// export default defineConfig({
+//   out: './drizzle',
+//   schema: './src/db/schema.ts',
+//   dialect: 'postgresql',
+//   dbCredentials: { url: process.env.DATABASE_URL! },
+// });

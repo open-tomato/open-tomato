@@ -1,0 +1,39 @@
+# Local dev stack for template-service-express.
+#
+# The `postgres` service is commented out by default — uncomment it if you
+# adopt the Drizzle opt-in (see docs/drizzle.md).
+
+services:
+  service:
+    build: .
+    environment:
+      PORT: 3000
+      LOG_LEVEL: info
+      # Uncomment when using the Drizzle opt-in:
+      # DATABASE_URL: postgres://template:template@postgres:5432/template
+    ports:
+      - "3000:3000"
+    # Uncomment when using the Drizzle opt-in:
+    # depends_on:
+    #   postgres:
+    #     condition: service_healthy
+
+  # postgres:
+  #   image: postgres:16-alpine
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: template
+  #     POSTGRES_PASSWORD: template
+  #     POSTGRES_DB: template
+  #   ports:
+  #     - "5432:5432"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U template -d template"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 5
+  #   volumes:
+  #     - template_pg_data:/var/lib/postgresql/data
+
+# volumes:
+#   template_pg_data:
