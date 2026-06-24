@@ -1,3 +1,10 @@
+---
+id: legacy-refactor-link-check
+initiative: legacy-refactor
+type: artifact
+status: done
+---
+
 # Link check — Plan 07.8
 
 **Date:** 2026-04-21

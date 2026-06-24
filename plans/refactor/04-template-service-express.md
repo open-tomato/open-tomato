@@ -1,3 +1,11 @@
+---
+id: legacy-refactor-04
+initiative: legacy-refactor
+status: done
+area: cross-cutting
+linear: []
+---
+
 # Plan 04 — `template-service-express/`
 
 ## Scope

@@ -1,3 +1,11 @@
+---
+id: legacy-refactor-05
+initiative: legacy-refactor
+status: done
+area: cross-cutting
+linear: []
+---
+
 # Plan 05 — `template-service-mcp/`
 
 ## Scope

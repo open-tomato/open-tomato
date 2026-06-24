@@ -1,3 +1,10 @@
+---
+id: legacy-refactor-plan-08-results
+initiative: legacy-refactor
+type: artifact
+status: done
+---
+
 # Plan 08 Results — Additional Services Migration
 
 **Date:** 2026-04-21

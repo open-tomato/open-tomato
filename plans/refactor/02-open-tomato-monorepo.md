@@ -1,3 +1,11 @@
+---
+id: legacy-refactor-02
+initiative: legacy-refactor
+status: done
+area: cross-cutting
+linear: []
+---
+
 # Plan 02 — `open-tomato/` Monorepo Scaffold
 
 ## Scope

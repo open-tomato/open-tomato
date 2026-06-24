@@ -1,3 +1,11 @@
+---
+id: legacy-refactor-06
+initiative: legacy-refactor
+status: done
+area: cross-cutting
+linear: []
+---
+
 # Plan 06 — `tomato-cli/` Standalone CLI
 
 ## Scope

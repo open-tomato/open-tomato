@@ -1,3 +1,11 @@
+---
+id: legacy-refactor-00
+initiative: legacy-refactor
+status: done
+area: cross-cutting
+linear: []
+---
+
 # Plan 00 — Foundation & Umbrella Tooling
 
 ## Scope

@@ -1,3 +1,20 @@
+---
+id: legacy-refactor-09
+initiative: legacy-refactor
+status: pending
+area: cross-cutting
+context:
+  read-first:
+    - plans/refactor/README.md
+    - MIGRATION_STATUS.md
+    - plans/refactor/PLAN_08_RESULTS.md
+  depends-on: [legacy-refactor-08]
+  blocks: []
+verification:
+  - test ! -d ../../../legacy-monorepo
+  - test ! -d ../../../legacy-app
+---
+
 # Plan 09 — Legacy Cleanup & Finalization
 
 ## Scope

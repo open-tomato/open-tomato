@@ -1,3 +1,11 @@
+---
+id: legacy-refactor-07
+initiative: legacy-refactor
+status: done
+area: cross-cutting
+linear: []
+---
+
 # Plan 07 — Skills & Documentation Consolidation
 
 ## Scope

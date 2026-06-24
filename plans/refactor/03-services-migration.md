@@ -1,3 +1,11 @@
+---
+id: legacy-refactor-03
+initiative: legacy-refactor
+status: done
+area: cross-cutting
+linear: []
+---
+
 # Plan 03 — Services Migration into `open-tomato/services/`
 
 ## Scope

@@ -1,3 +1,11 @@
+---
+id: legacy-refactor-08
+initiative: legacy-refactor
+status: done
+area: cross-cutting
+linear: []
+---
+
 # Plan 08 — Migrate Additional Services via the Express Template
 
 ## Scope

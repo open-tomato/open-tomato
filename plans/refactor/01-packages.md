@@ -1,3 +1,11 @@
+---
+id: legacy-refactor-01
+initiative: legacy-refactor
+status: done
+area: cross-cutting
+linear: []
+---
+
 # Plan 01 — Shared Packages Migration
 
 ## Scope

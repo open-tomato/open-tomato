@@ -1,3 +1,10 @@
+---
+id: legacy-refactor-baseline
+initiative: legacy-refactor
+type: artifact
+status: done
+---
+
 # Legacy Monorepo Baseline — Pre-Refactor Snapshot
 
 Recorded: 2026-04-20 (Plan 00, Step 00.5)
