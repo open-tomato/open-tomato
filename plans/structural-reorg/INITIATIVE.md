@@ -1,6 +1,6 @@
 ---
 slug: structural-reorg
-status: in-progress
+status: done
 areas: [cross-cutting]
 linear: []
 started: 2026-06-24

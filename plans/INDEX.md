@@ -4,10 +4,11 @@ This is the **authoritative status board** for all in-flight, planned, and histo
 
 ## Active & pending
 
-| Initiative                                            | Status                      | Areas                | Linear | Last touched |
-| ----------------------------------------------------- | --------------------------- | -------------------- | ------ | ------------ |
-| [structural-reorg](./structural-reorg/INITIATIVE.md)  | in-progress                 | cross-cutting        | —      | 2026-06-24   |
-| [legacy-refactor](./refactor/README.md)               | done (00–08); pending (09)  | cross-cutting        | —      | 2026-04-21   |
+| Initiative                                            | Status                      | Areas                  | Linear                  | Last touched |
+| ----------------------------------------------------- | --------------------------- | ---------------------- | ----------------------- | ------------ |
+| [phase-8](./phase-8/INITIATIVE.md)                    | pending                     | packages, cli, cross-cutting | OPT-138, OPT-139, OPT-140 | 2026-06-24 |
+| [structural-reorg](./structural-reorg/INITIATIVE.md)  | done                        | cross-cutting          | —                       | 2026-06-24   |
+| [legacy-refactor](./refactor/README.md)               | done (00–08); pending (09)  | cross-cutting          | —                       | 2026-04-21   |
 
 ## Task-doc convention
 
