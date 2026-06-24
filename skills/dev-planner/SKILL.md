@@ -117,6 +117,58 @@ Rules:
 
 ---
 
+## Versioning and publishing tasks (for publishable `@open-tomato/*` packages)
+
+When a plan modifies one or more **publishable** packages (anything under `packages/shared/*`, `packages/service/*`, `packages/notifications/*`, `packages/agents/*`, or `packages/ui-skeleton` whose `package.json` has `private: false`), the plan **must** include a `# Stage: Release` section containing the changeset + publish lifecycle. These tasks are NOT optional — without them the work never reaches consumers.
+
+Because the private registry (`npm.heimdall.bifemecanico.com`) is on the Grow Box network and unreachable from GitHub Actions, **package validation and publishing happen locally via the bun workspace**, not in CI. The plan must reflect this.
+
+### Required tasks for any plan that touches a publishable package
+
+Add these as the final stage, in this exact order:
+
+```markdown
+# Stage: Release
+- [ ] Add a changeset describing the change: run `bunx changeset` and select the affected packages with the appropriate semver bump
+- [ ] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
+- [ ] Run `bun run publish:dry` from the repo root and verify the tarball staging + publint validation pass
+- [ ] Run `bun run publish:local` from the repo root to publish to the private registry
+- [ ] Capture the new version in the changeset's commit message body
+```
+
+### Skip the Release stage when
+
+- The plan only touches **private** workspace members (`private: true` in package.json — e.g., `cli`, `services/*`, `app`, `templates/*`, `types`). They never reach the registry.
+- The plan is documentation-only or read-only.
+- The plan explicitly says "internal-only iteration; consumer bump deferred to a follow-up release".
+
+### Changeset granularity
+
+- **One changeset per coherent unit of work**, not per task. A multi-stage plan that touches three packages produces one changeset listing all three.
+- `patch` — bugfixes and internal refactors that don't change the public API
+- `minor` — new features, new exports, or new optional parameters
+- `major` — breaking changes (rare; document the migration path in the changeset body)
+- **New package**: when a plan introduces a new `@open-tomato/*` package, include it in the changeset so version `0.1.0` is generated.
+
+### Pre-publish gate (this replaces GitHub CI for package work)
+
+`bun run publish:dry` runs the full pipeline locally: `turbo run build check-types test lint` then `preflight --skip-changeset` then `publish-packages.ts --dry-run` (which calls `publint` against the staged tarball). **Do not skip it.** If `publish:dry` fails, the work isn't done.
+
+### External-consumer bump (when the published version unblocks downstream work)
+
+If a published package version unblocks a downstream consumer (`auth/`, `knowledge-base/`, `token-monitor/`, `grow-box/`), add a separate `# Stage: Consumer bump` after `# Stage: Release`:
+
+```markdown
+# Stage: Consumer bump
+- [ ] Bump @open-tomato/<pkg> in auth/package.json to ^<new-version>
+- [ ] Run `cd auth && bun install` and verify standalone resolution
+- [ ] Repeat for knowledge-base, token-monitor, grow-box/tools as applicable
+```
+
+Skip consumers that don't depend on the package in question. The bump is per-consumer because each repo has its own lockfile and may have additional constraints.
+
+---
+
 ## `[BLOCKED]` marker
 
 The `[BLOCKED]` marker is written by the executor when a task cannot complete. Format:
