@@ -1,13 +1,21 @@
 ---
 title: "Open Tomato — Agent Guidelines"
-description: "Orchestration guide for agents working in the open-tomato application monorepo (services + app)."
+description: "Umbrella orientation for agents working in the consolidated open-tomato mono-repo."
 ---
 
-# AGENTS — Open Tomato Monorepo
+# AGENTS — Open Tomato
 
-You are a software engineering agent working in the **open-tomato** monorepo — the TypeScript-first, Bun + Turborepo workspace that houses the application services and the frontend. Shared libraries live in the sibling [`../packages/`](../packages/) repo; CLI, templates, and Claude skills live in other umbrella siblings. Always read this file first, then the target project's own `AGENTS.md` before starting a task. See [`SECURITY.md`](SECURITY.md) for security rules.
+You are a software engineering agent working in the **open-tomato** mono-repo — the TypeScript-first, Bun + Turborepo workspace that houses the active cross-iterating stack: `packages/`, `services/`, `app/`, `cli/`, `templates/`, plus reference material in `docs/` and `skills/`.
 
-## Quick Reference
+**Before doing anything in this repo:**
+
+1. Read **[`plans/INDEX.md`](plans/INDEX.md)** — the authoritative status board for all initiatives. Anything you're being asked to do likely maps to an entry there.
+2. Read the **per-area `AGENTS.md`** for the directory you're about to touch (see [Per-area context](#per-area-context) below). Per-area files are scoped to one part of the tree; this root file deliberately does not restate them.
+3. If your task crosses areas, read the relevant initiative's `plans/<slug>/INITIATIVE.md` to see the explicit `context.read-first` list.
+
+This umbrella file gives you orientation, conventions, and pointers — nothing more. Per-area details, build commands specific to a workspace member, and ongoing roadmap status live in their respective scoped files.
+
+## Quick Reference (root-level commands)
 
 | Tool | Command | Description |
 | --- | --- | --- |
@@ -18,64 +26,59 @@ You are a software engineering agent working in the **open-tomato** monorepo —
 | Dev stack | `bun run dev:stack` | `docker compose up --build` |
 | Secrets | `bws run -- <cmd>` | Inject secrets from Bitwarden Secrets Manager at runtime |
 
-## Key Files
+## Workspace layout
 
-| Path | Purpose |
+| Area | Path | Role |
+| --- | --- | --- |
+| Packages | `packages/` | All `@open-tomato/*` shared packages (`shared/*`, `service/*`, `notifications/*`, `agents/*`, `ui-skeleton`). Published via the private registry. |
+| Services | `services/` | Backend services (`notifications`, `orchestrator`, `scheduler`, `task-worker`). |
+| App | `app/` | Frontend (Vite + React + TS). |
+| CLI | `cli/` | The `tomato` CLI — workspace member, publishes as `@open-tomato/tomato-cli`. |
+| Templates | `templates/` | Service boilerplates (`express`, `mcp`). Workspace members and clone targets. |
+| Types | `types/` | Repo-level shared TypeScript types (`@open-tomato/repo-types`). |
+| Docs | `docs/` | Compiled documentation root for the publishable docs site. |
+| Skills | `skills/` | Agent skills (API, drizzle-orm, git-workflow, hive-learning, n8n-nodes, etc.). |
+| Plans | `plans/` | Initiative registry. See `plans/INDEX.md`. |
+| Scripts | `scripts/` | Repo-wide helpers (publish pipeline lives under `packages/scripts/`). |
+
+## Per-area context
+
+When working in an area, read the file shown:
+
+| Area | Read |
 | --- | --- |
-| `AGENTS.md` (this file) | Root-level agent context for this monorepo |
-| `CONTRIBUTING.md` | Human contributor guide (setup, code style, PRs) |
-| `README.md` | Monorepo overview and quick start |
-| `SECURITY.md` | Security policy — secrets, reporting, audit cadence |
-| `eslint.config.ts` | Root ESLint config — extend from project configs, never override |
-| `tsconfig.json` | Root TypeScript config — extend from project configs, never override |
-| `turbo.json` | Build/test/lint/dev pipeline definitions |
-| `docker-compose.yml` | Dev-loop constellation for services + app + postgres |
-| `plans/refactor/` | In-progress plans for the legacy monorepo split |
+| `packages/` | [`packages/AGENTS.md`](packages/AGENTS.md) + the specific package's `AGENTS.md` if it has one |
+| `services/` | [`services/AGENTS.md`](services/AGENTS.md) + the specific service's `AGENTS.md` |
+| `app/` | [`app/AGENTS.md`](app/AGENTS.md) |
+| `cli/` | [`cli/AGENTS.md`](cli/AGENTS.md) |
+| `templates/` | [`templates/AGENTS.md`](templates/AGENTS.md) + the specific template's |
+| `docs/` | [`docs/AGENTS.md`](docs/AGENTS.md) |
+| `skills/` | [`skills/AGENTS.md`](skills/AGENTS.md) |
 
-## Workspace Layout
+External / on-hold / satellite repos (`grow-box/`, `auth/`, `knowledge-base/`, `token-monitor/`, `design-system/`, `component-breakdown/`) live at the umbrella level (`/Users/marcos/projects/open-tomato/`) and have their own `AGENTS.md`. They consume `@open-tomato/*` from the private registry as `^<version>`.
 
-| Path | Contents |
-| --- | --- |
-| `app/` | Vite + React + TS frontend (placeholder until feature work starts) |
-| `services/` | Backend services (`notifications`, `orchestrator`, `scheduler`, `task-worker` — populated in Plan 03) |
-| `types/` | Repo-level shared TypeScript types (`@open-tomato/repo-types`) |
+## Dependency reference policy
 
-## Cross-Repo Resolution Order
+- **Inside this mono-repo:** all internal `@open-tomato/*` deps use `workspace:^`. Resolved by Bun's workspace protocol at install time, rewritten to `^<version>` at publish time by `packages/scripts/prepare-publish.ts`.
+- **Outside this mono-repo** (external consumers like `grow-box/`, `auth/`): `@open-tomato/*` deps consume the private registry as `^<version>`.
+- **`file:` refs are not used** inside this workspace post-consolidation.
 
-Shared libraries and sibling projects are referenced in this order of preference:
+## Workflow defaults
 
-1. **Published npm org package** (e.g., `"@open-tomato/logger": "^1.0.0"`). *Target end state.*
-2. **Directory file reference** (e.g., `"@open-tomato/logger": "file:../../packages/shared/logger"`). *Current state during the split.*
-3. **GitHub ref** (e.g., `"user/repo#semver:^1.2.0"`). *Fallback only.*
-
-Never use `workspace:*` to reach libraries across repo roots — this workspace cannot resolve another workspace's `workspace:` protocol.
-
-## Agent Profiles
-
-- **plan/design** — scoping a feature; read this file and the target project's `AGENTS.md`.
-- **development** — implement TDD-first; lint after every change.
-- **testing** — negative tests first, mock all external deps.
-- **documentation** — confirm whether destination is manual (`docs/`) or auto-generated (dotfolders) before writing.
-- **maintenance** — read the target project's `AGENTS.md` first; gotchas live in project-local files.
-
-## Workflow Summary
-
-1. **Read context** — this file, the target project's `AGENTS.md`, and applicable skills at [`../skills/`](../skills/).
+1. **Read context** — `plans/INDEX.md`, per-area `AGENTS.md`, applicable skills under `skills/`.
 2. **Plan** — present a flat checklist; align on architecture before adding deps or structural changes.
 3. **Develop with TDD** — tests first, then implementation; lint and test continuously.
 4. **API work** — Zod validation, consistent response envelopes, security headers.
-5. **Documentation** — manual docs to `docs/`, auto-generated to dotfolders.
-6. **Commit and track** — conventional commits (`<type>: <scope> <description>`), no AI attribution (enforced globally).
-7. **Before marking done** — pass the Automation Checklist below.
+5. **Commit** — conventional commits (`<type>: <scope> <description>`), no AI attribution.
+6. **Before marking done** — pass the [Automation Checklist](#automation-checklist).
 
-## Package and Project Rules
+## Package and project rules
 
 - **Do not add deps to the root `package.json`** unless they are genuinely shared across every workspace.
-- Versioning is per project — each `package.json` has its own version.
+- Versioning is per workspace member — each `package.json` has its own version.
 - Root `tsconfig.json` and `eslint.config.ts` are the constitution — extend them, never override.
-- Shared libraries must be consumed from [`../packages/`](../packages/) via `file:` refs (or, once published, via npm).
 
-## Automation Checklist
+## Automation checklist
 
 - [ ] **TSDoc**: Is the logic explained for all new functions and modules?
 - [ ] **Complexity**: Can any new function be broken down further?
@@ -84,14 +87,21 @@ Never use `workspace:*` to reach libraries across repo roots — this workspace 
 - [ ] **Errors**: Does the error handler catch potential failures — nothing will crash the process?
 - [ ] **Delivery**: Is the code completed, properly consumed/integrated, and ready for production?
 
-## Known Deviations (Scaffold Stage)
+## Known gotchas (post-consolidation)
 
-- **Lint gate is a no-op at the scaffold stage.** `@open-tomato/eslint-config` is consumed via `file:../packages/shared/eslint-config`. Its plugin dependencies (`@typescript-eslint/*`, `eslint-plugin-*`, `jiti`, `eslint` itself) are declared as `devDependencies` of that package and are therefore not installed transitively via a `file:` ref. Real linting will be restored once:
-  1. `@open-tomato/eslint-config` moves its consumer-facing plugin deps to `dependencies` / `peerDependencies`, **or**
-  2. the packages are published to the npm org and consumed via semver ranges.
-  Until then, `app/package.json`'s `lint` script is an `echo + exit 0` placeholder. Do not restore `eslint --fix` until one of the two conditions above holds.
-- **Root `package.json` contains `overrides`** mapping `@open-tomato/eslint-config` and `@open-tomato/typescript-config` to their `file:` paths. This works around `bun install` failing to resolve `workspace:*` specifiers inside the linked packages. Remove the overrides block once the packages are on npm.
+- **Test files and story files are excluded from `check-types`** in some packages (e.g., `packages/ui-skeleton/`). This matches the established pattern: dev artifacts are not production code; `tsc --noEmit` only gates production sources. See `packages/ui-skeleton/tsconfig.json`.
+- **Pre-existing test debt in `services/orchestrator/`** — several `runner.test.ts` / store tests reference functions the test mocks don't expose (broken since commit `e96fbb2`, the executor→orchestrator rename). These are not regressions from the consolidation. Track as separate tech debt.
+- **Per-area `AGENTS.md` files merged from prior standalone repos** (`cli/`, `templates/express/`, `templates/mcp/`, several under `packages/`) may still describe their pre-consolidation standalone context. They should be refreshed lazily as work touches each area.
 
-## See Also
+## Tooling notes
 
-[README.md](README.md) — overview · [CONTRIBUTING.md](CONTRIBUTING.md) — dev guide · [SECURITY.md](SECURITY.md) — security · [../AGENTS.md](../AGENTS.md) — umbrella split map.
+- **Semgrep post-write hook:** the local Claude Code harness runs `semgrep mcp -k post-tool-cli-scan` after every `Write`. It reports `No SEMGREP_APP_TOKEN found` and is treated as a blocking error, but the write itself always succeeds. **Ignore this hook output** — proceed with subsequent tool calls as normal.
+
+## See also
+
+- [`README.md`](README.md) — repository overview and quick start
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — human contributor guide
+- [`SECURITY.md`](SECURITY.md) — security policy
+- [`plans/INDEX.md`](plans/INDEX.md) — initiative registry (authoritative roadmap)
+- [`../AGENTS.md`](../AGENTS.md) — umbrella orientation (external repos: `grow-box/`, `auth/`, etc.)
+- [`../MIGRATION_STATUS.md`](../MIGRATION_STATUS.md) — ground-truth snapshot if any doc disagrees with the tree

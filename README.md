@@ -1,97 +1,109 @@
 # Open Tomato
 
-Primary application monorepo — four backend services (`notifications`, `orchestrator`, `scheduler`, `task-worker`) plus the `app/` frontend, orchestrated with Bun and Turborepo.
-
-Shared libraries, the CLI, and service templates live in sibling repos under the umbrella directory. This repo depends on them via `file:` references during the split; once packages are published to the npm org, those references switch to semver ranges.
+The consolidated active stack for Open Tomato — backend services, frontend app, the `tomato` CLI, the `@open-tomato/*` package ecosystem, service templates, and the agent context layer (`skills/`, `docs/`, `plans/`). One Bun + Turborepo workspace.
 
 ## Name conventions
 
-- **"Monorepo"** — this repository (`open-tomato/`).
-- **"Project"** — an individual service or app within this monorepo.
-- **"App"** — the frontend (Vite + React + TypeScript), under `app/`.
-- **"Services"** — backend projects (typically Express-based), under `services/`.
-- **"Types"** — repo-level shared TypeScript types, under `types/`.
-- **"Packages"** — shared libraries consumed as deps; they live in the sibling [`../packages/`](../packages/) repo.
+- **Mono-repo** — this repository (`open-tomato/`).
+- **Workspace member** — any package or service tracked by the root `package.json`'s `workspaces` field.
+- **Active stack** — what lives in this repo. Distinct from "satellites" (`grow-box/`, `auth/`, `knowledge-base/`, `token-monitor/`, `design-system/`, `component-breakdown/`) which stay as separate sibling repos under the umbrella.
 
-## Repository Structure
+## Repository structure
 
 ```text
 open-tomato/
-├── .github/                 # GitHub Actions workflow files
-├── app/                     # Vite + React + TS frontend (placeholder scaffold)
-├── docs/                    # Repo-level documentation (seeded in Plan 07)
-├── services/                # Backend services (populated in Plan 03)
-├── types/                   # Repo-level shared TypeScript types
-├── AGENTS.md                # Agent guidelines
-├── CONTRIBUTING.md          # Human contributor guide
-├── README.md                # This file
-├── SECURITY.md              # Security rules and reporting process
-├── docker-compose.yml       # Dev-loop constellation (services + app + postgres)
-├── eslint.config.ts         # Root ESLint configuration
-├── package.json             # Root scripts + bun workspace declaration
-├── tsconfig.json            # Root TypeScript configuration
-└── turbo.json               # Turborepo pipeline configuration
+├── packages/                 # @open-tomato/* shared packages + publish pipeline
+│   ├── shared/*              # framework-agnostic libs (logger, errors, config, …)
+│   ├── service/*             # service-tier libs (express, mcp, service-core, …)
+│   ├── notifications/*       # notification plugins
+│   ├── agents/*              # agent infrastructure (agents-config)
+│   ├── ui-skeleton/          # UI component library (on-hold)
+│   └── scripts/              # publish pipeline (preflight, prepare-publish, …)
+├── services/                 # backend services (notifications, orchestrator, scheduler, task-worker)
+├── app/                      # Vite + React + TS frontend
+├── cli/                      # tomato CLI (publishes as @open-tomato/tomato-cli)
+├── templates/                # service templates (express, mcp)
+├── types/                    # repo-level shared TS types (@open-tomato/repo-types)
+├── docs/                     # publishable docs site source
+├── skills/                   # agent skills (API, drizzle-orm, n8n-nodes, …)
+├── plans/                    # initiative registry (start at plans/INDEX.md)
+├── AGENTS.md                 # umbrella orientation for agents
+├── CONTRIBUTING.md           # human contributor guide
+├── README.md                 # this file
+├── SECURITY.md               # security rules and reporting
+├── docker-compose.yml        # dev-loop constellation
+├── eslint.config.ts          # root ESLint config
+├── package.json              # workspaces declaration + root scripts
+├── tsconfig.json             # root TS config
+├── turbo.json                # turbo pipeline
+└── .changeset/               # changeset state for publish pipeline
 ```
 
-## Core Tech Stack
+## Core tech stack
 
 | Layer                     | Tools                                                  |
 | ------------------------- | ------------------------------------------------------ |
 | Runtime & package manager | Bun (v1.3.9+), Node v22+                               |
+| Build orchestration       | Turborepo                                              |
 | Language                  | TypeScript 5.0+ (`strict: true`)                       |
 | Testing                   | Vitest + Supertest                                     |
-| Linting                   | ESLint (no Prettier — style enforced via ESLint rules) |
-| Validation                | Zod (schemas, OpenAPI generation, type inference)      |
+| Linting                   | ESLint                                                 |
+| Validation                | Zod                                                    |
 | Documentation             | TSDoc / TypeDoc, OpenAPI                               |
 | Secrets                   | Bitwarden Secrets Manager (`bws`)                      |
 | CI/CD                     | GitHub Actions                                         |
+| Publish                   | Changesets → private registry (`npm.heimdall.bifemecanico.com`) |
 
 ## Quick start
 
 ```bash
-bun install           # resolves file: references to ../packages/shared/*
-bun run build         # turbo: build every workspace
-bun run test          # turbo: run every workspace test
-bun lint              # turbo: lint every workspace
-bun run dev:stack     # docker compose up --build (full dev constellation)
+bun install                          # resolves workspace:^ refs across all workspace members
+bun run build                        # turbo: build every workspace
+bun run test                         # turbo: run every workspace test
+bun lint                             # turbo: lint every workspace
+bun run check-types                  # turbo: tsc --noEmit across workspaces
+bun run dev:stack                    # docker compose up --build (full dev constellation)
 ```
 
-Individual workspace scripts are runnable via turbo filters:
+Per-workspace filters:
 
 ```bash
-bun run dev --filter @open-tomato/app        # only the frontend
+bun run dev --filter @open-tomato/app
 bun run test --filter @open-tomato/notifications
+bun run build --filter '@open-tomato/cli'
 ```
 
-## Related repositories
+Publish pipeline (from `packages/`):
 
-| Path | Purpose |
-| --- | --- |
-| [`../packages/`](../packages/) | Shared libraries (`@open-tomato/logger`, `@open-tomato/errors`, …) |
-| [`../tomato-cli/`](../tomato-cli/) | Standalone `tomato` CLI — repo helpers |
-| [`../template-service-express/`](../template-service-express/) | Boilerplate for new Express services |
-| [`../template-service-mcp/`](../template-service-mcp/) | Boilerplate for new MCP services |
-| [`../skills/`](../skills/) | Claude agent skills (API, drizzle-orm, styling, …) |
+```bash
+cd packages
+bun run changeset:add                # author a changeset
+bun run preflight                    # must pass
+bun run publish:dry                  # full dry-run
+bun run publish:local                # actually publish (needs registry creds)
+```
 
-## External services
+## Sibling repos (satellites under the umbrella)
 
-Migrated in Plan 08, these live as **standalone sibling folders** under
-the umbrella rather than inside this monorepo. They are intentionally
-decoupled from the turbo pipeline.
+These stay outside this mono-repo and consume `@open-tomato/*` from the private registry as `^<version>`:
 
-| Path | Purpose | Port |
-|------|---------|------|
-| [`../auth/`](../auth/) | `@open-tomato/auth-service` — OAuth (GitHub/Google), session introspection | 3004 |
-| [`../knowledge-base/`](../knowledge-base/) | `@open-tomato/knowledge-base` — knowledge artifact store (scaffold) | 3005 |
-| [`../token-monitor/`](../token-monitor/) | `claude-dashboard-backend` — Claude Code activity dashboard (deprecated; JS-only) | 4242 |
+| Path | Purpose | Status |
+| --- | --- | --- |
+| [`../grow-box/`](../grow-box/) | Local dev environment simulating cloud infra (Auth, monitoring, package registry, vault, …). Downstream consumer of this stack. | active |
+| [`../auth/`](../auth/) | `@open-tomato/auth-service` — OAuth + session introspection | on hold (sidecar architecture under consideration) |
+| [`../knowledge-base/`](../knowledge-base/) | Knowledge artifact store | on hold |
+| [`../token-monitor/`](../token-monitor/) | Claude Code activity dashboard | on hold |
+| [`../design-system/`](../design-system/) | Full app design output from Claude Design | on hold (resumes after visual-testing pipeline) |
+| [`../component-breakdown/`](../component-breakdown/) | Componentization of design-system | on hold |
+| [`../workflows/`](../workflows/) | n8n workflow templates | satellite |
 
-To join any of these to the dev-loop constellation, uncomment the
-matching `docker-compose.yml` stanza — each uses `context: ../<name>` so
-Docker builds from the sibling folder.
+To join any of the on-hold services to the dev-loop constellation, uncomment its `docker-compose.yml` stanza.
 
 ## Further reading
 
-- [AGENTS.md](AGENTS.md) — role definition, profiles, and workflow checklists for agentic development.
-- [CONTRIBUTING.md](CONTRIBUTING.md) — dev setup, code style, testing, and PR workflow.
-- [SECURITY.md](SECURITY.md) — security rules, secrets, and vulnerability reporting.
-- [plans/refactor/](plans/refactor/) — execution plans for the ongoing legacy split.
+- [`AGENTS.md`](AGENTS.md) — agent orientation
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — dev setup + code style + PR workflow
+- [`SECURITY.md`](SECURITY.md) — security rules + vulnerability reporting
+- [`plans/INDEX.md`](plans/INDEX.md) — initiative registry (authoritative roadmap)
+- [`../MIGRATION_STATUS.md`](../MIGRATION_STATUS.md) — ground-truth tree snapshot
+- [`packages/RELEASING.md`](packages/RELEASING.md), [`packages/VERSIONING.md`](packages/VERSIONING.md) — publish contract
