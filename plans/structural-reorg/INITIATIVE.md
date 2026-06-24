@@ -50,19 +50,30 @@ The Open Tomato umbrella has evolved through three structural eras (monolithic �
 
 ## Task list
 
-| #     | Task               | Status                       | Blocker            |
+| #     | Task               | Status                       | Tag/Notes |
 | ----- | ------------------ | ---------------------------- | ------------------ |
-| R-0   | Preflight          | partial (a/d done; b/c skipped) | (b) needs registry |
-| R-1   | Doc-truth fix      | done                         | —                  |
-| R-2   | Plan registry skeleton | in-progress              | —                  |
-| R-2.5 | External-consumer stopgap relink | pending          | needs registry     |
-| R-3a  | Subtree merges     | pending                      | —                  |
-| R-3b  | Workspaces + dep rewrite + .changeset reconcile | pending | —    |
-| R-3c  | Publish pipeline relocate + verdaccio verification | pending | verdaccio needs registry |
-| R-4   | Move skills/ + documentation/ | pending           | —                  |
-| R-5   | AGENTS.md hierarchy rebuild | pending             | —                  |
-| R-6   | External consumer bump to latest | pending        | needs registry + R-3c |
+| R-0   | Preflight          | partial: (a) registry confirmed unreachable from primary dev host; (d) collision report done — prefix-based merges have no root collisions; (b/c) deferred to VPN session | — |
+| R-1   | Doc-truth fix      | **done**                     | (umbrella AGENTS.md + README.md corrected) |
+| R-2   | Plan registry skeleton | **done**                 | tag `refactor/R-2-complete` |
+| R-2.5 | External-consumer stopgap relink | **deferred — needs registry** | run from VPN host: rewrite `@open-tomato/*` deps in `auth/`, `knowledge-base/`, `token-monitor/` to registry `^<published-version>` |
+| R-3a  | Subtree merges     | **done**                     | tag `refactor/R-3a-complete`. Sources: `packages/` from `feat/config-standard` branch (captures OPT-176); `tomato-cli/`, `template-service-{express,mcp}/` from `main` |
+| R-3b  | Workspaces + dep rewrite + .changeset reconcile | **done** | tag `refactor/R-3b-complete`. 9 package.json rewrites file:→workspace:^, `overrides` stripped, `packages/.changeset/` moved to root `.changeset/`. Install/check-types/build all green. Test failures in orchestrator + ui-skeleton Sidebar are pre-existing — see Known gotchas. |
+| R-3c  | Publish pipeline relocate + verdaccio verification | **deferred — needs verdaccio + registry** | path-constant audit in `packages/scripts/` and the verdaccio sandbox tarball-install test must run from a VPN host with verdaccio set up |
+| R-4   | Move skills/ + documentation/ | **done**          | tag `refactor/R-4-complete`. `git mv` from umbrella into `open-tomato/skills/` (348 files) and `open-tomato/docs/` (3 files; `.git/` neutralized + re-added as plain files) |
+| R-5   | AGENTS.md hierarchy rebuild | **done**            | tag `refactor/R-5-complete`. Root AGENTS.md rewritten as umbrella; 6 area-level AGENTS.md created (`packages/`, `services/`, `app/`, `templates/`, `docs/`, `skills/`); existing per-package AGENTS.md preserved as-is and flagged for lazy refresh |
+| R-6   | External consumer bump to latest | **deferred — needs registry + R-3c** | run after R-3c lands the first post-merge publish |
 | R-7   | Plan 09 legacy cleanup | deferred (separate initiative) | — |
+
+## Where the work lives
+
+All R-2 through R-5 commits are on the **`structural-reorg`** branch of the `open-tomato/` git repo. Main is untouched. User's pre-session WIP (uncommitted AGENTS.md formatting + package.json edits) is preserved on the **`pre-reorg-wip`** branch (commit `b964c91`) — to be reconciled with R-5's AGENTS.md rewrite via cherry-pick or merge.
+
+Branch state:
+- `main` — unchanged from `d12c999 docs(plans): record Plan 08 migration results`
+- `pre-reorg-wip` — `b964c91 wip: pre-structural-reorg snapshot of user changes`
+- `structural-reorg` — through `R-5-complete`; ready for review
+
+Tags: `refactor/R-2-complete`, `refactor/R-3a-complete`, `refactor/R-3b-complete`, `refactor/R-4-complete`, `refactor/R-5-complete`.
 
 ## Plan file
 
