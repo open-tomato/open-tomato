@@ -111,19 +111,25 @@ export function checkManifests(packages: PackageInfo[]): Finding[] {
   const findings: Finding[] = [];
   const seen = new Map<string, string>();
   for (const pkg of packages) {
-    if (!isValidSemver(pkg.version)) {
-      findings.push(
-        err("semver", `${pkg.relDir}: version "${pkg.version}" is not valid semver.`),
-      );
-    }
-    const expected = expectedPackageName(pkg.group, pkg.basename);
-    if (pkg.name !== expected) {
-      findings.push(
-        err(
-          "naming",
-          `${pkg.relDir}: name "${pkg.name}" does not match convention (expected "${expected}").`,
-        ),
-      );
+    // Naming + semver conventions only apply to publishable packages.
+    // Private workspace members (e.g., the cli, types, templates, services,
+    // app) use bespoke names and may omit version — they never reach the
+    // registry, so the convention isn't meaningful for them.
+    if (!pkg.private) {
+      if (!isValidSemver(pkg.version)) {
+        findings.push(
+          err("semver", `${pkg.relDir}: version "${pkg.version}" is not valid semver.`),
+        );
+      }
+      const expected = expectedPackageName(pkg.group, pkg.basename);
+      if (pkg.name !== expected) {
+        findings.push(
+          err(
+            "naming",
+            `${pkg.relDir}: name "${pkg.name}" does not match convention (expected "${expected}").`,
+          ),
+        );
+      }
     }
     const prev = seen.get(pkg.name);
     if (prev) {

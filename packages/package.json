@@ -5,17 +5,7 @@
   "type": "module",
   "packageManager": "bun@1.3.9",
   "scripts": {
-    "build": "turbo run build",
-    "check-types": "turbo run check-types",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
-    "test:scripts": "bun test scripts/",
-    "changeset:add": "bun scripts/add-changeset.ts",
-    "preflight": "bun scripts/preflight.ts",
-    "prepublish:check": "turbo run build check-types test lint && bun scripts/preflight.ts",
-    "publish:dry": "turbo run build check-types test lint && bun scripts/preflight.ts --skip-changeset && bun scripts/publish-packages.ts --dry-run",
-    "publish:local": "turbo run build check-types test lint && bun scripts/preflight.ts --skip-changeset && bun scripts/publish-packages.ts --yes",
-    "release": "changeset publish"
+    "test:scripts": "bun test scripts/"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",

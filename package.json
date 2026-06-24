@@ -22,7 +22,13 @@
     "dev": "turbo run dev",
     "dev:stack": "docker compose up --build",
     "lint": "turbo run lint",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "preflight": "bun packages/scripts/preflight.ts",
+    "changeset:add": "bun packages/scripts/add-changeset.ts",
+    "prepublish:check": "turbo run build check-types test lint && bun packages/scripts/preflight.ts",
+    "publish:dry": "turbo run build check-types test lint && bun packages/scripts/preflight.ts --skip-changeset && bun packages/scripts/publish-packages.ts --dry-run",
+    "publish:local": "turbo run build check-types test lint && bun packages/scripts/preflight.ts --skip-changeset && bun packages/scripts/publish-packages.ts --yes",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@open-tomato/eslint-config": "workspace:^",

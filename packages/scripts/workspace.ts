@@ -30,10 +30,19 @@ export interface PackageInfo {
  *   - shared/<x>          -> @open-tomato/<x>
  *   - service/<x>         -> @open-tomato/<x>          (group is not in the name)
  *   - notifications/<x>   -> @open-tomato/notifications-<x>  (group flattened in)
+ *   - agents/<x>          -> @open-tomato/agents-<x>   (group flattened in)
  *   - <direct>            -> @open-tomato/<direct>
+ *
+ * Direct (un-grouped) workspace members like `cli`, `types`, `app`, and
+ * `templates/*` use bespoke published names (`@open-tomato/tomato-cli`,
+ * `@open-tomato/repo-types`, `@open-tomato/template-service-express`, …)
+ * — they're all private and don't go through publish-time naming validation.
+ * See preflight.ts checkManifests: naming/semver checks are skipped for
+ * `pkg.private === true`.
  */
 export function expectedPackageName(group: string, base: string): string {
   if (group === "notifications") return `@open-tomato/notifications-${base}`;
+  if (group === "agents") return `@open-tomato/agents-${base}`;
   return `@open-tomato/${base}`;
 }
 
@@ -48,7 +57,12 @@ function toInfo(root: string, dir: string): PackageInfo | null {
   if (!manifest || !manifest.name) return null;
   const relDir = relative(root, dir);
   const segments = relDir.split("/");
-  const group = segments.length > 1 ? segments[0] : "";
+  // Group is the directory immediately above the package itself.
+  // - Pre-consolidation: root=packages/, relDir="shared/logger", group="shared".
+  // - Post-consolidation: root=open-tomato/, relDir="packages/shared/logger", group="shared".
+  // Backwards-compatible: when there's only one segment (a flat workspace
+  // member like "cli"), group is "".
+  const group = segments.length > 1 ? segments[segments.length - 2] : "";
   return {
     name: manifest.name,
     dir,
