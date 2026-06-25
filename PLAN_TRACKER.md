@@ -15,8 +15,8 @@ Files modified: `packages/shared/config/src/schema.ts` (extend `BaseConfigSchema
 
 - [x] Write `src/provision.ts` exporting `ProvisionSchema` Zod schema as a discriminated union of `z.literal(true)`, `z.literal(false)`, `z.object({ ... })` with optional fields `disabled`, `caps`, `metadata`
 - [x] Implement `coerceProvision(input: unknown): ProvisionObject` in `src/provision.ts` that normalizes `true` → `{}`, `false` → `{ disabled: true }`, undefined → `undefined`, and passes through validated objects
-- [ ] Write `src/provision.test.ts` covering: `true` coerces to `{}`, `false` coerces to `{ disabled: true }`, missing coerces to `undefined`, valid object passes through, invalid object throws Zod error
-- [ ] Add a negative test in `src/provision.test.ts` asserting `provision: "yes"` throws a Zod validation error
+- [x] Write `src/provision.test.ts` covering: `true` coerces to `{}`, `false` coerces to `{ disabled: true }`, missing coerces to `undefined`, valid object passes through, invalid object throws Zod error
+- [x] Add a negative test in `src/provision.test.ts` asserting `provision: "yes"` throws a Zod validation error
 
 # Stage: Platform refs
 
