@@ -74,8 +74,8 @@ Files created: `packages/shared/cli-core/package.json`, `tsconfig.json`, `eslint
 - [x] Instantiate the appropriate `CliOutput` based on resolved `outputMode` and `verbosity`
 - [x] Default `signal` to `new AbortController().signal` if not provided
 - [x] Wire `Object.freeze` on the returned `CliContext` so consumers cannot mutate it
-- [ ] Write `src/assembleContext.test.ts` covering: text mode default, `--output=json` flag wins over env, `forceOutputMode` arg wins over both, verbosity clamping, frozen result
-- [ ] Add a negative test in `src/assembleContext.test.ts` asserting that mutating the returned `flags` object throws in strict mode
+- [x] Write `src/assembleContext.test.ts` covering: text mode default, `--output=json` flag wins over env, `forceOutputMode` arg wins over both, verbosity clamping, frozen result
+- [x] Add a negative test in `src/assembleContext.test.ts` asserting that mutating the returned `flags` object throws in strict mode
 - [ ] Write `src/index.ts` re-exporting all public types and `assembleContext`, `createTextOutput`, `createJsonOutput`, `parseArgs`
 
 # Stage: Release
