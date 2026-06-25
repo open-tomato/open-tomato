@@ -9,3 +9,21 @@ export interface CliContext {
   signal: AbortSignal;
   env: Readonly<Record<string, string | undefined>>;
 }
+
+export interface ArgSpec {
+  name: string;
+  description: string;
+  type: 'string' | 'boolean' | 'number';
+  required?: boolean;
+  default?: string | boolean | number;
+  aliases?: readonly string[];
+}
+
+export interface FlagSpec {
+  name: string;
+  description: string;
+  type: 'string' | 'boolean' | 'number';
+  required?: boolean;
+  default?: string | boolean | number;
+  aliases?: readonly string[];
+}
