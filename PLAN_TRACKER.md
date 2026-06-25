@@ -30,7 +30,7 @@ Files modified: `packages/shared/config/src/schema.ts` (extend `BaseConfigSchema
 
 - [x] Update `src/schema.ts` to add an optional `owner: z.string().optional()` field to `ProjectSchema`
 - [x] Update `src/schema.ts` to add an optional `infrastructure: z.record(z.unknown()).optional()` field to `BaseConfigSchema`
-- [ ] Update `src/schema.ts` to add an optional `provision` field to the per-service schema using `ProvisionSchema` from `src/provision.ts`
+- [x] Update `src/schema.ts` to add an optional `provision` field to the per-service schema using `ProvisionSchema` from `src/provision.ts`
 - [ ] Write `src/schema.test.ts` cases verifying: `project.owner` present passes, `project.owner` absent passes (soft-required), `infrastructure: { homelab: {...} }` passes with arbitrary nested content, `provision: true` validates and coerces
 - [ ] Add a Phase-7 regression test in `src/schema.test.ts` that loads `tests/fixtures/knowledge-base-phase7.yaml` (a copy of the existing grow-box fixture) and asserts it validates without errors
 
