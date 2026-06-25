@@ -29,7 +29,7 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 
 # Stage: Auth strategies
 
-- [ ] Write `src/auth.ts` exporting `AuthStrategy` type union `'env' | 'file' | 'interactive'` and `resolveAuth(strategy, options): Promise<{ token: string }>`
+- [x] Write `src/auth.ts` exporting `AuthStrategy` type union `'env' | 'file' | 'interactive'` and `resolveAuth(strategy, options): Promise<{ token: string }>`
 - [ ] Implement the `env` strategy reading `BWS_ACCESS_TOKEN`, throwing `VaultAuthError` if absent
 - [ ] Implement the `file` strategy reading a path (default `~/.bws/token`), throwing `VaultAuthError` if missing or unreadable
 - [ ] Implement the `interactive` strategy that prompts on TTY using `node:readline` (no `inquirer` dependency — keep the package small), throwing `VaultAuthError` in non-TTY contexts

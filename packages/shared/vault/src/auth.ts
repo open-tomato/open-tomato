@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import { VaultAuthError } from './errors.js';
 
 /**
@@ -66,9 +68,13 @@ export async function resolveAuth(
 }
 
 async function resolveFromEnv(): Promise<ResolvedAuth> {
-  throw new VaultAuthError({
-    reason: 'the \'env\' auth strategy is not yet implemented',
-  });
+  const token = process.env.BWS_ACCESS_TOKEN?.trim();
+  if (!token) {
+    throw new VaultAuthError({
+      reason: 'BWS_ACCESS_TOKEN is not set in the environment',
+    });
+  }
+  return { token };
 }
 
 async function resolveFromFile(tokenPath: string | undefined): Promise<ResolvedAuth> {
