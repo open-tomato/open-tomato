@@ -73,6 +73,12 @@ import globals from 'globals';
 export default [...baseConfig, { languageOptions: { globals: { ...globals.node } } }];
 ```
 
+If the package only needs a few node primitives, the leaner alternative is to import them
+explicitly from `node:*` (`import { Buffer } from 'node:buffer'`, `setImmediate` from
+`node:timers`, `process` from `node:process`) and use concrete stream types like
+`Readable`/`Writable` from `node:stream` instead of `NodeJS.ReadableStream`/`NodeJS.WritableStream`
+aliases. This avoids the eslint-config edit and the `globals` devDep entirely.
+
 ## Scaffold-time gotchas — expected vs. real
 
 | Symptom | Cause | Action |
