@@ -401,6 +401,18 @@
         "typescript": "^5.9.3",
       },
     },
+    "packages/shared/platform-core": {
+      "name": "@open-tomato/platform-core",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@open-tomato/eslint-config": "workspace:^",
+        "@open-tomato/typescript-config": "workspace:^",
+        "@types/node": "^22.13.5",
+        "eslint": "^9.39.4",
+        "typescript": "^5.9.3",
+        "vitest": "^3.0.0",
+      },
+    },
     "packages/shared/prompt-builder": {
       "name": "@open-tomato/prompt-builder",
       "version": "0.1.1",
@@ -1007,6 +1019,8 @@
     "@open-tomato/orchestration": ["@open-tomato/orchestration@workspace:packages/service/orchestration"],
 
     "@open-tomato/orchestrator": ["@open-tomato/orchestrator@workspace:services/orchestrator"],
+
+    "@open-tomato/platform-core": ["@open-tomato/platform-core@workspace:packages/shared/platform-core"],
 
     "@open-tomato/prompt-builder": ["@open-tomato/prompt-builder@workspace:packages/shared/prompt-builder"],
 
