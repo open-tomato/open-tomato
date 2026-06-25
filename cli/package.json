@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@linear/sdk": "^76.0.0",
+    "@open-tomato/cli-core": "workspace:^",
     "@open-tomato/errors": "workspace:^",
     "@open-tomato/linear": "workspace:^",
     "@open-tomato/logger": "workspace:^",

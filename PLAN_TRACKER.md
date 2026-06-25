@@ -1,57 +1,65 @@
-# Plan: config schema v2 extension
+# Plan: cli structured-output adoption
 
 ## Description
 
-Extend the existing `@open-tomato/config` package (at `packages/shared/config/`) with the schema v2 features required by Phase 8 platform plugins. This is an extension — not a fork. The Phase 7 fixture `samples/knowledge-base/service.config.yaml` (in grow-box) must continue to validate after the change. Schema v2 adds four capabilities:
+Refactor the `cli/` package (published as `@open-tomato/tomato-cli`, `private: true`) to adopt `@open-tomato/cli-core`. The current dispatcher in `cli/src/cli.ts` calls each command's bare `default(args, ctx)` with a minimal `CommandContext` (`{ repoRoot }`). The new dispatcher assembles a full `CliContext` via `assembleContext`, gates output by `--output=json` / `TOMATO_OUTPUT=json`, emits NDJSON `CliEvent`s for long-running commands, and registers a new `tomato describe` command that walks the command tree and emits the documented JSON shape with `schemaVersion: 1`.
 
-1. **`{{platform.<vendor>.*}}` syntax** — left unresolved by the loader and passed through to the platform plugin's `resolvePlatformRefs` method at emit-time. The loader must recognize the syntax, NOT attempt to resolve it, and preserve the literal string in the resolved config.
-2. **`infrastructure.<vendor>` pot convention** — a top-level pot keyed by vendor name (`homelab`, `heroku`, etc.) whose schema is opened via `defineConfig` extensions per plugin.
-3. **`provision` object coercion** — accept `provision: true`, `provision: false`, or `provision: { ... }` at the service level. `true` becomes `{}` (default allowance), `false` becomes `{ disabled: true }`, absent becomes `undefined`. The plugin's `validateProvision` reads the coerced object.
-4. **`project.owner` soft-required field** — string field on `project`. Soft-required: emits a `warning` (not an `error`) in `ValidationResult` when absent. `loadConfig` returns the warnings alongside the resolved config.
+This is a runtime change for the CLI but a contract change for command modules: existing commands keep working through a thin shim (`runLegacyCommand`) but new and migrated commands receive `CliContext` directly and declare `ArgSpec`/`FlagSpec` metadata so `describe` can serialize them. The `cli/` package stays private — these changes ship as part of the `phase-8-registry-cut` initiative, not on their own.
 
-Files modified: `packages/shared/config/src/schema.ts` (extend `BaseConfigSchema`, add `ProvisionSchema`, add `InfrastructureSchema`), `packages/shared/config/src/loader.ts` (add platform-ref recognition, pass-through), `packages/shared/config/src/index.ts` (export new symbols). New file: `packages/shared/config/src/platformRefs.ts`. Test fixtures added under `packages/shared/config/tests/fixtures/`.
+The `describe` output shape (versioned by `schemaVersion`):
 
-# Stage: Provision schema
+```json
+{
+  "schemaVersion": 1,
+  "binary": "tomato",
+  "version": "0.2.0",
+  "commands": [
+    { "tool": "linear", "command": "next", "description": "...", "args": [...], "flags": [...] }
+  ]
+}
+```
 
-- [x] Write `src/provision.ts` exporting `ProvisionSchema` Zod schema as a discriminated union of `z.literal(true)`, `z.literal(false)`, `z.object({ ... })` with optional fields `disabled`, `caps`, `metadata`
-- [x] Implement `coerceProvision(input: unknown): ProvisionObject` in `src/provision.ts` that normalizes `true` → `{}`, `false` → `{ disabled: true }`, undefined → `undefined`, and passes through validated objects
-- [x] Write `src/provision.test.ts` covering: `true` coerces to `{}`, `false` coerces to `{ disabled: true }`, missing coerces to `undefined`, valid object passes through, invalid object throws Zod error
-- [x] Add a negative test in `src/provision.test.ts` asserting `provision: "yes"` throws a Zod validation error
+Files modified: `cli/src/cli.ts` (dispatcher rewrite), `cli/package.json` (add `@open-tomato/cli-core` dep), `cli/AGENTS.md` (update golden rules). New files: `cli/src/dispatch.ts`, `cli/src/registry.ts`, `cli/src/legacyShim.ts`, `cli/src/commands/describe.ts`.
 
-# Stage: Platform refs
+# Stage: Wire cli-core
 
-- [x] Write `src/platformRefs.ts` exporting `PLATFORM_REF_PATTERN: RegExp` that matches `{{platform.<vendor>.<path>}}` with capture groups for vendor and path
-- [x] Implement `isPlatformRef(value: string): boolean` returning true if the value contains at least one platform ref
-- [x] Implement `extractPlatformRefs(value: string): Array<{ vendor: string; path: string; full: string }>` returning every match in the input
-- [x] Write `src/platformRefs.test.ts` covering: single ref, multiple refs in one string, nested paths (`{{platform.homelab.network.subnet}}`), invalid syntax (no curly close) does not match
-- [x] Add a test asserting that `{{config.foo}}` and `{{vault.foo}}` are NOT matched by `PLATFORM_REF_PATTERN`
+- [x] Add `@open-tomato/cli-core: workspace:^` to `cli/package.json` dependencies
+- [ ] Run `bun install` at the repo root to link the new dependency
+- [ ] Update `cli/tsconfig.json` if needed so `@open-tomato/cli-core` resolves correctly under the workspace
+- [ ] Write `cli/src/legacyShim.ts` exporting `runLegacyCommand(ctx: CliContext, mod: { default: Function })` that builds a `CommandContext`-shape adapter from `CliContext` (`repoRoot` from `resolveRepoRoot`) and invokes the module's default export with `ctx.args`
+- [ ] Write `cli/src/legacyShim.test.ts` verifying the shim passes `args` and resolves `repoRoot` correctly, and that thrown errors propagate as rejected promises
 
-# Stage: Schema extensions
+# Stage: Command registry
 
-- [x] Update `src/schema.ts` to add an optional `owner: z.string().optional()` field to `ProjectSchema`
-- [x] Update `src/schema.ts` to add an optional `infrastructure: z.record(z.unknown()).optional()` field to `BaseConfigSchema`
-- [x] Update `src/schema.ts` to add an optional `provision` field to the per-service schema using `ProvisionSchema` from `src/provision.ts`
-- [x] Write `src/schema.test.ts` cases verifying: `project.owner` present passes, `project.owner` absent passes (soft-required), `infrastructure: { homelab: {...} }` passes with arbitrary nested content, `provision: true` validates and coerces
-- [x] Add a Phase-7 regression test in `src/schema.test.ts` that loads `tests/fixtures/knowledge-base-phase7.yaml` (a copy of the existing grow-box fixture) and asserts it validates without errors
+- [ ] Write `cli/src/registry.ts` exporting `CommandRegistry` class with methods `register(tool, command, module)`, `get(tool, command)`, `list(): Array<{ tool, command, meta }>`
+- [ ] Implement filesystem-based auto-registration in `registry.ts` that scans `cli/src/commands/<tool>/<command>.ts` at construction time
+- [ ] Extend module shape so a command file may export `meta: CliCommand` (description, args, flags) in addition to `default`
+- [ ] Write `cli/src/registry.test.ts` verifying: registry discovers known commands, returns null for unknown commands, `list()` includes metadata when present and falls back to inferred name when absent
+- [ ] Add a test in `cli/src/registry.test.ts` asserting registry handles missing `commands/<tool>/` directories without throwing
 
-# Stage: Loader integration
+# Stage: Dispatcher
 
-- [x] Update `src/loader.ts` to skip resolution of strings matched by `PLATFORM_REF_PATTERN`, preserving them verbatim in the resolved config
-- [x] Update `src/loader.ts` `LoadConfigResult` shape to include a `warnings: Array<{ path: string; message: string }>` field
-- [x] Emit a soft-required warning when `project.owner` is absent, populating `warnings` in the result
-- [x] Update `src/loader.ts` to apply `coerceProvision` to every service's `provision` field after schema validation
-- [x] Write `src/loader.test.ts` cases: platform refs preserved through `loadConfig`, missing `project.owner` produces exactly one warning, present `project.owner` produces zero warnings, `provision: true` resolves to `{}` in the result
-- [x] Add an end-to-end fixture test loading `tests/fixtures/schema-v2-full.yaml` with platform refs, infrastructure pot, provision objects, and ownership all present
+- [ ] Write `cli/src/dispatch.ts` exporting `dispatch(argv: string[]): Promise<number>` that uses `assembleContext` and the registry to route a command, returning a numeric exit code
+- [ ] Replace the body of `cli/src/cli.ts` `main()` with a call to `dispatch(argv)` followed by `process.exit(code)`
+- [ ] Preserve the existing `tomato <tool> <command>` positional shape — tool and command are the first two positional args after the binary name
+- [ ] Emit a `start` `CliEvent` before invoking the command and a `result` `CliEvent` after the command resolves or rejects
+- [ ] Map thrown errors to exit code 1 and `result: { ok: false, error: { code, message } }`
+- [ ] When the command module lacks `meta`, route through `runLegacyCommand`; when `meta` is present, call the module's `default(ctx)` directly with the `CliContext`
+- [ ] Write `cli/src/dispatch.test.ts` covering: unknown command exits 1 with `result` event, known legacy command runs through shim, known meta-aware command receives `CliContext`, NDJSON output mode emits events to stdout as one-per-line JSON
+- [ ] Add a test asserting `TOMATO_OUTPUT=json` env var triggers JSON mode without the `--output=json` flag
 
-# Stage: Exports and docs
+# Stage: describe command
 
-- [x] Update `src/index.ts` to re-export `ProvisionSchema`, `coerceProvision`, `PLATFORM_REF_PATTERN`, `isPlatformRef`, `extractPlatformRefs`, and the updated `LoadConfigResult` type
-- [x] Update `packages/shared/config/README.md` with a "Schema v2" section documenting the four new capabilities and a worked example
-- [x] Add a one-line pointer in the README to `packages/AGENTS.md` clarifying that `@open-tomato/config` is the SERVICE config, distinct from `@open-tomato/agents-config`
+- [ ] Write `cli/src/commands/describe.ts` exporting a `meta: CliCommand` describing the describe command and a `default(ctx: CliContext)` implementation
+- [ ] Implement the describe command to read the registry, walk every registered command, collect `{ tool, command, description, args, flags }`, and emit a `result` event with the full tree
+- [ ] Include `schemaVersion: 1`, `binary: 'tomato'`, and the version from `cli/package.json` in the result payload
+- [ ] In text mode, render the same tree as a human-readable list grouped by tool
+- [ ] Write `cli/src/commands/describe.test.ts` asserting the JSON output matches the documented shape and that `schemaVersion` is `1`
+- [ ] Add a test asserting that adding a new command file with `meta` makes it appear in the describe output
 
-# Stage: Release
+# Stage: Documentation
 
-- [x] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/config` with a `minor` bump (new features, no breaking change)
-- [x] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
-- [x] Run `bun run publish:dry` from the repo root and verify the tarball staging + publint validation pass
-- [x] Run `bun run publish:local` from the repo root to publish to the private registry
+- [ ] Update `cli/AGENTS.md` to reflect the new dispatcher shape: commands may export `meta` plus `default(ctx: CliContext)`; legacy commands continue to work via the shim
+- [ ] Document the `--output=json` / `TOMATO_OUTPUT=json` flag and the NDJSON event stream in `cli/AGENTS.md`
+- [ ] Document the `tomato describe` command and the `schemaVersion: 1` contract in `cli/AGENTS.md`
+- [ ] Update `cli/README.md` with a short example showing a command that exports `meta` and consumes `ctx.output.emit`
