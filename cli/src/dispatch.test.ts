@@ -156,4 +156,41 @@ describe('dispatch', () => {
     const result = events.find((e): e is CliEventResult => e.type === 'result');
     expect(result?.ok).toBe(true);
   });
+
+  it('triggers JSON mode via TOMATO_OUTPUT=json env var when --output=json flag is absent', async () => {
+    const registry = new CommandRegistry({ commandsDir: null });
+    const defaultFn = vi.fn().mockResolvedValue(undefined);
+    registry.register('linear', 'next', {
+      default: defaultFn,
+      meta: makeMeta('next'),
+    });
+
+    const { stream, chunks } = makeRecorder();
+    const code = await dispatch(['linear', 'next'], {
+      registry,
+      env: { TOMATO_OUTPUT: 'json' },
+      stream,
+    });
+
+    expect(code).toBe(0);
+    expect(defaultFn).toHaveBeenCalledTimes(1);
+
+    const ctx = defaultFn.mock.calls[0]?.[0] as CliContext;
+    expect(ctx.outputMode).toBe('json');
+
+    expect(chunks.length).toBeGreaterThan(0);
+    for (const chunk of chunks) {
+      expect(chunk.endsWith('\n')).toBe(true);
+      const trimmed = chunk.slice(0, -1);
+      expect(() => JSON.parse(trimmed)).not.toThrow();
+    }
+
+    const events = parseNdjson(chunks);
+    const types = events.map((e) => e.type);
+    expect(types).toContain('start');
+    expect(types).toContain('result');
+
+    const result = events.find((e): e is CliEventResult => e.type === 'result');
+    expect(result?.ok).toBe(true);
+  });
 });

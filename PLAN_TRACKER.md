@@ -45,8 +45,8 @@ Files modified: `cli/src/cli.ts` (dispatcher rewrite), `cli/package.json` (add `
 - [x] Emit a `start` `CliEvent` before invoking the command and a `result` `CliEvent` after the command resolves or rejects
 - [x] Map thrown errors to exit code 1 and `result: { ok: false, error: { code, message } }`
 - [x] When the command module lacks `meta`, route through `runLegacyCommand`; when `meta` is present, call the module's `default(ctx)` directly with the `CliContext`
-- [ ] Write `cli/src/dispatch.test.ts` covering: unknown command exits 1 with `result` event, known legacy command runs through shim, known meta-aware command receives `CliContext`, NDJSON output mode emits events to stdout as one-per-line JSON
-- [ ] Add a test asserting `TOMATO_OUTPUT=json` env var triggers JSON mode without the `--output=json` flag
+- [x] Write `cli/src/dispatch.test.ts` covering: unknown command exits 1 with `result` event, known legacy command runs through shim, known meta-aware command receives `CliContext`, NDJSON output mode emits events to stdout as one-per-line JSON
+- [x] Add a test asserting `TOMATO_OUTPUT=json` env var triggers JSON mode without the `--output=json` flag
 
 # Stage: describe command
 
