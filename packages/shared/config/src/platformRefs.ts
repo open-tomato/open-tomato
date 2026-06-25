@@ -30,3 +30,41 @@ export const PLATFORM_REF_PATTERN: RegExp =
 export function isPlatformRef(value: string): boolean {
   return !value.matchAll(PLATFORM_REF_PATTERN).next().done;
 }
+
+/**
+ * A single `{{platform.<vendor>.<path>}}` occurrence extracted from a string.
+ *
+ * - `vendor` — kebab-case vendor identifier captured from the placeholder
+ * - `path`   — dotted path inside the vendor namespace
+ * - `full`   — the literal matched substring including the surrounding braces,
+ *              suitable for `String.prototype.replaceAll` when a plugin later
+ *              substitutes resolved values
+ */
+export interface PlatformRefMatch {
+  readonly vendor: string;
+  readonly path: string;
+  readonly full: string;
+}
+
+/**
+ * Extracts every `{{platform.<vendor>.<path>}}` occurrence from `value`, in the
+ * order they appear. Returns an empty array when no references are present.
+ */
+export function extractPlatformRefs(value: string): PlatformRefMatch[] {
+  const matches: PlatformRefMatch[] = [];
+
+  for (const match of value.matchAll(PLATFORM_REF_PATTERN)) {
+    const groups = match.groups;
+    if (!groups?.vendor || !groups.path) {
+      continue;
+    }
+
+    matches.push({
+      vendor: groups.vendor,
+      path: groups.path,
+      full: match[0],
+    });
+  }
+
+  return matches;
+}
