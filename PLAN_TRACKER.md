@@ -51,7 +51,7 @@ Files modified: `packages/shared/config/src/schema.ts` (extend `BaseConfigSchema
 
 # Stage: Release
 
-- [ ] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/config` with a `minor` bump (new features, no breaking change)
-- [ ] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
+- [x] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/config` with a `minor` bump (new features, no breaking change)
+- [x] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
 - [ ] Run `bun run publish:dry` from the repo root and verify the tarball staging + publint validation pass
 - [ ] Run `bun run publish:local` from the repo root to publish to the private registry
