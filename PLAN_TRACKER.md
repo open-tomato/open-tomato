@@ -26,8 +26,8 @@ Files modified: `cli/src/cli.ts` (dispatcher rewrite), `cli/package.json` (add `
 - [x] Add `@open-tomato/cli-core: workspace:^` to `cli/package.json` dependencies
 - [x] Run `bun install` at the repo root to link the new dependency
 - [x] Update `cli/tsconfig.json` if needed so `@open-tomato/cli-core` resolves correctly under the workspace
-- [ ] Write `cli/src/legacyShim.ts` exporting `runLegacyCommand(ctx: CliContext, mod: { default: Function })` that builds a `CommandContext`-shape adapter from `CliContext` (`repoRoot` from `resolveRepoRoot`) and invokes the module's default export with `ctx.args`
-- [ ] Write `cli/src/legacyShim.test.ts` verifying the shim passes `args` and resolves `repoRoot` correctly, and that thrown errors propagate as rejected promises
+- [x] Write `cli/src/legacyShim.ts` exporting `runLegacyCommand(ctx: CliContext, mod: { default: Function })` that builds a `CommandContext`-shape adapter from `CliContext` (`repoRoot` from `resolveRepoRoot`) and invokes the module's default export with `ctx.args`
+- [x] Write `cli/src/legacyShim.test.ts` verifying the shim passes `args` and resolves `repoRoot` correctly, and that thrown errors propagate as rejected promises
 
 # Stage: Command registry
 
