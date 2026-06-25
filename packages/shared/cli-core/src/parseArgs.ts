@@ -12,6 +12,16 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     if (arg === undefined) {
       continue;
     }
+    if (arg === '--') {
+      for (let j = i + 1; j < argv.length; j++) {
+        const rest = argv[j];
+        if (rest === undefined) {
+          continue;
+        }
+        positional.push(rest);
+      }
+      break;
+    }
     if (arg.startsWith('--')) {
       const body = arg.slice(2);
       const eqIndex = body.indexOf('=');

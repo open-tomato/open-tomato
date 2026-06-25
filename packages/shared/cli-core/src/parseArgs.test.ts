@@ -242,3 +242,47 @@ describe('parseArgs short alias syntax', () => {
     expect(result.positional).toEqual(['cmd', '-']);
   });
 });
+
+describe('parseArgs -- end-of-flags marker', () => {
+  it('treats every token after -- as positional', () => {
+    const result = parseArgs(['svc', '--', '--env=staging', '-v', 'extra']);
+
+    expect(result.flags).toEqual({});
+    expect(result.positional).toEqual(['svc', '--env=staging', '-v', 'extra']);
+  });
+
+  it('does not include the -- marker itself in positional', () => {
+    const result = parseArgs(['--', 'a', 'b']);
+
+    expect(result.flags).toEqual({});
+    expect(result.positional).toEqual(['a', 'b']);
+  });
+
+  it('parses flags before -- normally', () => {
+    const result = parseArgs(['--env=staging', '--', '--debug', 'tail']);
+
+    expect(result.flags).toEqual({ env: 'staging' });
+    expect(result.positional).toEqual(['--debug', 'tail']);
+  });
+
+  it('handles -- at the very end of argv with no trailing tokens', () => {
+    const result = parseArgs(['--env=staging', '--']);
+
+    expect(result.flags).toEqual({ env: 'staging' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('passes through a second -- as a positional after the marker', () => {
+    const result = parseArgs(['--', '--', 'x']);
+
+    expect(result.flags).toEqual({});
+    expect(result.positional).toEqual(['--', 'x']);
+  });
+
+  it('preserves order of positional tokens before and after --', () => {
+    const result = parseArgs(['one', '--flag=value', 'two', '--', 'three', '--four']);
+
+    expect(result.flags).toEqual({ flag: 'value' });
+    expect(result.positional).toEqual(['one', 'two', 'three', '--four']);
+  });
+});
