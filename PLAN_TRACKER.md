@@ -39,8 +39,8 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 
 - [x] Write `src/mapping.ts` exporting `resolveVaultId(id: string, env: string, region?: string): string[]` that returns the ordered fallback list
 - [x] Implement the fallback order: `<id>-<env>-<region>` (if region), `<id>-<env>`, `<id>`
-- [ ] Write `src/mapping.test.ts` covering: id with env and region, id with env only, id with region only (no region segment in the list), bare id (single-element list)
-- [ ] Add a test asserting the fallback list contains no duplicates when env and region are empty strings
+- [x] Write `src/mapping.test.ts` covering: id with env and region, id with env only, id with region only (no region segment in the list), bare id (single-element list)
+- [x] Add a test asserting the fallback list contains no duplicates when env and region are empty strings
 
 # Stage: BWS client
 
