@@ -76,11 +76,11 @@ Files created: `packages/shared/cli-core/package.json`, `tsconfig.json`, `eslint
 - [x] Wire `Object.freeze` on the returned `CliContext` so consumers cannot mutate it
 - [x] Write `src/assembleContext.test.ts` covering: text mode default, `--output=json` flag wins over env, `forceOutputMode` arg wins over both, verbosity clamping, frozen result
 - [x] Add a negative test in `src/assembleContext.test.ts` asserting that mutating the returned `flags` object throws in strict mode
-- [ ] Write `src/index.ts` re-exporting all public types and `assembleContext`, `createTextOutput`, `createJsonOutput`, `parseArgs`
+- [x] Write `src/index.ts` re-exporting all public types and `assembleContext`, `createTextOutput`, `createJsonOutput`, `parseArgs`
 
 # Stage: Release
 
-- [ ] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/cli-core` with a `minor` bump (new package, ships at `0.1.0`)
+- [x] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/cli-core` with a `minor` bump (new package, ships at `0.1.0`)
 - [ ] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
 - [ ] Run `bun run publish:dry` from the repo root and verify the tarball staging + publint validation pass
 - [ ] Run `bun run publish:local` from the repo root to publish to the private registry
