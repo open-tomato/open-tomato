@@ -36,7 +36,7 @@ Files created: `packages/shared/platform-core/package.json`, `tsconfig.json`, `e
 - [x] Define `validateProvision(request: ProvisionRequest, allowance: ProvisionAllowance): Promise<ValidationResult>` method signature in `PlatformPlugin`
 - [x] Define `emit(config: ResolvedConfig): Promise<EmitResult>` method signature in `PlatformPlugin`
 - [x] Add JSDoc to every method in `PlatformPlugin` documenting expected inputs, outputs, and error semantics (throw on programmer error, return `ValidationResult` for user-facing errors)
-- [ ] Write `src/plugin.test.ts` with a type-level test that a plain object satisfying the interface compiles, and that omitting any method produces a TypeScript error
+- [x] Write `src/plugin.test.ts` with a type-level test that a plain object satisfying the interface compiles, and that omitting any method produces a TypeScript error
 
 # Stage: Reference no-op plugin
 
