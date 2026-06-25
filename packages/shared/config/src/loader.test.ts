@@ -1,6 +1,7 @@
-import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { z } from 'zod';
@@ -8,6 +9,13 @@ import { z } from 'zod';
 import { ConfigError } from './errors.js';
 import { loadConfig } from './loader.js';
 import { defineConfig } from './schema.js';
+
+const FIXTURES_DIR = join(
+  fileURLToPath(new URL('.', import.meta.url)),
+  '..',
+  'tests',
+  'fixtures',
+);
 
 let dir: string;
 
@@ -216,5 +224,49 @@ describe('loadConfig', () => {
     const { config } = await loadConfig({ configDir: dir, env: 'dev' });
 
     expect(config.provision).toEqual({});
+  });
+
+  it('loads the schema-v2-full fixture: platform refs + infra pot + provision + owner', async () => {
+    const fixture = readFileSync(join(FIXTURES_DIR, 'schema-v2-full.yaml'), 'utf8');
+    write('config.default.yaml', fixture);
+
+    const { config, warnings } = await loadConfig({ configDir: dir, env: 'dev' });
+
+    // project.owner present → soft-required warning is suppressed.
+    expect(warnings.filter((w) => w.path === 'project.owner')).toEqual([]);
+    expect(config.project).toMatchObject({
+      id: 'knowledge-base',
+      type: 'service',
+      owner: 'platform-team',
+      port: 3001,
+    });
+
+    // Vendor pot survives untouched at infrastructure.<vendor>.
+    expect(config.infrastructure).toMatchObject({
+      homelab: {
+        host: 'tomato-pi.local',
+        network: { subnet: '10.0.0.0/24', vlan: 42 },
+        storage: [{ name: 'data', size: '100G' }],
+      },
+      heroku: { region: 'us', dyno: 'standard-1x' },
+    });
+
+    // provision object form passes through coerceProvision unchanged.
+    expect(config.provision).toEqual({
+      caps: ['db:write', 'cache:read'],
+      metadata: { tier: 'gold' },
+    });
+
+    // `{{config.*}}` resolves; `{{platform.*}}` is preserved verbatim,
+    // including composed strings and array entries.
+    expect(config.env).toMatchObject({
+      server: { port: '3001' },
+      network: {
+        subnet: '{{platform.homelab.network.subnet}}',
+        cidr: 'vlan-{{platform.homelab.network.vlan}}-prod',
+        region: '{{platform.heroku.region}}',
+        zones: ['{{platform.homelab.dns.zone}}'],
+      },
+    });
   });
 });

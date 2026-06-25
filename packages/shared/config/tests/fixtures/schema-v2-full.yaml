@@ -1,0 +1,37 @@
+# End-to-end Phase-8 schema-v2 fixture: every new capability in a single file.
+# Consumed by loader.test.ts via `loadConfig` to prove the four features
+# (platform refs, infrastructure vendor pot, provision object, project.owner)
+# round-trip together without conflict.
+project:
+  id: knowledge-base
+  type: service
+  name: Knowledge Base
+  owner: platform-team            # soft-required — present → no warning emitted
+  port: 3001
+
+infrastructure:                   # vendor-keyed pot (open record at the base)
+  homelab:
+    host: tomato-pi.local
+    network:
+      subnet: '10.0.0.0/24'
+      vlan: 42
+    storage:
+      - { name: data, size: 100G }
+  heroku:
+    region: us
+    dyno: standard-1x
+
+provision:                        # full object form (not the true/false shorthand)
+  caps: ['db:write', 'cache:read']
+  metadata:
+    tier: gold
+
+env:
+  server:
+    port: '{{config.project.port}}'                       # self-ref → '3001'
+  network:
+    subnet: '{{platform.homelab.network.subnet}}'         # platform ref → preserved verbatim
+    cidr: 'vlan-{{platform.homelab.network.vlan}}-prod'   # composed platform ref
+    region: '{{platform.heroku.region}}'                  # second vendor preserved
+    zones:
+      - '{{platform.homelab.dns.zone}}'                   # platform ref inside an array
