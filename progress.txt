@@ -19,3 +19,10 @@ appending here. Reserve this file for transient iteration notes only.
   `packages/shared/cli-core/AGENTS.md`.
 - **Ecosystem layout, `workspace:^` policy, publish workflow** → `packages/AGENTS.md`
   (already authoritative).
+- **CLI dispatch shape (Phase 8 registry cut)** — `dispatch()` takes user args
+  (already sliced past `[node, bin]`), calls `assembleContext` once, then
+  re-freezes a derived `CliContext` with `args = baseCtx.args.slice(2)` so the
+  first two positionals (tool + command) are removed before the command sees
+  them. `assembleContext`'s returned context is frozen, so the spread-then-
+  `Object.freeze` pattern is the canonical way to override `args` without
+  fighting strict-mode TypeErrors → `cli/src/dispatch.ts`.
