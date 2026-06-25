@@ -57,11 +57,11 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 - [x] Return the resolved map keyed by the original ref string (e.g. `'{{vault.db-password}}'`), value being the secret
 - [x] Write `src/loadSecrets.test.ts` covering: single ref resolves on first fallback, single ref resolves on third fallback, missing ref throws `VaultRefNotFoundError` with `triedKeys` populated, batch of three refs all resolve
 - [x] Add a test that `loadSecrets` does not call the client more than necessary (caches resolved keys when multiple refs share an id)
-- [ ] Write `src/index.ts` re-exporting `loadSecrets`, `resolveVaultId`, error classes, and the `AuthStrategy` type
+- [x] Write `src/index.ts` re-exporting `loadSecrets`, `resolveVaultId`, error classes, and the `AuthStrategy` type
 
 # Stage: Release
 
-- [ ] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/vault` with a `minor` bump (new package, ships at `0.1.0`)
+- [x] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/vault` with a `minor` bump (new package, ships at `0.1.0`)
 - [ ] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
 - [ ] Run `bun run publish:dry` from the repo root and verify the tarball staging + publint validation pass
 - [ ] Run `bun run publish:local` from the repo root to publish to the private registry
