@@ -2,7 +2,7 @@ import type { CliOutputStream } from './output';
 
 import { describe, expect, it } from 'vitest';
 
-import { createTextOutput } from './output';
+import { createJsonOutput, createTextOutput } from './output';
 
 const createMemoryStream = (): { stream: CliOutputStream; chunks: string[] } => {
   const chunks: string[] = [];
@@ -78,5 +78,51 @@ describe('createTextOutput at verbosity 0', () => {
       'error: error-1\n',
       'result: done\n',
     ]);
+  });
+});
+
+describe('createJsonOutput', () => {
+  it('produces exactly one JSON object per line for each call', () => {
+    const { stream, chunks } = createMemoryStream();
+    const output = createJsonOutput({ stream });
+
+    output.info('first');
+    output.warn('second');
+    output.error('third');
+    output.debug('fourth');
+    output.result({ count: 1 });
+
+    expect(chunks).toHaveLength(5);
+    for (const chunk of chunks) {
+      expect(chunk.endsWith('\n')).toBe(true);
+      const body = chunk.slice(0, -1);
+      expect(body).not.toContain('\n');
+      const parsed: unknown = JSON.parse(body);
+      expect(typeof parsed).toBe('object');
+      expect(parsed).not.toBeNull();
+    }
+  });
+
+  it('emits a type: "result" event when result is called', () => {
+    const { stream, chunks } = createMemoryStream();
+    const output = createJsonOutput({ stream });
+
+    output.result({ items: 5 });
+
+    expect(chunks).toHaveLength(1);
+    const [chunk] = chunks;
+    if (chunk === undefined) {
+      throw new Error('expected a chunk to be written');
+    }
+    const event = JSON.parse(chunk.slice(0, -1)) as {
+      type: string;
+      ok: boolean;
+      data: unknown;
+      ts: string;
+    };
+    expect(event.type).toBe('result');
+    expect(event.ok).toBe(true);
+    expect(event.data).toEqual({ items: 5 });
+    expect(typeof event.ts).toBe('string');
   });
 });
