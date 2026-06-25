@@ -49,5 +49,5 @@ Files created: `packages/shared/platform-core/package.json`, `tsconfig.json`, `e
 
 - [x] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/platform-core` with a `minor` bump (new package, ships at `0.1.0`)
 - [x] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
-- [ ] Run `bun run publish:dry` from the repo root and verify the tarball staging + publint validation pass
+- [x] Run `bun run publish:dry` from the repo root and verify the tarball staging + publint validation pass
 - [ ] Run `bun run publish:local` from the repo root to publish to the private registry
