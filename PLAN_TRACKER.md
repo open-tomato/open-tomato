@@ -12,7 +12,7 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 
 # Stage: Package scaffold
 
-- [ ] Create `packages/shared/vault/package.json` with name `@open-tomato/vault`, version `0.1.0`, `private: false`, `publishConfig.access: public`, `type: module`, `main: ./src/index.ts`, dependency on `@bitwarden/sdk-napi` (latest), devDependencies on `@open-tomato/eslint-config` and `@open-tomato/typescript-config` (both `workspace:^`), `eslint`, `typescript`, `vitest`, `@types/node`
+- [x] Create `packages/shared/vault/package.json` with name `@open-tomato/vault`, version `0.1.0`, `private: false`, `publishConfig.access: public`, `type: module`, `main: ./src/index.ts`, dependency on `@bitwarden/sdk-napi` (latest), devDependencies on `@open-tomato/eslint-config` and `@open-tomato/typescript-config` (both `workspace:^`), `eslint`, `typescript`, `vitest`, `@types/node`
 - [ ] Create `packages/shared/vault/tsconfig.json` extending `@open-tomato/typescript-config/base.json` with `include: ["src/**/*"]`
 - [ ] Create `packages/shared/vault/eslint.config.mjs` re-exporting `@open-tomato/eslint-config`
 - [ ] Create `packages/shared/vault/README.md` documenting auth strategies, the id-mapping fallback rule, and a `loadSecrets` example
