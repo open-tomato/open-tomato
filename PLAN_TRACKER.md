@@ -72,8 +72,8 @@ Files created: `packages/shared/cli-core/package.json`, `tsconfig.json`, `eslint
 - [x] Resolve `outputMode` in `assembleContext` with precedence: `forceOutputMode` arg > `--output=json` flag > `TOMATO_OUTPUT=json` env var > default `'text'`
 - [x] Resolve `verbosity` in `assembleContext` from `-v`/`--verbose` flag (repeatable count, clamp to 0..3) and `TOMATO_VERBOSITY` env var
 - [x] Instantiate the appropriate `CliOutput` based on resolved `outputMode` and `verbosity`
-- [ ] Default `signal` to `new AbortController().signal` if not provided
-- [ ] Wire `Object.freeze` on the returned `CliContext` so consumers cannot mutate it
+- [x] Default `signal` to `new AbortController().signal` if not provided
+- [x] Wire `Object.freeze` on the returned `CliContext` so consumers cannot mutate it
 - [ ] Write `src/assembleContext.test.ts` covering: text mode default, `--output=json` flag wins over env, `forceOutputMode` arg wins over both, verbosity clamping, frozen result
 - [ ] Add a negative test in `src/assembleContext.test.ts` asserting that mutating the returned `flags` object throws in strict mode
 - [ ] Write `src/index.ts` re-exporting all public types and `assembleContext`, `createTextOutput`, `createJsonOutput`, `parseArgs`
