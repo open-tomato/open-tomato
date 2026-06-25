@@ -1,3 +1,6 @@
+import { readFile } from 'node:fs/promises';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 import process from 'node:process';
 
 import { VaultAuthError } from './errors.js';
@@ -78,13 +81,25 @@ async function resolveFromEnv(): Promise<ResolvedAuth> {
 }
 
 async function resolveFromFile(tokenPath: string | undefined): Promise<ResolvedAuth> {
-  // Captured here so the file-strategy implementation task can wire in the
-  // default (`~/.bws/token`) and the actual fs read without changing the
-  // dispatcher above.
-  void tokenPath;
-  throw new VaultAuthError({
-    reason: 'the \'file\' auth strategy is not yet implemented',
-  });
+  const resolvedPath = tokenPath ?? join(homedir(), '.bws', 'token');
+
+  let contents: string;
+  try {
+    contents = await readFile(resolvedPath, 'utf8');
+  } catch (cause) {
+    throw new VaultAuthError({
+      reason: `token file at ${resolvedPath} could not be read`,
+      cause,
+    });
+  }
+
+  const token = contents.trim();
+  if (!token) {
+    throw new VaultAuthError({
+      reason: `token file at ${resolvedPath} is empty`,
+    });
+  }
+  return { token };
 }
 
 async function resolveFromInteractive(): Promise<ResolvedAuth> {

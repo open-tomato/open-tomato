@@ -82,6 +82,7 @@ export default [...baseConfig, { languageOptions: { globals: { ...globals.node }
 | `tsc --noEmit` reports `TS2307` on a sibling import, but ESLint is green | Forward `import type { X } from './x'` where `./x.ts` lands in a later stage task (fine under `moduleResolution: bundler`) | **Expected** during multi-stage scaffolds. Verify lint passes and move on; the error clears when the dep file lands. |
 | `T \| undefined` on array index access | `base` enables `noUncheckedIndexedAccess` — `argv[i]`, look-aheads like `argv[i+1]` are all `T \| undefined` | Narrow before use. Plan an explicit `if (x === undefined) continue;` whenever switching `for...of` → index iteration. |
 | ESLint auto-fix reorders imports each run | Rule pushes all `import type` above value imports | Write tests/sources with `import type` first from the start to avoid no-op lint churn. |
+| `vi.spyOn(osModule, 'homedir')` (or any node:* export) throws `Cannot redefine property` / `Module namespace is not configurable in ESM` | `type: "module"` packages get frozen module namespaces; `vi.spyOn` cannot rewrite them | Drive the dependency through an env var (`vi.stubEnv('HOME', dir)` so `os.homedir()` returns the test path) or inject a path/factory through the function's options. Reserve `vi.mock('node:os', ...)` for cases where neither works. |
 
 ## Type-level tests
 
