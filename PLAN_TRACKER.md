@@ -24,7 +24,7 @@ Files created: `packages/shared/platform-core/package.json`, `tsconfig.json`, `e
 - [x] Add `ResolvedConfig` interface to `src/types.ts` representing the post-platform-resolution config payload with fields `service`, `env`, `infrastructure` (record), `vault` (record), `extras` (record)
 - [x] Add `MatchResult` interface to `src/types.ts` with fields `matches` (boolean), `score` (number 0..1), `missing` (string array)
 - [x] Add `ValidationResult` interface to `src/types.ts` with fields `valid` (boolean), `errors` (array of `{ path: string; message: string }`), `warnings` (same shape)
-- [ ] Add `EmitTarget` interface to `src/types.ts` with fields `kind` (string), `path` (string), `content` (string or Buffer), `mode` (optional octal number)
+- [x] Add `EmitTarget` interface to `src/types.ts` with fields `kind` (string), `path` (string), `content` (string or Buffer), `mode` (optional octal number)
 - [ ] Add `EmitResult` interface to `src/types.ts` with fields `targets` (array of `EmitTarget`), `lockHash` (string SHA-256 hex)
 - [ ] Write `src/types.test.ts` with type-level assertions that `ProvisionAllowance.reasons` is a readonly array and that `EmitTarget.content` is `string | Uint8Array`
 

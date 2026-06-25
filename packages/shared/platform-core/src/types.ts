@@ -43,3 +43,8 @@ export interface EmitTarget {
   content: string | Uint8Array;
   mode?: number;
 }
+
+export interface EmitResult {
+  targets: EmitTarget[];
+  lockHash: string;
+}
