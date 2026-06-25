@@ -464,6 +464,21 @@
       "name": "@open-tomato/typescript-config",
       "version": "0.1.1",
     },
+    "packages/shared/vault": {
+      "name": "@open-tomato/vault",
+      "version": "0.1.0",
+      "dependencies": {
+        "@bitwarden/sdk-napi": "^1.0.0",
+      },
+      "devDependencies": {
+        "@open-tomato/eslint-config": "workspace:^",
+        "@open-tomato/typescript-config": "workspace:^",
+        "@types/node": "^22.13.5",
+        "eslint": "^9.39.4",
+        "typescript": "^5.9.3",
+        "vitest": "^3.0.0",
+      },
+    },
     "packages/ui-skeleton": {
       "name": "@open-tomato/ui-skeleton",
       "version": "0.1.1",
@@ -768,6 +783,16 @@
 
     "@bcoe/v8-coverage": ["@bcoe/v8-coverage@1.0.2", "", {}, "sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA=="],
 
+    "@bitwarden/sdk-napi": ["@bitwarden/sdk-napi@1.0.0", "", { "optionalDependencies": { "@bitwarden/sdk-napi-darwin-arm64": "1.0.0", "@bitwarden/sdk-napi-darwin-x64": "1.0.0", "@bitwarden/sdk-napi-linux-x64-gnu": "1.0.0", "@bitwarden/sdk-napi-win32-x64-msvc": "1.0.0" } }, "sha512-KrOXiuuQdVBvIM4l7XGrKl8otA9tSEKHjRQr0nF71eyCmIDzOV2kt/gchgLK42exGGuD/JcmmgnXx/j+U6W/+g=="],
+
+    "@bitwarden/sdk-napi-darwin-arm64": ["@bitwarden/sdk-napi-darwin-arm64@1.0.0", "", { "os": "darwin", "cpu": "arm64" }, "sha512-0W6P2VByGFqYIf6bkI7qKWlXPGhG9KFibrN14pvllFIkbNRaz3hktMOLJ/JdWZVmdHrz0R5xmAVldbIWNMjFOA=="],
+
+    "@bitwarden/sdk-napi-darwin-x64": ["@bitwarden/sdk-napi-darwin-x64@1.0.0", "", { "os": "darwin", "cpu": "x64" }, "sha512-Esyg8sktE50U+g12lL/xe68hgc5y78jPPV9maNcKTO9EWdde4RIx9u3xEpbYk5fyHaeMFXdo3TK8A8qLD34X5w=="],
+
+    "@bitwarden/sdk-napi-linux-x64-gnu": ["@bitwarden/sdk-napi-linux-x64-gnu@1.0.0", "", { "os": "linux", "cpu": "x64" }, "sha512-PBGEOq9saYuBBthCq5jAr7eQSyEmQylB+kwsuT0j666VXT124a3YjDGgobPYaR9KN/IRDQ5h2Tysuy1pojx10A=="],
+
+    "@bitwarden/sdk-napi-win32-x64-msvc": ["@bitwarden/sdk-napi-win32-x64-msvc@1.0.0", "", { "os": "win32", "cpu": "x64" }, "sha512-cu92XYjsOWEVECyohGtLxiXcMJMVui+nDJtyNg52iGDeAzWQ7QZh0/bcjkymTCuGoqRD3sT0cCs+5PbW66K2XQ=="],
+
     "@bramus/specificity": ["@bramus/specificity@2.4.2", "", { "dependencies": { "css-tree": "^3.0.0" }, "bin": { "specificity": "bin/cli.js" } }, "sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw=="],
 
     "@csstools/color-helpers": ["@csstools/color-helpers@6.0.2", "", {}, "sha512-LMGQLS9EuADloEFkcTBR3BwV/CGHV7zyDxVRtVDTwdI2Ca4it0CCVTT9wCkxSgokjE5Ho41hEPgb8OEUwoXr6Q=="],
@@ -1045,6 +1070,8 @@
     "@open-tomato/typescript-config": ["@open-tomato/typescript-config@workspace:packages/shared/typescript-config"],
 
     "@open-tomato/ui-skeleton": ["@open-tomato/ui-skeleton@workspace:packages/ui-skeleton"],
+
+    "@open-tomato/vault": ["@open-tomato/vault@workspace:packages/shared/vault"],
 
     "@open-tomato/worker-protocol": ["@open-tomato/worker-protocol@workspace:packages/service/worker-protocol"],
 
