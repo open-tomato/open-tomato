@@ -1,67 +1,57 @@
-# Plan: vault BWS strategies and id mapping
+# Plan: config schema v2 extension
 
 ## Description
 
-`@open-tomato/vault` is a small shared package that resolves `{{vault.<id>}}` references against Bitwarden Secrets Manager (BWS). It owns three concerns: (1) authentication strategy — environment variable, file, or interactive prompt; (2) vault-id mapping — the `<id>-<env>[-<region>]` fallback rule that lets a single config refer to an abstract id (`db-password`) and have it resolve to a concrete project secret (`db-password-staging-us-east-1`); (3) batch secret loading — `loadSecrets(refs, env)` that takes a set of `{{vault.*}}` refs and an environment and returns a resolved `Record<string, string>`.
+Extend the existing `@open-tomato/config` package (at `packages/shared/config/`) with the schema v2 features required by Phase 8 platform plugins. This is an extension — not a fork. The Phase 7 fixture `samples/knowledge-base/service.config.yaml` (in grow-box) must continue to validate after the change. Schema v2 adds four capabilities:
 
-This package is consumed by `@open-tomato/config` (during `loadConfig` when references are encountered) and by command modules that need to inject secrets at runtime. It does NOT call `bws` as a subprocess by default — it uses the `@bitwarden/sdk-napi` if available, falling back to subprocess only when the native binding is absent. `BWS_ACCESS_TOKEN` must be present in the environment at the time `loadSecrets` is called; missing tokens throw a typed `VaultAuthError` with a clear remediation message.
+1. **`{{platform.<vendor>.*}}` syntax** — left unresolved by the loader and passed through to the platform plugin's `resolvePlatformRefs` method at emit-time. The loader must recognize the syntax, NOT attempt to resolve it, and preserve the literal string in the resolved config.
+2. **`infrastructure.<vendor>` pot convention** — a top-level pot keyed by vendor name (`homelab`, `heroku`, etc.) whose schema is opened via `defineConfig` extensions per plugin.
+3. **`provision` object coercion** — accept `provision: true`, `provision: false`, or `provision: { ... }` at the service level. `true` becomes `{}` (default allowance), `false` becomes `{ disabled: true }`, absent becomes `undefined`. The plugin's `validateProvision` reads the coerced object.
+4. **`project.owner` soft-required field** — string field on `project`. Soft-required: emits a `warning` (not an `error`) in `ValidationResult` when absent. `loadConfig` returns the warnings alongside the resolved config.
 
-The id-mapping fallback rule (from REVIEW.md Section A): given a ref `{{vault.db-password}}` with env=`staging` and region=`us-east-1`, the resolver tries `db-password-staging-us-east-1` first, then `db-password-staging`, then `db-password`, returning the first one that exists. This is the rule that lets grow-box and Heroku share a config shape without duplicating per-env vault id fields.
+Files modified: `packages/shared/config/src/schema.ts` (extend `BaseConfigSchema`, add `ProvisionSchema`, add `InfrastructureSchema`), `packages/shared/config/src/loader.ts` (add platform-ref recognition, pass-through), `packages/shared/config/src/index.ts` (export new symbols). New file: `packages/shared/config/src/platformRefs.ts`. Test fixtures added under `packages/shared/config/tests/fixtures/`.
 
-Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.config.mjs`, `README.md`, `src/auth.ts`, `src/mapping.ts`, `src/client.ts`, `src/loadSecrets.ts`, `src/errors.ts`, `src/index.ts`, plus `*.test.ts` siblings.
+# Stage: Provision schema
 
-# Stage: Package scaffold
+- [x] Write `src/provision.ts` exporting `ProvisionSchema` Zod schema as a discriminated union of `z.literal(true)`, `z.literal(false)`, `z.object({ ... })` with optional fields `disabled`, `caps`, `metadata`
+- [ ] Implement `coerceProvision(input: unknown): ProvisionObject` in `src/provision.ts` that normalizes `true` → `{}`, `false` → `{ disabled: true }`, undefined → `undefined`, and passes through validated objects
+- [ ] Write `src/provision.test.ts` covering: `true` coerces to `{}`, `false` coerces to `{ disabled: true }`, missing coerces to `undefined`, valid object passes through, invalid object throws Zod error
+- [ ] Add a negative test in `src/provision.test.ts` asserting `provision: "yes"` throws a Zod validation error
 
-- [x] Create `packages/shared/vault/package.json` with name `@open-tomato/vault`, version `0.1.0`, `private: false`, `publishConfig.access: public`, `type: module`, `main: ./src/index.ts`, dependency on `@bitwarden/sdk-napi` (latest), devDependencies on `@open-tomato/eslint-config` and `@open-tomato/typescript-config` (both `workspace:^`), `eslint`, `typescript`, `vitest`, `@types/node`
-- [x] Create `packages/shared/vault/tsconfig.json` extending `@open-tomato/typescript-config/base.json` with `include: ["src/**/*"]`
-- [x] Create `packages/shared/vault/eslint.config.mjs` re-exporting `@open-tomato/eslint-config`
-- [x] Create `packages/shared/vault/README.md` documenting auth strategies, the id-mapping fallback rule, and a `loadSecrets` example
-- [x] Run `bun install` at the repo root to register the new workspace member
-- [x] Create `packages/shared/vault/vitest.config.ts` with default config
+# Stage: Platform refs
 
-# Stage: Errors
+- [ ] Write `src/platformRefs.ts` exporting `PLATFORM_REF_PATTERN: RegExp` that matches `{{platform.<vendor>.<path>}}` with capture groups for vendor and path
+- [ ] Implement `isPlatformRef(value: string): boolean` returning true if the value contains at least one platform ref
+- [ ] Implement `extractPlatformRefs(value: string): Array<{ vendor: string; path: string; full: string }>` returning every match in the input
+- [ ] Write `src/platformRefs.test.ts` covering: single ref, multiple refs in one string, nested paths (`{{platform.homelab.network.subnet}}`), invalid syntax (no curly close) does not match
+- [ ] Add a test asserting that `{{config.foo}}` and `{{vault.foo}}` are NOT matched by `PLATFORM_REF_PATTERN`
 
-- [x] Write `src/errors.ts` exporting a `VaultError` base class extending `Error` with a `code` field
-- [x] Add `VaultAuthError` subclass for missing or invalid `BWS_ACCESS_TOKEN`, with a remediation message in the constructor
-- [x] Add `VaultRefNotFoundError` subclass with fields `ref` (the original `{{vault.foo}}` string) and `triedKeys` (string array of fallback attempts)
-- [x] Add `VaultIOError` subclass for network or SDK errors, wrapping the underlying cause
-- [x] Write `src/errors.test.ts` verifying that each error sets `name`, `code`, and `message` correctly and that `instanceof VaultError` is true for each subclass
+# Stage: Schema extensions
 
-# Stage: Auth strategies
+- [ ] Update `src/schema.ts` to add an optional `owner: z.string().optional()` field to `ProjectSchema`
+- [ ] Update `src/schema.ts` to add an optional `infrastructure: z.record(z.unknown()).optional()` field to `BaseConfigSchema`
+- [ ] Update `src/schema.ts` to add an optional `provision` field to the per-service schema using `ProvisionSchema` from `src/provision.ts`
+- [ ] Write `src/schema.test.ts` cases verifying: `project.owner` present passes, `project.owner` absent passes (soft-required), `infrastructure: { homelab: {...} }` passes with arbitrary nested content, `provision: true` validates and coerces
+- [ ] Add a Phase-7 regression test in `src/schema.test.ts` that loads `tests/fixtures/knowledge-base-phase7.yaml` (a copy of the existing grow-box fixture) and asserts it validates without errors
 
-- [x] Write `src/auth.ts` exporting `AuthStrategy` type union `'env' | 'file' | 'interactive'` and `resolveAuth(strategy, options): Promise<{ token: string }>`
-- [x] Implement the `env` strategy reading `BWS_ACCESS_TOKEN`, throwing `VaultAuthError` if absent
-- [x] Implement the `file` strategy reading a path (default `~/.bws/token`), throwing `VaultAuthError` if missing or unreadable
-- [x] Implement the `interactive` strategy that prompts on TTY using `node:readline` (no `inquirer` dependency — keep the package small), throwing `VaultAuthError` in non-TTY contexts
-- [x] Write `src/auth.test.ts` covering all three strategies with mocked env/fs/tty; assert that missing token in `env` strategy throws `VaultAuthError`
+# Stage: Loader integration
 
-# Stage: ID mapping
+- [ ] Update `src/loader.ts` to skip resolution of strings matched by `PLATFORM_REF_PATTERN`, preserving them verbatim in the resolved config
+- [ ] Update `src/loader.ts` `LoadConfigResult` shape to include a `warnings: Array<{ path: string; message: string }>` field
+- [ ] Emit a soft-required warning when `project.owner` is absent, populating `warnings` in the result
+- [ ] Update `src/loader.ts` to apply `coerceProvision` to every service's `provision` field after schema validation
+- [ ] Write `src/loader.test.ts` cases: platform refs preserved through `loadConfig`, missing `project.owner` produces exactly one warning, present `project.owner` produces zero warnings, `provision: true` resolves to `{}` in the result
+- [ ] Add an end-to-end fixture test loading `tests/fixtures/schema-v2-full.yaml` with platform refs, infrastructure pot, provision objects, and ownership all present
 
-- [x] Write `src/mapping.ts` exporting `resolveVaultId(id: string, env: string, region?: string): string[]` that returns the ordered fallback list
-- [x] Implement the fallback order: `<id>-<env>-<region>` (if region), `<id>-<env>`, `<id>`
-- [x] Write `src/mapping.test.ts` covering: id with env and region, id with env only, id with region only (no region segment in the list), bare id (single-element list)
-- [x] Add a test asserting the fallback list contains no duplicates when env and region are empty strings
+# Stage: Exports and docs
 
-# Stage: BWS client
-
-- [x] Write `src/client.ts` exporting `createClient(token: string): VaultClient` with method `getSecret(key: string): Promise<string | null>` (null on not-found, throws `VaultIOError` on network errors)
-- [x] Implement the primary path using `@bitwarden/sdk-napi` (lazy-import inside `createClient`)
-- [x] Implement the subprocess fallback that shells out to `bws secret get` when the native binding fails to load, parsing the JSON output
-- [x] Write `src/client.test.ts` with mocked SDK responses for: successful fetch, not-found (null), network error (throws), token rejection (throws `VaultAuthError`)
-
-# Stage: loadSecrets
-
-- [x] Write `src/loadSecrets.ts` exporting `loadSecrets(refs: string[], opts: { env: string; region?: string; auth?: AuthStrategy; }): Promise<Record<string, string>>`
-- [x] Parse `{{vault.<id>}}` syntax from each ref, extracting the bare id
-- [x] For each id, walk `resolveVaultId` fallbacks against the client; record the first non-null hit, throw `VaultRefNotFoundError` if none match
-- [x] Return the resolved map keyed by the original ref string (e.g. `'{{vault.db-password}}'`), value being the secret
-- [x] Write `src/loadSecrets.test.ts` covering: single ref resolves on first fallback, single ref resolves on third fallback, missing ref throws `VaultRefNotFoundError` with `triedKeys` populated, batch of three refs all resolve
-- [x] Add a test that `loadSecrets` does not call the client more than necessary (caches resolved keys when multiple refs share an id)
-- [x] Write `src/index.ts` re-exporting `loadSecrets`, `resolveVaultId`, error classes, and the `AuthStrategy` type
+- [ ] Update `src/index.ts` to re-export `ProvisionSchema`, `coerceProvision`, `PLATFORM_REF_PATTERN`, `isPlatformRef`, `extractPlatformRefs`, and the updated `LoadConfigResult` type
+- [ ] Update `packages/shared/config/README.md` with a "Schema v2" section documenting the four new capabilities and a worked example
+- [ ] Add a one-line pointer in the README to `packages/AGENTS.md` clarifying that `@open-tomato/config` is the SERVICE config, distinct from `@open-tomato/agents-config`
 
 # Stage: Release
 
-- [x] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/vault` with a `minor` bump (new package, ships at `0.1.0`)
-- [x] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
-- [x] Run `bun run publish:dry` from the repo root and verify the tarball staging + publint validation pass
+- [ ] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/config` with a `minor` bump (new features, no breaking change)
+- [ ] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
+- [ ] Run `bun run publish:dry` from the repo root and verify the tarball staging + publint validation pass
 - [ ] Run `bun run publish:local` from the repo root to publish to the private registry
