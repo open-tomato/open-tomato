@@ -47,7 +47,7 @@ Files modified: `packages/shared/config/src/schema.ts` (extend `BaseConfigSchema
 
 - [x] Update `src/index.ts` to re-export `ProvisionSchema`, `coerceProvision`, `PLATFORM_REF_PATTERN`, `isPlatformRef`, `extractPlatformRefs`, and the updated `LoadConfigResult` type
 - [x] Update `packages/shared/config/README.md` with a "Schema v2" section documenting the four new capabilities and a worked example
-- [ ] Add a one-line pointer in the README to `packages/AGENTS.md` clarifying that `@open-tomato/config` is the SERVICE config, distinct from `@open-tomato/agents-config`
+- [x] Add a one-line pointer in the README to `packages/AGENTS.md` clarifying that `@open-tomato/config` is the SERVICE config, distinct from `@open-tomato/agents-config`
 
 # Stage: Release
 
