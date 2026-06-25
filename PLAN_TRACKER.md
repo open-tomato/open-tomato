@@ -20,7 +20,7 @@ Files modified: `packages/shared/config/src/schema.ts` (extend `BaseConfigSchema
 
 # Stage: Platform refs
 
-- [ ] Write `src/platformRefs.ts` exporting `PLATFORM_REF_PATTERN: RegExp` that matches `{{platform.<vendor>.<path>}}` with capture groups for vendor and path
+- [x] Write `src/platformRefs.ts` exporting `PLATFORM_REF_PATTERN: RegExp` that matches `{{platform.<vendor>.<path>}}` with capture groups for vendor and path
 - [ ] Implement `isPlatformRef(value: string): boolean` returning true if the value contains at least one platform ref
 - [ ] Implement `extractPlatformRefs(value: string): Array<{ vendor: string; path: string; full: string }>` returning every match in the input
 - [ ] Write `src/platformRefs.test.ts` covering: single ref, multiple refs in one string, nested paths (`{{platform.homelab.network.subnet}}`), invalid syntax (no curly close) does not match
