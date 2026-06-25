@@ -14,8 +14,8 @@ Files created: `packages/shared/platform-core/package.json`, `tsconfig.json`, `e
 - [x] Create `packages/shared/platform-core/tsconfig.json` extending `@open-tomato/typescript-config/base.json` with `include: ["src/**/*"]`
 - [x] Create `packages/shared/platform-core/eslint.config.mjs` re-exporting `@open-tomato/eslint-config`
 - [x] Create `packages/shared/platform-core/README.md` documenting the `PlatformPlugin` contract and giving an example plugin skeleton
-- [ ] Run `bun install` at the repo root to register the new workspace member
-- [ ] Create `packages/shared/platform-core/vitest.config.ts` with default config
+- [x] Run `bun install` at the repo root to register the new workspace member
+- [x] Create `packages/shared/platform-core/vitest.config.ts` with default config
 
 # Stage: Provision types
 
