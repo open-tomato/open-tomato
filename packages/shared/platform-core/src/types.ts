@@ -19,3 +19,9 @@ export interface ResolvedConfig {
   vault: Record<string, unknown>;
   extras: Record<string, unknown>;
 }
+
+export interface MatchResult {
+  matches: boolean;
+  score: number;
+  missing: string[];
+}
