@@ -1,5 +1,5 @@
 {
-  "extends": "@open-tomato/typescript-config/base.json",
+  "extends": "@open-tomato/typescript-config/base",
   "compilerOptions": {
     "noEmit": true
   },
