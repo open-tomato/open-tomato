@@ -16,7 +16,7 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 - [x] Create `packages/shared/vault/tsconfig.json` extending `@open-tomato/typescript-config/base.json` with `include: ["src/**/*"]`
 - [x] Create `packages/shared/vault/eslint.config.mjs` re-exporting `@open-tomato/eslint-config`
 - [x] Create `packages/shared/vault/README.md` documenting auth strategies, the id-mapping fallback rule, and a `loadSecrets` example
-- [ ] Run `bun install` at the repo root to register the new workspace member
+- [x] Run `bun install` at the repo root to register the new workspace member
 - [ ] Create `packages/shared/vault/vitest.config.ts` with default config
 
 # Stage: Errors
