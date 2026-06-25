@@ -18,6 +18,7 @@ const ProjectBaseSchema = z.object({
   id: z.string().regex(KEBAB_CASE, 'project.id must be kebab-case'),
   type: ProjectTypeSchema,
   name: z.string().optional(),
+  owner: z.string().optional(),
   port: z.number().int()
     .positive()
     .optional(),
