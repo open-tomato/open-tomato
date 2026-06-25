@@ -30,8 +30,8 @@ Files created: `packages/shared/platform-core/package.json`, `tsconfig.json`, `e
 
 # Stage: PlatformPlugin contract
 
-- [ ] Write `src/plugin.ts` exporting `PlatformPlugin` interface with fields `name` (string), `version` (semver string), and four methods
-- [ ] Define `matchCapabilities(request: ProvisionRequest): Promise<MatchResult>` method signature in `PlatformPlugin`
+- [x] Write `src/plugin.ts` exporting `PlatformPlugin` interface with fields `name` (string), `version` (semver string), and four methods
+- [x] Define `matchCapabilities(request: ProvisionRequest): Promise<MatchResult>` method signature in `PlatformPlugin`
 - [ ] Define `resolvePlatformRefs(template: string, ctx: ResolvedConfig): Promise<string>` method signature in `PlatformPlugin`
 - [ ] Define `validateProvision(request: ProvisionRequest, allowance: ProvisionAllowance): Promise<ValidationResult>` method signature in `PlatformPlugin`
 - [ ] Define `emit(config: ResolvedConfig): Promise<EmitResult>` method signature in `PlatformPlugin`
