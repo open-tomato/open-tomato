@@ -1,7 +1,14 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { load as parseYaml } from 'js-yaml';
 import { describe, it, expect } from 'vitest';
 
 import { coerceProvision } from './provision.js';
 import { BaseConfigSchema } from './schema.js';
+
+const FIXTURES_DIR = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'tests', 'fixtures');
 
 const baseService = {
   project: {
@@ -81,6 +88,23 @@ describe('BaseConfigSchema — provision shorthand', () => {
     expect(result.success).toBe(true);
     if (result.success) {
       expect(coerceProvision(result.data.provision)).toEqual({});
+    }
+  });
+});
+
+describe('BaseConfigSchema — Phase-7 regression', () => {
+  it('accepts the grow-box knowledge-base fixture (samples/knowledge-base/service.config.yaml)', () => {
+    const raw = readFileSync(join(FIXTURES_DIR, 'knowledge-base-phase7.yaml'), 'utf8');
+    const parsed = parseYaml(raw);
+
+    const result = BaseConfigSchema.safeParse(parsed);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.project.id).toBe('knowledge-base');
+      expect(result.data.project.type).toBe('service');
+      expect(result.data.project.port).toBe(3001);
+      expect(result.data.infrastructure).toBeDefined();
     }
   });
 });

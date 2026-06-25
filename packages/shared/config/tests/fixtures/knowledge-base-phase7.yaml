@@ -1,0 +1,44 @@
+# Sample own-app intent (Contract 1) — the canonical Phase-7 fixture.
+# In real use this lives in the CONSUMER app's repo; here it drives `make svc-validate`/`svc-generate`.
+# Native tomato 4-section file; all homelab materialization fields under `infrastructure.homelab`.
+project:
+  id: knowledge-base            # → apps/knowledge-base/ ; kebab-case; unique
+  type: service                 # service | frontend | mcp | package
+  name: Knowledge Base
+  port: 3001
+  environments: [stage, prod]   # the homelab materializes ONLY prod
+
+infrastructure:
+  database:
+    engine: postgres            # postgres | mysql
+    version: '16'
+    provision: true             # false → reference an existing/shared instance (no store generated)
+    instances: 1                # advisory (recorded, not enforced in v1)
+    storage_gb: 20              # advisory
+    connection_pool: 10         # advisory
+    homelab: { alias: primary, backup: dumps }   # → knowledge-base-primary ; backup ownership
+  cache:
+    engine: redis
+    version: '7'
+    provision: true
+    homelab: { alias: cache, backup: none }      # → knowledge-base-cache
+
+  homelab:                      # the materialization island (the tomato CLI ignores this)
+    build: { mode: image, image: ghcr.io/markost/knowledge-base:latest }   # git mode deferred
+    repo: { owner: markost, group: admins }      # trust anchor (enforced in S4)
+    expose: { level: sso, subdomain: kb }        # → https://kb.${DOMAIN} behind authelia@file
+    monitoring: { metrics_path: /metrics, metrics_port: 3001 }   # optional → Prometheus file_sd
+    monorepo:
+      packages:
+        - { id: kb-core, path: packages/kb-core } # advisory in v1
+
+env:                            # tomato free-form; flattened to SCREAMING_SNAKE for the .env
+  # Backing-store connection vars are SYNTHESIZED by the homelab from infrastructure.* —
+  # the app receives PRIMARY_{HOST,PORT,DB,USER,PASSWORD,URL} and CACHE_{HOST,PORT,URL}.
+  # Do NOT hand-write DB/Redis URLs here. This block is for app-level config only.
+  server:
+    port: '{{config.project.port}}'              # self-ref → 3001
+  sentry:
+    environment: '{{proc.env}}'                  # → prod
+    release: '{{config.project.id}}@1.0.0'       # → knowledge-base@1.0.0
+    dsn: '{{vault.sentry_dsn}}'                  # external → SENTRY_DSN=change-me + SECRETS.md
