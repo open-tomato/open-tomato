@@ -32,8 +32,8 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 - [x] Write `src/auth.ts` exporting `AuthStrategy` type union `'env' | 'file' | 'interactive'` and `resolveAuth(strategy, options): Promise<{ token: string }>`
 - [x] Implement the `env` strategy reading `BWS_ACCESS_TOKEN`, throwing `VaultAuthError` if absent
 - [x] Implement the `file` strategy reading a path (default `~/.bws/token`), throwing `VaultAuthError` if missing or unreadable
-- [ ] Implement the `interactive` strategy that prompts on TTY using `node:readline` (no `inquirer` dependency — keep the package small), throwing `VaultAuthError` in non-TTY contexts
-- [ ] Write `src/auth.test.ts` covering all three strategies with mocked env/fs/tty; assert that missing token in `env` strategy throws `VaultAuthError`
+- [x] Implement the `interactive` strategy that prompts on TTY using `node:readline` (no `inquirer` dependency — keep the package small), throwing `VaultAuthError` in non-TTY contexts
+- [x] Write `src/auth.test.ts` covering all three strategies with mocked env/fs/tty; assert that missing token in `env` strategy throws `VaultAuthError`
 
 # Stage: ID mapping
 
