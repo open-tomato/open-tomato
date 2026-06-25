@@ -41,12 +41,12 @@ Files modified: `packages/shared/config/src/schema.ts` (extend `BaseConfigSchema
 - [x] Emit a soft-required warning when `project.owner` is absent, populating `warnings` in the result
 - [x] Update `src/loader.ts` to apply `coerceProvision` to every service's `provision` field after schema validation
 - [x] Write `src/loader.test.ts` cases: platform refs preserved through `loadConfig`, missing `project.owner` produces exactly one warning, present `project.owner` produces zero warnings, `provision: true` resolves to `{}` in the result
-- [ ] Add an end-to-end fixture test loading `tests/fixtures/schema-v2-full.yaml` with platform refs, infrastructure pot, provision objects, and ownership all present
+- [x] Add an end-to-end fixture test loading `tests/fixtures/schema-v2-full.yaml` with platform refs, infrastructure pot, provision objects, and ownership all present
 
 # Stage: Exports and docs
 
-- [ ] Update `src/index.ts` to re-export `ProvisionSchema`, `coerceProvision`, `PLATFORM_REF_PATTERN`, `isPlatformRef`, `extractPlatformRefs`, and the updated `LoadConfigResult` type
-- [ ] Update `packages/shared/config/README.md` with a "Schema v2" section documenting the four new capabilities and a worked example
+- [x] Update `src/index.ts` to re-export `ProvisionSchema`, `coerceProvision`, `PLATFORM_REF_PATTERN`, `isPlatformRef`, `extractPlatformRefs`, and the updated `LoadConfigResult` type
+- [x] Update `packages/shared/config/README.md` with a "Schema v2" section documenting the four new capabilities and a worked example
 - [ ] Add a one-line pointer in the README to `packages/AGENTS.md` clarifying that `@open-tomato/config` is the SERVICE config, distinct from `@open-tomato/agents-config`
 
 # Stage: Release
