@@ -46,7 +46,7 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 
 - [x] Write `src/client.ts` exporting `createClient(token: string): VaultClient` with method `getSecret(key: string): Promise<string | null>` (null on not-found, throws `VaultIOError` on network errors)
 - [x] Implement the primary path using `@bitwarden/sdk-napi` (lazy-import inside `createClient`)
-- [ ] Implement the subprocess fallback that shells out to `bws secret get` when the native binding fails to load, parsing the JSON output
+- [x] Implement the subprocess fallback that shells out to `bws secret get` when the native binding fails to load, parsing the JSON output
 - [ ] Write `src/client.test.ts` with mocked SDK responses for: successful fetch, not-found (null), network error (throws), token rejection (throws `VaultAuthError`)
 
 # Stage: loadSecrets
