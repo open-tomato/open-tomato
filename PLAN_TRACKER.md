@@ -43,11 +43,11 @@ Files created: `packages/shared/platform-core/package.json`, `tsconfig.json`, `e
 - [x] Write `src/noopPlugin.ts` exporting `createNoopPlugin(name: string): PlatformPlugin` that returns a plugin whose methods resolve to empty/safe defaults (`matchCapabilities` returns `{ matches: false, score: 0, missing: [] }`, `emit` returns `{ targets: [], lockHash: '...' }`)
 - [x] Implement deterministic SHA-256 hash computation for the empty `emit` result so tests can assert against a known value
 - [x] Write `src/noopPlugin.test.ts` verifying every method returns the documented shape and that the plugin satisfies `PlatformPlugin` structurally
-- [ ] Write `src/index.ts` re-exporting all types from `types.ts`, the `PlatformPlugin` interface from `plugin.ts`, and `createNoopPlugin` from `noopPlugin.ts`
+- [x] Write `src/index.ts` re-exporting all types from `types.ts`, the `PlatformPlugin` interface from `plugin.ts`, and `createNoopPlugin` from `noopPlugin.ts`
 
 # Stage: Release
 
-- [ ] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/platform-core` with a `minor` bump (new package, ships at `0.1.0`)
-- [ ] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
+- [x] Add a changeset describing the change: run `bunx changeset` and select `@open-tomato/platform-core` with a `minor` bump (new package, ships at `0.1.0`)
+- [x] Run `bun run preflight --skip-changeset` from the repo root and verify it exits 0
 - [ ] Run `bun run publish:dry` from the repo root and verify the tarball staging + publint validation pass
 - [ ] Run `bun run publish:local` from the repo root to publish to the private registry
