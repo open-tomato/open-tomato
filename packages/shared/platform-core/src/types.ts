@@ -11,3 +11,11 @@ export interface ProvisionAllowance {
   reasons: readonly string[];
   caps: Record<string, string>;
 }
+
+export interface ResolvedConfig {
+  service: string;
+  env: string;
+  infrastructure: Record<string, unknown>;
+  vault: Record<string, unknown>;
+  extras: Record<string, unknown>;
+}
