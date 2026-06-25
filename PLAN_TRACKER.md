@@ -33,7 +33,7 @@ Files modified: `cli/src/cli.ts` (dispatcher rewrite), `cli/package.json` (add `
 
 - [x] Write `cli/src/registry.ts` exporting `CommandRegistry` class with methods `register(tool, command, module)`, `get(tool, command)`, `list(): Array<{ tool, command, meta }>`
 - [x] Implement filesystem-based auto-registration in `registry.ts` that scans `cli/src/commands/<tool>/<command>.ts` at construction time
-- [ ] Extend module shape so a command file may export `meta: CliCommand` (description, args, flags) in addition to `default`
+- [x] Extend module shape so a command file may export `meta: CliCommand` (description, args, flags) in addition to `default`
 - [ ] Write `cli/src/registry.test.ts` verifying: registry discovers known commands, returns null for unknown commands, `list()` includes metadata when present and falls back to inferred name when absent
 - [ ] Add a test in `cli/src/registry.test.ts` asserting registry handles missing `commands/<tool>/` directories without throwing
 
