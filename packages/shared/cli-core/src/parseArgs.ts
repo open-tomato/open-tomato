@@ -15,6 +15,11 @@ export function parseArgs(argv: string[]): ParseArgsResult {
     if (arg.startsWith('--')) {
       const body = arg.slice(2);
       const eqIndex = body.indexOf('=');
+      if (eqIndex === -1 && body.startsWith('no-') && body.length > 3) {
+        const name = body.slice(3);
+        flags[name] = false;
+        continue;
+      }
       if (eqIndex !== -1) {
         const name = body.slice(0, eqIndex);
         const value = body.slice(eqIndex + 1);

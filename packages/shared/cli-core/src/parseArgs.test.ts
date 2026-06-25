@@ -128,3 +128,47 @@ describe('parseArgs boolean flag syntax', () => {
     expect(result.positional).toEqual([]);
   });
 });
+
+describe('parseArgs --no-flag negation syntax', () => {
+  it('sets the underlying flag to false for --no-flag', () => {
+    const result = parseArgs(['--no-color']);
+
+    expect(result.flags).toEqual({ color: false });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('does not consume the next token as a value for --no-flag', () => {
+    const result = parseArgs(['--no-color', 'staging']);
+
+    expect(result.flags).toEqual({ color: false });
+    expect(result.positional).toEqual(['staging']);
+  });
+
+  it('mixes --no-flag with positional and other flags', () => {
+    const result = parseArgs(['svc', '--no-color', '--env=staging']);
+
+    expect(result.flags).toEqual({ color: false, env: 'staging' });
+    expect(result.positional).toEqual(['svc']);
+  });
+
+  it('preserves hyphenated targets when negating', () => {
+    const result = parseArgs(['--no-dry-run']);
+
+    expect(result.flags).toEqual({ 'dry-run': false });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('treats --no-flag=value as a literal flag named no-<rest>', () => {
+    const result = parseArgs(['--no-color=red']);
+
+    expect(result.flags).toEqual({ 'no-color': 'red' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('lets a later --flag=value override an earlier --no-flag', () => {
+    const result = parseArgs(['--no-color', '--color=red']);
+
+    expect(result.flags).toEqual({ color: 'red' });
+    expect(result.positional).toEqual([]);
+  });
+});
