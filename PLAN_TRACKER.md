@@ -39,7 +39,7 @@ Files modified: `packages/shared/config/src/schema.ts` (extend `BaseConfigSchema
 - [x] Update `src/loader.ts` to skip resolution of strings matched by `PLATFORM_REF_PATTERN`, preserving them verbatim in the resolved config
 - [x] Update `src/loader.ts` `LoadConfigResult` shape to include a `warnings: Array<{ path: string; message: string }>` field
 - [x] Emit a soft-required warning when `project.owner` is absent, populating `warnings` in the result
-- [ ] Update `src/loader.ts` to apply `coerceProvision` to every service's `provision` field after schema validation
+- [x] Update `src/loader.ts` to apply `coerceProvision` to every service's `provision` field after schema validation
 - [ ] Write `src/loader.test.ts` cases: platform refs preserved through `loadConfig`, missing `project.owner` produces exactly one warning, present `project.owner` produces zero warnings, `provision: true` resolves to `{}` in the result
 - [ ] Add an end-to-end fixture test loading `tests/fixtures/schema-v2-full.yaml` with platform refs, infrastructure pot, provision objects, and ownership all present
 

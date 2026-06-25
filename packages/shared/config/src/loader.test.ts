@@ -177,4 +177,44 @@ describe('loadConfig', () => {
 
     expect(warnings.filter((w) => w.path === 'project.owner')).toEqual([]);
   });
+
+  it('preserves {{platform.<vendor>.<path>}} refs verbatim through loadConfig', async () => {
+    write(
+      'config.default.yaml',
+      [
+        'project: { id: kb, type: service, port: 1 }',
+        'env:',
+        '  subnet: "{{platform.homelab.network.subnet}}"',
+        '  composed: "vlan-{{platform.homelab.network.vlan}}-prod"',
+        '  nested:',
+        '    region: "{{platform.heroku.region}}"',
+        '  arr:',
+        '    - "{{platform.homelab.dns.zone}}"',
+      ].join('\n'),
+    );
+
+    const { config } = await loadConfig({ configDir: dir, env: 'dev' });
+
+    expect(config.env).toMatchObject({
+      subnet: '{{platform.homelab.network.subnet}}',
+      composed: 'vlan-{{platform.homelab.network.vlan}}-prod',
+      nested: { region: '{{platform.heroku.region}}' },
+      arr: ['{{platform.homelab.dns.zone}}'],
+    });
+  });
+
+  it('coerces `provision: true` to `{}` in the resolved config', async () => {
+    write(
+      'config.default.yaml',
+      [
+        'project: { id: kb, type: service, port: 1 }',
+        'provision: true',
+        'env: {}',
+      ].join('\n'),
+    );
+
+    const { config } = await loadConfig({ configDir: dir, env: 'dev' });
+
+    expect(config.provision).toEqual({});
+  });
 });
