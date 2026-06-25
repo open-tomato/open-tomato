@@ -87,7 +87,44 @@ describe('parseArgs --flag value (space-separated) syntax', () => {
   it('does not consume a following flag as a value', () => {
     const result = parseArgs(['--env', '--region', 'us-east-1']);
 
-    expect(result.flags).toEqual({ region: 'us-east-1' });
+    expect(result.flags).toEqual({ env: true, region: 'us-east-1' });
+    expect(result.positional).toEqual([]);
+  });
+});
+
+describe('parseArgs boolean flag syntax', () => {
+  it('parses a single bare --flag as true', () => {
+    const result = parseArgs(['--verbose']);
+
+    expect(result.flags).toEqual({ verbose: true });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('parses multiple bare --flag arguments as true', () => {
+    const result = parseArgs(['--verbose', '--debug']);
+
+    expect(result.flags).toEqual({ verbose: true, debug: true });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('treats a trailing --flag at the end of argv as boolean true', () => {
+    const result = parseArgs(['svc', '--verbose']);
+
+    expect(result.flags).toEqual({ verbose: true });
+    expect(result.positional).toEqual(['svc']);
+  });
+
+  it('mixes boolean flags with --flag=value forms', () => {
+    const result = parseArgs(['--verbose', '--env=staging']);
+
+    expect(result.flags).toEqual({ verbose: true, env: 'staging' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('treats a flag followed by another flag as boolean true', () => {
+    const result = parseArgs(['--verbose', '--env=staging', '--region', 'us-east-1']);
+
+    expect(result.flags).toEqual({ verbose: true, env: 'staging', region: 'us-east-1' });
     expect(result.positional).toEqual([]);
   });
 });

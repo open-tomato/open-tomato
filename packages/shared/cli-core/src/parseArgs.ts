@@ -27,6 +27,7 @@ export function parseArgs(argv: string[]): ParseArgsResult {
         i++;
         continue;
       }
+      flags[body] = true;
       continue;
     }
     if (arg.startsWith('-')) {
