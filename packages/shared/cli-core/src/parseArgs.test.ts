@@ -172,3 +172,73 @@ describe('parseArgs --no-flag negation syntax', () => {
     expect(result.positional).toEqual([]);
   });
 });
+
+describe('parseArgs short alias syntax', () => {
+  it('parses -f=value as a string assignment', () => {
+    const result = parseArgs(['-v=2']);
+
+    expect(result.flags).toEqual({ v: '2' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('parses space-separated -f value as a string assignment', () => {
+    const result = parseArgs(['-v', '2']);
+
+    expect(result.flags).toEqual({ v: '2' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('treats a trailing -f at the end of argv as boolean true', () => {
+    const result = parseArgs(['svc', '-v']);
+
+    expect(result.flags).toEqual({ v: true });
+    expect(result.positional).toEqual(['svc']);
+  });
+
+  it('treats -f followed by another flag as boolean true', () => {
+    const result = parseArgs(['-v', '--env=staging']);
+
+    expect(result.flags).toEqual({ v: true, env: 'staging' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('mixes short aliases with positional args', () => {
+    const result = parseArgs(['svc', '-v=2', 'validate']);
+
+    expect(result.flags).toEqual({ v: '2' });
+    expect(result.positional).toEqual(['svc', 'validate']);
+  });
+
+  it('mixes short aliases with long flags', () => {
+    const result = parseArgs(['-v', '2', '--env=staging']);
+
+    expect(result.flags).toEqual({ v: '2', env: 'staging' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('keeps additional equals signs inside the value', () => {
+    const result = parseArgs(['-f=key=value']);
+
+    expect(result.flags).toEqual({ f: 'key=value' });
+  });
+
+  it('accepts an empty value after the equals sign', () => {
+    const result = parseArgs(['-f=']);
+
+    expect(result.flags).toEqual({ f: '' });
+  });
+
+  it('does not consume a following short flag as a value', () => {
+    const result = parseArgs(['-v', '-d']);
+
+    expect(result.flags).toEqual({ v: true, d: true });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('treats a bare - as a positional argument', () => {
+    const result = parseArgs(['cmd', '-']);
+
+    expect(result.flags).toEqual({});
+    expect(result.positional).toEqual(['cmd', '-']);
+  });
+});

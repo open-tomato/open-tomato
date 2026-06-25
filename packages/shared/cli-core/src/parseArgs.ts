@@ -35,7 +35,22 @@ export function parseArgs(argv: string[]): ParseArgsResult {
       flags[body] = true;
       continue;
     }
-    if (arg.startsWith('-')) {
+    if (arg.startsWith('-') && arg.length > 1) {
+      const body = arg.slice(1);
+      const eqIndex = body.indexOf('=');
+      if (eqIndex !== -1) {
+        const name = body.slice(0, eqIndex);
+        const value = body.slice(eqIndex + 1);
+        flags[name] = value;
+        continue;
+      }
+      const next = argv[i + 1];
+      if (next !== undefined && !next.startsWith('-')) {
+        flags[body] = next;
+        i++;
+        continue;
+      }
+      flags[body] = true;
       continue;
     }
     positional.push(arg);
