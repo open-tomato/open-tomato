@@ -51,8 +51,8 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 
 # Stage: loadSecrets
 
-- [ ] Write `src/loadSecrets.ts` exporting `loadSecrets(refs: string[], opts: { env: string; region?: string; auth?: AuthStrategy; }): Promise<Record<string, string>>`
-- [ ] Parse `{{vault.<id>}}` syntax from each ref, extracting the bare id
+- [x] Write `src/loadSecrets.ts` exporting `loadSecrets(refs: string[], opts: { env: string; region?: string; auth?: AuthStrategy; }): Promise<Record<string, string>>`
+- [x] Parse `{{vault.<id>}}` syntax from each ref, extracting the bare id
 - [ ] For each id, walk `resolveVaultId` fallbacks against the client; record the first non-null hit, throw `VaultRefNotFoundError` if none match
 - [ ] Return the resolved map keyed by the original ref string (e.g. `'{{vault.db-password}}'`), value being the secret
 - [ ] Write `src/loadSecrets.test.ts` covering: single ref resolves on first fallback, single ref resolves on third fallback, missing ref throws `VaultRefNotFoundError` with `triedKeys` populated, batch of three refs all resolve
