@@ -286,3 +286,68 @@ describe('parseArgs -- end-of-flags marker', () => {
     expect(result.positional).toEqual(['one', 'two', 'three', '--four']);
   });
 });
+
+describe('parseArgs edge cases', () => {
+  it('last --flag=value wins when the same flag is repeated', () => {
+    const result = parseArgs(['--env=staging', '--env=production']);
+
+    expect(result.flags).toEqual({ env: 'production' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('last --flag value wins when the same flag is repeated in space-separated form', () => {
+    const result = parseArgs(['--env', 'staging', '--env', 'production']);
+
+    expect(result.flags).toEqual({ env: 'production' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('last value wins when --flag=value and --flag value forms are mixed', () => {
+    const result = parseArgs(['--env=staging', '--env', 'production']);
+
+    expect(result.flags).toEqual({ env: 'production' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('last short -f assignment wins when repeated', () => {
+    const result = parseArgs(['-v=1', '-v=2']);
+
+    expect(result.flags).toEqual({ v: '2' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('overrides an earlier boolean --flag with a later --flag=value', () => {
+    const result = parseArgs(['--verbose', '--verbose=2']);
+
+    expect(result.flags).toEqual({ verbose: '2' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('overrides an earlier --flag=value with a later bare --flag (boolean true)', () => {
+    const result = parseArgs(['--env=staging', '--env']);
+
+    expect(result.flags).toEqual({ env: true });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('falls back to boolean true when a long flag intended as a value has no value at end of argv', () => {
+    const result = parseArgs(['--env']);
+
+    expect(result.flags).toEqual({ env: true });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('falls back to boolean true when a long flag intended as a value is followed by another flag', () => {
+    const result = parseArgs(['--env', '--region=us-east-1']);
+
+    expect(result.flags).toEqual({ env: true, region: 'us-east-1' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('falls back to boolean true when a short flag intended as a value has no value at end of argv', () => {
+    const result = parseArgs(['-v']);
+
+    expect(result.flags).toEqual({ v: true });
+    expect(result.positional).toEqual([]);
+  });
+});
