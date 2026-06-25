@@ -1,4 +1,4 @@
-import type { CliEvent } from './events';
+import type { CliEvent, CliEventLog } from './events';
 
 export interface CliOutput {
   info(message: string): void;
@@ -101,6 +101,46 @@ export function createTextOutput({ verbosity, stream }: CreateTextOutputOptions)
         return;
       }
     }
+  };
+
+  return { info, warn, error, debug, emit, result };
+}
+
+export interface CreateJsonOutputOptions {
+  stream: CliOutputStream;
+}
+
+export function createJsonOutput({ stream }: CreateJsonOutputOptions): CliOutput {
+  const writeEvent = (event: CliEvent): void => {
+    stream.write(`${JSON.stringify(event)}\n`);
+  };
+
+  const logAt = (level: CliEventLog['level'], message: string): void => {
+    writeEvent({ type: 'log', level, message, ts: new Date().toISOString() });
+  };
+
+  const debug = (message: string): void => {
+    logAt('debug', message);
+  };
+
+  const info = (message: string): void => {
+    logAt('info', message);
+  };
+
+  const warn = (message: string): void => {
+    logAt('warn', message);
+  };
+
+  const error = (message: string): void => {
+    logAt('error', message);
+  };
+
+  const emit = (event: CliEvent): void => {
+    writeEvent(event);
+  };
+
+  const result = (payload: unknown): void => {
+    writeEvent({ type: 'result', ok: true, data: payload, ts: new Date().toISOString() });
   };
 
   return { info, warn, error, debug, emit, result };
