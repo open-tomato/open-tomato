@@ -91,3 +91,31 @@ export class VaultRefNotFoundError extends VaultError {
     this.triedKeys = opts.triedKeys;
   }
 }
+
+/**
+ * Thrown when a Bitwarden Secrets Manager request fails for transport reasons —
+ * network errors, SDK rejections that are not authentication-related, malformed
+ * subprocess output, etc.
+ *
+ * The underlying error is preserved on `Error.cause` (via the base class)
+ * so callers can inspect the original failure without losing the typed wrapper.
+ * Use {@link VaultAuthError} for token-related failures and
+ * {@link VaultRefNotFoundError} for missing-secret failures; reserve
+ * `VaultIOError` for everything else that goes wrong while talking to BWS.
+ */
+export class VaultIOError extends VaultError {
+  /**
+   * @param opts.reason - Short description of the I/O failure (e.g.
+   *   `'BWS SDK request failed'` or `'bws subprocess exited with status 1'`).
+   *   Should not end with a period — the base message stands on its own.
+   * @param opts.cause - The underlying error that triggered this one
+   *   (e.g. a fetch rejection, an SDK exception, or a subprocess error).
+   */
+  constructor(opts: { reason: string; cause?: unknown }) {
+    super({
+      message: opts.reason,
+      code: 'IO_ERROR',
+      cause: opts.cause,
+    });
+  }
+}
