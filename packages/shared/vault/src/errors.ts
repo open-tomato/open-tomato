@@ -57,3 +57,37 @@ export class VaultAuthError extends VaultError {
     });
   }
 }
+
+/**
+ * Thrown when a `{{vault.<id>}}` reference cannot be resolved to any concrete
+ * BWS secret after walking the id-mapping fallback list.
+ *
+ * Carries the original `ref` string (so log messages can echo the exact token
+ * the operator wrote) and the full `triedKeys` array (so operators can see
+ * which concrete keys the resolver attempted, in fallback order, and create
+ * the missing secret under the right name).
+ */
+export class VaultRefNotFoundError extends VaultError {
+  /** The original `{{vault.<id>}}` reference string that failed to resolve. */
+  readonly ref: string;
+
+  /** Concrete BWS keys attempted, in fallback order. */
+  readonly triedKeys: readonly string[];
+
+  /**
+   * @param opts.ref - The original `{{vault.<id>}}` reference string.
+   * @param opts.triedKeys - Concrete BWS keys attempted, in fallback order.
+   * @param opts.cause - The underlying error, if any.
+   */
+  constructor(opts: { ref: string; triedKeys: readonly string[]; cause?: unknown }) {
+    super({
+      message:
+        `Vault reference ${opts.ref} could not be resolved ` +
+        `(tried: ${opts.triedKeys.join(', ')}).`,
+      code: 'REF_NOT_FOUND',
+      cause: opts.cause,
+    });
+    this.ref = opts.ref;
+    this.triedKeys = opts.triedKeys;
+  }
+}

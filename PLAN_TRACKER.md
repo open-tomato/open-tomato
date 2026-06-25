@@ -22,8 +22,8 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 # Stage: Errors
 
 - [x] Write `src/errors.ts` exporting a `VaultError` base class extending `Error` with a `code` field
-- [ ] Add `VaultAuthError` subclass for missing or invalid `BWS_ACCESS_TOKEN`, with a remediation message in the constructor
-- [ ] Add `VaultRefNotFoundError` subclass with fields `ref` (the original `{{vault.foo}}` string) and `triedKeys` (string array of fallback attempts)
+- [x] Add `VaultAuthError` subclass for missing or invalid `BWS_ACCESS_TOKEN`, with a remediation message in the constructor
+- [x] Add `VaultRefNotFoundError` subclass with fields `ref` (the original `{{vault.foo}}` string) and `triedKeys` (string array of fallback attempts)
 - [ ] Add `VaultIOError` subclass for network or SDK errors, wrapping the underlying cause
 - [ ] Write `src/errors.test.ts` verifying that each error sets `name`, `code`, and `message` correctly and that `instanceof VaultError` is true for each subclass
 
