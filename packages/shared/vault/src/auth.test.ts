@@ -1,11 +1,44 @@
+import { Buffer } from 'node:buffer';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { PassThrough, type Readable, type Writable } from 'node:stream';
+import { setImmediate } from 'node:timers';
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { resolveAuth } from './auth.js';
 import { VaultAuthError } from './errors.js';
+
+interface TestStreams {
+  input: Readable;
+  output: Writable;
+}
+
+function ttyInput(text: string): Readable {
+  const stream = new PassThrough();
+  (stream as unknown as { isTTY: boolean }).isTTY = true;
+  setImmediate(() => {
+    stream.end(`${text}\n`);
+  });
+  return stream;
+}
+
+function nonTtyInput(): Readable {
+  const stream = new PassThrough();
+  (stream as unknown as { isTTY: boolean }).isTTY = false;
+  return stream;
+}
+
+function discardOutput(): Writable {
+  const stream = new PassThrough();
+  stream.resume();
+  return stream;
+}
+
+function ttyStreams(text: string): TestStreams {
+  return { input: ttyInput(text), output: discardOutput() };
+}
 
 describe('resolveAuth (\'env\' strategy)', () => {
   afterEach(() => {
@@ -143,5 +176,62 @@ describe('resolveAuth (\'file\' strategy)', () => {
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe('resolveAuth (\'interactive\' strategy)', () => {
+  it('returns the token entered on the TTY prompt', async () => {
+    const result = await resolveAuth('interactive', ttyStreams('bws-token-typed'));
+
+    expect(result).toEqual({ token: 'bws-token-typed' });
+  });
+
+  it('trims surrounding whitespace from the entered token', async () => {
+    const result = await resolveAuth(
+      'interactive',
+      ttyStreams('  bws-token-padded\t  '),
+    );
+
+    expect(result).toEqual({ token: 'bws-token-padded' });
+  });
+
+  it('writes a BWS_ACCESS_TOKEN prompt to the output stream', async () => {
+    const input = ttyInput('bws-token-typed');
+    let prompted = '';
+    const output = new PassThrough();
+    output.on('data', (chunk: Buffer) => {
+      prompted += chunk.toString('utf8');
+    });
+
+    await resolveAuth('interactive', { input, output });
+
+    expect(prompted).toContain('BWS_ACCESS_TOKEN');
+  });
+
+  it('throws VaultAuthError when stdin is not a TTY', async () => {
+    const streams: TestStreams = {
+      input: nonTtyInput(),
+      output: discardOutput(),
+    };
+
+    await expect(resolveAuth('interactive', streams)).rejects.toBeInstanceOf(
+      VaultAuthError,
+    );
+    await expect(resolveAuth('interactive', streams)).rejects.toMatchObject({
+      code: 'AUTH_FAILED',
+      message: expect.stringContaining('TTY'),
+    });
+  });
+
+  it('throws VaultAuthError when the entered token is empty', async () => {
+    await expect(
+      resolveAuth('interactive', ttyStreams('')),
+    ).rejects.toBeInstanceOf(VaultAuthError);
+  });
+
+  it('throws VaultAuthError when the entered token is whitespace only', async () => {
+    await expect(
+      resolveAuth('interactive', ttyStreams('   \t   ')),
+    ).rejects.toBeInstanceOf(VaultAuthError);
   });
 });

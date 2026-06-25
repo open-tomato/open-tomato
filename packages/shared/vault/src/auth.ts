@@ -1,7 +1,10 @@
+import type { Readable, Writable } from 'node:stream';
+
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import process from 'node:process';
+import { createInterface } from 'node:readline/promises';
 
 import { VaultAuthError } from './errors.js';
 
@@ -31,6 +34,20 @@ export interface ResolveAuthOptions {
    * strategies.
    */
   tokenPath?: string;
+  /**
+   * Input stream the `'interactive'` strategy reads the token from. Defaults
+   * to `process.stdin`. Exposed primarily so tests can inject a fake TTY
+   * stream; production callers should leave this unset. Ignored by the
+   * `'env'` and `'file'` strategies.
+   */
+  input?: Readable;
+  /**
+   * Output stream the `'interactive'` strategy writes the prompt to. Defaults
+   * to `process.stdout`. Exposed primarily so tests can capture prompt
+   * output; production callers should leave this unset. Ignored by the
+   * `'env'` and `'file'` strategies.
+   */
+  output?: Writable;
 }
 
 /**
@@ -66,7 +83,7 @@ export async function resolveAuth(
     case 'file':
       return resolveFromFile(options.tokenPath);
     case 'interactive':
-      return resolveFromInteractive();
+      return resolveFromInteractive(options.input, options.output);
   }
 }
 
@@ -102,8 +119,34 @@ async function resolveFromFile(tokenPath: string | undefined): Promise<ResolvedA
   return { token };
 }
 
-async function resolveFromInteractive(): Promise<ResolvedAuth> {
-  throw new VaultAuthError({
-    reason: 'the \'interactive\' auth strategy is not yet implemented',
-  });
+async function resolveFromInteractive(
+  input: Readable = process.stdin,
+  output: Writable = process.stdout,
+): Promise<ResolvedAuth> {
+  // `isTTY` is only present on `tty.ReadStream`; on a piped/redirected stdin
+  // the property is `undefined`, so a strict `!== true` check rejects every
+  // non-interactive context (CI, `cmd < file`, `cmd | tomato …`) without
+  // requiring callers to plumb an extra flag through.
+  const isTTY = (input as { isTTY?: boolean }).isTTY === true;
+  if (!isTTY) {
+    throw new VaultAuthError({
+      reason: 'cannot prompt for BWS_ACCESS_TOKEN: stdin is not a TTY',
+    });
+  }
+
+  const rl = createInterface({ input, output, terminal: false });
+  let answer: string;
+  try {
+    answer = await rl.question('BWS_ACCESS_TOKEN: ');
+  } finally {
+    rl.close();
+  }
+
+  const token = answer.trim();
+  if (!token) {
+    throw new VaultAuthError({
+      reason: 'BWS_ACCESS_TOKEN prompt returned an empty value',
+    });
+  }
+  return { token };
 }
