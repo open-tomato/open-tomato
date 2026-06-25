@@ -5,3 +5,9 @@ export interface ProvisionRequest {
   capabilities: string[];
   metadata: Record<string, unknown>;
 }
+
+export interface ProvisionAllowance {
+  allowed: boolean;
+  reasons: readonly string[];
+  caps: Record<string, string>;
+}

@@ -19,7 +19,7 @@ Files created: `packages/shared/platform-core/package.json`, `tsconfig.json`, `e
 
 # Stage: Provision types
 
-- [ ] Write `src/types.ts` exporting `ProvisionRequest` interface with fields `service`, `env`, `region`, `capabilities` (string array), `metadata` (record of string to unknown)
+- [x] Write `src/types.ts` exporting `ProvisionRequest` interface with fields `service`, `env`, `region`, `capabilities` (string array), `metadata` (record of string to unknown)
 - [ ] Add `ProvisionAllowance` interface to `src/types.ts` with fields `allowed` (boolean), `reasons` (string array), `caps` (record of string to string for resolved capability values)
 - [ ] Add `ResolvedConfig` interface to `src/types.ts` representing the post-platform-resolution config payload with fields `service`, `env`, `infrastructure` (record), `vault` (record), `extras` (record)
 - [ ] Add `MatchResult` interface to `src/types.ts` with fields `matches` (boolean), `score` (number 0..1), `missing` (string array)
