@@ -41,8 +41,8 @@ Files modified: `cli/src/cli.ts` (dispatcher rewrite), `cli/package.json` (add `
 
 - [x] Write `cli/src/dispatch.ts` exporting `dispatch(argv: string[]): Promise<number>` that uses `assembleContext` and the registry to route a command, returning a numeric exit code
 - [x] Replace the body of `cli/src/cli.ts` `main()` with a call to `dispatch(argv)` followed by `process.exit(code)`
-- [ ] Preserve the existing `tomato <tool> <command>` positional shape — tool and command are the first two positional args after the binary name
-- [ ] Emit a `start` `CliEvent` before invoking the command and a `result` `CliEvent` after the command resolves or rejects
+- [x] Preserve the existing `tomato <tool> <command>` positional shape — tool and command are the first two positional args after the binary name
+- [x] Emit a `start` `CliEvent` before invoking the command and a `result` `CliEvent` after the command resolves or rejects
 - [ ] Map thrown errors to exit code 1 and `result: { ok: false, error: { code, message } }`
 - [ ] When the command module lacks `meta`, route through `runLegacyCommand`; when `meta` is present, call the module's `default(ctx)` directly with the `CliContext`
 - [ ] Write `cli/src/dispatch.test.ts` covering: unknown command exits 1 with `result` event, known legacy command runs through shim, known meta-aware command receives `CliContext`, NDJSON output mode emits events to stdout as one-per-line JSON
