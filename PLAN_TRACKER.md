@@ -17,11 +17,11 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 - [x] Create `packages/shared/vault/eslint.config.mjs` re-exporting `@open-tomato/eslint-config`
 - [x] Create `packages/shared/vault/README.md` documenting auth strategies, the id-mapping fallback rule, and a `loadSecrets` example
 - [x] Run `bun install` at the repo root to register the new workspace member
-- [ ] Create `packages/shared/vault/vitest.config.ts` with default config
+- [x] Create `packages/shared/vault/vitest.config.ts` with default config
 
 # Stage: Errors
 
-- [ ] Write `src/errors.ts` exporting a `VaultError` base class extending `Error` with a `code` field
+- [x] Write `src/errors.ts` exporting a `VaultError` base class extending `Error` with a `code` field
 - [ ] Add `VaultAuthError` subclass for missing or invalid `BWS_ACCESS_TOKEN`, with a remediation message in the constructor
 - [ ] Add `VaultRefNotFoundError` subclass with fields `ref` (the original `{{vault.foo}}` string) and `triedKeys` (string array of fallback attempts)
 - [ ] Add `VaultIOError` subclass for network or SDK errors, wrapping the underlying cause
