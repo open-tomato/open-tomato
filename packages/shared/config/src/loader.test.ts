@@ -48,19 +48,20 @@ describe('loadConfig', () => {
       ].join('\n'),
     );
 
-    const config = await loadConfig({ configDir: dir, env: 'dev' });
+    const { config, warnings } = await loadConfig({ configDir: dir, env: 'dev' });
 
     expect(config).toMatchObject({
       project: { id: 'kb', type: 'service', port: 3001 },
       env: { database_a: { url: 'postgres://h:5432/db' } },
     });
+    expect(warnings).toEqual([]);
   });
 
   it('overlays config.<env>.yaml values over the default', async () => {
     write('config.default.yaml', 'project: { id: kb, type: service, port: 1 }\nenv: { a: { url: default } }\n');
     write('config.prod.yaml', 'env: { a: { url: prod } }\n');
 
-    const config = await loadConfig({ configDir: dir, env: 'prod' });
+    const { config } = await loadConfig({ configDir: dir, env: 'prod' });
 
     expect(config).toMatchObject({ env: { a: { url: 'prod' } } });
   });
@@ -80,7 +81,7 @@ describe('loadConfig', () => {
       'project: { id: knowledge-base, type: service, port: 1 }\nenv: { sentry: { release: "{{config.project.id}}@1.0.0" } }\n',
     );
 
-    const config = await loadConfig({ configDir: dir, env: 'dev' });
+    const { config } = await loadConfig({ configDir: dir, env: 'dev' });
     expect(config).toMatchObject({ env: { sentry: { release: 'knowledge-base@1.0.0' } } });
   });
 
@@ -118,11 +119,11 @@ describe('loadConfig', () => {
     const original = process.env.NODE_ENV;
     try {
       process.env.NODE_ENV = 'production';
-      const skipped = await loadConfig({ configDir: dir, env: 'dev' });
+      const { config: skipped } = await loadConfig({ configDir: dir, env: 'dev' });
       expect(skipped).toMatchObject({ env: { a: { url: 'base' } } });
 
       process.env.NODE_ENV = 'development';
-      const loaded = await loadConfig({ configDir: dir, env: 'dev' });
+      const { config: loaded } = await loadConfig({ configDir: dir, env: 'dev' });
       expect(loaded).toMatchObject({ env: { a: { url: 'local' } } });
     } finally {
       process.env.NODE_ENV = original;
@@ -140,8 +141,16 @@ describe('loadConfig', () => {
   it('returns a deep-frozen object', async () => {
     write('config.default.yaml', 'project: { id: kb, type: service, port: 1 }\nenv: { a: { url: x } }\n');
 
-    const config = await loadConfig({ configDir: dir, env: 'dev' });
+    const { config } = await loadConfig({ configDir: dir, env: 'dev' });
     expect(Object.isFrozen(config)).toBe(true);
     expect(Object.isFrozen(config.project)).toBe(true);
+  });
+
+  it('returns a warnings array alongside the resolved config', async () => {
+    write('config.default.yaml', 'project: { id: kb, type: service, port: 1 }\nenv: {}\n');
+
+    const result = await loadConfig({ configDir: dir, env: 'dev' });
+    expect(Array.isArray(result.warnings)).toBe(true);
+    expect(result.config).toBeDefined();
   });
 });
