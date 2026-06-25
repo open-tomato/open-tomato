@@ -17,6 +17,7 @@ Claude skills — deep, actionable reference material agents load on demand. Mov
 | `n8n-nodes/` | n8n node patterns and examples |
 | `react-query/` | TanStack Query patterns |
 | `releasing-packages/` | Package release workflow |
+| `shared-package-authoring/` | Scaffolding `@open-tomato/*` shared packages + scaffold-time TS/ESLint gotchas |
 | `styling/` | Styling patterns |
 
 ## Skills vs rules vs AGENTS.md

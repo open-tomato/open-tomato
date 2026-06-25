@@ -99,6 +99,30 @@ choose **major** and explain why in the summary.
 | Expecting `publish:local` to ship an un-bumped package | Same version as registry → nothing ships. |
 | Reaching for `--skip-changeset` | That flag is only for the one-time initial graduation, not a normal release. |
 | Summary like "update logger" | Summaries are CHANGELOG entries — describe the observable change. |
+| `changeset:add` exits "no target packages" | `bun run changeset:add` only auto-detects packages from **uncommitted** git changes. If you committed first, pass `--pkg <name>:<level>` explicitly. |
+| `publish:dry`/`publish:local` aborts before staging | The turbo pipeline runs `build check-types test lint` **first**; a failing test in *any* package (incl. pre-existing debt — see root `AGENTS.md`) aborts before the publish stage. Use the direct-script escape hatch below. |
+
+## Troubleshooting — pipeline aborts on unrelated failures
+
+`bun run publish:dry` and `bun run publish:local` run the full `turbo run build check-types
+test lint` pipeline **before** the publint + tarball step. Pre-existing test failures in
+unrelated packages (e.g. `services/orchestrator` debt) abort the run before publish ever
+executes. To exercise just the stage + publint + pack step for the packages you actually
+bumped, invoke the publish script directly:
+
+```bash
+bun packages/scripts/publish-packages.ts --dry-run   # stage + publint + npm pack --dry-run; prints "All good!"
+bun packages/scripts/publish-packages.ts --yes       # same, then bun publish to the private registry, in dep order
+```
+
+- Both forms stage **every eligible package** (any whose local `version` is not yet on the
+  registry), **not just yours**. Read the `[publish] PUBLISH -> ...` preamble before letting
+  `--yes` proceed — if another in-flight package has an unreleased bump, you'll publish it too.
+- Registry auth lives in `~/.npmrc`
+  (`//npm.heimdall.bifemecanico.com/:_authToken=...`); the committed `packages/.npmrc` only
+  handles scope→registry routing.
+- This bypasses the turbo gates — only reach for it when the *only* thing failing the pipeline
+  is unrelated debt. Run `bun run prepublish:check` for your own package first.
 
 ## See also
 
