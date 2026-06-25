@@ -53,4 +53,19 @@ describe('PLATFORM_REF_PATTERN', () => {
     expect(isPlatformRef(value)).toBe(false);
     expect(extractPlatformRefs(value)).toEqual([]);
   });
+
+  it('does not match `{{config.*}}` or `{{vault.*}}` placeholders', () => {
+    const configValue = 'token={{config.foo}}';
+    const vaultValue = 'secret={{vault.foo}}';
+    const mixed = '{{config.foo}} and {{vault.foo}}';
+
+    expect(isPlatformRef(configValue)).toBe(false);
+    expect(extractPlatformRefs(configValue)).toEqual([]);
+
+    expect(isPlatformRef(vaultValue)).toBe(false);
+    expect(extractPlatformRefs(vaultValue)).toEqual([]);
+
+    expect(isPlatformRef(mixed)).toBe(false);
+    expect(extractPlatformRefs(mixed)).toEqual([]);
+  });
 });
