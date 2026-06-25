@@ -36,3 +36,10 @@ export interface ValidationResult {
   errors: ValidationIssue[];
   warnings: ValidationIssue[];
 }
+
+export interface EmitTarget {
+  kind: string;
+  path: string;
+  content: string | Uint8Array;
+  mode?: number;
+}
