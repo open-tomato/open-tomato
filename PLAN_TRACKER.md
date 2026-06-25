@@ -26,7 +26,7 @@ Files created: `packages/shared/platform-core/package.json`, `tsconfig.json`, `e
 - [x] Add `ValidationResult` interface to `src/types.ts` with fields `valid` (boolean), `errors` (array of `{ path: string; message: string }`), `warnings` (same shape)
 - [x] Add `EmitTarget` interface to `src/types.ts` with fields `kind` (string), `path` (string), `content` (string or Buffer), `mode` (optional octal number)
 - [x] Add `EmitResult` interface to `src/types.ts` with fields `targets` (array of `EmitTarget`), `lockHash` (string SHA-256 hex)
-- [ ] Write `src/types.test.ts` with type-level assertions that `ProvisionAllowance.reasons` is a readonly array and that `EmitTarget.content` is `string | Uint8Array`
+- [x] Write `src/types.test.ts` with type-level assertions that `ProvisionAllowance.reasons` is a readonly array and that `EmitTarget.content` is `string | Uint8Array`
 
 # Stage: PlatformPlugin contract
 
