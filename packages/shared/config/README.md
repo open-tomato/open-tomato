@@ -15,6 +15,8 @@ It deliberately does **not** resolve `{{vault.*}}`, `{{proc.*}}`, or
 `loadConfig()` runs, secrets and process values are already resolved into the
 environment.
 
+> **Not the agent config.** `@open-tomato/config` is the **service** config standard; agent configuration lives in `@open-tomato/agents-config` (`packages/agents/config`). See [`packages/AGENTS.md`](../../AGENTS.md) for the distinction.
+
 ## API
 
 ```ts
