@@ -42,7 +42,7 @@ Files created: `packages/shared/platform-core/package.json`, `tsconfig.json`, `e
 
 - [x] Write `src/noopPlugin.ts` exporting `createNoopPlugin(name: string): PlatformPlugin` that returns a plugin whose methods resolve to empty/safe defaults (`matchCapabilities` returns `{ matches: false, score: 0, missing: [] }`, `emit` returns `{ targets: [], lockHash: '...' }`)
 - [x] Implement deterministic SHA-256 hash computation for the empty `emit` result so tests can assert against a known value
-- [ ] Write `src/noopPlugin.test.ts` verifying every method returns the documented shape and that the plugin satisfies `PlatformPlugin` structurally
+- [x] Write `src/noopPlugin.test.ts` verifying every method returns the documented shape and that the plugin satisfies `PlatformPlugin` structurally
 - [ ] Write `src/index.ts` re-exporting all types from `types.ts`, the `PlatformPlugin` interface from `plugin.ts`, and `createNoopPlugin` from `noopPlugin.ts`
 
 # Stage: Release
