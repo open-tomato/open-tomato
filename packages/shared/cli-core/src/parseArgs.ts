@@ -7,7 +7,11 @@ export function parseArgs(argv: string[]): ParseArgsResult {
   const positional: string[] = [];
   const flags: Record<string, string | boolean> = {};
 
-  for (const arg of argv) {
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === undefined) {
+      continue;
+    }
     if (arg.startsWith('--')) {
       const body = arg.slice(2);
       const eqIndex = body.indexOf('=');
@@ -15,6 +19,13 @@ export function parseArgs(argv: string[]): ParseArgsResult {
         const name = body.slice(0, eqIndex);
         const value = body.slice(eqIndex + 1);
         flags[name] = value;
+        continue;
+      }
+      const next = argv[i + 1];
+      if (next !== undefined && !next.startsWith('-')) {
+        flags[body] = next;
+        i++;
+        continue;
       }
       continue;
     }

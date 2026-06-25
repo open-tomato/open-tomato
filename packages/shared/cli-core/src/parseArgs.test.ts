@@ -42,3 +42,52 @@ describe('parseArgs --flag=value syntax', () => {
     expect(result.flags).toEqual({ filter: 'key=value' });
   });
 });
+
+describe('parseArgs --flag value (space-separated) syntax', () => {
+  it('parses a single space-separated --flag value pair', () => {
+    const result = parseArgs(['--env', 'staging']);
+
+    expect(result.flags).toEqual({ env: 'staging' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('parses multiple space-separated --flag value pairs', () => {
+    const result = parseArgs(['--env', 'staging', '--region', 'us-east-1']);
+
+    expect(result.flags).toEqual({ env: 'staging', region: 'us-east-1' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('preserves positional args alongside space-separated flags', () => {
+    const result = parseArgs(['svc', '--env', 'staging', 'validate']);
+
+    expect(result.flags).toEqual({ env: 'staging' });
+    expect(result.positional).toEqual(['svc', 'validate']);
+  });
+
+  it('keeps an = inside a space-separated value', () => {
+    const result = parseArgs(['--filter', 'key=value']);
+
+    expect(result.flags).toEqual({ filter: 'key=value' });
+  });
+
+  it('treats the value as a string even when it parses as a number', () => {
+    const result = parseArgs(['--port', '8080']);
+
+    expect(result.flags).toEqual({ port: '8080' });
+  });
+
+  it('mixes --flag=value and --flag value forms in one argv', () => {
+    const result = parseArgs(['--env=staging', '--region', 'us-east-1']);
+
+    expect(result.flags).toEqual({ env: 'staging', region: 'us-east-1' });
+    expect(result.positional).toEqual([]);
+  });
+
+  it('does not consume a following flag as a value', () => {
+    const result = parseArgs(['--env', '--region', 'us-east-1']);
+
+    expect(result.flags).toEqual({ region: 'us-east-1' });
+    expect(result.positional).toEqual([]);
+  });
+});
