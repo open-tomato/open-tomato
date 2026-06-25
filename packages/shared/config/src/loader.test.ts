@@ -54,7 +54,8 @@ describe('loadConfig', () => {
       project: { id: 'kb', type: 'service', port: 3001 },
       env: { database_a: { url: 'postgres://h:5432/db' } },
     });
-    expect(warnings).toEqual([]);
+    // The fixture omits project.owner, so the loader emits the soft-required warning.
+    expect(warnings.map((w) => w.path)).toEqual(['project.owner']);
   });
 
   it('overlays config.<env>.yaml values over the default', async () => {
@@ -152,5 +153,28 @@ describe('loadConfig', () => {
     const result = await loadConfig({ configDir: dir, env: 'dev' });
     expect(Array.isArray(result.warnings)).toBe(true);
     expect(result.config).toBeDefined();
+  });
+
+  it('emits exactly one soft-required warning when project.owner is absent', async () => {
+    write('config.default.yaml', 'project: { id: kb, type: service, port: 1 }\nenv: {}\n');
+
+    const { warnings } = await loadConfig({ configDir: dir, env: 'dev' });
+
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toEqual({
+      path: 'project.owner',
+      message: expect.stringMatching(/owner/i) as unknown as string,
+    });
+  });
+
+  it('emits no owner warning when project.owner is present', async () => {
+    write(
+      'config.default.yaml',
+      'project: { id: kb, type: service, port: 1, owner: platform-team }\nenv: {}\n',
+    );
+
+    const { warnings } = await loadConfig({ configDir: dir, env: 'dev' });
+
+    expect(warnings.filter((w) => w.path === 'project.owner')).toEqual([]);
   });
 });
