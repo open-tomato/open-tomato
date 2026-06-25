@@ -9,6 +9,8 @@
  */
 import { z } from 'zod';
 
+import { ProvisionSchema } from './provision.js';
+
 const KEBAB_CASE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export const ProjectTypeSchema = z.enum(['service', 'frontend', 'mcp', 'package']);
@@ -87,6 +89,7 @@ export const BaseConfigSchema = z.object({
   project: ProjectSchema,
   infrastructure: z.record(z.unknown()).optional(),
   env: z.record(z.unknown()).optional(),
+  provision: ProvisionSchema.optional(),
 });
 
 /** A service-level schema extension produced by {@link defineConfig}. */
