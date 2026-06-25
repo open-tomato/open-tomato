@@ -71,7 +71,7 @@ Files created: `packages/shared/cli-core/package.json`, `tsconfig.json`, `eslint
 - [x] Write `src/assembleContext.ts` exporting `assembleContext({ argv, env, forceOutputMode, signal })` returning a frozen `CliContext`
 - [x] Resolve `outputMode` in `assembleContext` with precedence: `forceOutputMode` arg > `--output=json` flag > `TOMATO_OUTPUT=json` env var > default `'text'`
 - [x] Resolve `verbosity` in `assembleContext` from `-v`/`--verbose` flag (repeatable count, clamp to 0..3) and `TOMATO_VERBOSITY` env var
-- [ ] Instantiate the appropriate `CliOutput` based on resolved `outputMode` and `verbosity`
+- [x] Instantiate the appropriate `CliOutput` based on resolved `outputMode` and `verbosity`
 - [ ] Default `signal` to `new AbortController().signal` if not provided
 - [ ] Wire `Object.freeze` on the returned `CliContext` so consumers cannot mutate it
 - [ ] Write `src/assembleContext.test.ts` covering: text mode default, `--output=json` flag wins over env, `forceOutputMode` arg wins over both, verbosity clamping, frozen result
