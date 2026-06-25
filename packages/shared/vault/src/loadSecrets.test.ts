@@ -107,4 +107,27 @@ describe('loadSecrets', () => {
       '{{vault.webhook-secret}}': 'webhook-secret-value',
     });
   });
+
+  it('does not call the client more than necessary when multiple refs share an id', async () => {
+    state.store.set('db-password', 'shared-secret');
+
+    const result = await loadSecrets(
+      [
+        '{{vault.db-password}}',
+        '{{ vault.db-password }}',
+        '{{vault.db-password}}',
+      ],
+      { env: 'staging', region: 'us-east-1' },
+    );
+
+    expect(result).toEqual({
+      '{{vault.db-password}}': 'shared-secret',
+      '{{ vault.db-password }}': 'shared-secret',
+    });
+    expect(state.calls).toEqual([
+      'db-password-staging-us-east-1',
+      'db-password-staging',
+      'db-password',
+    ]);
+  });
 });

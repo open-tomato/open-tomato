@@ -55,8 +55,8 @@ Files created: `packages/shared/vault/package.json`, `tsconfig.json`, `eslint.co
 - [x] Parse `{{vault.<id>}}` syntax from each ref, extracting the bare id
 - [x] For each id, walk `resolveVaultId` fallbacks against the client; record the first non-null hit, throw `VaultRefNotFoundError` if none match
 - [x] Return the resolved map keyed by the original ref string (e.g. `'{{vault.db-password}}'`), value being the secret
-- [ ] Write `src/loadSecrets.test.ts` covering: single ref resolves on first fallback, single ref resolves on third fallback, missing ref throws `VaultRefNotFoundError` with `triedKeys` populated, batch of three refs all resolve
-- [ ] Add a test that `loadSecrets` does not call the client more than necessary (caches resolved keys when multiple refs share an id)
+- [x] Write `src/loadSecrets.test.ts` covering: single ref resolves on first fallback, single ref resolves on third fallback, missing ref throws `VaultRefNotFoundError` with `triedKeys` populated, batch of three refs all resolve
+- [x] Add a test that `loadSecrets` does not call the client more than necessary (caches resolved keys when multiple refs share an id)
 - [ ] Write `src/index.ts` re-exporting `loadSecrets`, `resolveVaultId`, error classes, and the `AuthStrategy` type
 
 # Stage: Release
