@@ -39,8 +39,8 @@ Files modified: `cli/src/cli.ts` (dispatcher rewrite), `cli/package.json` (add `
 
 # Stage: Dispatcher
 
-- [ ] Write `cli/src/dispatch.ts` exporting `dispatch(argv: string[]): Promise<number>` that uses `assembleContext` and the registry to route a command, returning a numeric exit code
-- [ ] Replace the body of `cli/src/cli.ts` `main()` with a call to `dispatch(argv)` followed by `process.exit(code)`
+- [x] Write `cli/src/dispatch.ts` exporting `dispatch(argv: string[]): Promise<number>` that uses `assembleContext` and the registry to route a command, returning a numeric exit code
+- [x] Replace the body of `cli/src/cli.ts` `main()` with a call to `dispatch(argv)` followed by `process.exit(code)`
 - [ ] Preserve the existing `tomato <tool> <command>` positional shape — tool and command are the first two positional args after the binary name
 - [ ] Emit a `start` `CliEvent` before invoking the command and a `result` `CliEvent` after the command resolves or rejects
 - [ ] Map thrown errors to exit code 1 and `result: { ok: false, error: { code, message } }`
