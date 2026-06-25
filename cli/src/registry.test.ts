@@ -143,4 +143,14 @@ describe('CommandRegistry', () => {
     const registry = new CommandRegistry({ commandsDir: null });
     expect(registry.list()).toEqual([]);
   });
+
+  it('does not throw when the commands directory exists but no <tool>/ subdirectories are present', () => {
+    fs.writeFileSync(path.join(tmpRoot, 'README.md'), '# stray top-level file');
+
+    expect(() => new CommandRegistry({ commandsDir: tmpRoot })).not.toThrow();
+
+    const registry = new CommandRegistry({ commandsDir: tmpRoot });
+    expect(registry.list()).toEqual([]);
+    expect(registry.get('linear', 'next')).toBeNull();
+  });
 });
