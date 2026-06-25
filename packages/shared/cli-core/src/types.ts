@@ -27,3 +27,11 @@ export interface FlagSpec {
   default?: string | boolean | number;
   aliases?: readonly string[];
 }
+
+export interface CliCommand {
+  name: string;
+  description: string;
+  args: ArgSpec[];
+  flags: FlagSpec[];
+  run: (context: CliContext) => Promise<void>;
+}
