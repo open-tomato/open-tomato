@@ -50,7 +50,7 @@ Files modified: `cli/src/cli.ts` (dispatcher rewrite), `cli/package.json` (add `
 
 # Stage: describe command
 
-- [ ] Write `cli/src/commands/describe.ts` exporting a `meta: CliCommand` describing the describe command and a `default(ctx: CliContext)` implementation
+- [x] Write `cli/src/commands/describe.ts` exporting a `meta: CliCommand` describing the describe command and a `default(ctx: CliContext)` implementation
 - [ ] Implement the describe command to read the registry, walk every registered command, collect `{ tool, command, description, args, flags }`, and emit a `result` event with the full tree
 - [ ] Include `schemaVersion: 1`, `binary: 'tomato'`, and the version from `cli/package.json` in the result payload
 - [ ] In text mode, render the same tree as a human-readable list grouped by tool
