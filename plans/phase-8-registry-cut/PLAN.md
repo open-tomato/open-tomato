@@ -31,7 +31,7 @@ Files created: `plans/phase-8-registry-cut/RELEASE_NOTES.md` (captures the versi
 
 # Stage: Publish
 
-- [ ] Run `bun run publish:dry` from the repo root and verify the tarball staging plus `publint` validation pass for every package
+- [x] Run `bun run publish:dry` from the repo root and verify the tarball staging plus `publint` validation pass for every package
 - [ ] Run `bun run publish:local` from the repo root to publish to `npm.heimdall.bifemecanico.com`
 - [ ] Capture the exact published version of each package from the publish output
 
