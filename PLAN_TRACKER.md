@@ -31,8 +31,8 @@ Files created: `plans/phase-8-registry-cut/RELEASE_NOTES.md` (captures the versi
 
 # Stage: Publish
 
-- [ ] Run `bun run publish:dry` from the repo root and verify the tarball staging plus `publint` validation pass for every package
-- [ ] Run `bun run publish:local` from the repo root to publish to `npm.heimdall.bifemecanico.com`
+- [x] Run `bun run publish:dry` from the repo root and verify the tarball staging plus `publint` validation pass for every package
+- [x] Run `bun run publish:local` from the repo root to publish to `npm.heimdall.bifemecanico.com` — turbo pipeline aborted on pre-existing `@open-tomato/ui-skeleton` TS debt, so used the documented escape hatch (`bun packages/scripts/publish-packages.ts --yes`) per `skills/releasing-packages/SKILL.md`; published cli-core@0.2.0, config@0.2.0, platform-core@0.2.0, vault@0.2.0
 - [ ] Capture the exact published version of each package from the publish output
 
 # Stage: Post-publish verification
