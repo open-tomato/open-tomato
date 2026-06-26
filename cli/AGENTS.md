@@ -98,6 +98,61 @@ linking policy, and refactor deletion rules.
 7. **Verify before commit.** `bun install && bun lint && bun run test &&
    bun run check-types` must stay green.
 
+## External command discovery
+
+Beyond the commands shipped under `src/commands/` (rule 1), the
+dispatcher loads command modules contributed by the surrounding
+consumer repository at runtime. Discovery hinges on two conventions: a
+`.open-tomato-root` marker file and an `ot.commands` entry in the
+sibling `package.json`. The wiring lives in `src/discovery/` and is
+triggered from `src/dispatch.ts` before the first command resolution.
+
+**The marker.** On startup the dispatcher walks parent directories
+upward from `process.cwd()` looking for a file literally named
+`.open-tomato-root` (`src/discovery/findRoot.ts`). The walk stops at
+the filesystem root. When the marker is found, the function returns
+its *containing directory* — not the marker path itself — and that
+directory is treated as the consumer root for resolving sibling files
+(notably `package.json`). The marker file's contents are not read; only
+its presence and location matter, so it can be empty.
+
+**The manifest.** External commands are declared under `ot.commands`
+in the consumer repo's `<rootDir>/package.json`:
+
+```json
+{
+  "name": "grow-box-tools",
+  "ot": {
+    "commands": [
+      { "tool": "svc", "command": "validate", "module": "./tools/commands/svc/validate.ts" },
+      { "tool": "svc", "command": "generate", "module": "./tools/commands/svc/generate.ts" }
+    ]
+  }
+}
+```
+
+Each entry needs three non-empty string fields:
+
+- `tool` and `command` form the lookup key matching the user-facing
+  `tomato <tool> <command>` invocation.
+- `module` is a path that `loadManifest`
+  (`src/discovery/loadManifest.ts`) resolves to an absolute path
+  *relative to the marker directory*, then `loadExternalCommands`
+  (`src/discovery/loadExternalCommands.ts`) dynamically imports via
+  `import(pathToFileURL(absolute).href)`.
+
+The loaded module must export a callable `default` — and optionally
+`meta` — matching the same two shapes documented in rule 1. External
+commands route through the same `default(ctx)` call path as internal
+ones and surface in `tomato describe` output alongside them.
+
+**Lifecycle.** Discovery is run once per process, before the registry
+resolves the first command. `loadExternalCommands` caches its result by
+`rootDir` so repeat dispatches inside the same process reuse the
+loaded modules instead of re-importing — there is no hot reload, and a
+running process will not pick up a freshly-edited consumer module
+without a restart.
+
 ## Known caveats
 
 - **Legacy command tests are excluded from vitest** pending ad-hoc
