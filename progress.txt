@@ -26,3 +26,11 @@ appending here. Reserve this file for transient iteration notes only.
   them. `assembleContext`'s returned context is frozen, so the spread-then-
   `Object.freeze` pattern is the canonical way to override `args` without
   fighting strict-mode TypeErrors → `cli/src/dispatch.ts`.
+- **Unused-param gotcha for placeholder/stub command runs** — the repo's
+  `@typescript-eslint/no-unused-vars` rule has no `argsIgnorePattern`, AND
+  `tsc` runs with a flag that emits TS6133 on unused params, so a `_`-prefixed
+  arg fails both linter and typecheck. For stub `run`/`default` implementations
+  that still need to advertise `(ctx: CliContext)` in the signature, a single
+  `void ctx;` in the body satisfies both. See `cli/src/commands/describe.ts`
+  for the canonical shape (also documented in `packages/shared/eslint-config/
+  AGENTS.md`).
