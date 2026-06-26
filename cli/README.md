@@ -150,6 +150,116 @@ directory.
    under `src/commands/<tool>/tests/` (command-level, not yet wired into
    the default vitest include — see `vitest.config.ts`).
 
+## Adding commands from a consumer repo
+
+The dispatcher also discovers command modules contributed by the
+surrounding consumer repository at runtime, so a workspace can ship its
+own `tomato <tool> <command>` entries without forking `cli/`. Discovery
+runs once at startup and hinges on two conventions: a
+`.open-tomato-root` marker file and an `ot.commands` entry in the
+sibling `package.json`. See [AGENTS.md](./AGENTS.md#external-command-discovery)
+for the failure-mode details; the worked example below shows the
+minimum layout that surfaces external commands in `tomato describe`.
+
+### Worked example
+
+Suppose a consumer repo named `grow-box-tools` wants to expose
+`tomato svc validate` from a module under `tools/commands/svc/`. The
+layout looks like:
+
+```text
+grow-box-tools/
+├── .open-tomato-root          # empty file; only its presence matters
+├── package.json               # declares the `ot.commands` manifest
+└── tools/
+    └── commands/
+        └── svc/
+            └── validate.ts    # the command module the manifest points to
+```
+
+`.open-tomato-root` can be empty — its contents are never read. Drop
+it at whichever directory should anchor discovery (typically the repo
+root). `findOpenTomatoRoot` walks parents of `process.cwd()` until it
+finds the marker, then treats the *containing directory* as the
+consumer root.
+
+`package.json` extends the standard manifest with an `ot.commands`
+array. Each entry needs three non-empty string fields: `tool` and
+`command` form the lookup key matching the user-facing invocation, and
+`module` resolves to an absolute path relative to the marker
+directory.
+
+```json
+{
+  "name": "grow-box-tools",
+  "version": "0.1.0",
+  "ot": {
+    "commands": [
+      {
+        "tool": "svc",
+        "command": "validate",
+        "module": "./tools/commands/svc/validate.ts"
+      }
+    ]
+  }
+}
+```
+
+`tools/commands/svc/validate.ts` follows the same shape as an internal
+command — export `meta` alongside a `default(ctx: CliContext)`
+function:
+
+```ts
+import type { CliCommand, CliContext } from '@open-tomato/cli-core';
+
+const run = async (ctx: CliContext): Promise<void> => {
+  ctx.output.emit({
+    type: 'result',
+    ok: true,
+    data: { validated: ctx.args[0] ?? null },
+    ts: new Date().toISOString(),
+  });
+};
+
+export const meta: CliCommand = {
+  name: 'validate',
+  description: 'Validate a service definition.',
+  args: [{ name: 'target', description: 'Path to validate', type: 'string' }],
+  flags: [],
+  run,
+};
+
+export default run;
+```
+
+With those three files in place, running `tomato svc validate ./svc.yaml`
+from anywhere inside `grow-box-tools/` dispatches into the external
+module. The same command surfaces in `tomato describe` output alongside
+the internal commands, keyed by `tool: 'svc'` / `command: 'validate'`.
+
+Legacy modules that export only `default(args, { repoRoot })` work too:
+the dispatcher detects the missing `meta` and routes through
+`runLegacyCommand` exactly as it does for internal commands.
+
+Three discovery failure modes degrade gracefully — internal commands
+under `src/commands/` keep working even when the consumer side is
+broken:
+
+- **No marker found.** Discovery short-circuits silently; the registry
+  is built with no external commands.
+- **Malformed `ot.commands` manifest.** `loadManifest` emits a single
+  `console.warn` naming the offending `package.json` and returns
+  `null`; per-entry validation issues (missing `tool` / `command` /
+  `module` fields) drop the offending entry with its own warning
+  while keeping the remaining valid entries.
+- **Individual module load failure.** A module that throws on
+  `import()` — or that lacks a callable `default` export — is logged
+  via `console.warn` and skipped; other modules continue to load.
+
+Discovery results are cached per `rootDir` for the lifetime of the
+process, so there is no hot reload — restart `tomato` after editing
+the manifest or a consumer module.
+
 ## Scripts
 
 | Command | Purpose |
