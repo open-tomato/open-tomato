@@ -150,6 +150,86 @@ describe('describe run', () => {
   });
 });
 
+describe('describe JSON output shape contract', () => {
+  it('emits a payload whose top-level keys match the documented shape', async () => {
+    const { ctx, events } = makeStubCtx('json');
+
+    await describeCommand.default(ctx);
+
+    const result = events.find((e): e is CliEventResult => e.type === 'result');
+    expect(result).toBeDefined();
+    expect(result?.ok).toBe(true);
+
+    const payload = result?.data as describeCommand.DescribePayload;
+    expect(payload).toBeDefined();
+    expect(Object.keys(payload).sort()).toEqual(
+      ['binary', 'commands', 'schemaVersion', 'version'].sort(),
+    );
+  });
+
+  it('sets schemaVersion to the literal 1', async () => {
+    const { ctx, events } = makeStubCtx('json');
+
+    await describeCommand.default(ctx);
+
+    const result = events.find((e): e is CliEventResult => e.type === 'result');
+    const payload = result?.data as describeCommand.DescribePayload;
+
+    expect(payload.schemaVersion).toBe(1);
+    expect(typeof payload.schemaVersion).toBe('number');
+  });
+
+  it('sets binary to "tomato" and version to a non-empty string', async () => {
+    const { ctx, events } = makeStubCtx('json');
+
+    await describeCommand.default(ctx);
+
+    const result = events.find((e): e is CliEventResult => e.type === 'result');
+    const payload = result?.data as describeCommand.DescribePayload;
+
+    expect(payload.binary).toBe('tomato');
+    expect(typeof payload.version).toBe('string');
+    expect(payload.version.length).toBeGreaterThan(0);
+  });
+
+  it('emits each commands[] entry with exactly tool, command, description, args, flags keys', async () => {
+    const { ctx, events } = makeStubCtx('json');
+
+    await describeCommand.default(ctx);
+
+    const result = events.find((e): e is CliEventResult => e.type === 'result');
+    const payload = result?.data as describeCommand.DescribePayload;
+
+    expect(payload.commands.length).toBeGreaterThan(0);
+    for (const entry of payload.commands) {
+      expect(Object.keys(entry).sort()).toEqual(
+        ['args', 'command', 'description', 'flags', 'tool'].sort(),
+      );
+    }
+  });
+
+  it('serializes cleanly to JSON and round-trips with schemaVersion === 1', async () => {
+    const { ctx, events } = makeStubCtx('json');
+
+    await describeCommand.default(ctx);
+
+    const result = events.find((e): e is CliEventResult => e.type === 'result');
+    const payload = result?.data as describeCommand.DescribePayload;
+
+    const roundTripped = JSON.parse(JSON.stringify(payload)) as {
+      schemaVersion: number;
+      binary: string;
+      version: string;
+      commands: DescribeEntryShape[];
+    };
+
+    expect(roundTripped.schemaVersion).toBe(1);
+    expect(roundTripped.binary).toBe('tomato');
+    expect(typeof roundTripped.version).toBe('string');
+    expect(Array.isArray(roundTripped.commands)).toBe(true);
+  });
+});
+
 describe('renderTextTree', () => {
   it('groups commands by tool with a header line per tool', () => {
     const payload: describeCommand.DescribePayload = {
