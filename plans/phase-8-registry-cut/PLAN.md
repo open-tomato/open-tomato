@@ -27,7 +27,7 @@ Files created: `plans/phase-8-registry-cut/RELEASE_NOTES.md` (captures the versi
 - [ ] Run `bunx changeset` and add a changeset selecting `@open-tomato/config` with `minor` bump (schema v2 additive features, no breaking change)
 - [x] Add a body to each changeset describing the Phase 8 grouping ("Part of Phase 8 registry cut — see plans/phase-8/")
 - [ ] Run `bunx changeset version` to apply pending changesets, updating package.json versions and CHANGELOG.md files
-- [ ] Commit the version bumps with a single commit titled `chore: phase-8 registry cut version bumps`
+- [x] Commit the version bumps with a single commit titled `chore: phase-8 registry cut version bumps`
 
 # Stage: Publish
 
