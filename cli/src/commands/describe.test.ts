@@ -5,7 +5,7 @@ import type {
   CliEventResult,
 } from '@open-tomato/cli-core';
 
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { CommandRegistry } from '../registry.js';
 
@@ -19,12 +19,14 @@ interface DescribeEntryShape {
   flags: readonly unknown[];
 }
 
-function makeStubCtx(): { ctx: CliContext; events: CliEvent[] } {
+function makeStubCtx(
+  outputMode: 'text' | 'json' = 'json',
+): { ctx: CliContext; events: CliEvent[] } {
   const events: CliEvent[] = [];
   const ctx: CliContext = {
     args: [],
     flags: {},
-    outputMode: 'json',
+    outputMode,
     verbosity: 0,
     output: {
       info: (): void => {},
@@ -145,5 +147,108 @@ describe('describe run', () => {
       expect(Array.isArray(entry.args)).toBe(true);
       expect(Array.isArray(entry.flags)).toBe(true);
     }
+  });
+});
+
+describe('renderTextTree', () => {
+  it('groups commands by tool with a header line per tool', () => {
+    const payload: describeCommand.DescribePayload = {
+      schemaVersion: 1,
+      binary: 'tomato',
+      version: '0.2.0',
+      commands: [
+        { tool: 'linear', command: 'next', description: 'Show the next task', args: [], flags: [] },
+        { tool: 'linear', command: 'login', description: 'Authenticate', args: [], flags: [] },
+        { tool: 'event', command: 'send', description: 'Send an event', args: [], flags: [] },
+      ],
+    };
+
+    const text = describeCommand.renderTextTree(payload);
+
+    expect(text).toContain('linear:');
+    expect(text).toContain('event:');
+    expect(text).toContain('next');
+    expect(text).toContain('login');
+    expect(text).toContain('send');
+  });
+
+  it('sorts tools alphabetically and commands alphabetically within each tool', () => {
+    const payload: describeCommand.DescribePayload = {
+      schemaVersion: 1,
+      binary: 'tomato',
+      version: '0.2.0',
+      commands: [
+        { tool: 'linear', command: 'next', description: '', args: [], flags: [] },
+        { tool: 'event', command: 'send', description: '', args: [], flags: [] },
+        { tool: 'linear', command: 'login', description: '', args: [], flags: [] },
+      ],
+    };
+
+    const text = describeCommand.renderTextTree(payload);
+
+    const eventIdx = text.indexOf('event:');
+    const linearIdx = text.indexOf('linear:');
+    expect(eventIdx).toBeGreaterThanOrEqual(0);
+    expect(linearIdx).toBeGreaterThan(eventIdx);
+
+    const loginIdx = text.indexOf('login');
+    const nextIdx = text.indexOf('next');
+    expect(loginIdx).toBeGreaterThan(linearIdx);
+    expect(nextIdx).toBeGreaterThan(loginIdx);
+  });
+
+  it('includes binary and version in a header line', () => {
+    const payload: describeCommand.DescribePayload = {
+      schemaVersion: 1,
+      binary: 'tomato',
+      version: '9.9.9',
+      commands: [
+        { tool: 'linear', command: 'next', description: '', args: [], flags: [] },
+      ],
+    };
+
+    const text = describeCommand.renderTextTree(payload);
+    expect(text).toContain('tomato');
+    expect(text).toContain('9.9.9');
+  });
+
+  it('includes the description when present and omits the colon when absent', () => {
+    const payload: describeCommand.DescribePayload = {
+      schemaVersion: 1,
+      binary: 'tomato',
+      version: '0.2.0',
+      commands: [
+        { tool: 'linear', command: 'next', description: 'Show the next task', args: [], flags: [] },
+        { tool: 'linear', command: 'login', description: '', args: [], flags: [] },
+      ],
+    };
+
+    const text = describeCommand.renderTextTree(payload);
+    expect(text).toContain('next: Show the next task');
+    expect(text).not.toContain('login: ');
+    expect(text).toContain('login');
+  });
+});
+
+describe('describe run in text mode', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('writes a human-readable grouped tree to stdout instead of emitting a result event', async () => {
+    const writeSpy = vi
+      .spyOn(process.stdout, 'write')
+      .mockImplementation(() => true);
+    const { ctx, events } = makeStubCtx('text');
+
+    await describeCommand.default(ctx);
+
+    const result = events.find((e): e is CliEventResult => e.type === 'result');
+    expect(result).toBeUndefined();
+
+    const written = writeSpy.mock.calls.map((call) => String(call[0])).join('');
+    expect(written.length).toBeGreaterThan(0);
+    expect(written).toMatch(/:/);
+    expect(written).not.toMatch(/^\{"schemaVersion"/);
   });
 });

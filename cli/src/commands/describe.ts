@@ -8,6 +8,7 @@ import type {
 
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 import { CommandRegistry } from '../registry.js';
@@ -61,6 +62,34 @@ export function collectDescribeEntries(
   }));
 }
 
+export function renderTextTree(payload: DescribePayload): string {
+  const byTool = new Map<string, DescribeCommandEntry[]>();
+  for (const entry of payload.commands) {
+    const bucket = byTool.get(entry.tool) ?? [];
+    bucket.push(entry);
+    byTool.set(entry.tool, bucket);
+  }
+
+  const lines: string[] = [`${payload.binary} ${payload.version}`, ''];
+
+  const tools = [...byTool.keys()].sort((a, b) => a.localeCompare(b));
+  for (const tool of tools) {
+    const commands = (byTool.get(tool) ?? [])
+      .slice()
+      .sort((a, b) => a.command.localeCompare(b.command));
+    lines.push(`${tool}:`);
+    for (const entry of commands) {
+      const suffix = entry.description.length > 0
+        ? `: ${entry.description}`
+        : '';
+      lines.push(`  ${entry.command}${suffix}`);
+    }
+    lines.push('');
+  }
+
+  return lines.join('\n');
+}
+
 const run = async (ctx: CliContext): Promise<void> => {
   const registry = new CommandRegistry();
   await registry.autoload();
@@ -71,6 +100,11 @@ const run = async (ctx: CliContext): Promise<void> => {
     version: CLI_VERSION,
     commands: collectDescribeEntries(registry),
   };
+
+  if (ctx.outputMode === 'text') {
+    process.stdout.write(`${renderTextTree(payload)}\n`);
+    return;
+  }
 
   const event: CliEventResult = {
     type: 'result',

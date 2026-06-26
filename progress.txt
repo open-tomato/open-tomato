@@ -34,3 +34,11 @@ appending here. Reserve this file for transient iteration notes only.
   `void ctx;` in the body satisfies both. See `cli/src/commands/describe.ts`
   for the canonical shape (also documented in `packages/shared/eslint-config/
   AGENTS.md`).
+- **`CliOutput` has no plain-text print primitive.** `info()` is gated by
+  `verbosity >= 1`; `warn/error/result/emit` all prefix the line in text mode
+  (`warn: ...`, `result: ...`, etc.). Commands whose primary text-mode output
+  is human-readable (e.g. `describe`) must branch on `ctx.outputMode === 'text'`
+  and write to `process.stdout.write` directly. Unit tests spy via
+  `vi.spyOn(process.stdout, 'write').mockImplementation(() => true)` and read
+  back from the spy's call list. See `cli/src/commands/describe.ts` and its
+  `describe run in text mode` test for the canonical shape.
