@@ -13,7 +13,7 @@ Files created: `plans/phase-8-registry-cut/RELEASE_NOTES.md` (captures the versi
 # Stage: Pre-publish verification
 
 - [ ] Verify `bun install` at the repo root completes without errors and the workspace lockfile is up to date
-- [ ] Verify the registry `npm.heimdall.bifemecanico.com` is reachable: run `curl -fsS https://npm.heimdall.bifemecanico.com/-/ping` and confirm a 2xx response
+- [x] Verify the registry `npm.heimdall.bifemecanico.com` is reachable: run `curl -fsS https://npm.heimdall.bifemecanico.com/-/ping` and confirm a 2xx response
 - [ ] Verify registry write credentials are present: run `npm whoami --registry https://npm.heimdall.bifemecanico.com/` and confirm a non-error response
 - [ ] Verify `bun run preflight --skip-changeset` from the repo root exits 0
 - [ ] Verify all four new packages and `@open-tomato/config` have their respective initiatives' code merged into the working tree (check `git log --oneline` for the cli-core, platform-core, vault, platform-heroku, config-schema-v2 implementations)
