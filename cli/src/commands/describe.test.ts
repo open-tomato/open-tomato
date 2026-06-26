@@ -123,6 +123,47 @@ describe('collectDescribeEntries', () => {
 
     expect(keys).toEqual(['event send', 'linear login', 'linear next']);
   });
+
+  it('surfaces a newly added command file with meta in the describe output', () => {
+    const registry = new CommandRegistry({ commandsDir: null });
+    registry.register('linear', 'next', {
+      default: async (): Promise<void> => {},
+      meta: {
+        name: 'next',
+        description: 'Show the next Linear task',
+        args: [],
+        flags: [],
+        run: async (): Promise<void> => {},
+      },
+    });
+
+    const baseline = describeCommand.collectDescribeEntries(registry);
+    expect(baseline.find((e) => e.command === 'brand-new')).toBeUndefined();
+
+    // Simulate the dispatcher autoloading a freshly added command file —
+    // autoload() registers discovered modules via the same `register()`
+    // path used here.
+    registry.register('linear', 'brand-new', {
+      default: async (): Promise<void> => {},
+      meta: {
+        name: 'brand-new',
+        description: 'A freshly added command',
+        args: [{ name: 'target', description: 'who to greet', type: 'string' }],
+        flags: [{ name: 'force', description: 'force the action', type: 'boolean' }],
+        run: async (): Promise<void> => {},
+      },
+    });
+
+    const updated = describeCommand.collectDescribeEntries(registry);
+    const added = updated.find((e) => e.command === 'brand-new');
+    expect(added).toEqual({
+      tool: 'linear',
+      command: 'brand-new',
+      description: 'A freshly added command',
+      args: [{ name: 'target', description: 'who to greet', type: 'string' }],
+      flags: [{ name: 'force', description: 'force the action', type: 'boolean' }],
+    });
+  });
 });
 
 describe('describe run', () => {
