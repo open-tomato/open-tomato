@@ -46,11 +46,11 @@ Files added to `cli/`: `cli/src/discovery/findRoot.ts`, `cli/src/discovery/loadM
 - [x] Validate each loaded module has either a `default` export (legacy shape) or `meta` + `default` (new shape); skip with warning if neither
 - [x] Cache results by `rootDir` so repeat calls in the same process do not re-load
 - [x] Write `cli/src/discovery/loadExternalCommands.test.ts` covering: all modules load, one module throws on import (others still load), one module has no valid exports (others still load), cache returns the same array reference on second call
-- [ ] Add an integration test using a temp directory with a real `.open-tomato-root` and a synthetic `package.json` + module files
+- [x] Add an integration test using a temp directory with a real `.open-tomato-root` and a synthetic `package.json` + module files
 
 # Stage: Registry and dispatch integration
 
-- [ ] Update `cli/src/discovery/index.ts` to re-export `findOpenTomatoRoot`, `loadManifest`, `loadExternalCommands`
+- [x] Update `cli/src/discovery/index.ts` to re-export `findOpenTomatoRoot`, `loadManifest`, `loadExternalCommands`
 - [ ] Update `cli/src/registry.ts` to accept an optional `externalCommands` array in the constructor and merge them into the lookup table after internal commands
 - [ ] When an external command shares a `tool/command` key with an internal one, prefer the internal (and emit a `console.warn` about the conflict)
 - [ ] Update `cli/src/dispatch.ts` to call `findOpenTomatoRoot(process.cwd())` → `loadManifest` → `loadExternalCommands` once at startup, passing results to the registry
