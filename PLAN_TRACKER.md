@@ -25,7 +25,7 @@ Files created: `plans/phase-8-registry-cut/RELEASE_NOTES.md` (captures the versi
 - [x] Run `bunx changeset` and add a single changeset selecting `@open-tomato/vault` with `minor` bump (initial 0.1.0 release) — already pending at `.changeset/vault-71e01705.md`
 - [x] Run `bunx changeset` and add a single changeset selecting `@open-tomato/platform-heroku` with `minor` bump (initial 0.1.0 release; if platform-heroku has not yet landed, skip this task and include it in a follow-up cut)
 - [x] Run `bunx changeset` and add a changeset selecting `@open-tomato/config` with `minor` bump (schema v2 additive features, no breaking change) — already pending at `.changeset/config-f0e6455d.md` (covers platform refs pass-through, infrastructure pot, provision coercion, soft-required project.owner)
-- [ ] Add a body to each changeset describing the Phase 8 grouping ("Part of Phase 8 registry cut — see plans/phase-8/")
+- [x] Add a body to each changeset describing the Phase 8 grouping ("Part of Phase 8 registry cut — see plans/phase-8/") — appended grouping line to cli-core-5ad1bb85.md, platform-core-da7c4939.md, vault-71e01705.md, config-f0e6455d.md
 - [ ] Run `bunx changeset version` to apply pending changesets, updating package.json versions and CHANGELOG.md files
 - [ ] Commit the version bumps with a single commit titled `chore: phase-8 registry cut version bumps`
 
