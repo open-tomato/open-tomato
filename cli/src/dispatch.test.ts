@@ -12,6 +12,17 @@ vi.mock('./root.js', () => ({
   resolveRepoRoot: vi.fn(() => '/repo'),
 }));
 
+vi.mock('./discovery/index.js', () => ({
+  findOpenTomatoRoot: vi.fn(() => null),
+  loadManifest: vi.fn(() => null),
+  loadExternalCommands: vi.fn(async () => []),
+}));
+
+import {
+  findOpenTomatoRoot,
+  loadExternalCommands,
+  loadManifest,
+} from './discovery/index.js';
 import { dispatch } from './dispatch.js';
 import { CommandRegistry, type CommandModule } from './registry.js';
 
@@ -190,6 +201,55 @@ describe('dispatch', () => {
     expect(types).toContain('start');
     expect(types).toContain('result');
 
+    const result = events.find((e): e is CliEventResult => e.type === 'result');
+    expect(result?.ok).toBe(true);
+  });
+
+  it('dispatches an external command discovered at startup when no registry is supplied', async () => {
+    vi.mocked(findOpenTomatoRoot).mockReturnValue('/fake/root');
+    vi.mocked(loadManifest).mockReturnValue({
+      commands: [
+        {
+          tool: 'svc',
+          command: 'validate',
+          module: '/fake/root/tools/commands/svc/validate.mjs',
+        },
+      ],
+    });
+
+    const externalDefault = vi.fn().mockResolvedValue(undefined);
+    vi.mocked(loadExternalCommands).mockResolvedValue([
+      {
+        tool: 'svc',
+        command: 'validate',
+        module: {
+          default: externalDefault,
+          meta: makeMeta('validate'),
+        },
+      },
+    ]);
+
+    const { stream, chunks } = makeRecorder();
+    const code = await dispatch(['svc', 'validate', 'extra', '--output=json'], {
+      env: {},
+      stream,
+    });
+
+    expect(findOpenTomatoRoot).toHaveBeenCalledTimes(1);
+    expect(loadManifest).toHaveBeenCalledWith('/fake/root');
+    expect(loadExternalCommands).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(loadExternalCommands).mock.calls[0]?.[1]).toBe('/fake/root');
+
+    expect(code).toBe(0);
+    expect(externalDefault).toHaveBeenCalledTimes(1);
+
+    const ctx = externalDefault.mock.calls[0]?.[0] as CliContext;
+    expect(ctx).toBeDefined();
+    expect(ctx.args).toEqual(['extra']);
+
+    const events = parseNdjson(chunks);
+    const start = events.find((e) => e.type === 'start');
+    expect(start).toMatchObject({ type: 'start', command: 'svc validate' });
     const result = events.find((e): e is CliEventResult => e.type === 'result');
     expect(result?.ok).toBe(true);
   });
