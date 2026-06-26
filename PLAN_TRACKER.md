@@ -60,6 +60,6 @@ Files added to `cli/`: `cli/src/discovery/findRoot.ts`, `cli/src/discovery/loadM
 
 # Stage: Documentation
 
-- [ ] Update `cli/AGENTS.md` to document the `.open-tomato-root` marker convention and the `ot.commands` manifest shape
-- [ ] Document the three failure modes and their fallback behavior in `cli/AGENTS.md`
+- [x] Update `cli/AGENTS.md` to document the `.open-tomato-root` marker convention and the `ot.commands` manifest shape
+- [x] Document the three failure modes and their fallback behavior in `cli/AGENTS.md`
 - [ ] Add a worked example to `cli/README.md` showing a consumer repo with a marker file and a manifest entry

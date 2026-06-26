@@ -153,6 +153,49 @@ loaded modules instead of re-importing — there is no hot reload, and a
 running process will not pick up a freshly-edited consumer module
 without a restart.
 
+**Failure modes.** Discovery is best-effort: a broken consumer manifest
+must never block the internal commands shipped under `src/commands/`.
+The three failure modes are handled as follows:
+
+1. **No marker found.** `findOpenTomatoRoot` walks up to the filesystem
+   root without locating `.open-tomato-root` and returns `null`.
+   `dispatch.ts` short-circuits the discovery branch (no manifest read,
+   no imports) and constructs the registry with an empty
+   `externalCommands` list. No warning is emitted — the absence of a
+   marker is treated as the normal case for consumers that ship the
+   CLI without external contributions. Internal commands continue to
+   resolve and run normally.
+
+2. **Malformed `ot.commands` manifest.** `loadManifest` returns `null`
+   and emits a single `console.warn` naming the offending
+   `package.json` when any of these hold: the file is unreadable;
+   `JSON.parse` throws; `ot` is present but not an object; `ot.commands`
+   is present but not an array. Within an otherwise-valid array,
+   individual entries missing one of the required `tool` / `command` /
+   `module` non-empty string fields are dropped with their own
+   per-entry warning, and the remaining valid entries are kept. The
+   dispatcher then proceeds with whatever the loader produced —
+   internal commands keep working in every case, and partial external
+   manifests still contribute their valid entries.
+
+3. **Individual module load failure.** `loadExternalCommands` wraps
+   each `import()` in a try/catch and, on a thrown import (missing
+   file, syntax error, transitive failure), logs a `console.warn`
+   naming the failing absolute module path and the error message, then
+   `continue`s to the next entry. A module that imports successfully
+   but exposes no callable `default` export is treated the same way:
+   skipped with a warning, other modules still load. The cached
+   `Promise<readonly ExternalCommand[]>` therefore reflects the set of
+   commands that loaded *successfully*, not the set that was declared
+   — partial failures shrink the external surface but never abort the
+   dispatch.
+
+In all three cases the dispatcher reaches the same call site
+(`new CommandRegistry({ externalCommands })`) with whatever external
+commands survived, then proceeds to `registry.autoload()` for the
+internal commands. Failures upstream never prevent the registry from
+serving internal commands.
+
 ## Known caveats
 
 - **Legacy command tests are excluded from vitest** pending ad-hoc
