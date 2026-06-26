@@ -58,6 +58,19 @@ appending here. Reserve this file for transient iteration notes only.
   branch). When a task spans both `cli/` and a publishable
   `@open-tomato/*` package, explicitly pass `--pkg @open-tomato/<name>:patch`
   so the script writes a changeset for the publishable side only.
+- **`CommandRegistry` uses a literal NULL byte (`\x00`) as the compound-key
+  separator** inside template literals like `` `${tool}\x00${command}` `` to
+  build the `seen` Set inside `list()`. The bytes render as a space in most
+  editors/diff tools, so a fallback loop that uses ` ` (space) instead of
+  `\x00` looks identical but no longer deduplicates against existing entries
+  — the `seen.has(key)` check silently misses. `git diff` reports the file
+  as binary because of the NULLs, so the diff appears as "Binary files
+  differ" rather than a textual diff. Tools (Edit's exact-string match
+  included) cannot match a regular space against the NULL. When extending
+  `list()` or any code reading these keys, mirror the existing
+  `${a}\x00${b}` shape — write the file via a script that emits the real
+  NULL byte (e.g. Python `replace`) rather than relying on Edit's
+  whitespace-as-space round-trip.
 - **Vitest cannot resolve runtime `import()` of OS-tmpdir paths.** Vitest's
   Node SSR runtime puts user code in a vm context whose dynamic-import
   linker only knows Vite's module graph. `await import(absolutePath)` and
