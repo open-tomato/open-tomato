@@ -26,7 +26,7 @@ Files added to `cli/`: `cli/src/discovery/findRoot.ts`, `cli/src/discovery/loadM
 
 - [x] Write `cli/src/discovery/findRoot.ts` exporting `findOpenTomatoRoot(startDir: string): string | null` that walks parent directories looking for `.open-tomato-root`
 - [x] Stop the walk at the filesystem root (return null) rather than crossing the boundary
-- [ ] Return the directory containing the marker (not the marker path itself)
+- [x] Return the directory containing the marker (not the marker path itself)
 - [ ] Write `cli/src/discovery/findRoot.test.ts` covering: marker in the start dir, marker three levels up, no marker found (returns null), symlinked directories handled correctly
 - [ ] Add a test asserting `findOpenTomatoRoot('/')` returns null without throwing
 
