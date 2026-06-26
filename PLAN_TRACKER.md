@@ -55,8 +55,8 @@ Files added to `cli/`: `cli/src/discovery/findRoot.ts`, `cli/src/discovery/loadM
 - [x] When an external command shares a `tool/command` key with an internal one, prefer the internal (and emit a `console.warn` about the conflict)
 - [x] Update `cli/src/dispatch.ts` to call `findOpenTomatoRoot(process.cwd())` → `loadManifest` → `loadExternalCommands` once at startup, passing results to the registry
 - [x] When discovery finds no root, the dispatcher proceeds normally with internal commands only
-- [ ] Write a test in `cli/src/dispatch.test.ts` asserting that external commands are dispatched correctly when discovery succeeds
-- [ ] Write a test asserting that startup with no `.open-tomato-root` still runs internal commands without errors
+- [x] Write a test in `cli/src/dispatch.test.ts` asserting that external commands are dispatched correctly when discovery succeeds
+- [x] Write a test asserting that startup with no `.open-tomato-root` still runs internal commands without errors
 
 # Stage: Documentation
 

@@ -253,4 +253,39 @@ describe('dispatch', () => {
     const result = events.find((e): e is CliEventResult => e.type === 'result');
     expect(result?.ok).toBe(true);
   });
+
+  it('runs internal commands without errors when no .open-tomato-root is found at startup', async () => {
+    vi.mocked(findOpenTomatoRoot).mockReset()
+      .mockReturnValue(null);
+    vi.mocked(loadManifest).mockReset()
+      .mockReturnValue(null);
+    vi.mocked(loadExternalCommands).mockReset()
+      .mockResolvedValue([]);
+
+    const { stream, chunks } = makeRecorder();
+
+    const code = await dispatch(
+      ['no-such-tool', 'no-such-command', '--output=json'],
+      {
+        env: {},
+        stream,
+      },
+    );
+
+    expect(findOpenTomatoRoot).toHaveBeenCalledTimes(1);
+    // findOpenTomatoRoot returned null, so manifest/external loaders never ran.
+    expect(loadManifest).not.toHaveBeenCalled();
+    expect(loadExternalCommands).not.toHaveBeenCalled();
+
+    // Dispatcher built an internal-only registry and reached the lookup path
+    // without throwing. The unknown route resolves to a clean command_not_found
+    // result, proving the no-marker fallback keeps internal dispatch operational.
+    expect(code).toBe(1);
+    const events = parseNdjson(chunks);
+    const result = events.find((e): e is CliEventResult => e.type === 'result');
+    expect(result).toBeDefined();
+    expect(result?.ok).toBe(false);
+    expect(result?.error?.code).toBe('command_not_found');
+    expect(result?.error?.message).toContain('no-such-tool no-such-command');
+  });
 });
