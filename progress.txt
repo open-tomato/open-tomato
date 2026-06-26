@@ -42,3 +42,11 @@ appending here. Reserve this file for transient iteration notes only.
   `vi.spyOn(process.stdout, 'write').mockImplementation(() => true)` and read
   back from the spy's call list. See `cli/src/commands/describe.ts` and its
   `describe run in text mode` test for the canonical shape.
+- **`bun run changeset:add` is a no-op for cli-only changes.** The `cli/`
+  package is `private: true`, so `add-changeset.ts` reports "no target
+  packages — pass --pkg, or make changes to a publishable package" and exits
+  1 when auto-detecting from git. For task loops that touch only `cli/`,
+  skip the changeset step (matches the prior commit history on this
+  branch). When a task spans both `cli/` and a publishable
+  `@open-tomato/*` package, explicitly pass `--pkg @open-tomato/<name>:patch`
+  so the script writes a changeset for the publishable side only.
