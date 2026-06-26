@@ -43,5 +43,5 @@ Files created: `plans/phase-8-registry-cut/RELEASE_NOTES.md` (captures the versi
 - [ ] Run `npm view @open-tomato/platform-heroku versions --registry https://npm.heimdall.bifemecanico.com/` and confirm the new version is listed (skip if platform-heroku was deferred)
 - [x] Run `npm view @open-tomato/config versions --registry https://npm.heimdall.bifemecanico.com/` and confirm the new version is listed (versions: 0.1.0, 0.1.1, 0.2.0)
 - [x] Run `npm pack @open-tomato/cli-core --dry-run --registry https://npm.heimdall.bifemecanico.com/` from a scratch directory and confirm the tarball downloads (verified 0.2.0 tarball, 12.3 kB, 19 files, exit 0)
-- [ ] Write `plans/phase-8-registry-cut/RELEASE_NOTES.md` listing each package and its published version, the registry URL, and the date
+- [x] Write `plans/phase-8-registry-cut/RELEASE_NOTES.md` listing each package and its published version, the registry URL, and the date
 - [ ] Commit the release notes with a commit titled `docs(phase-8): capture registry-cut versions`
