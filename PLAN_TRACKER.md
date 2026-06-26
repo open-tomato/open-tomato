@@ -33,7 +33,7 @@ Files created: `plans/phase-8-registry-cut/RELEASE_NOTES.md` (captures the versi
 
 - [x] Run `bun run publish:dry` from the repo root and verify the tarball staging plus `publint` validation pass for every package
 - [x] Run `bun run publish:local` from the repo root to publish to `npm.heimdall.bifemecanico.com` — turbo pipeline aborted on pre-existing `@open-tomato/ui-skeleton` TS debt, so used the documented escape hatch (`bun packages/scripts/publish-packages.ts --yes`) per `skills/releasing-packages/SKILL.md`; published cli-core@0.2.0, config@0.2.0, platform-core@0.2.0, vault@0.2.0
-- [ ] Capture the exact published version of each package from the publish output
+- [x] Capture the exact published version of each package from the publish output — `@open-tomato/cli-core@0.2.0`, `@open-tomato/config@0.2.0`, `@open-tomato/platform-core@0.2.0`, `@open-tomato/vault@0.2.0` (published 2026-06-26 via `bun packages/scripts/publish-packages.ts --yes`; commit `00579dd`); `@open-tomato/platform-heroku` deferred (package not yet landed)
 
 # Stage: Post-publish verification
 
