@@ -1,8 +1,8 @@
 # Phase 8 — open-tomato progress notes
 
-Iteration learnings from the Phase 8 shared-package loops have been consolidated into skills and
-AGENTS.md. Add new broadly-applicable findings to the relevant destination below rather than
-appending here. Reserve this file for transient iteration notes only.
+Iteration learnings from the Phase 8 shared-package and CLI loops have been consolidated into
+skills and AGENTS.md. Add new broadly-applicable findings to the relevant destination below
+rather than appending here. Reserve this file for transient iteration notes only.
 
 ## Where the findings live
 
@@ -19,69 +19,14 @@ appending here. Reserve this file for transient iteration notes only.
   `packages/shared/cli-core/AGENTS.md`.
 - **Ecosystem layout, `workspace:^` policy, publish workflow** → `packages/AGENTS.md`
   (already authoritative).
-- **CLI dispatch shape (Phase 8 registry cut)** — `dispatch()` takes user args
-  (already sliced past `[node, bin]`), calls `assembleContext` once, then
-  re-freezes a derived `CliContext` with `args = baseCtx.args.slice(2)` so the
-  first two positionals (tool + command) are removed before the command sees
-  them. `assembleContext`'s returned context is frozen, so the spread-then-
-  `Object.freeze` pattern is the canonical way to override `args` without
-  fighting strict-mode TypeErrors → `cli/src/dispatch.ts`.
-- **Unused-param gotcha for placeholder/stub command runs** — the repo's
-  `@typescript-eslint/no-unused-vars` rule has no `argsIgnorePattern`, AND
-  `tsc` runs with a flag that emits TS6133 on unused params, so a `_`-prefixed
-  arg fails both linter and typecheck. For stub `run`/`default` implementations
-  that still need to advertise `(ctx: CliContext)` in the signature, a single
-  `void ctx;` in the body satisfies both. See `cli/src/commands/describe.ts`
-  for the canonical shape (also documented in `packages/shared/eslint-config/
-  AGENTS.md`).
-- **`CliOutput` has no plain-text print primitive.** `info()` is gated by
-  `verbosity >= 1`; `warn/error/result/emit` all prefix the line in text mode
-  (`warn: ...`, `result: ...`, etc.). Commands whose primary text-mode output
-  is human-readable (e.g. `describe`) must branch on `ctx.outputMode === 'text'`
-  and write to `process.stdout.write` directly. Unit tests spy via
-  `vi.spyOn(process.stdout, 'write').mockImplementation(() => true)` and read
-  back from the spy's call list. See `cli/src/commands/describe.ts` and its
-  `describe run in text mode` test for the canonical shape.
-- **macOS `mkdtempSync` returns a symlinked path.** `os.tmpdir()` on macOS
-  resolves to `/var/folders/...` but `fs.mkdtempSync(path.join(os.tmpdir(),
-  'prefix-'))` returns a `/var/...`-prefixed path while the OS canonical path
-  is `/private/var/...`. Any test that compares a directory path *produced by
-  the code under test* (e.g. via `path.resolve` or by walking) against the
-  tmpdir handle needs to call `fs.realpathSync(tmpRoot)` once and compare
-  against the resolved value, otherwise the equality check fails on macOS but
-  passes on Linux. See `cli/src/discovery/findRoot.test.ts` for the pattern.
-- **`bun run changeset:add` is a no-op for cli-only changes.** The `cli/`
-  package is `private: true`, so `add-changeset.ts` reports "no target
-  packages — pass --pkg, or make changes to a publishable package" and exits
-  1 when auto-detecting from git. For task loops that touch only `cli/`,
-  skip the changeset step (matches the prior commit history on this
-  branch). When a task spans both `cli/` and a publishable
-  `@open-tomato/*` package, explicitly pass `--pkg @open-tomato/<name>:patch`
-  so the script writes a changeset for the publishable side only.
-- **`CommandRegistry` uses a literal NULL byte (`\x00`) as the compound-key
-  separator** inside template literals like `` `${tool}\x00${command}` `` to
-  build the `seen` Set inside `list()`. The bytes render as a space in most
-  editors/diff tools, so a fallback loop that uses ` ` (space) instead of
-  `\x00` looks identical but no longer deduplicates against existing entries
-  — the `seen.has(key)` check silently misses. `git diff` reports the file
-  as binary because of the NULLs, so the diff appears as "Binary files
-  differ" rather than a textual diff. Tools (Edit's exact-string match
-  included) cannot match a regular space against the NULL. When extending
-  `list()` or any code reading these keys, mirror the existing
-  `${a}\x00${b}` shape — write the file via a script that emits the real
-  NULL byte (e.g. Python `replace`) rather than relying on Edit's
-  whitespace-as-space round-trip.
-- **Vitest cannot resolve runtime `import()` of OS-tmpdir paths.** Vitest's
-  Node SSR runtime puts user code in a vm context whose dynamic-import
-  linker only knows Vite's module graph. `await import(absolutePath)` and
-  `await import(pathToFileURL(absolutePath).href)` both fail — the first
-  with "Cannot find module" (Vite resolver), the second with "A dynamic
-  import callback was not specified" (vm context). `new Function('return
-  import(...)')` does not help because the generated function runs in the
-  same vm context. The clean fix for any production module that needs to
-  dynamically import paths the manifest/disk produces is dependency
-  injection: take an optional `(specifier: string) => Promise<unknown>`
-  importer parameter, default it to `(s) => import(s)` for prod (bun/Node
-  resolves `file://` URLs natively), and pass a synthetic importer in tests
-  that reads the file and returns a stand-in module namespace object. See
-  `cli/src/discovery/loadExternalCommands.ts` for the canonical shape.
+- **ESLint/typecheck gotchas** — `no-unused-vars` has no `argsIgnorePattern`, Node-globals,
+  import ordering, `bun:*` unresolved imports, etc. → `packages/shared/eslint-config/AGENTS.md`.
+- **CLI command shape, output modes, `describe` manifest, external-command discovery, plus
+  editing/testing caveats** — frozen `CliContext` + `dispatch.ts` arg-slice/`Object.freeze`
+  override, `CommandRegistry` NUL-byte (`\x00`) compound keys, macOS `mkdtempSync` →
+  `fs.realpathSync` test comparison, Vitest's inability to `import()` OS-tmpdir paths (inject
+  the importer), and skipping changesets for the `private` cli package →
+  `cli/AGENTS.md`.
+
+<!-- Scratch space for transient iteration notes. Promote anything broadly applicable to a
+     destination above, then delete it from here. -->

@@ -207,3 +207,47 @@ serving internal commands.
   (`commands/event/interact.ts` parameter annotation,
   `commands/ralph/effort-collect.ts` null→undefined coercion). Prefer
   this pattern — fix where you find it — over loosening `tsconfig.json`.
+- **`assembleContext`'s `CliContext` is frozen — override by copy.**
+  `dispatch.ts` calls `assembleContext` once, then slices
+  `baseCtx.args.slice(2)` to drop the leading `tool` + `command`
+  positionals before the command sees them. Because the returned
+  context is `Object.freeze`d, the canonical way to override `args` (or
+  any field) is spread-then-`Object.freeze` a derived object — you
+  cannot mutate the original without a strict-mode TypeError. See
+  `src/dispatch.ts`.
+- **`CommandRegistry` compound keys use a literal NUL byte (`\x00`).**
+  `registry.ts` builds dedup/lookup keys as `` `${tool}\x00${command}` ``
+  (the `seen` set in `list()`, the external/internal merge). The byte
+  renders as a space in most editors and makes `git diff` report the
+  file as binary ("Binary files differ"), and Edit's exact-string match
+  cannot target a NUL with a regular space. When touching this code,
+  mirror the existing `${a}\x00${b}` shape and write the file via a
+  script that emits the real byte (e.g. Python `replace`) rather than
+  relying on Edit's whitespace round-trip.
+- **macOS tmpdir tests must compare against `fs.realpathSync`.**
+  `fs.mkdtempSync(path.join(os.tmpdir(), 'prefix-'))` returns a
+  `/var/...` path on macOS while code-under-test that resolves paths
+  sees the OS-canonical `/private/var/...`. Any test comparing a path
+  *produced by the code* against the tmpdir handle must resolve the
+  handle once via `fs.realpathSync(tmpRoot)` and compare against that,
+  or the equality fails on macOS while passing on Linux. See
+  `src/discovery/findRoot.test.ts`.
+- **Vitest cannot `import()` OS-tmpdir paths — inject the importer.**
+  Vitest's Node SSR runtime resolves dynamic imports through Vite's
+  module graph, so `await import(absolutePath)` and
+  `await import(pathToFileURL(absolutePath).href)` both fail in tests
+  (Vite "Cannot find module" / vm "dynamic import callback was not
+  specified"). Any production module that imports paths the
+  manifest/disk produces takes an injectable
+  `(specifier) => Promise<unknown>` importer, defaulting to
+  `(s) => import(s)` for prod (bun/Node resolve `file://` natively),
+  so tests can pass a synthetic importer that returns a stand-in module
+  namespace. See `src/discovery/loadExternalCommands.ts`.
+- **Skip changesets for cli-only changes.** `@open-tomato/tomato-cli`
+  is `private: true`, so `bun run changeset:add` reports "no target
+  packages" and exits 1 when auto-detecting from git — cli-only loops
+  skip the changeset step. When a change spans `cli/` and a
+  publishable `@open-tomato/*` package, pass
+  `--pkg @open-tomato/<name>:patch` so the changeset covers only the
+  publishable side. (General changeset flow lives in the
+  `releasing-packages` skill.)
