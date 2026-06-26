@@ -20,8 +20,8 @@ Files created: `plans/phase-8-registry-cut/RELEASE_NOTES.md` (captures the versi
 
 # Stage: Compose changesets
 
-- [ ] Run `bunx changeset` and add a single changeset selecting `@open-tomato/cli-core` with `minor` bump (initial 0.1.0 release of the new package)
-- [ ] Run `bunx changeset` and add a single changeset selecting `@open-tomato/platform-core` with `minor` bump (initial 0.1.0 release)
+- [x] Run `bunx changeset` and add a single changeset selecting `@open-tomato/cli-core` with `minor` bump (initial 0.1.0 release of the new package)
+- [x] Run `bunx changeset` and add a single changeset selecting `@open-tomato/platform-core` with `minor` bump (initial 0.1.0 release) — already pending at `.changeset/platform-core-da7c4939.md`
 - [ ] Run `bunx changeset` and add a single changeset selecting `@open-tomato/vault` with `minor` bump (initial 0.1.0 release)
 - [ ] Run `bunx changeset` and add a single changeset selecting `@open-tomato/platform-heroku` with `minor` bump (initial 0.1.0 release; if platform-heroku has not yet landed, skip this task and include it in a follow-up cut)
 - [ ] Run `bunx changeset` and add a changeset selecting `@open-tomato/config` with `minor` bump (schema v2 additive features, no breaking change)
