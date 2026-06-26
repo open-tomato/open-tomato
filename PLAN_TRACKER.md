@@ -32,8 +32,8 @@ Files added to `cli/`: `cli/src/discovery/findRoot.ts`, `cli/src/discovery/loadM
 
 # Stage: Manifest loader
 
-- [ ] Write `cli/src/discovery/loadManifest.ts` exporting `loadManifest(rootDir: string): { commands: Array<{ tool: string; command: string; module: string }> } | null`
-- [ ] Implement reading `<rootDir>/package.json`, parsing JSON, extracting the `ot.commands` field, and validating each entry has `tool`, `command`, `module` string fields
+- [x] Write `cli/src/discovery/loadManifest.ts` exporting `loadManifest(rootDir: string): { commands: Array<{ tool: string; command: string; module: string }> } | null`
+- [x] Implement reading `<rootDir>/package.json`, parsing JSON, extracting the `ot.commands` field, and validating each entry has `tool`, `command`, `module` string fields
 - [ ] Return null when `package.json` is missing or `ot.commands` is absent
 - [ ] Log a warning via `console.warn` and return null when `ot.commands` exists but is malformed (not an array, missing required fields)
 - [ ] Resolve each `module` path relative to `rootDir`, producing absolute paths
