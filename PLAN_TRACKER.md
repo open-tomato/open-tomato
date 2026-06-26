@@ -43,7 +43,7 @@ Files added to `cli/`: `cli/src/discovery/findRoot.ts`, `cli/src/discovery/loadM
 
 - [x] Write `cli/src/discovery/loadExternalCommands.ts` exporting `loadExternalCommands(manifest, rootDir): Promise<Array<{ tool, command, module: CommandModule }>>`
 - [x] Use dynamic `import()` to load each module path, swallowing individual load errors with a `console.warn` naming the failing module path
-- [ ] Validate each loaded module has either a `default` export (legacy shape) or `meta` + `default` (new shape); skip with warning if neither
+- [x] Validate each loaded module has either a `default` export (legacy shape) or `meta` + `default` (new shape); skip with warning if neither
 - [ ] Cache results by `rootDir` so repeat calls in the same process do not re-load
 - [ ] Write `cli/src/discovery/loadExternalCommands.test.ts` covering: all modules load, one module throws on import (others still load), one module has no valid exports (others still load), cache returns the same array reference on second call
 - [ ] Add an integration test using a temp directory with a real `.open-tomato-root` and a synthetic `package.json` + module files
