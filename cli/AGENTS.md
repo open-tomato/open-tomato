@@ -47,19 +47,55 @@ linking policy, and refactor deletion rules.
    directly (see `src/commands/describe.ts`). Never mix raw
    `console.log` output with NDJSON — it corrupts the stream for
    programmatic consumers.
-3. **Repo-root detection is centralised.** Use `resolveRepoRoot()` from
+3. **`tomato describe` is the registry's machine-readable manifest.**
+   The describe command (`src/commands/describe.ts`) walks the
+   `CommandRegistry`, collects every command's `meta`, and emits the
+   tree. In `json` mode it sends a single `result` `CliEvent` whose
+   `data` payload conforms to the stable contract:
+
+   ```json
+   {
+     "schemaVersion": 1,
+     "binary": "tomato",
+     "version": "<cli/package.json version>",
+     "commands": [
+       {
+         "tool": "<tool>",
+         "command": "<command>",
+         "description": "<meta.description, or ''>",
+         "args": [/* ArgSpec[] from meta, or [] */],
+         "flags": [/* FlagSpec[] from meta, or [] */]
+       }
+     ]
+   }
+   ```
+
+   `schemaVersion: 1` is the integration contract — external consumers
+   (registry tooling, docs generators, IDEs) key off it, so treat any
+   breaking change (renaming/removing fields, changing the `binary` or
+   `schemaVersion` literal, narrowing existing field types) as a new
+   `schemaVersion`. Additive, backwards-compatible fields (new optional
+   keys on a command entry, new top-level keys) can land at the same
+   version. Legacy commands without `meta` still appear in the output,
+   but with empty `description` / `args` / `flags` — migrate them to
+   the meta-aware shape to surface real metadata. In `text` mode the
+   same tree renders as a plain list grouped by tool (`<tool>:` header
+   followed by `  <command>: <description>` entries), written directly
+   via `process.stdout.write` per the rule-2 caveat about
+   human-readable text output.
+4. **Repo-root detection is centralised.** Use `resolveRepoRoot()` from
    `src/root.ts` whenever a command needs workspace context. Do not
    re-implement the walk-up inside individual commands.
-4. **Dispatcher-level tests live under `tests/`.** They run by default.
+5. **Dispatcher-level tests live under `tests/`.** They run by default.
    Command-level tests under `src/commands/**/tests/` are intentionally
    excluded from the default `vitest` include — see `vitest.config.ts`.
    Fix legacy command tests ad-hoc when touching the command, not as
    part of unrelated work.
-5. **Shared packages via `file:` refs.** `@open-tomato/logger`,
+6. **Shared packages via `file:` refs.** `@open-tomato/logger`,
    `@open-tomato/linear`, etc. are linked by path. Adopters who detach
    the CLI from this umbrella must switch to published semver or GitHub
    refs — see the README's publishing section.
-6. **Verify before commit.** `bun install && bun lint && bun run test &&
+7. **Verify before commit.** `bun install && bun lint && bun run test &&
    bun run check-types` must stay green.
 
 ## Known caveats
