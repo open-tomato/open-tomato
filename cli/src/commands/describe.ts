@@ -6,7 +6,29 @@ import type {
   FlagSpec,
 } from '@open-tomato/cli-core';
 
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { CommandRegistry } from '../registry.js';
+
+const SCHEMA_VERSION = 1 as const;
+const BINARY_NAME = 'tomato' as const;
+
+function readCliVersion(): string {
+  const packageJsonPath = join(
+    dirname(fileURLToPath(import.meta.url)),
+    '..',
+    '..',
+    'package.json',
+  );
+  const raw = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as {
+    version: string;
+  };
+  return raw.version;
+}
+
+const CLI_VERSION = readCliVersion();
 
 export interface DescribeCommandEntry {
   tool: string;
@@ -17,6 +39,9 @@ export interface DescribeCommandEntry {
 }
 
 export interface DescribePayload {
+  schemaVersion: typeof SCHEMA_VERSION;
+  binary: typeof BINARY_NAME;
+  version: string;
   commands: DescribeCommandEntry[];
 }
 
@@ -41,6 +66,9 @@ const run = async (ctx: CliContext): Promise<void> => {
   await registry.autoload();
 
   const payload: DescribePayload = {
+    schemaVersion: SCHEMA_VERSION,
+    binary: BINARY_NAME,
+    version: CLI_VERSION,
     commands: collectDescribeEntries(registry),
   };
 
