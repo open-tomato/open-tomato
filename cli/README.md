@@ -80,7 +80,55 @@ directory.
 ## Adding a new command
 
 1. Create `src/commands/<tool>/<command>.ts`.
-2. Export a `default` async function:
+2. Preferred: export `meta` (a `CliCommand` from
+   `@open-tomato/cli-core`) alongside a `default(ctx: CliContext)`
+   async function. The dispatcher calls `default(ctx)` directly,
+   passes positional args through `ctx.args`, flags through
+   `ctx.flags`, and routes structured output through
+   `ctx.output.emit`. In `--output=json` mode each emitted event is
+   one NDJSON line on stdout; in `text` mode events render as
+   prefixed lines.
+
+   ```ts
+   import type { CliCommand, CliContext } from '@open-tomato/cli-core';
+
+   const run = async (ctx: CliContext): Promise<void> => {
+     ctx.output.emit({
+       type: 'step',
+       name: 'greet',
+       message: `hello ${ctx.args[0] ?? 'world'}`,
+       ts: new Date().toISOString(),
+     });
+
+     ctx.output.emit({
+       type: 'result',
+       ok: true,
+       data: { greeted: ctx.args[0] ?? 'world' },
+       ts: new Date().toISOString(),
+     });
+   };
+
+   export const meta: CliCommand = {
+     name: 'greet',
+     description: 'Print a greeting and emit structured events.',
+     args: [
+       { name: 'name', description: 'Who to greet', type: 'string' },
+     ],
+     flags: [],
+     run,
+   };
+
+   export default run;
+   ```
+
+   `meta` is what `tomato describe` walks to produce its tree, so
+   keep `description`, `args`, and `flags` accurate.
+
+3. Legacy shape (still supported). A module that exports only
+   `default(args: string[], { repoRoot }: CommandContext)` is routed
+   through `runLegacyCommand`, which builds the `{ repoRoot }` adapter
+   via `resolveRepoRoot()` and forwards positional args. Migrate to
+   the meta-aware shape when you next touch the file.
 
    ```ts
    import type { CommandContext } from '../../cli.js';
@@ -97,8 +145,8 @@ directory.
    }
    ```
 
-3. Running `tomato <tool> <command> [...args]` dispatches here.
-4. Add a vitest file under `tests/` (dispatcher-level) or co-located
+4. Running `tomato <tool> <command> [...args]` dispatches here.
+5. Add a vitest file under `tests/` (dispatcher-level) or co-located
    under `src/commands/<tool>/tests/` (command-level, not yet wired into
    the default vitest include — see `vitest.config.ts`).
 
