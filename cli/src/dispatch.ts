@@ -9,8 +9,13 @@ import process from 'node:process';
 
 import { assembleContext } from '@open-tomato/cli-core';
 
+import {
+  findOpenTomatoRoot,
+  loadExternalCommands,
+  loadManifest,
+} from './discovery/index.js';
 import { runLegacyCommand } from './legacyShim.js';
-import { CommandRegistry } from './registry.js';
+import { CommandRegistry, type ExternalCommandRegistration } from './registry.js';
 
 export interface DispatchOptions {
   /**
@@ -118,8 +123,19 @@ export async function dispatch(
     return 1;
   }
 
-  const registry = options.registry ?? new CommandRegistry();
-  if (options.registry === undefined) {
+  let registry: CommandRegistry;
+  if (options.registry !== undefined) {
+    registry = options.registry;
+  } else {
+    let externalCommands: readonly ExternalCommandRegistration[] = [];
+    const rootDir = findOpenTomatoRoot(process.cwd());
+    if (rootDir !== null) {
+      const manifest = loadManifest(rootDir);
+      if (manifest !== null) {
+        externalCommands = await loadExternalCommands(manifest, rootDir);
+      }
+    }
+    registry = new CommandRegistry({ externalCommands });
     await registry.autoload();
   }
 
