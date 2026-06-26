@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CommandRegistry, type CommandModule } from './registry.js';
 
@@ -142,6 +142,49 @@ describe('CommandRegistry', () => {
     expect(() => new CommandRegistry({ commandsDir: null })).not.toThrow();
     const registry = new CommandRegistry({ commandsDir: null });
     expect(registry.list()).toEqual([]);
+  });
+
+  it('autoload() warns and keeps the internal command when an external shares its tool/command key', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const internalMod = makeModule(makeMeta('next'));
+    const externalMod = makeModule(makeMeta('external-next'));
+
+    const registry = new CommandRegistry({
+      commandsDir: null,
+      externalCommands: [
+        { tool: 'linear', command: 'next', module: externalMod },
+      ],
+    });
+    registry.register('linear', 'next', internalMod);
+
+    await registry.autoload();
+
+    expect(registry.get('linear', 'next')).toBe(internalMod);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0]?.[0]).toContain('linear next');
+    expect(warnSpy.mock.calls[0]?.[0]).toMatch(/conflicts with an internal command/);
+
+    warnSpy.mockRestore();
+  });
+
+  it('autoload() registers a non-conflicting external command and does not warn', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const externalMod = makeModule(makeMeta('validate'));
+    const registry = new CommandRegistry({
+      commandsDir: null,
+      externalCommands: [
+        { tool: 'svc', command: 'validate', module: externalMod },
+      ],
+    });
+
+    await registry.autoload();
+
+    expect(registry.get('svc', 'validate')).toBe(externalMod);
+    expect(warnSpy).not.toHaveBeenCalled();
+
+    warnSpy.mockRestore();
   });
 
   it('does not throw when the commands directory exists but no <tool>/ subdirectories are present', () => {

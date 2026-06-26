@@ -51,8 +51,8 @@ Files added to `cli/`: `cli/src/discovery/findRoot.ts`, `cli/src/discovery/loadM
 # Stage: Registry and dispatch integration
 
 - [x] Update `cli/src/discovery/index.ts` to re-export `findOpenTomatoRoot`, `loadManifest`, `loadExternalCommands`
-- [ ] Update `cli/src/registry.ts` to accept an optional `externalCommands` array in the constructor and merge them into the lookup table after internal commands
-- [ ] When an external command shares a `tool/command` key with an internal one, prefer the internal (and emit a `console.warn` about the conflict)
+- [x] Update `cli/src/registry.ts` to accept an optional `externalCommands` array in the constructor and merge them into the lookup table after internal commands
+- [x] When an external command shares a `tool/command` key with an internal one, prefer the internal (and emit a `console.warn` about the conflict)
 - [ ] Update `cli/src/dispatch.ts` to call `findOpenTomatoRoot(process.cwd())` → `loadManifest` → `loadExternalCommands` once at startup, passing results to the registry
 - [ ] When discovery finds no root, the dispatcher proceeds normally with internal commands only
 - [ ] Write a test in `cli/src/dispatch.test.ts` asserting that external commands are dispatched correctly when discovery succeeds
