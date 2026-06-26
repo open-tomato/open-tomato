@@ -38,8 +38,9 @@ session's changes into correct changesets + version bumps, verify, then publish 
    longer match reality (wrong packages, wrong level, outdated summary). A leftover changeset
    silently bumps packages you never touched on `changeset version`.
 
-3. **Author one changeset for the changed set** — `bunx changeset`, or write
-   `.changeset/<name>.md` directly:
+3. **Author one changeset for the changed set** — `bunx @changesets/cli` (plain
+   `bunx changeset` fails with "could not determine executable" because the package is
+   `@changesets/cli`, not `changeset`), or write `.changeset/<name>.md` directly:
    ```markdown
    ---
    "@open-tomato/logger": minor
@@ -61,7 +62,7 @@ session's changes into correct changesets + version bumps, verify, then publish 
    ```
    Every changed package must be covered by a pending changeset here.
 
-5. **Apply versions:** `bunx changeset version`. This bumps each `package.json`, writes each
+5. **Apply versions:** `bunx @changesets/cli version`. This bumps each `package.json`, writes each
    package's `CHANGELOG.md`, and consumes the changeset files. Review the diff — changesets
    cascades internal-dependency bumps (`updateInternalDependencies: patch`), so confirm
    nothing unexpected moved:
