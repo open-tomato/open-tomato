@@ -59,7 +59,7 @@ Files modified: `cli/src/cli.ts` (dispatcher rewrite), `cli/package.json` (add `
 
 # Stage: Documentation
 
-- [ ] Update `cli/AGENTS.md` to reflect the new dispatcher shape: commands may export `meta` plus `default(ctx: CliContext)`; legacy commands continue to work via the shim
-- [ ] Document the `--output=json` / `TOMATO_OUTPUT=json` flag and the NDJSON event stream in `cli/AGENTS.md`
+- [x] Update `cli/AGENTS.md` to reflect the new dispatcher shape: commands may export `meta` plus `default(ctx: CliContext)`; legacy commands continue to work via the shim
+- [x] Document the `--output=json` / `TOMATO_OUTPUT=json` flag and the NDJSON event stream in `cli/AGENTS.md`
 - [ ] Document the `tomato describe` command and the `schemaVersion: 1` contract in `cli/AGENTS.md`
 - [ ] Update `cli/README.md` with a short example showing a command that exports `meta` and consumes `ctx.output.emit`

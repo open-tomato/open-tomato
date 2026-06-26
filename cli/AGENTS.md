@@ -26,19 +26,40 @@ linking policy, and refactor deletion rules.
      `{ repoRoot }` adapter via `resolveRepoRoot()` and forwards
      `ctx.args`. Existing commands keep working unchanged; migrate to
      the meta-aware shape when you next touch one.
-2. **Repo-root detection is centralised.** Use `resolveRepoRoot()` from
+2. **Output mode is driven by `--output=json` / `TOMATO_OUTPUT=json`.**
+   `assembleContext` (`@open-tomato/cli-core`) resolves `ctx.outputMode`
+   from the `--output=<mode>` flag first, then the `TOMATO_OUTPUT` env
+   var, defaulting to `'text'`. In `json` mode, `ctx.output` is the
+   NDJSON writer from `createJsonOutput`: every call to `emit`, `info`,
+   `warn`, `error`, `debug`, or `result` writes exactly one
+   `JSON.stringify(event)\n` line to stdout, so consumers can read
+   stdout as line-delimited JSON. The dispatcher itself emits a `start`
+   `CliEvent` before invoking the command and a `result` event after it
+   resolves or rejects (`{ ok: true }` on success, `{ ok: false, error:
+   { code, message } }` on failure). Commands may emit additional
+   `step` or `log` events through `ctx.output.emit` for long-running
+   work — keep payloads JSON-serialisable, since the JSON writer calls
+   `JSON.stringify` on each event. In `text` mode the same events are
+   rendered as prefixed lines (`start: ...`, `result: ok`,
+   `result: error <code>: <message>`, etc.); commands whose primary
+   text output is human-readable must branch on
+   `ctx.outputMode === 'text'` and write to `process.stdout.write`
+   directly (see `src/commands/describe.ts`). Never mix raw
+   `console.log` output with NDJSON — it corrupts the stream for
+   programmatic consumers.
+3. **Repo-root detection is centralised.** Use `resolveRepoRoot()` from
    `src/root.ts` whenever a command needs workspace context. Do not
    re-implement the walk-up inside individual commands.
-3. **Dispatcher-level tests live under `tests/`.** They run by default.
+4. **Dispatcher-level tests live under `tests/`.** They run by default.
    Command-level tests under `src/commands/**/tests/` are intentionally
    excluded from the default `vitest` include — see `vitest.config.ts`.
    Fix legacy command tests ad-hoc when touching the command, not as
    part of unrelated work.
-4. **Shared packages via `file:` refs.** `@open-tomato/logger`,
+5. **Shared packages via `file:` refs.** `@open-tomato/logger`,
    `@open-tomato/linear`, etc. are linked by path. Adopters who detach
    the CLI from this umbrella must switch to published semver or GitHub
    refs — see the README's publishing section.
-5. **Verify before commit.** `bun install && bun lint && bun run test &&
+6. **Verify before commit.** `bun install && bun lint && bun run test &&
    bun run check-types` must stay green.
 
 ## Known caveats
