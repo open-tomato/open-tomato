@@ -37,11 +37,11 @@ Files added to `cli/`: `cli/src/discovery/findRoot.ts`, `cli/src/discovery/loadM
 - [x] Return null when `package.json` is missing or `ot.commands` is absent
 - [x] Log a warning via `console.warn` and return null when `ot.commands` exists but is malformed (not an array, missing required fields)
 - [x] Resolve each `module` path relative to `rootDir`, producing absolute paths
-- [ ] Write `cli/src/discovery/loadManifest.test.ts` covering: well-formed manifest, missing `ot.commands` (returns null), malformed `ot.commands` (returns null with warning), non-array `ot.commands` (returns null with warning), missing fields in an entry (entry skipped, others kept)
+- [x] Write `cli/src/discovery/loadManifest.test.ts` covering: well-formed manifest, missing `ot.commands` (returns null), malformed `ot.commands` (returns null with warning), non-array `ot.commands` (returns null with warning), missing fields in an entry (entry skipped, others kept)
 
 # Stage: External command loader
 
-- [ ] Write `cli/src/discovery/loadExternalCommands.ts` exporting `loadExternalCommands(manifest, rootDir): Promise<Array<{ tool, command, module: CommandModule }>>`
+- [x] Write `cli/src/discovery/loadExternalCommands.ts` exporting `loadExternalCommands(manifest, rootDir): Promise<Array<{ tool, command, module: CommandModule }>>`
 - [ ] Use dynamic `import()` to load each module path, swallowing individual load errors with a `console.warn` naming the failing module path
 - [ ] Validate each loaded module has either a `default` export (legacy shape) or `meta` + `default` (new shape); skip with warning if neither
 - [ ] Cache results by `rootDir` so repeat calls in the same process do not re-load

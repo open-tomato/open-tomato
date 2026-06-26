@@ -58,3 +58,17 @@ appending here. Reserve this file for transient iteration notes only.
   branch). When a task spans both `cli/` and a publishable
   `@open-tomato/*` package, explicitly pass `--pkg @open-tomato/<name>:patch`
   so the script writes a changeset for the publishable side only.
+- **Vitest cannot resolve runtime `import()` of OS-tmpdir paths.** Vitest's
+  Node SSR runtime puts user code in a vm context whose dynamic-import
+  linker only knows Vite's module graph. `await import(absolutePath)` and
+  `await import(pathToFileURL(absolutePath).href)` both fail — the first
+  with "Cannot find module" (Vite resolver), the second with "A dynamic
+  import callback was not specified" (vm context). `new Function('return
+  import(...)')` does not help because the generated function runs in the
+  same vm context. The clean fix for any production module that needs to
+  dynamically import paths the manifest/disk produces is dependency
+  injection: take an optional `(specifier: string) => Promise<unknown>`
+  importer parameter, default it to `(s) => import(s)` for prod (bun/Node
+  resolves `file://` URLs natively), and pass a synthetic importer in tests
+  that reads the file and returns a stand-in module namespace object. See
+  `cli/src/discovery/loadExternalCommands.ts` for the canonical shape.
