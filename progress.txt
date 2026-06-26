@@ -42,6 +42,14 @@ appending here. Reserve this file for transient iteration notes only.
   `vi.spyOn(process.stdout, 'write').mockImplementation(() => true)` and read
   back from the spy's call list. See `cli/src/commands/describe.ts` and its
   `describe run in text mode` test for the canonical shape.
+- **macOS `mkdtempSync` returns a symlinked path.** `os.tmpdir()` on macOS
+  resolves to `/var/folders/...` but `fs.mkdtempSync(path.join(os.tmpdir(),
+  'prefix-'))` returns a `/var/...`-prefixed path while the OS canonical path
+  is `/private/var/...`. Any test that compares a directory path *produced by
+  the code under test* (e.g. via `path.resolve` or by walking) against the
+  tmpdir handle needs to call `fs.realpathSync(tmpRoot)` once and compare
+  against the resolved value, otherwise the equality check fails on macOS but
+  passes on Linux. See `cli/src/discovery/findRoot.test.ts` for the pattern.
 - **`bun run changeset:add` is a no-op for cli-only changes.** The `cli/`
   package is `private: true`, so `add-changeset.ts` reports "no target
   packages — pass --pkg, or make changes to a publishable package" and exits
