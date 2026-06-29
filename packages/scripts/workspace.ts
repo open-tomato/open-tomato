@@ -33,12 +33,15 @@ export interface PackageInfo {
  *   - agents/<x>          -> @open-tomato/agents-<x>   (group flattened in)
  *   - <direct>            -> @open-tomato/<direct>
  *
- * Direct (un-grouped) workspace members like `cli`, `types`, `app`, and
- * `templates/*` use bespoke published names (`@open-tomato/tomato-cli`,
- * `@open-tomato/repo-types`, `@open-tomato/template-service-express`, …)
- * — they're all private and don't go through publish-time naming validation.
- * See preflight.ts checkManifests: naming/semver checks are skipped for
- * `pkg.private === true`.
+ * The direct (un-grouped) member `cli` IS published and follows the
+ * `<direct> -> @open-tomato/<direct>` convention (`@open-tomato/cli`), so it
+ * goes through publish-time naming validation like any grouped package.
+ *
+ * The remaining direct members — `types`, `app`, and `templates/*` — use
+ * bespoke published names (`@open-tomato/repo-types`,
+ * `@open-tomato/template-service-express`, …) but are all private, so they
+ * never reach the registry. See preflight.ts checkManifests: naming/semver
+ * checks are skipped for `pkg.private === true`.
  */
 export function expectedPackageName(group: string, base: string): string {
   if (group === "notifications") return `@open-tomato/notifications-${base}`;

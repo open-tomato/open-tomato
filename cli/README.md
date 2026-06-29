@@ -1,4 +1,4 @@
-# tomato-cli
+# @open-tomato/cli
 
 Standalone CLI for the open-tomato ecosystem. Dispatches to small
 per-tool commands that live under `src/commands/<tool>/<command>.ts`.
@@ -8,7 +8,7 @@ per-tool commands that live under `src/commands/<tool>/<command>.ts`.
 ### Global install (long-lived use)
 
 ```sh
-cd tomato-cli
+cd cli
 bun install -g .
 # `tomato` is now on PATH
 tomato event listen
@@ -17,10 +17,10 @@ tomato event listen
 ### Run without installing
 
 ```sh
-bunx --bun /Users/marcos/projects/open-tomato/tomato-cli event listen
+bunx --bun /Users/marcos/projects/open-tomato/open-tomato/cli event listen
 # or once published to npm:
-bunx @open-tomato/tomato-cli event listen
-npx  @open-tomato/tomato-cli event listen
+bunx @open-tomato/cli event listen
+npx  @open-tomato/cli event listen
 ```
 
 ### Local dev inside this folder

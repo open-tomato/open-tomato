@@ -1,8 +1,21 @@
 /* global globalThis */
-import '@testing-library/jest-dom/vitest';
+import * as jestDomMatchers from '@testing-library/jest-dom/matchers';
 import { toHaveNoViolations } from 'jest-axe';
 import { expect, vi } from 'vitest';
 
+/**
+ * Register jest-dom matchers (toBeInTheDocument, toHaveAttribute, …) on the
+ * locally-imported `expect` — the same instance these tests run against.
+ *
+ * We deliberately avoid the `@testing-library/jest-dom/vitest` side-effect
+ * entry: it calls `expect.extend` on the `vitest` it resolves through its own
+ * `require('vitest')`, which in this monorepo hoists to a different vitest
+ * instance (3.x) than the one running ui-skeleton's tests (4.x). The matchers
+ * then land on the wrong `expect` and never register, surfacing as
+ * "Invalid Chai property: toBeInTheDocument". Extending the local `expect`
+ * with the standalone matchers sidesteps that resolution entirely.
+ */
+expect.extend(jestDomMatchers);
 expect.extend(toHaveNoViolations);
 
 if (typeof globalThis.ResizeObserver === 'undefined') {

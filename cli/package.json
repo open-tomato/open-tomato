@@ -1,8 +1,7 @@
 {
-  "name": "@open-tomato/tomato-cli",
+  "name": "@open-tomato/cli",
   "version": "0.1.1",
   "type": "module",
-  "private": true,
   "description": "Open Tomato general-purpose CLI",
   "bin": {
     "tomato": "./bin/tomato.ts"

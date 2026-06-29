@@ -33,7 +33,7 @@ This umbrella file gives you orientation, conventions, and pointers — nothing 
 | Packages | `packages/` | All `@open-tomato/*` shared packages (`shared/*`, `service/*`, `notifications/*`, `agents/*`, `ui-skeleton`). Published via the private registry. |
 | Services | `services/` | Backend services (`notifications`, `orchestrator`, `scheduler`, `task-worker`). |
 | App | `app/` | Frontend (Vite + React + TS). |
-| CLI | `cli/` | The `tomato` CLI — workspace member, publishes as `@open-tomato/tomato-cli`. |
+| CLI | `cli/` | The `tomato` CLI — workspace member, publishes as `@open-tomato/cli`. |
 | Templates | `templates/` | Service boilerplates (`express`, `mcp`). Workspace members and clone targets. |
 | Types | `types/` | Repo-level shared TypeScript types (`@open-tomato/repo-types`). |
 | Docs | `docs/` | Compiled documentation root for the publishable docs site. |

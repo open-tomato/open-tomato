@@ -21,7 +21,7 @@ open-tomato/
 │   └── scripts/              # publish pipeline (preflight, prepare-publish, …)
 ├── services/                 # backend services (notifications, orchestrator, scheduler, task-worker)
 ├── app/                      # Vite + React + TS frontend
-├── cli/                      # tomato CLI (publishes as @open-tomato/tomato-cli)
+├── cli/                      # tomato CLI (publishes as @open-tomato/cli)
 ├── templates/                # service templates (express, mcp)
 ├── types/                    # repo-level shared TS types (@open-tomato/repo-types)
 ├── docs/                     # publishable docs site source

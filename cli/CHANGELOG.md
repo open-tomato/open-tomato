@@ -1,4 +1,4 @@
-# @open-tomato/tomato-cli
+# @open-tomato/cli
 
 ## 0.1.1
 

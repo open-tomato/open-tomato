@@ -1,4 +1,4 @@
-# tomato-cli — agent notes
+# @open-tomato/cli — agent notes
 
 Standalone CLI for the open-tomato ecosystem. Umbrella conventions live
 in [../AGENTS.md](../AGENTS.md); read it first for commit format, package
@@ -243,11 +243,11 @@ serving internal commands.
   `(s) => import(s)` for prod (bun/Node resolve `file://` natively),
   so tests can pass a synthetic importer that returns a stand-in module
   namespace. See `src/discovery/loadExternalCommands.ts`.
-- **Skip changesets for cli-only changes.** `@open-tomato/tomato-cli`
-  is `private: true`, so `bun run changeset:add` reports "no target
-  packages" and exits 1 when auto-detecting from git — cli-only loops
-  skip the changeset step. When a change spans `cli/` and a
-  publishable `@open-tomato/*` package, pass
-  `--pkg @open-tomato/<name>:patch` so the changeset covers only the
-  publishable side. (General changeset flow lives in the
+- **Changesets are required for cli changes.** `@open-tomato/cli` is a
+  published, publish-eligible package (no longer `private: true`), so a
+  change under `cli/` must ship with a pending changeset or preflight's
+  changed-must-bump check fails. Run `bun run changeset:add` (or pass
+  `--pkg @open-tomato/cli:patch`) to declare the bump. When a change
+  spans `cli/` and other publishable `@open-tomato/*` packages, include
+  each in the changeset. (General changeset flow lives in the
   `releasing-packages` skill.)

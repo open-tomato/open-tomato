@@ -1,4 +1,4 @@
-# Contributing to `tomato-cli`
+# Contributing to `@open-tomato/cli`
 
 ## Adding a command
 
@@ -81,5 +81,5 @@ bun run test
 bun run check-types
 ```
 
-Commits follow the umbrella format: `<type>(tomato-cli): <description>`
+Commits follow the umbrella format: `<type>(cli): <description>`
 (see [../AGENTS.md](../AGENTS.md)).

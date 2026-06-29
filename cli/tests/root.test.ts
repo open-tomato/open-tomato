@@ -10,7 +10,7 @@ describe('resolveRepoRoot', () => {
   let tempRoot: string;
 
   beforeEach(() => {
-    tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'tomato-cli-root-'));
+    tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'open-tomato-cli-root-'));
   });
 
   afterEach(() => {

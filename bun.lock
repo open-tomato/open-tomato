@@ -32,7 +32,7 @@
     },
     "cli": {
       "name": "@open-tomato/tomato-cli",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "bin": {
         "tomato": "./bin/tomato.ts",
       },
@@ -264,7 +264,7 @@
     },
     "packages/shared/cli-core": {
       "name": "@open-tomato/cli-core",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "devDependencies": {
         "@open-tomato/eslint-config": "workspace:^",
         "@open-tomato/typescript-config": "workspace:^",
@@ -277,7 +277,7 @@
     },
     "packages/shared/config": {
       "name": "@open-tomato/config",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "js-yaml": "^4.1.0",
         "zod": "^3.24.0",
@@ -404,7 +404,7 @@
     },
     "packages/shared/platform-core": {
       "name": "@open-tomato/platform-core",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "devDependencies": {
         "@open-tomato/eslint-config": "workspace:^",
         "@open-tomato/typescript-config": "workspace:^",
@@ -467,7 +467,7 @@
     },
     "packages/shared/vault": {
       "name": "@open-tomato/vault",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@bitwarden/sdk-napi": "^1.0.0",
       },
