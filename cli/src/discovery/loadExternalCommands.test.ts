@@ -172,6 +172,61 @@ describe('loadExternalCommands', () => {
     }
   });
 
+  it('accepts a CliCommand object exported as default (treats .run as entrypoint)', async () => {
+    const ran: unknown[] = [];
+    const cmd = {
+      name: 'validate',
+      description: 'validate a service',
+      args: [],
+      flags: [],
+      run: async (ctx: unknown): Promise<void> => {
+        ran.push(ctx);
+      },
+    };
+    const importer: ExternalCommandImporter = async () => ({ default: cmd });
+
+    const result = await loadExternalCommands(
+      { commands: [{ tool: 'svc', command: 'validate', module: '/x/v.mjs' }] },
+      realTmpRoot,
+      importer,
+    );
+
+    expect(result).toHaveLength(1);
+    // The CliCommand object becomes the command's meta.
+    expect(result[0]?.module.meta).toBe(cmd);
+    // Calling default(ctx) routes through cmd.run(ctx).
+    const fakeCtx = { sentinel: true };
+    await result[0]?.module.default(fakeCtx);
+    expect(ran).toEqual([fakeCtx]);
+  });
+
+  it('accepts a CliCommand object as the module namespace itself (no default)', async () => {
+    const ran: unknown[] = [];
+    const cmd = {
+      name: 'setup',
+      description: 'set up',
+      args: [],
+      flags: [],
+      run: async (ctx: unknown): Promise<void> => {
+        ran.push(ctx);
+      },
+    };
+    // Module namespace exposes run/meta directly with no `default`.
+    const importer: ExternalCommandImporter = async () => cmd;
+
+    const result = await loadExternalCommands(
+      { commands: [{ tool: 'setup', command: 'setup', module: '/x/s.mjs' }] },
+      realTmpRoot,
+      importer,
+    );
+
+    expect(result).toHaveLength(1);
+    expect(typeof result[0]?.module.default).toBe('function');
+    const fakeCtx = { sentinel: 2 };
+    await result[0]?.module.default(fakeCtx);
+    expect(ran).toEqual([fakeCtx]);
+  });
+
   it('returns the same array reference on a second call with the same rootDir', async () => {
     const aPath = writeFixture('a.mjs', '// ot-default: a-ran\n');
 

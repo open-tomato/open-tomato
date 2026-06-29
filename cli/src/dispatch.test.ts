@@ -254,6 +254,123 @@ describe('dispatch', () => {
     expect(result?.ok).toBe(true);
   });
 
+  it('routes a single-token command registered as tool === command', async () => {
+    const registry = new CommandRegistry({ commandsDir: null });
+    const defaultFn = vi.fn().mockResolvedValue(undefined);
+    registry.register('setup', 'setup', {
+      default: defaultFn,
+      meta: makeMeta('setup'),
+    });
+
+    const { stream, chunks } = makeRecorder();
+    const code = await dispatch(['setup', '--output=json'], {
+      registry,
+      env: {},
+      stream,
+    });
+
+    expect(code).toBe(0);
+    expect(defaultFn).toHaveBeenCalledTimes(1);
+
+    const events = parseNdjson(chunks);
+    const start = events.find((e) => e.type === 'start');
+    expect(start).toMatchObject({ type: 'start', command: 'setup setup' });
+    const result = events.find((e): e is CliEventResult => e.type === 'result');
+    expect(result?.ok).toBe(true);
+  });
+
+  it('passes flags after a single-token command through as command args', async () => {
+    const registry = new CommandRegistry({ commandsDir: null });
+    const defaultFn = vi.fn().mockResolvedValue(undefined);
+    registry.register('setup', 'setup', {
+      default: defaultFn,
+      meta: makeMeta('setup'),
+    });
+
+    const { stream } = makeRecorder();
+    const code = await dispatch(['setup', 'extra', '--dry-run'], {
+      registry,
+      env: {},
+      stream,
+    });
+
+    expect(code).toBe(0);
+    const ctx = defaultFn.mock.calls[0]?.[0] as CliContext;
+    expect(ctx.args).toEqual(['extra']);
+    expect(ctx.flags['dry-run']).toBe(true);
+  });
+
+  it('emits exactly one start and one terminal result when the command emits its own', async () => {
+    const registry = new CommandRegistry({ commandsDir: null });
+    registry.register('svc', 'validate', {
+      default: async (ctx: CliContext): Promise<void> => {
+        ctx.output.emit({
+          type: 'start',
+          command: 'svc validate',
+          ts: new Date().toISOString(),
+        });
+        ctx.output.emit({
+          type: 'result',
+          ok: true,
+          data: { validated: true },
+          ts: new Date().toISOString(),
+        });
+      },
+      meta: makeMeta('validate'),
+    });
+
+    const { stream, chunks } = makeRecorder();
+    const code = await dispatch(['svc', 'validate', '--output=json'], {
+      registry,
+      env: {},
+      stream,
+    });
+
+    expect(code).toBe(0);
+    const events = parseNdjson(chunks);
+    const starts = events.filter((e) => e.type === 'start');
+    const results = events.filter((e) => e.type === 'result');
+    expect(starts).toHaveLength(1);
+    expect(results).toHaveLength(1);
+
+    const result = results[0] as CliEventResult;
+    expect(result.ok).toBe(true);
+    // The command's own data-bearing result is the terminal one.
+    expect(result.data).toEqual({ validated: true });
+  });
+
+  it('preserves a command-emitted error result without adding a duplicate', async () => {
+    const registry = new CommandRegistry({ commandsDir: null });
+    registry.register('svc', 'validate', {
+      default: async (ctx: CliContext): Promise<void> => {
+        ctx.output.emit({
+          type: 'result',
+          ok: false,
+          error: { code: 'invalid', message: 'bad config' },
+          ts: new Date().toISOString(),
+        });
+      },
+      meta: makeMeta('validate'),
+    });
+
+    const { stream, chunks } = makeRecorder();
+    const code = await dispatch(['svc', 'validate', '--output=json'], {
+      registry,
+      env: {},
+      stream,
+    });
+
+    // The command returned normally, so dispatch reports success exit, but it
+    // must not append its own ok:true result on top of the command's error.
+    expect(code).toBe(0);
+    const events = parseNdjson(chunks);
+    const results = events.filter((e) => e.type === 'result');
+    expect(results).toHaveLength(1);
+    const result = results[0] as CliEventResult;
+    expect(result.ok).toBe(false);
+    expect(result.error?.code).toBe('invalid');
+  });
+
   it('runs internal commands without errors when no .open-tomato-root is found at startup', async () => {
     vi.mocked(findOpenTomatoRoot).mockReset()
       .mockReturnValue(null);
