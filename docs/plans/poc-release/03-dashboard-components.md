@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [03a first within this WS; D1 spike for 03b]
 parallel-with: [01, 02, 05-wave-0, 06-breakdown]
 size: L (4+ sessions: 03a–03d)
-status: 03a done (CB PR #8, 2026-07-22); 03b-03d ready
+status: 03a+03b done (CB PRs #8, #10); 03c/03d ready
 linear: OPT-242
 ---
 
@@ -28,16 +28,16 @@ Primitives (all from UI-New-Components.md):
 - [x] `Formatted*` family + single Intl-based formatter utility (no 3rd-party deps): `HumanReadableValue`, `FormattedDate`, `FormattedCurrency`, `FormattedPercentage` (ratio|raw), `FormattedDuration`, `FormattedRelativeTime` (day→hh:mm, then relative ladder), `FormattedValue` (type-dispatching)
 - [x] `ModalFooterStatus` — footer status string slot supported by the modal provider/component
 
-## Session 03b — Cards & charts (M) — starts with D1 spike
+## Session 03b — Cards & charts (M) — DONE (CB PR #10: D1 resolved hand-rolled SVG; + SectionCard shell, chartTone palette, UsageBar; toDate date-only local-parse fix; >100% overflow treatment designed)
 
-- [ ] **D1 spike (~1h)**: LineChart hand-rolled SVG vs library; record outcome in 00-master-plan decision log
-- [ ] `SmallStatCard` — header (title + decoration|trend), stat value w/ unit or `current / goal`, optional bottom line (text/link/progress/sparkline)
-- [ ] `RowStatCard` — title/subtitle + invisible-column ministats; row 2 optional text/link/progress (fix the misaligned forecast-legend noted in spec)
-- [ ] `UsageChart` / `ProgressChart` — simple (3-col) + multi (decoration/name+bar/value + free columns) + single-line segmented variant; progress >100% visual treatment (not in original design — design it)
-- [ ] `Sparkline` — mini chart for card bottoms and table cells
-- [ ] `CalendarHeatmap` — week (7×24, hour labels every 4h) and 90/180-day modes, Monday start (settings-driven later), hover tooltip, optional drill-down click
-- [ ] `LineChart` — per D1 outcome (Overview "Tokens by model")
-- [ ] `FilesChanged` — header (files/additions/deletions), rows: file-type icon, path, `+n` green / `-n` red
+- [x] **D1 spike (~1h)**: LineChart hand-rolled SVG vs library; record outcome in 00-master-plan decision log
+- [x] `SmallStatCard` — header (title + decoration|trend), stat value w/ unit or `current / goal`, optional bottom line (text/link/progress/sparkline)
+- [x] `RowStatCard` — title/subtitle + invisible-column ministats; row 2 optional text/link/progress (fix the misaligned forecast-legend noted in spec)
+- [x] `UsageChart` / `ProgressChart` — simple (3-col) + multi (decoration/name+bar/value + free columns) + single-line segmented variant; progress >100% visual treatment (not in original design — design it)
+- [x] `Sparkline` — mini chart for card bottoms and table cells
+- [x] `CalendarHeatmap` — week (7×24, hour labels every 4h) and 90/180-day modes, Monday start (settings-driven later), hover tooltip, optional drill-down click
+- [x] `LineChart` — per D1 outcome (Overview "Tokens by model")
+- [x] `FilesChanged` — header (files/additions/deletions), rows: file-type icon, path, `+n` green / `-n` red
 
 ## Session 03c — Table kit & known entities (M)
 

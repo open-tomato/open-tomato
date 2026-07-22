@@ -25,7 +25,7 @@ Pipeline: **raw design system → CB (breakdown/fidelity) → OT `packages/ui/*`
 
 | # | Decision | Outcome |
 |---|----------|---------|
-| D1 | LineChart | ~1h spike at top of charts session; bias hand-rolled token-styled SVG (consistent with Sparkline/UsageChart) |
+| D1 | LineChart | **RESOLVED 2026-07-22 (WS03b, CB PR #10)**: hand-rolled token-styled SVG — raw-DS reference is itself ~90 lines of SVG; zero new deps; revisit triggers (zoom/brush/animation/dense tooltips → evaluate headless visx/d3-scale) recorded in `LineChart/D1-DECISION.md` |
 | D2 | ui package versioning | Changesets **fixed/linked group**: ui-components, ui-portal, ui-docs, theme-default move together at 0.x |
 | D3 | Theming | Tokens + Tailwind preset extracted to `@open-tomato/theme-default` in WS05 wave 0; consumed by all ui packages + apps |
 | D4 | Reference-free enforcement | ESLint `no-restricted-imports` + grep gate over `packages/ui/**` wired into `publish:dry` + story-source scrub in port checklist |
