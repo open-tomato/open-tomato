@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [03a first within this WS; D1 spike for 03b]
 parallel-with: [01, 02, 05-wave-0, 06-breakdown]
 size: L (4+ sessions: 03a–03d)
-status: 03a+03b done (CB PRs #8, #10); 03c/03d ready
+status: 03a+03b+03c done (CB PRs #8, #10, #11); 03d ready
 linear: OPT-242
 ---
 
@@ -39,28 +39,28 @@ Primitives (all from UI-New-Components.md):
 - [x] `LineChart` — per D1 outcome (Overview "Tokens by model")
 - [x] `FilesChanged` — header (files/additions/deletions), rows: file-type icon, path, `+n` green / `-n` red
 
-## Session 03c — Table kit & known entities (M)
+## Session 03c — Table kit & known entities (M) — DONE (CB PR #11: CellContent kit, 10 entity cells, Table striped/selectable/reorderable/RowContextAction + cellTypes registry; decisions documented: parent-cell tooltips, controlled onSelectionChange, ConfirmPopover seam for 03d)
 
 CellContent kit:
-- [ ] Value / Value-with-unit (right-aligned, unit greyed)
-- [ ] Decoration (avatar/icon/badge, first-column rule)
-- [ ] DoubleLine text (name + truncating subtitle)
-- [ ] Status (ok/warn/err/info/disabled; rounded/square/icon formats)
-- [ ] Label (accent color, array support)
-- [ ] Bar indicator (mini + regular stroke variants)
-- [ ] `tokens-consumption` + `tokens-progress` (green→yellow→red thresholds)
-- [ ] `spend-over-time` (FormattedCurrency over duration·relative-time)
-- [ ] Decide: tooltip ownership — per-content component vs parent cell (document the call)
+- [x] Value / Value-with-unit (right-aligned, unit greyed)
+- [x] Decoration (avatar/icon/badge, first-column rule)
+- [x] DoubleLine text (name + truncating subtitle)
+- [x] Status (ok/warn/err/info/disabled; rounded/square/icon formats)
+- [x] Label (accent color, array support)
+- [x] Bar indicator (mini + regular stroke variants)
+- [x] `tokens-consumption` + `tokens-progress` (green→yellow→red thresholds)
+- [x] `spend-over-time` (FormattedCurrency over duration·relative-time)
+- [x] Decide: tooltip ownership — per-content component vs parent cell (document the call)
 
 TableRow modifiers:
-- [ ] Checkbox column (parent-provider events question — document the call)
-- [ ] SortHandle (Droppable/Draggable reorder)
-- [ ] odd/even styling prop
-- [ ] Context action (`ellipsis-vertical` menu, `{actions[], destructive}` contract, destructive → semi-generic confirm popover naming the action + entity)
+- [x] Checkbox column (parent-provider events question — document the call)
+- [x] SortHandle (Droppable/Draggable reorder)
+- [x] odd/even styling prop
+- [x] Context action (`ellipsis-vertical` menu, `{actions[], destructive}` contract, destructive → semi-generic confirm popover naming the action + entity)
 
 Known entities (contract-typed display components):
-- [ ] `agent-title`, `agent-cell`, `session-inline`, `session-cell`, `model-cell`, `model-footer`, `branch-inline`, `user-inline`, `task-cell`, `tool-title`
-- [ ] Self-describing table integration: column type `{entity}-{variant}` → inferred component
+- [x] `agent-title`, `agent-cell`, `session-inline`, `session-cell`, `model-cell`, `model-footer`, `branch-inline`, `user-inline`, `task-cell`, `tool-title`
+- [x] Self-describing table integration: column type `{entity}-{variant}` → inferred component
 
 ## Session 03d — Topbar set, form additions, passkey (M)
 
