@@ -5,7 +5,7 @@ depends-on: [01; wave 1 on 03c+03d; wave 2 on 03b]
 parallel-with: [03 (different repo), 04, 06]
 size: L (3+ sessions, one per wave)
 status: wave 0 ready after WS01
-linear: TBD (WS02)
+linear: OPT-244
 ---
 
 # WS05 — Port & publish `@open-tomato/ui-components` + `@open-tomato/theme-default`

@@ -5,7 +5,7 @@ depends-on: []
 parallel-with: [02, 03, 05-wave-0]
 size: S
 status: done (2026-07-22)
-linear: OPT-239 (orchestrator test quarantine record)
+linear: OPT-240 (WS01) · OPT-239 (quarantine record)
 ---
 
 > Completed 2026-07-22: `packages/ui/*` glob wired; scaffolds committed with

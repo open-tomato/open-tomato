@@ -5,7 +5,7 @@ depends-on: [any buildable app — pilot can use a placeholder image]
 parallel-with: [07, 08]
 size: M
 status: pending
-linear: TBD (WS02)
+linear: OPT-251
 ---
 
 # WS12 — Deployment via grow-box

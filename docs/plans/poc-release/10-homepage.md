@@ -5,7 +5,7 @@ depends-on: [06]
 parallel-with: [07, 08, 11]
 size: S
 status: pending
-linear: TBD (WS02)
+linear: OPT-249
 ---
 
 # WS10 — Homepage app

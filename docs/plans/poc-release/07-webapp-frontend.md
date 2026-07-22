@@ -5,7 +5,7 @@ depends-on: [05-wave-0 (scaffold), 05-wave-1+2 (pages); 04 as spec]
 parallel-with: [08, 05-wave-2, 10, 11]
 size: L (scaffold + ~3 page sessions)
 status: pending
-linear: TBD (WS02)
+linear: OPT-246
 ---
 
 # WS07 — Webapp frontend

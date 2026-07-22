@@ -5,7 +5,7 @@ depends-on: [05-wave-1 (AuthShell + auth templates published)]
 parallel-with: [07, 10, 11]
 size: M (1–2 sessions)
 status: pending
-linear: TBD (WS02)
+linear: OPT-247
 ---
 
 # WS08 — Auth app frontend + backend API contract

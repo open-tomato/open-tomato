@@ -5,7 +5,7 @@ depends-on: [03b, 03c, 03d]
 parallel-with: [05-wave-1, 06-port]
 size: M–L (2–3 sessions)
 status: pending
-linear: TBD (WS02)
+linear: OPT-243
 ---
 
 # WS04 — Dashboard reference pages

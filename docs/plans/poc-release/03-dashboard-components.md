@@ -5,7 +5,7 @@ depends-on: [03a first within this WS; D1 spike for 03b]
 parallel-with: [01, 02, 05-wave-0, 06-breakdown]
 size: L (4+ sessions: 03a–03d)
 status: ready (03a can start now)
-linear: TBD (WS02)
+linear: OPT-242
 ---
 
 # WS03 — Dashboard component catalog completion

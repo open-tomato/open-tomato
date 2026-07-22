@@ -5,7 +5,7 @@ depends-on: [08]
 parallel-with: [12-partial]
 size: L
 status: pending
-linear: TBD (WS02)
+linear: OPT-248
 ---
 
 # WS09 — Auth backend

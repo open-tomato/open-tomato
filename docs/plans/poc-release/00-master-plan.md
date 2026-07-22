@@ -2,6 +2,7 @@
 
 > Status: **active** · Authored 2026-07-22 from the planning session driven by [reference/POC-RELEASE-PLANS.md](reference/POC-RELEASE-PLANS.md).
 > Each workstream has its own doc (`NN-<name>.md`) with frontmatter: `repo / tier / depends-on / parallel-with / size / status / linear`.
+> Linear mirror: **PoC Release** project (Open Tomato team) — issues OPT-240…OPT-252 map WS01…WS13; OPT-239 is the orchestrator-test quarantine record. WS01 + WS02 completed 2026-07-22.
 
 ## Repos
 

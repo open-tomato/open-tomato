@@ -5,7 +5,7 @@ depends-on: [05-wave-0 (port checklist + gate + theme-default), 03a (skill adapt
 parallel-with: [03b–d, 04]
 size: M–L (2–3 sessions)
 status: pending
-linear: TBD (WS02)
+linear: OPT-245
 ---
 
 # WS06 — Portal & docs pipeline → `@open-tomato/ui-portal` + `@open-tomato/ui-docs`
