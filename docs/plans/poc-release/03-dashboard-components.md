@@ -1,0 +1,88 @@
+---
+repo: component-breakdown
+tier: detailed
+depends-on: [03a first within this WS; D1 spike for 03b]
+parallel-with: [01, 02, 05-wave-0, 06-breakdown]
+size: L (4+ sessions: 03a–03d)
+status: ready (03a can start now)
+linear: TBD (WS02)
+---
+
+# WS03 — Dashboard component catalog completion
+
+**Goal:** every net-new component from [reference/UI-New-Components.md](reference/UI-New-Components.md) and [reference/UI-App-Shell.md](reference/UI-App-Shell.md) exists in `@open-tomato/pre-components` at rosetta-verified quality, following the established pattern (`index.ts` + `<Name>.tsx` + `<Name>.variants.ts` + `<Name>.stories.tsx`, CVA variant-first, no inline classes).
+
+**Sources:** raw-DS JSX under `demo/raw-design-system/dashboard/*.jsx` + `topbar.html`; specs in `reference/UI-*.md`. Where raw design and the UI-*.md specs diverge (e.g. list/cards double display), **the specs win**.
+
+**Do not** source anything from OT `packages/ui-skeleton` (D9).
+
+## Session 03a — Skill adaptation + primitives (M)
+
+Tooling first:
+- [ ] Adapt `skills/component-from-design` for raw-DS JSX sources: the rosetta loop currently assumes bundle-chapter sources; unmigrated screens live in richer raw-DS JSX (e.g. `AgentEditor.jsx` 434 LOC). Document the adapted loop (source extraction → CVA mapping → fidelity check via `compare-design.mjs` — extend `--source` handling if needed for dashboard/topbar artboards).
+
+Primitives (all from UI-New-Components.md):
+- [ ] `Icon` — Lucide-by-name wrapper (`<Icon name="terminal" size accent bg-color>`); also closes the CB "real Icon component" follow-up
+- [ ] `StatusIndicator` — circle/rounded-square, accent + `pulse={true}`
+- [ ] `TrendIndicator` — ratio-based trend prop, up/down/flat, optional `+x%`/`-x%` value
+- [ ] `Formatted*` family + single Intl-based formatter utility (no 3rd-party deps): `HumanReadableValue`, `FormattedDate`, `FormattedCurrency`, `FormattedPercentage` (ratio|raw), `FormattedDuration`, `FormattedRelativeTime` (day→hh:mm, then relative ladder), `FormattedValue` (type-dispatching)
+- [ ] `ModalFooterStatus` — footer status string slot supported by the modal provider/component
+
+## Session 03b — Cards & charts (M) — starts with D1 spike
+
+- [ ] **D1 spike (~1h)**: LineChart hand-rolled SVG vs library; record outcome in 00-master-plan decision log
+- [ ] `SmallStatCard` — header (title + decoration|trend), stat value w/ unit or `current / goal`, optional bottom line (text/link/progress/sparkline)
+- [ ] `RowStatCard` — title/subtitle + invisible-column ministats; row 2 optional text/link/progress (fix the misaligned forecast-legend noted in spec)
+- [ ] `UsageChart` / `ProgressChart` — simple (3-col) + multi (decoration/name+bar/value + free columns) + single-line segmented variant; progress >100% visual treatment (not in original design — design it)
+- [ ] `Sparkline` — mini chart for card bottoms and table cells
+- [ ] `CalendarHeatmap` — week (7×24, hour labels every 4h) and 90/180-day modes, Monday start (settings-driven later), hover tooltip, optional drill-down click
+- [ ] `LineChart` — per D1 outcome (Overview "Tokens by model")
+- [ ] `FilesChanged` — header (files/additions/deletions), rows: file-type icon, path, `+n` green / `-n` red
+
+## Session 03c — Table kit & known entities (M)
+
+CellContent kit:
+- [ ] Value / Value-with-unit (right-aligned, unit greyed)
+- [ ] Decoration (avatar/icon/badge, first-column rule)
+- [ ] DoubleLine text (name + truncating subtitle)
+- [ ] Status (ok/warn/err/info/disabled; rounded/square/icon formats)
+- [ ] Label (accent color, array support)
+- [ ] Bar indicator (mini + regular stroke variants)
+- [ ] `tokens-consumption` + `tokens-progress` (green→yellow→red thresholds)
+- [ ] `spend-over-time` (FormattedCurrency over duration·relative-time)
+- [ ] Decide: tooltip ownership — per-content component vs parent cell (document the call)
+
+TableRow modifiers:
+- [ ] Checkbox column (parent-provider events question — document the call)
+- [ ] SortHandle (Droppable/Draggable reorder)
+- [ ] odd/even styling prop
+- [ ] Context action (`ellipsis-vertical` menu, `{actions[], destructive}` contract, destructive → semi-generic confirm popover naming the action + entity)
+
+Known entities (contract-typed display components):
+- [ ] `agent-title`, `agent-cell`, `session-inline`, `session-cell`, `model-cell`, `model-footer`, `branch-inline`, `user-inline`, `task-cell`, `tool-title`
+- [ ] Self-describing table integration: column type `{entity}-{variant}` → inferred component
+
+## Session 03d — Topbar set, form additions, passkey (M)
+
+Topbar (source: `topbar.html` + `TopbarLive.jsx`; currently only story fixtures):
+- [ ] `WorkspaceSwitcher` — 5 most recent + settings link, check marks, hidden for single-workspace, fixed/max width, no hard topbar-scope dependency (may move to sidebar)
+- [ ] `SearchSuggest` — ⌘K global, lens icon + `⌘K` label, 5 suggestion kinds (agent/session/task/tool/doc) each with accent, keyboard navigation, enter-fallthrough to full search page
+- [ ] `NotificationsBell` — ghost icon button + popover grouped by level (ok/warn/err/info), red dot ≥1 unread, mark-all-read header action
+- [ ] `ThemeSwitcher` — ghost icon button, hidden when user preference = system
+- [ ] `ProfileMenu` — touchable avatar, header (avatar/name/email/role), My Profile / Account Settings / Switch workspace / Logout (inline confirm)
+- [ ] `ConfirmPopover` — standalone + inline flavours; always names the action
+- [ ] `AppShellTopbar` upgrade — collapse button in wrapper; sidebar: dynamic nav config (json/api-driven), week-summary widget stub, bottom quick-access (Docs/Settings); optional `AppShellContent` footer
+
+FormKit additions:
+- [ ] `VerboseOption` / `VerboseOptionList` (from raw `ModelOption` in `AgentEditor.jsx`) — radio/checkbox behavior, model badges, description
+- [ ] `DecoratedToggle` / `DecoratedToggleList` (from raw `ToolPicker` in `AgentEditor.jsx`) — grouped toggles w/ x/y indicator
+- [ ] `ChipList` — single/multi modes, suggestions, keyboard nav, `allowNew`
+- [ ] `AvatarSelector` — big avatar + initials input + color grid
+
+Passkey (D5):
+- [ ] `PasskeyPrompt` from `dashboard/Profile.jsx` (raw DS settings.html) — post-"add passkey" 2FA-modal state awaiting browser WebAuthn interaction; wire as a TwoFactor flow step candidate (app wiring happens in WS08)
+
+## Verification (every session)
+
+- Rosetta loop per component: `compare-design.mjs` side-by-side (light + dark), `bun run check:stories`, `bun run test`, `test-visual.sh` baselines updated deliberately.
+- Every component ships `.tsx` + `.variants.ts` + `.stories.tsx` + `index.ts` and is exported from the root barrel.

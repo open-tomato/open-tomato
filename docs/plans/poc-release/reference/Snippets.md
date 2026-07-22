@@ -1,0 +1,21 @@
+The final version should also include the following seections/widgets:
+  - Sessions: 
+    - Row with Small cards indicator:
+      - Live now
+      - Today
+      - Tokens Today
+      - Cost Today
+    - List of top 5 sessions (same row as Sessions section). A cog button can set the filter/sorting: Latest, Tokens, Cost, Reset. Choosing other than the workspace default persists across sessions but is reserved for the user, not workspace. Clicking reset will reset to workspace default.
+    - View all button/link to sessions page.
+  - Agents:
+    - Row with Small cards indicator:
+      - Active
+      - Most used
+      - Most expensive
+    - List of top 5 agents (same row as Agents section). A cog button can set the filter/sorting: Latest, Active, Most used, Most expensive, Reset. Choosing other than the workspace default persists across sessions but is reserved for the user, not workspace. Clicking reset will reset to workspace default.
+    - View all button/link to agents page.
+  - Tools:
+    - Row with Small Bar Charts:
+      - Tools per type (Mcp, LLM, API Client, Skill, etc)
+      - Tools usage (top 5 used tools with 3 indicator bars showing Tokens used, Used x Times, Estimated cost)
+    - View all button/link to tools page.
