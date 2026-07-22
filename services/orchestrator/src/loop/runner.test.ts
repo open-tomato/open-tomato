@@ -133,6 +133,7 @@ function makeContext(
 
 const PLAN_WITH_ONE_TASK = '- [ ] Do something important\n';
 
+// Quarantined (stale Db mocks / runner crash) — re-enable via OPT-239.
 describe.skip('runLoop — disposition:block terminates with non-zero (blocked) status', () => {
   let workDir: string;
 
@@ -476,6 +477,7 @@ function makeContextWithBus(
   return { ctx, stateUpdates, rpcEvents };
 }
 
+// Quarantined (stale Db mocks / runner crash) — re-enable via OPT-239.
 describe.skip('runLoop — RPC lifecycle events through RpcEventBus', () => {
   let workDir: string;
 
@@ -619,6 +621,7 @@ describe.skip('runLoop — RPC lifecycle events through RpcEventBus', () => {
 // RPC orchestration events (hat_changed, task_status_changed, task_counts_updated)
 // ---------------------------------------------------------------------------
 
+// Quarantined (stale Db mocks / runner crash) — re-enable via OPT-239.
 describe.skip('runLoop — RPC orchestration events', () => {
   let workDir: string;
 

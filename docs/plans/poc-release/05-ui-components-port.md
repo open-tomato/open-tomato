@@ -1,5 +1,5 @@
 ---
-repo: open-tomato (packages/ui/components, packages/ui/theme-default)
+repo: open-tomato (packages/ui/components, packages/shared/theme-default)
 tier: detailed
 depends-on: [01; wave 1 on 03c+03d; wave 2 on 03b]
 parallel-with: [03 (different repo), 04, 06]

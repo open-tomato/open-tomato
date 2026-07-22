@@ -4,9 +4,17 @@ tier: milestone
 depends-on: []
 parallel-with: [02, 03, 05-wave-0]
 size: S
-status: ready
-linear: TBD (WS02)
+status: done (2026-07-22)
+linear: OPT-239 (orchestrator test quarantine record)
 ---
+
+> Completed 2026-07-22: `packages/ui/*` glob wired; scaffolds committed with
+> gate-passing placeholders + `REFACTOR_NEEDED.md` publish guards;
+> `theme-default` relocated to `packages/shared/` (the `ui` group naming
+> convention prefixes `ui-`, and the decided name is `@open-tomato/theme-default`);
+> `expectedPackageName` gained the `ui` prefix rule; orchestrator suites stay
+> quarantined per OPT-239 (store mocks predate drizzle Db; runner suite crashes
+> the worker); published `cli@0.1.3`, `cli-core@0.2.1`, `config@0.2.1`.
 
 # WS01 — Monorepo hygiene & release baseline
 
@@ -14,10 +22,10 @@ linear: TBD (WS02)
 
 ## Milestones
 
-1. **Wire in `packages/ui/*`**: add the glob to root `package.json` `workspaces` (verified absent today); commit the untracked `packages/ui/components` + `packages/ui/theme-default` scaffolds. Empty `src/` must not break the turbo gate — add a placeholder entry point/test so `build`, `check-types`, `test`, `lint` pass.
+1. **Wire in `packages/ui/*`**: add the glob to root `package.json` `workspaces` (verified absent today); commit the untracked `packages/ui/components` + `packages/shared/theme-default` scaffolds. Empty `src/` must not break the turbo gate — add a placeholder entry point/test so `build`, `check-types`, `test`, `lint` pass.
 2. **Publish pending changesets**: CLI rename `tomato-cli` → `@open-tomato/cli` + dispatch fixes (`.changeset/cli-b397c0ec.md`, `cli-dispatch-contract.md`) versioned and published to Verdaccio.
 3. **Orchestrator test debt** (commit `4461ab7` disabled `runner.test.ts`, `store/{jobs,tasks,workers}.test.ts`): re-enable, or explicitly quarantine each with a Linear issue so the gate is honest, not silently weakened.
-4. **Normalize `packages/ui/theme-default`**: real package.json in the fixed version group (D2), even if content lands in WS05 wave 0.
+4. **Normalize `packages/shared/theme-default`**: real package.json in the fixed version group (D2), even if content lands in WS05 wave 0.
 
 ## Cut-lines
 

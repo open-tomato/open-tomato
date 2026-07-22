@@ -37,6 +37,7 @@ function createMockDb() {
   };
 }
 
+// Quarantined (stale Db mocks / runner crash) — re-enable via OPT-239.
 describe.skip('store/tasks', () => {
   let db: ReturnType<typeof createMockDb>;
 

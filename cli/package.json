@@ -1,6 +1,6 @@
 {
   "name": "@open-tomato/cli",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
   "description": "Open Tomato general-purpose CLI",
   "bin": {

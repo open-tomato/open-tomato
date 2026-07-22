@@ -46,6 +46,7 @@ export interface PackageInfo {
 export function expectedPackageName(group: string, base: string): string {
   if (group === "notifications") return `@open-tomato/notifications-${base}`;
   if (group === "agents") return `@open-tomato/agents-${base}`;
+  if (group === "ui") return `@open-tomato/ui-${base}`;
   return `@open-tomato/${base}`;
 }
 

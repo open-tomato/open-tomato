@@ -1,0 +1,13 @@
+{
+  "name": "@open-tomato/theme-default",
+  "version": "0.6.0",
+  "private": false,
+  "type": "module",
+  "description": "Default theme (design tokens + Tailwind preset) for @open-tomato/ui-* packages. Content lands in WS05 wave 0.",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

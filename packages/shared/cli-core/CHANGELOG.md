@@ -1,5 +1,12 @@
 # @open-tomato/cli-core
 
+## 0.2.1
+
+### Patch Changes
+
+- 6176954: docs(phase-8): release notes capturing registry-cut versions committed (9a86d05)
+- a50fd09: Verified @open-tomato/cli-core 0.2.0 tarball downloads from heimdall registry via npm pack --dry-run
+
 ## 0.2.0
 
 ### Minor Changes
