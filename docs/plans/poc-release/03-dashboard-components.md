@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [03a first within this WS; D1 spike for 03b]
 parallel-with: [01, 02, 05-wave-0, 06-breakdown]
 size: L (4+ sessions: 03a–03d)
-status: ready (03a can start now)
+status: 03a done (CB PR #8, 2026-07-22); 03b-03d ready
 linear: OPT-242
 ---
 
@@ -16,17 +16,17 @@ linear: OPT-242
 
 **Do not** source anything from OT `packages/ui-skeleton` (D9).
 
-## Session 03a — Skill adaptation + primitives (M)
+## Session 03a — Skill adaptation + primitives (M) — DONE (CB PR #8: skill covers bundle/raw-DS/spec-driven sources; compare-design.mjs gained --source topbar|dashboard; lucide-react added; repo lint debt tracked as OPT-253)
 
 Tooling first:
-- [ ] Adapt `skills/component-from-design` for raw-DS JSX sources: the rosetta loop currently assumes bundle-chapter sources; unmigrated screens live in richer raw-DS JSX (e.g. `AgentEditor.jsx` 434 LOC). Document the adapted loop (source extraction → CVA mapping → fidelity check via `compare-design.mjs` — extend `--source` handling if needed for dashboard/topbar artboards).
+- [x] Adapt `skills/component-from-design` for raw-DS JSX sources: the rosetta loop currently assumes bundle-chapter sources; unmigrated screens live in richer raw-DS JSX (e.g. `AgentEditor.jsx` 434 LOC). Document the adapted loop (source extraction → CVA mapping → fidelity check via `compare-design.mjs` — extend `--source` handling if needed for dashboard/topbar artboards).
 
 Primitives (all from UI-New-Components.md):
-- [ ] `Icon` — Lucide-by-name wrapper (`<Icon name="terminal" size accent bg-color>`); also closes the CB "real Icon component" follow-up
-- [ ] `StatusIndicator` — circle/rounded-square, accent + `pulse={true}`
-- [ ] `TrendIndicator` — ratio-based trend prop, up/down/flat, optional `+x%`/`-x%` value
-- [ ] `Formatted*` family + single Intl-based formatter utility (no 3rd-party deps): `HumanReadableValue`, `FormattedDate`, `FormattedCurrency`, `FormattedPercentage` (ratio|raw), `FormattedDuration`, `FormattedRelativeTime` (day→hh:mm, then relative ladder), `FormattedValue` (type-dispatching)
-- [ ] `ModalFooterStatus` — footer status string slot supported by the modal provider/component
+- [x] `Icon` — Lucide-by-name wrapper (`<Icon name="terminal" size accent bg-color>`); also closes the CB "real Icon component" follow-up
+- [x] `StatusIndicator` — circle/rounded-square, accent + `pulse={true}`
+- [x] `TrendIndicator` — ratio-based trend prop, up/down/flat, optional `+x%`/`-x%` value
+- [x] `Formatted*` family + single Intl-based formatter utility (no 3rd-party deps): `HumanReadableValue`, `FormattedDate`, `FormattedCurrency`, `FormattedPercentage` (ratio|raw), `FormattedDuration`, `FormattedRelativeTime` (day→hh:mm, then relative ladder), `FormattedValue` (type-dispatching)
+- [x] `ModalFooterStatus` — footer status string slot supported by the modal provider/component
 
 ## Session 03b — Cards & charts (M) — starts with D1 spike
 
