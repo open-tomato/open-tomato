@@ -4,9 +4,26 @@ tier: detailed
 depends-on: [01; wave 1 on 03c+03d; wave 2 on 03b]
 parallel-with: [03 (different repo), 04, 06]
 size: L (3+ sessions, one per wave)
-status: wave 0 ready after WS01
+status: wave 0 done (2026-07-22); waves 1–2 pending WS03
 linear: OPT-244
 ---
+
+> **Wave 0 completed 2026-07-22** — published `@open-tomato/ui-components@0.6.0`
+> (25 atoms + 16 molecules + lib, 183 stories, Storybook workbench + visual
+> suite) and `@open-tomato/theme-default@0.6.0` (tokens + fonts) as the initial
+> registry cut (no changeset — first publish of the pre-set 0.6.0; later waves
+> use changesets in the fixed group). Reference-free gate live: ESLint
+> `no-restricted-imports` + `packages/scripts/reference-gate.ts` wired into
+> `publish:dry`/`publish:local`. Decisions taken: theming split per lib.css
+> contract (theme-default owns tokens.css+fonts.css; theme.css component
+> contract stays here; build copies theme files into dist via
+> `createRequire.resolve`); tokens element defaults wrapped in `@layer base`
+> (cascade fix — wave-1 pages may drop their `!` workarounds);
+> `prepack` hook removed (staging has no node_modules; the gated flow's turbo
+> build guarantees freshness, matching every other published package);
+> `@storybook/addon-vitest` pinned `~10.4.1` (10.5.x breaks against
+> storybook 10.4). Install-from-registry smoke test passed (129 exports,
+> styles, types).
 
 # WS05 — Port & publish `@open-tomato/ui-components` + `@open-tomato/theme-default`
 

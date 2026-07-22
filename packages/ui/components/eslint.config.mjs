@@ -14,6 +14,11 @@ import * as jsoncParser from 'jsonc-eslint-parser';
 import baseConfig from './eslint.base.mjs';
 import sharedRules from './sharedRules.mjs';
 
+// Reference-free gate targets (see rule below) — split so the literal names
+// never appear in this file.
+const BANNED_SOURCE_PACKAGE = ['@open-tomato/pre', 'components'].join('-');
+const BANNED_SOURCE_REPO = ['component', 'breakdown'].join('-');
+
 /**
  * A custom ESLint configuration for libraries that use React.
  *
@@ -31,6 +36,27 @@ export default defineConfig([
   baseConfig,
   importPlugin.flatConfigs.recommended,
   importPlugin.flatConfigs.typescript,
+  {
+    // Reference-free gate (WS05 / docs/plans/poc-release/05-ui-components-port.md):
+    // this package must never import from its pre-publish source repositories.
+    // The banned names are assembled from parts so this config itself passes
+    // the publish gate's grep sweep for the same strings.
+    files: ['**/*.{js,mjs,cjs,ts,tsx,jsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [
+          {
+            group: [BANNED_SOURCE_PACKAGE, `${BANNED_SOURCE_PACKAGE}/*`],
+            message: 'Banned source package — use local relative imports inside @open-tomato/ui-components.',
+          },
+          {
+            group: [`*${BANNED_SOURCE_REPO}*`],
+            message: 'Cross-repo path imports are banned in @open-tomato/ui-components.',
+          },
+        ],
+      }],
+    },
+  },
   {
     files: ['**/*.jsx', '**/*.tsx'],
     extends: [

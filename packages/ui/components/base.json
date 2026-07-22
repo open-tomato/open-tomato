@@ -22,5 +22,5 @@
     "types": ["node"]
   },
   "include": ["src", "demo", "*.ts", "*.tsx", "*.mjs", ".storybook"],
-  "exclude": ["node_modules", "dist", "dist-web", "build", "demo/design-bundle"]
+  "exclude": ["node_modules", "dist", "dist-web", "build"]
 }

@@ -3,10 +3,15 @@
   "version": "0.6.0",
   "private": false,
   "type": "module",
-  "description": "Default theme (design tokens + Tailwind preset) for @open-tomato/ui-* packages. Content lands in WS05 wave 0.",
+  "description": "Default theme for @open-tomato/ui-* packages: semantic design-token variables (light + dark) and type-face source. Override by redefining the semantic variables after import.",
   "files": [
-    "dist"
+    "src"
   ],
+  "exports": {
+    "./tokens.css": "./src/tokens.css",
+    "./fonts.css": "./src/fonts.css",
+    "./package.json": "./package.json"
+  },
   "publishConfig": {
     "access": "public"
   }

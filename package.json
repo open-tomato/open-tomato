@@ -26,9 +26,10 @@
     "test": "turbo run test",
     "preflight": "bun packages/scripts/preflight.ts",
     "changeset:add": "bun packages/scripts/add-changeset.ts",
-    "prepublish:check": "turbo run build check-types test lint && bun packages/scripts/preflight.ts",
-    "publish:dry": "turbo run build check-types test lint && bun packages/scripts/preflight.ts --skip-changeset && bun packages/scripts/publish-packages.ts --dry-run",
-    "publish:local": "turbo run build check-types test lint && bun packages/scripts/preflight.ts --skip-changeset && bun packages/scripts/publish-packages.ts --yes",
+    "reference-gate": "bun packages/scripts/reference-gate.ts",
+    "prepublish:check": "turbo run build check-types test lint && bun packages/scripts/preflight.ts && bun packages/scripts/reference-gate.ts",
+    "publish:dry": "turbo run build check-types test lint && bun packages/scripts/preflight.ts --skip-changeset && bun packages/scripts/reference-gate.ts && bun packages/scripts/publish-packages.ts --dry-run",
+    "publish:local": "turbo run build check-types test lint && bun packages/scripts/preflight.ts --skip-changeset && bun packages/scripts/reference-gate.ts && bun packages/scripts/publish-packages.ts --yes",
     "release": "changeset publish"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 # Open Tomato - Component
-This is a component library based on our Design System demo for the Open Tomato project. These are the building blocks for our apps and UI-based packages.
+This is the Open Tomato component library — the building blocks for our apps and UI-based packages. Scope and porting waves are driven by the PoC release plan (`docs/plans/poc-release/05-ui-components-port.md` at the repo root).
 
 ## Tech stack:
 The tech stack consists of React components with TypeScript, using Radix UI primitives for accessibility and headless behavior, Tailwind CSS for styling, and Class Variant Authority (CVA) for managing classes to component variants. The use of classes directly to components is discouraged, and the styling should be covered by variants and flags on the main component and not fine grained styling. These variants should be covered in the component definition and not in the implementation side.
@@ -14,8 +14,8 @@ Our project structure is organized in the atomic design pattern, with folders fo
 
 
 ## JSX to TSX:
-In some cases importing from the design system demo will include static JSX files. These files need to be refactored to TSX and types need to be added.
-When refactoring a JSX component file that was created as part of a demo site for our web kit / design system we need to move gradually to streamline the process.
+In some cases incoming component work starts from static JSX files. These files need to be refactored to TSX and types need to be added.
+When refactoring such a JSX component file we need to move gradually to streamline the process.
 
 ### Steps to follow:
 1. Read the whole file to understand which components we have and what's the main domain/entity it's being handled inside.

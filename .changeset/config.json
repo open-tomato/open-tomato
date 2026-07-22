@@ -2,7 +2,9 @@
   "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [],
+  "fixed": [
+    ["@open-tomato/ui-components", "@open-tomato/theme-default"]
+  ],
   "linked": [],
   "access": "public",
   "baseBranch": "main",

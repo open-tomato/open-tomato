@@ -28,20 +28,21 @@
     "heroku-postbuild": "npm run build:web",
     "lint:fix": "eslint ./src --ext .ts,.tsx --fix",
     "lint": "eslint ./src --ext .ts,.tsx",
+    "check-types": "tsc --noEmit",
     "dev": "vite --host",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
-    "test": "vitest run --config vitest.unit.config.ts",
+    "test": "vitest run",
     "test:watch": "vitest",
     "test:visual": "scripts/test-visual.sh",
     "test:visual:update": "scripts/test-visual.sh --update",
-    "check:stories": "node scripts/check-stories.mjs",
-    "prepack": "bun run build"
+    "check:stories": "node scripts/check-stories.mjs"
   },
   "engines": {
     "node": "22.x"
   },
   "dependencies": {
+    "@open-tomato/theme-default": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.16",
     "@radix-ui/react-dialog": "^1.1.19",
     "@radix-ui/react-dropdown-menu": "^2.1.20",
@@ -61,7 +62,7 @@
     "@eslint/js": "^9.39.4",
     "@eslint/markdown": "^7.5.1",
     "@next/eslint-plugin-next": "^16.1.6",
-    "@storybook/addon-vitest": "^10.4.1",
+    "@storybook/addon-vitest": "~10.4.1",
     "@storybook/react-vite": "^10.4.1",
     "@storybook/test-runner": "^0.24.4",
     "@stylistic/eslint-plugin": "^5.10.0",

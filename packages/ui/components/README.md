@@ -1,7 +1,7 @@
 # @open-tomato/ui-components
 
 Open Tomato's component library — variant-first React components (CVA +
-Tailwind 4 + Radix primitives) translated 1:1 from the Claude Design bundle.
+Tailwind 4 + Radix primitives).
 
 Published to the pre-release registry (`npm.heimdall.bifemecanico.com`, LAN)
 while under development; public npm comes later. The `@open-tomato` scope is
@@ -31,9 +31,13 @@ That single import brings in, layer by layer:
 | Layer                  | File                                                     | Role                                                                                                 |
 | ---------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | fonts                  | `fonts.css`                                              | type faces (Google Fonts today; swappable source)                                                    |
-| **theme definition**   | `theme.css` (exported as `theme.css`, from `tokens.css`) | the DEFAULT theme — semantic variables (`--bg`, `--fg1`, `--primary`, …) for light + dark            |
+| **theme definition**   | `tokens.css` (exported as `theme.css`)                   | the DEFAULT theme — semantic variables (`--bg`, `--fg1`, `--primary`, …) for light + dark            |
 | **component contract** | internal `@theme` mapping                                | maps semantic variables onto Tailwind utilities (`bg-primary`, `text-fg1`, …) — stable across themes |
 | source scan            | `@source`                                                | points your Tailwind build at the package's JS so the components' classes are generated              |
+
+The fonts and tokens layers are owned by
+[`@open-tomato/theme-default`](../../shared/theme-default) and copied into
+`dist/styles` at build time.
 
 ```tsx
 import { Button, Touchable } from '@open-tomato/ui-components';
@@ -46,14 +50,15 @@ Dark mode: set `data-theme="dark"` on the document element (default follows
 
 ## Theming (v1: theme definition via CSS)
 
-Component layout is fixed; the **token variables are the theme**. Override the
-semantic variables after the styles import:
+Component layout is fixed; the **token variables are the theme**. The default
+theme definition lives in `@open-tomato/theme-default`. Override the semantic
+variables after the styles import:
 
 ```css
 @import "tailwindcss";
 @import "@open-tomato/ui-components/styles.css";
 
-/* your theme definition — same contract tokens.css fulfills */
+/* your theme definition — same contract theme-default's tokens.css fulfills */
 :root, [data-theme='light'] {
   --primary: #7a1fa2;
   --accent: #1d4ed8;
@@ -63,16 +68,15 @@ semantic variables after the styles import:
 }
 ```
 
-A future `@open-tomato` theming package (and eventually a ThemeProvider
-component) will formalize this contract; the variable names above are that
-contract's v1. The variable→utility mapping itself is part of the components —
-don't override it.
+`@open-tomato/theme-default` (and eventually a ThemeProvider component)
+formalizes this contract. The variable→utility mapping itself is part of the
+components — don't override it.
 
 ## Development
 
-This repo is also the design-translation workbench (design bundle under
-`demo/`, authoring skill under `skills/`). See [CLAUDE.md](CLAUDE.md) and the
-[migration roadmap](docs/superpowers/plans/2026-07-15-component-migration-roadmap.md).
+This package is also the component workbench (Storybook + smoke/visual test
+suites). See [CLAUDE.md](CLAUDE.md) and the PoC release plan under
+`docs/plans/poc-release/` (repo root), workstream 05.
 
 ```bash
 bun run storybook          # component workbench

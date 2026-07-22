@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 
 import tailwindcss from '@tailwindcss/vite';
@@ -7,6 +8,12 @@ import dts from 'vite-plugin-dts';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const rootDir = import.meta.dirname;
+const require = createRequire(import.meta.url);
+
+// Theme files ship as copies next to lib.css so its relative @imports resolve
+// in dist; the default theme definition is owned by @open-tomato/theme-default.
+const themeTokensCss = require.resolve('@open-tomato/theme-default/tokens.css');
+const themeFontsCss = require.resolve('@open-tomato/theme-default/fonts.css');
 
 export default defineConfig({
   server: {
@@ -32,8 +39,8 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         { src: 'src/styles/lib.css', dest: 'styles', rename: { stripBase: true, name: 'index.css' } },
-        { src: 'src/styles/fonts.css', dest: 'styles', rename: { stripBase: true } },
-        { src: 'src/styles/tokens.css', dest: 'styles', rename: { stripBase: true } },
+        { src: themeFontsCss, dest: 'styles', rename: { stripBase: true } },
+        { src: themeTokensCss, dest: 'styles', rename: { stripBase: true } },
         { src: 'src/styles/theme.css', dest: 'styles', rename: { stripBase: true } },
       ],
     }),
