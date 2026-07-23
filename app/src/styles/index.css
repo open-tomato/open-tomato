@@ -1,0 +1,6 @@
+/* Tailwind 4 consumer entry per the ui-components lib.css contract:
+   the library ships no prebuilt utilities — its @source directive points
+   this build at the package's compiled JS so the utility classes its
+   variants reference are generated here, alongside the app's own. */
+@import "tailwindcss";
+@import "@open-tomato/ui-components/styles.css";

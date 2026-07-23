@@ -1,0 +1,223 @@
+/**
+ * Typed entity contracts for the webapp's mock data layer (WS07 session 0).
+ *
+ * These shapes double as the draft backend API requirements — every field
+ * here is something a page (per docs/plans/poc-release/reference/UI-*.md)
+ * needs the backend to serve. The human-readable version of this contract
+ * lives in app/docs/data-contracts.md; keep both in sync.
+ *
+ * Deliberately UI-free: no imports from @open-tomato/ui-components. Where a
+ * spec'd table column maps to a cellTypes entry (session-cell, agent-cell,
+ * tokens-progress, spend-over-time, user-inline, …) the fields below are
+ * chosen so pages can project them into those cell props without extra
+ * lookups.
+ */
+
+/* ---- shared scalars ------------------------------------------------------ */
+
+/** ISO-8601 UTC timestamp ("2026-07-20T09:30:00Z"). */
+export type IsoDateTime = string;
+
+export type ThemePreference = 'light' | 'dark' | 'system';
+
+/* ---- workspace & user ---------------------------------------------------- */
+
+export interface Workspace {
+  id: string;
+  name: string;
+  /** URL-safe identifier (also the settings → workspaces anchor). */
+  slug: string;
+  /** Member count, shown in the workspace switcher rows. */
+  members: number;
+  /** Identity-block accent used by the UI's WorkspaceMark. */
+  tone: 'accent' | 'primary' | 'gold';
+}
+
+export type UserRole = 'owner' | 'admin' | 'member';
+
+export interface UserPreferences {
+  /** `system` hides the theme switcher (app-shell spec: Top Bar). */
+  theme: ThemePreference;
+  /** Drives the calendar heatmap's first row (UI-Overview spec). */
+  weekStartsOn: 'monday' | 'sunday';
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  preferences: UserPreferences;
+}
+
+/* ---- sessions ------------------------------------------------------------ */
+
+export type SessionStatus = 'running' | 'waiting' | 'done' | 'failed';
+
+export interface Session {
+  id: string;
+  workspaceId: string;
+  /** Export filename stem (UI-Sessions spec: Export transcript). */
+  slug: string;
+  title: string;
+  description?: string;
+  status: SessionStatus;
+  /** Runner agent (coordinates the session). */
+  agentId: string;
+  /** Model actually used by the run — feeds model-cell / Known Entity. */
+  model: string;
+  /** One session per roadmap task (UI-Sessions spec: Fork). */
+  taskId?: string;
+  branch?: string;
+  /** User who started the session — feeds the "By" user-inline column. */
+  createdBy: string;
+  startedAt: IsoDateTime;
+  finishedAt?: IsoDateTime;
+  /** Tokens consumed so far — feeds tokens-progress with `tokenQuota`. */
+  tokensUsed: number;
+  /** Absent means the "no limit" toggle was on. */
+  tokenQuota?: number;
+  costUsd: number;
+  toolCalls: number;
+  filesChanged: number;
+  commits: number;
+}
+
+/* ---- agents -------------------------------------------------------------- */
+
+export type AgentStatus = 'enabled' | 'disabled';
+
+export interface Agent {
+  id: string;
+  workspaceId: string;
+  name: string;
+  description: string;
+  model: string;
+  status: AgentStatus;
+  /** Running instance count (AgentCard header badge). */
+  runningCount: number;
+  /** Tools this agent may call (AgentCard badges, ToolPicker). */
+  toolIds: string[];
+  /** Token budget per run (New Agent modal slider). */
+  tokenBudgetPerRun: number;
+  totalRuns: number;
+  lastRunAt?: IsoDateTime;
+}
+
+/* ---- roadmap tasks ------------------------------------------------------- */
+
+export type TaskStatus =
+  | 'todo'
+  | 'ready-for-dev'
+  | 'in-progress'
+  | 'blocked'
+  | 'done';
+
+export type TaskPriority = 'high' | 'medium' | 'low';
+
+export interface Task {
+  id: string;
+  workspaceId: string;
+  title: string;
+  description?: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  ownerId?: string;
+  tags: string[];
+  /** ETA — feeds the relative-time column (UI-Roadmap table config). */
+  eta?: IsoDateTime;
+  parentId?: string;
+  subtaskIds: string[];
+  /** Red relations group (UI-Roadmap spec). */
+  blockedBy: string[];
+  blocking: string[];
+  /** Drives quota preselection in the New Session modal. */
+  estimatedTokens?: number;
+  suggestedAgentIds: string[];
+}
+
+/* ---- tools --------------------------------------------------------------- */
+
+export type ToolType = 'api-client' | 'mcp-server' | 'skill-set';
+
+export type ToolStatus = 'connected' | 'needs-attention' | 'disabled';
+
+export interface Tool {
+  id: string;
+  workspaceId: string;
+  name: string;
+  description: string;
+  type: ToolType;
+  status: ToolStatus;
+  /** stdio:// | http(s):// address, webhook endpoint, or skills source. */
+  uri: string;
+  /** System events that fire this tool (ToolCard webhook list). */
+  events: string[];
+  /** "x tools" (MCP) / "x skills" (skill-set); absent for API clients. */
+  itemCount?: number;
+  /** Total tracked uses in this workspace; 0 renders "never used". */
+  uses: number;
+}
+
+/* ---- notifications ------------------------------------------------------- */
+
+export type NotificationLevel = 'ok' | 'warn' | 'err' | 'info';
+
+export interface NotificationRecord {
+  id: string;
+  workspaceId: string;
+  level: NotificationLevel;
+  title: string;
+  body: string;
+  /** Provider/source shown on the notifications page table. */
+  source?: string;
+  createdAt: IsoDateTime;
+  unread: boolean;
+  /** Workspace-relative link to the acted-on resource ("/sessions/…"). */
+  href?: string;
+}
+
+/* ---- usage stats --------------------------------------------------------- */
+
+export interface WeekSummary {
+  /** Healthy while `tokensUsed <= tokenLimit` (sidebar widget pill). */
+  status: 'healthy' | 'unhealthy';
+  tokensUsed: number;
+  tokenLimit: number;
+}
+
+export interface UsageStats {
+  workspaceId: string;
+  /** Sessions currently running ("Live now" stat card). */
+  activeSessions: number;
+  /** Non-active sessions executed today ("Today" stat card). */
+  runsToday: number;
+  tokensToday: number;
+  costTodayUsd: number;
+  week: WeekSummary;
+}
+
+/* ---- search -------------------------------------------------------------- */
+
+/** Mirrors the ui-components SearchSuggestionKind union. */
+export type SearchSuggestionKind =
+  | 'agent'
+  | 'session'
+  | 'task'
+  | 'tool'
+  | 'doc';
+
+export interface SearchSuggestionRecord {
+  kind: SearchSuggestionKind;
+  /** Id of the underlying entity (or doc slug). */
+  id: string;
+  label: string;
+  /** Mono context line ("running · agent-7d2f"). */
+  sub?: string;
+  /**
+   * Workspace-relative destination ("/sessions/ses-001") — the app
+   * prefixes the active workspace base. `doc` suggestions carry an
+   * absolute https:// URL instead.
+   */
+  href: string;
+}
