@@ -31,6 +31,22 @@ const config: TestRunnerConfig = {
     expect.extend({ toMatchImageSnapshot });
   },
   async postVisit(page, context) {
+    // Async-loaded glyphs (atoms/Icon: per-name React.lazy chunks) mark
+    // their stand-ins with data-glyph-pending. Wait until every pending
+    // glyph has committed before capturing either theme — otherwise the
+    // screenshot races the lazy commit and the baselines flake. The cheap
+    // evaluate guard keeps glyph-less stories on their original capture
+    // timing (waitForSelector costs a frame even when nothing matches,
+    // which was enough to shift the timer-driven Toast demos). A timeout
+    // on the wait is a real failure (a chunk never loaded), so let it
+    // throw.
+    const hasPendingGlyphs = await page.evaluate(() => document.querySelector('[data-glyph-pending]') != null);
+    if (hasPendingGlyphs) {
+      await page.waitForSelector('[data-glyph-pending]', {
+        state: 'detached',
+        timeout: 15_000,
+      });
+    }
     for (const theme of THEMES) {
       await page.evaluate((t) => {
         document.documentElement.setAttribute('data-theme', t);
