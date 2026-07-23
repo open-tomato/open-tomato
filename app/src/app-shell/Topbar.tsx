@@ -62,7 +62,11 @@ const toSuggestion = (s: SearchSuggestionRecord): SuggestionWithHref => ({
 const toNotificationItem = (n: NotificationRecord): NotificationItem => ({
   id: n.id,
   level: n.level,
-  title: n.title,
+  // Empty title falls back to the provider/source (same rule as the
+  // Notifications page).
+  title: n.title.trim() === ''
+    ? n.source ?? n.title
+    : n.title,
   body: n.body,
   time: timeLabel(n.createdAt),
   unread: n.unread,

@@ -1,6 +1,7 @@
 export { api, type OpenTomatoApi } from './api';
 export { DEFAULT_WORKSPACE_ID, POC_NOW } from './fixtures';
 export { agentTone, exportJsonl, sessionElapsedSeconds } from './sessionsData';
+export { AGENT_OWNER, resolveOwnerHandle } from './tasksData';
 export type {
   ActivityCell,
   Agent,
@@ -15,9 +16,11 @@ export type {
   ChartToneName,
   IsoDateTime,
   NewSessionOptions,
+  NotificationCategory,
   NotificationLevel,
   NotificationRecord,
   ReadyTaskOption,
+  SearchResultRecord,
   SearchSuggestionKind,
   SearchSuggestionRecord,
   Session,
@@ -28,11 +31,15 @@ export type {
   SessionTimelineLevel,
   SessionToolCall,
   Task,
+  TaskFormOptions,
   TaskPriority,
   TaskStatus,
+  TeamMember,
   ThemePreference,
   Tool,
   ToolCallStat,
+  ToolEditorOptions,
+  ToolSkillOption,
   ToolStatus,
   ToolType,
   TopSessionStat,

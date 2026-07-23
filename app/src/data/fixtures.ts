@@ -10,6 +10,7 @@ import type {
   NotificationRecord,
   Session,
   Task,
+  TeamMember,
   Tool,
   UsageStats,
   User,
@@ -40,6 +41,18 @@ export const CURRENT_USER: User = {
   role: 'owner',
   preferences: { theme: 'light', weekStartsOn: 'monday' },
 };
+
+/**
+ * Workspace members — the Roadmap owner pool + the Settings → Members
+ * roster. Handles resolve `Task.ownerId` into the roadmap's `user-inline`
+ * owner column; the current user (Jess) leads the list.
+ */
+export const MEMBERS: TeamMember[] = [
+  { id: 'usr-jess', handle: 'jess', name: 'Jess Lin', role: 'owner' },
+  { id: 'usr-sam', handle: 'sam', name: 'Sam Ortega', role: 'admin' },
+  { id: 'usr-ana', handle: 'ana', name: 'Ana Reyes', role: 'member' },
+  { id: 'usr-kai', handle: 'kai', name: 'Kai Tanaka', role: 'member' },
+];
 
 export const SESSIONS: Session[] = [
   {
@@ -327,6 +340,8 @@ export const TOOLS: Tool[] = [
     events: ['session started', 'session ended'],
     itemCount: 14,
     uses: 412,
+    inUse: 3,
+    lastUsedAt: '2026-07-23T11:57:00Z',
   },
   {
     id: 'tol-linear',
@@ -338,6 +353,8 @@ export const TOOLS: Tool[] = [
     uri: 'https://hooks.open-garden.dev/linear',
     events: ['task created', 'task status changed'],
     uses: 96,
+    inUse: 1,
+    lastUsedAt: '2026-07-23T11:38:00Z',
   },
   {
     id: 'tol-repo-skills',
@@ -350,17 +367,21 @@ export const TOOLS: Tool[] = [
     events: [],
     itemCount: 9,
     uses: 158,
+    inUse: 4,
+    lastUsedAt: '2026-07-23T11:51:00Z',
   },
   {
     id: 'tol-sentry-hook',
     workspaceId: 'ws-open-garden',
     name: 'sentry-alerts',
-    description: 'POSTs new production error groups to the debugger agent.',
+    description: 'POSTs new production error groups to the debugger agent. Currently failing the TLS handshake.',
     type: 'api-client',
     status: 'needs-attention',
     uri: 'https://hooks.open-garden.dev/sentry',
     events: ['tool error'],
     uses: 12,
+    inUse: 0,
+    lastUsedAt: '2026-07-23T06:00:00Z',
   },
   {
     id: 'tol-scratch-mcp',
@@ -373,6 +394,7 @@ export const TOOLS: Tool[] = [
     events: ['session started'],
     itemCount: 3,
     uses: 0,
+    inUse: 0,
   },
 ];
 
@@ -381,6 +403,7 @@ export const NOTIFICATIONS: NotificationRecord[] = [
     id: 'ntf-001',
     workspaceId: 'ws-open-garden',
     level: 'ok',
+    category: 'session',
     title: 'auth-refactor finished',
     body: '8 files updated · 12.3k tokens',
     source: 'sessions',
@@ -392,6 +415,7 @@ export const NOTIFICATIONS: NotificationRecord[] = [
     id: 'ntf-002',
     workspaceId: 'ws-open-garden',
     level: 'warn',
+    category: 'session',
     title: 'perf-investigate is waiting',
     body: 'Token budget paused at 0/200k.',
     source: 'sessions',
@@ -403,9 +427,11 @@ export const NOTIFICATIONS: NotificationRecord[] = [
     id: 'ntf-003',
     workspaceId: 'ws-open-garden',
     level: 'err',
-    title: 'sentry-alerts connection failed',
-    body: 'Webhook returned 401 — check the stored token.',
-    source: 'tools',
+    category: 'tool',
+    // Empty title → the page + bell fall back to the provider/source.
+    title: '',
+    body: 'sentry-alerts failed the TLS handshake — check the stored token.',
+    source: 'sentry-alerts',
     createdAt: '2026-07-19T22:12:00Z',
     unread: true,
     href: '/tools/tol-sentry-hook',
@@ -414,8 +440,9 @@ export const NOTIFICATIONS: NotificationRecord[] = [
     id: 'ntf-004',
     workspaceId: 'ws-open-garden',
     level: 'info',
+    category: 'agent',
     title: 'docs-typos opened PR #214',
-    body: '23 typos across docs/.',
+    body: '23 typos across docs/. Review requested.',
     source: 'github',
     createdAt: '2026-07-18T11:26:00Z',
     unread: false,
@@ -425,12 +452,50 @@ export const NOTIFICATIONS: NotificationRecord[] = [
     id: 'ntf-005',
     workspaceId: 'ws-open-garden',
     level: 'info',
+    category: 'billing',
     title: 'Weekly usage report ready',
     body: 'Jul 13 – Jul 19 · 1.2M tokens · $38.40.',
-    source: 'usage',
+    source: 'billing',
     createdAt: '2026-07-20T06:00:00Z',
     unread: false,
     href: '/',
+  },
+  {
+    id: 'ntf-006',
+    workspaceId: 'ws-open-garden',
+    level: 'ok',
+    category: 'member',
+    title: 'Kai accepted your invite',
+    body: 'Joined open-garden as a Member.',
+    source: 'members',
+    createdAt: '2026-07-19T16:40:00Z',
+    unread: false,
+    href: '/settings/members',
+  },
+  {
+    id: 'ntf-007',
+    workspaceId: 'ws-open-garden',
+    level: 'info',
+    category: 'tool',
+    // Second source-fallback row (empty title).
+    title: '',
+    body: 'Linear synced 6 issue updates back into the roadmap.',
+    source: 'linear',
+    createdAt: '2026-07-19T09:30:00Z',
+    unread: false,
+    href: '/tasks',
+  },
+  {
+    id: 'ntf-008',
+    workspaceId: 'ws-open-garden',
+    level: 'info',
+    category: 'system',
+    title: 'Scheduled maintenance this weekend',
+    body: 'Read-only window Sat 02:00–03:00 UTC. Sessions will queue.',
+    source: 'system',
+    createdAt: '2026-07-18T08:00:00Z',
+    unread: false,
+    href: '/settings/notifications',
   },
 ];
 
