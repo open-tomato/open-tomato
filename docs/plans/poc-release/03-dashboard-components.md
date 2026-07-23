@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [03a first within this WS; D1 spike for 03b]
 parallel-with: [01, 02, 05-wave-0, 06-breakdown]
 size: L (4+ sessions: 03a–03d)
-status: 03a+03b+03c done (CB PRs #8, #10, #11); 03d ready
+status: COMPLETE — 03a-03d done (CB PRs #8, #10, #11, #12)
 linear: OPT-242
 ---
 
@@ -62,25 +62,25 @@ Known entities (contract-typed display components):
 - [x] `agent-title`, `agent-cell`, `session-inline`, `session-cell`, `model-cell`, `model-footer`, `branch-inline`, `user-inline`, `task-cell`, `tool-title`
 - [x] Self-describing table integration: column type `{entity}-{variant}` → inferred component
 
-## Session 03d — Topbar set, form additions, passkey (M)
+## Session 03d — Topbar set, form additions, passkey (M) — DONE (CB PR #12: full topbar set + ConfirmPopover closing the 03c seam, AppShell upgrade w/ real chrome in stories, 4 FormKit additions, PasskeyPrompt; SearchSuggest documented as CommandPalette sibling)
 
 Topbar (source: `topbar.html` + `TopbarLive.jsx`; currently only story fixtures):
-- [ ] `WorkspaceSwitcher` — 5 most recent + settings link, check marks, hidden for single-workspace, fixed/max width, no hard topbar-scope dependency (may move to sidebar)
-- [ ] `SearchSuggest` — ⌘K global, lens icon + `⌘K` label, 5 suggestion kinds (agent/session/task/tool/doc) each with accent, keyboard navigation, enter-fallthrough to full search page
-- [ ] `NotificationsBell` — ghost icon button + popover grouped by level (ok/warn/err/info), red dot ≥1 unread, mark-all-read header action
-- [ ] `ThemeSwitcher` — ghost icon button, hidden when user preference = system
-- [ ] `ProfileMenu` — touchable avatar, header (avatar/name/email/role), My Profile / Account Settings / Switch workspace / Logout (inline confirm)
-- [ ] `ConfirmPopover` — standalone + inline flavours; always names the action
-- [ ] `AppShellTopbar` upgrade — collapse button in wrapper; sidebar: dynamic nav config (json/api-driven), week-summary widget stub, bottom quick-access (Docs/Settings); optional `AppShellContent` footer
+- [x] `WorkspaceSwitcher` — 5 most recent + settings link, check marks, hidden for single-workspace, fixed/max width, no hard topbar-scope dependency (may move to sidebar)
+- [x] `SearchSuggest` — ⌘K global, lens icon + `⌘K` label, 5 suggestion kinds (agent/session/task/tool/doc) each with accent, keyboard navigation, enter-fallthrough to full search page
+- [x] `NotificationsBell` — ghost icon button + popover grouped by level (ok/warn/err/info), red dot ≥1 unread, mark-all-read header action
+- [x] `ThemeSwitcher` — ghost icon button, hidden when user preference = system
+- [x] `ProfileMenu` — touchable avatar, header (avatar/name/email/role), My Profile / Account Settings / Switch workspace / Logout (inline confirm)
+- [x] `ConfirmPopover` — standalone + inline flavours; always names the action
+- [x] `AppShellTopbar` upgrade — collapse button in wrapper; sidebar: dynamic nav config (json/api-driven), week-summary widget stub, bottom quick-access (Docs/Settings); optional `AppShellContent` footer
 
 FormKit additions:
-- [ ] `VerboseOption` / `VerboseOptionList` (from raw `ModelOption` in `AgentEditor.jsx`) — radio/checkbox behavior, model badges, description
-- [ ] `DecoratedToggle` / `DecoratedToggleList` (from raw `ToolPicker` in `AgentEditor.jsx`) — grouped toggles w/ x/y indicator
-- [ ] `ChipList` — single/multi modes, suggestions, keyboard nav, `allowNew`
-- [ ] `AvatarSelector` — big avatar + initials input + color grid
+- [x] `VerboseOption` / `VerboseOptionList` (from raw `ModelOption` in `AgentEditor.jsx`) — radio/checkbox behavior, model badges, description
+- [x] `DecoratedToggle` / `DecoratedToggleList` (from raw `ToolPicker` in `AgentEditor.jsx`) — grouped toggles w/ x/y indicator
+- [x] `ChipList` — single/multi modes, suggestions, keyboard nav, `allowNew`
+- [x] `AvatarSelector` — big avatar + initials input + color grid
 
 Passkey (D5):
-- [ ] `PasskeyPrompt` from `dashboard/Profile.jsx` (raw DS settings.html) — post-"add passkey" 2FA-modal state awaiting browser WebAuthn interaction; wire as a TwoFactor flow step candidate (app wiring happens in WS08)
+- [x] `PasskeyPrompt` from `dashboard/Profile.jsx` (raw DS settings.html) — post-"add passkey" 2FA-modal state awaiting browser WebAuthn interaction; wire as a TwoFactor flow step candidate (app wiring happens in WS08)
 
 ## Verification (every session)
 
