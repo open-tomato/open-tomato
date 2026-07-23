@@ -21,20 +21,19 @@ const renderAt = (path: string) => {
  * background shell `aria-hidden`, so the list page's h1 + nav landmark are
  * no longer in the accessibility tree while the modal is up.
  */
-const ROUTE_CASES: Array<[string, string]> = [
+const ROUTE_CASES: Array<[string, string | RegExp]> = [
   ['/', 'Overview'],
   ['/sessions', 'Sessions'],
   ['/agents', 'Agents'],
   ['/tasks', 'Roadmap'],
-  ['/tasks/tsk-001', 'Task'],
   ['/tools', 'Tools'],
-  ['/tools/tol-github/export', 'Export Tool'],
   ['/settings', 'Settings'],
   ['/settings/profile', 'Settings'],
   ['/notifications', 'Notifications'],
-  ['/search?q=tomato', 'Search results'],
+  ['/search?q=tomato', /Results for/],
   ['/workspace/ws-ripe-tomatoes', 'Overview'],
   ['/workspace/ws-ripe-tomatoes/sessions', 'Sessions'],
+  ['/workspace/ws-ripe-tomatoes/tasks', 'Roadmap'],
 ];
 
 /** [path, modal title] — sub-routes that render a modal over their list. */
@@ -45,6 +44,11 @@ const MODAL_ROUTE_CASES: Array<[string, string | RegExp]> = [
   ['/agents/new', 'Create a reusable persona'],
   ['/agents/agt-planner/edit', 'Edit agent'],
   ['/agents/agt-planner/clone', 'Clone agent'],
+  ['/tasks/new', 'Add a roadmap task'],
+  ['/tasks/tsk-001/edit', 'Edit task'],
+  ['/tools/new', /Wire up something/],
+  ['/tools/tol-github/edit', 'Edit tool'],
+  ['/tools/tol-github/clone', 'Clone tool'],
 ];
 
 describe('route table', () => {
@@ -78,16 +82,12 @@ describe('route table', () => {
     ).toBeTruthy();
   });
 
-  test('echoes route params on detail placeholders', async () => {
+  test('the Edit Task sub-route opens the form prefilled for the task', async () => {
     renderAt('/tasks/tsk-001/edit');
-    expect(await screen.findByText('taskId')).toBeTruthy();
-    expect(screen.getByText('tsk-001')).toBeTruthy();
-  });
-
-  test('multi-workspace base echoes the workspaceId param', async () => {
-    renderAt('/workspace/ws-ripe-tomatoes/tasks/tsk-001');
-    expect(await screen.findByText('workspaceId')).toBeTruthy();
-    expect(screen.getByText('ws-ripe-tomatoes')).toBeTruthy();
+    // Eyebrow renders immediately; the danger-framed relations group lands
+    // once the task + form options resolve.
+    expect(await screen.findByText('Edit task')).toBeTruthy();
+    expect(await screen.findByText('Blocking relations')).toBeTruthy();
   });
 
   test('unknown paths fall through to the Not found placeholder', async () => {

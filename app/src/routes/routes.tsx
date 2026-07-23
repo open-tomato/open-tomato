@@ -7,7 +7,14 @@ import {
   AgentNewRoute,
   AgentsPage,
 } from '../pages/agents';
+import { NotificationsPage } from '../pages/notifications';
 import { OverviewPage } from '../pages/overview';
+import {
+  RoadmapPage,
+  TaskEditRoute,
+  TaskNewRoute,
+} from '../pages/roadmap';
+import { SearchResultsPage } from '../pages/search';
 import {
   ExportTranscriptRoute,
   ForkSessionRoute,
@@ -15,6 +22,13 @@ import {
   SessionsPage,
   SessionViewPage,
 } from '../pages/sessions';
+import { SettingsPage } from '../pages/settings';
+import {
+  ToolCloneRoute,
+  ToolEditRoute,
+  ToolNewRoute,
+  ToolsPage,
+} from '../pages/tools';
 
 import { PlaceholderPage } from './PlaceholderPage';
 
@@ -28,53 +42,13 @@ import { PlaceholderPage } from './PlaceholderPage';
  *   …/sessions/:sessionId              View Session
  *   …/sessions/:sessionId/fork         Fork Session
  *   …/sessions/:sessionId/export       Export transcript
- *   …/agents(/new|/:agentId(/edit|/clone|/export))
- *   …/tasks(/new|/:taskId(/edit|/clone|/export))     ← "Roadmap" page
- *   …/tools(/new|/:toolId(/edit|/clone|/export))
- *   …/settings/*                       Settings shell (vertical sub-nav later)
+ *   …/agents(/new|/:agentId(/edit|/clone))
+ *   …/tasks(/new|/:taskId/edit)        ← "Roadmap" page (form modals)
+ *   …/tools(/new|/:toolId(/edit|/clone))
+ *   …/settings(/:section)              Settings shell (URL-driven sub-nav)
  *   …/notifications                    Notifications page
  *   …/search?q=…                       Search results (⌘K enter-fallthrough)
  */
-
-interface EntityRouteSpec {
-  segment: string;
-  /** List page title ("Sessions", "Roadmap"). */
-  title: string;
-  /** Singular entity name for sub-page titles ("Session"). */
-  singular: string;
-  /** Route param name (":sessionId"). */
-  param: string;
-  /** Detail sub-actions ("fork" | "edit" | "clone" | "export"). */
-  subActions: string[];
-}
-
-const capitalize = (word: string): string => word.charAt(0).toUpperCase() + word.slice(1);
-
-const entityRoutes = ({
-  segment,
-  title,
-  singular,
-  param,
-  subActions,
-}: EntityRouteSpec): RouteObject => ({
-  path: segment,
-  children: [
-    { index: true, element: <PlaceholderPage title={title} /> },
-    { path: 'new', element: <PlaceholderPage title={`New ${singular}`} /> },
-    {
-      path: `:${param}`,
-      children: [
-        { index: true, element: <PlaceholderPage title={singular} /> },
-        ...subActions.map((action): RouteObject => ({
-          path: action,
-          element: (
-            <PlaceholderPage title={`${capitalize(action)} ${singular}`} />
-          ),
-        })),
-      ],
-    },
-  ],
-});
 
 const workspaceChildren = (): RouteObject[] => [
   { index: true, element: <OverviewPage /> },
@@ -102,29 +76,32 @@ const workspaceChildren = (): RouteObject[] => [
       { path: ':agentId/clone', element: <AgentCloneRoute /> },
     ],
   },
-  entityRoutes({
-    segment: 'tasks',
-    title: 'Roadmap',
-    singular: 'Task',
-    param: 'taskId',
-    subActions: ['edit', 'clone', 'export'],
-  }),
-  entityRoutes({
-    segment: 'tools',
-    title: 'Tools',
-    singular: 'Tool',
-    param: 'toolId',
-    subActions: ['edit', 'clone', 'export'],
-  }),
+  // Roadmap: the table is the layout for the New/Edit task-form modal
+  // sub-routes (rendered into its Outlet). Edit opens from a row menu.
   {
-    path: 'settings',
+    path: 'tasks',
+    element: <RoadmapPage />,
     children: [
-      { index: true, element: <PlaceholderPage title="Settings" /> },
-      { path: '*', element: <PlaceholderPage title="Settings" /> },
+      { path: 'new', element: <TaskNewRoute /> },
+      { path: ':taskId/edit', element: <TaskEditRoute /> },
     ],
   },
-  { path: 'notifications', element: <PlaceholderPage title="Notifications" /> },
-  { path: 'search', element: <PlaceholderPage title="Search results" /> },
+  // Tools: grid is the layout for the New/Edit/Clone editor modal sub-routes.
+  {
+    path: 'tools',
+    element: <ToolsPage />,
+    children: [
+      { path: 'new', element: <ToolNewRoute /> },
+      { path: ':toolId/edit', element: <ToolEditRoute /> },
+      { path: ':toolId/clone', element: <ToolCloneRoute /> },
+    ],
+  },
+  // Settings: shell with a URL-driven vertical sub-nav (the splat selects
+  // the section; the same page renders for `/settings` and `/settings/:s`).
+  { path: 'settings', element: <SettingsPage /> },
+  { path: 'settings/*', element: <SettingsPage /> },
+  { path: 'notifications', element: <NotificationsPage /> },
+  { path: 'search', element: <SearchResultsPage /> },
   { path: '*', element: <PlaceholderPage title="Not found" /> },
 ];
 
