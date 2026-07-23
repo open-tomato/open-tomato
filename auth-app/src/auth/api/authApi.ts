@@ -59,6 +59,10 @@ const OAUTH_EXISTING: Partial<Record<OAuthProvider, UserProfile>> = {
   github: { id: 'usr_kai', email: 'kai@open-tomato.dev', name: 'Kai Mercer', handle: 'kai' },
 };
 
+/** Handles already linked to an account — chosen at OAuth completion, they
+ *  collide and yield `email_taken`. */
+const TAKEN_HANDLES = new Set(['sam', 'ren', 'kai']);
+
 /** Password that deterministically fails, for exercising the error path. */
 const WRONG_PASSWORD = 'wrong';
 /** The only code the mock TOTP accepts (enroll + challenge). */
@@ -283,8 +287,16 @@ export const createAuthApi = (clock: Clock = frozenClock) => {
         return settle({ status: 'ok', user, tokens: issueFor(user, ['pwd']) });
       },
 
-      /** Finish an OAuth sign-up once the user has chosen a handle. */
+      /**
+       * Finish an OAuth sign-up once the user has chosen a handle. A handle
+       * already linked to an account returns `email_taken` (the federated
+       * identity collides) — so the contract's `email_taken` result is
+       * reachable here, not just from `withEmail`.
+       */
       completeOAuth: ({ provider, username, displayName }: CompleteOAuthRequest): Promise<SignUpResult> => {
+        if (TAKEN_HANDLES.has(username.trim().toLowerCase())) {
+          return settle({ status: 'email_taken' });
+        }
         const user: UserProfile = {
           id: makeId('usr', stableHash(`${provider}:${username}`)),
           email: `${username}@${provider}.example`,
@@ -299,12 +311,20 @@ export const createAuthApi = (clock: Clock = frozenClock) => {
       /** Send a one-time reset code. Always 'sent' (no account enumeration). */
       requestCode: ({ email }: RequestResetRequest): Promise<RequestResetResult> => settle({ status: 'sent', channel: 'email', maskedEmail: maskEmail(email) }),
 
-      /** Verify the code and set a new password in one step. */
+      /**
+       * Verify the code and set a new password in one step. The code is bound
+       * to a single account: an unknown email — or a code that wasn't issued
+       * for that email — returns `invalid_code` and mints NOTHING. There is no
+       * default-user fallback (that would be an account-takeover shape). A real
+       * backend looks the code up by (account, code) and rejects any mismatch.
+       */
       resetPassword: ({ email, code, newPassword }: ResetPasswordRequest): Promise<ResetPasswordResult> => {
         void newPassword;
+        const user = USERS_BY_EMAIL[email.trim().toLowerCase()];
+        // No account for this email → the code cannot have been issued for it.
+        if (user == null) return settle({ status: 'invalid_code' });
         if (code === EXPIRED_RESET_CODE) return settle({ status: 'expired' });
         if (code !== VALID_RESET_CODE) return settle({ status: 'invalid_code' });
-        const user = USERS_BY_EMAIL[email.trim().toLowerCase()] ?? USER_STANDARD;
         // Password reset signs the user in and (per the screen) revokes other
         // sessions — the fresh token is minted on `pwd`.
         return settle({ status: 'ok', tokens: issueFor(user, ['pwd']) });

@@ -97,6 +97,11 @@ describe('authApi — sign up', () => {
     expect(result.user.handle).toBe('alex');
     expect(result.tokens.claims.amr).toEqual(['oauth:google']);
   });
+
+  test('OAuth completion with an already-linked handle returns email_taken', async () => {
+    const result = await authApi.signUp.completeOAuth({ provider: 'github', username: 'kai', displayName: 'Kai' });
+    expect(result.status).toBe('email_taken');
+  });
 });
 
 describe('authApi — reset', () => {
@@ -115,6 +120,17 @@ describe('authApi — reset', () => {
       .toBe('expired');
     expect((await authApi.reset.resetPassword({ email: USER_STANDARD.email, code: '999999', newPassword: 'x' })).status)
       .toBe('invalid_code');
+  });
+
+  test('the reset code is bound to an account — an unknown email never authenticates', async () => {
+    // A valid-looking code + an email with no account must NOT fall back to a
+    // default user (account-takeover shape). It returns invalid_code, no token.
+    const unknown = await authApi.reset.resetPassword({ email: 'stranger@nowhere.dev', code: VALID_RESET_CODE, newPassword: 'x' });
+    expect(unknown.status).toBe('invalid_code');
+    expect('tokens' in unknown).toBe(false);
+
+    const empty = await authApi.reset.resetPassword({ email: '', code: VALID_RESET_CODE, newPassword: 'x' });
+    expect(empty.status).toBe('invalid_code');
   });
 });
 

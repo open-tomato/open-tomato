@@ -79,11 +79,29 @@ Result:
 Request: `{ challengeId, code }`
 Result: `{ status: 'ok', tokens }` (`amr: ['pwd','otp']`) | `{ status: 'invalid_code' }`.
 
-#### `GET /sign-in/oauth/:provider` — `signIn.withOAuth` (OAuth/OIDC)
-See the redirect flow below. Result of the callback exchange:
-- `{ status: 'ok', tokens }` — provider identity already linked (`amr: ['oauth:<provider>']`).
-- `{ status: 'needs_profile', provider, suggested }` — first sign-in with this provider; collect a handle (OAuth confirm screen) then create the account.
-- `{ status: 'denied', reason }` — user rejected consent at the provider.
+The `challengeId` is issued by step 1 (`sign-in/email` → `two_factor_required`)
+and **bound to that step-1 user**; it is short-lived (single sign-in attempt,
+e.g. a few minutes) and single-use. The backend must resolve the challenge to
+its user and reject an expired, already-consumed, or foreign challenge — do not
+trust a `sub` from the client. (The mock ignores `challengeId` for simplicity;
+the binding + expiry are a real-backend requirement.)
+
+#### `GET /sign-in/oauth/:provider` — `signIn.withOAuth` (OAuth/OIDC initiation)
+Redirects the browser to the provider's authorization endpoint (see the redirect
+flow below). The backend generates and stores `state` (CSRF) + `nonce` (OIDC)
+bound to the browser session before redirecting.
+
+#### `GET /sign-in/oauth/:provider/callback?code&state` — provider callback
+The provider redirects back here after consent. The backend:
+1. Validates `state` matches the value it stored for this session (reject on
+   mismatch/absence — CSRF guard); validates the OIDC `nonce` on the id_token.
+2. Exchanges `code` (+ its PKCE verifier) server-side for the provider's
+   tokens — the frontend never sees `code` or any client secret.
+3. Resolves or provisions the local identity and returns the same result union
+   `signIn.withOAuth` yields to the screens:
+   - `{ status: 'ok', tokens }` — provider identity already linked (`amr: ['oauth:<provider>']`).
+   - `{ status: 'needs_profile', provider, suggested }` — first sign-in with this provider; collect a handle (OAuth confirm screen) then create the account.
+   - `{ status: 'denied', reason }` — provider returned `error=access_denied` (user rejected consent).
 
 ### Sign up
 
@@ -94,6 +112,9 @@ Result: `{ status: 'ok', user, tokens }` | `{ status: 'email_taken' }`.
 #### `POST /sign-up/oauth/:provider/complete` — `signUp.completeOAuth`
 Request: `{ provider, username, displayName }` (after the OAuth confirm screen).
 Result: `{ status: 'ok', user, tokens }` | `{ status: 'email_taken' }`.
+`email_taken` is returned when the chosen handle (or the resolved federated
+identity/email) is already linked to an account — the client re-prompts for a
+different handle. (The mock triggers this for handles already in use.)
 
 Both land the user on workspace pick before the account is fully "in".
 
@@ -106,10 +127,15 @@ Result: `{ status: 'sent', channel: 'email', maskedEmail }` — **always** (no e
 #### `POST /reset/confirm` — `reset.resetPassword`
 Request: `{ email, code, newPassword }` — the single ResetCode screen verifies the
 code and sets the password together.
-Result:
-- `{ status: 'ok', tokens }` — signs the user in and (per the screen) revokes other sessions.
-- `{ status: 'expired' }` — code past its 15-minute window; offer resend.
-- `{ status: 'invalid_code' }` — wrong code; allow retry.
+
+**The reset code is bound server-side to a single account.** The backend looks
+the code up by `(account, code)` and validates it identifies that exact account;
+a code presented with a different or unknown email is a mismatch. There is **no
+default-user fallback** — an unbound code must never authenticate an arbitrary
+account (that is an account-takeover shape). Result:
+- `{ status: 'ok', tokens }` — code valid **and** bound to this email; signs the user in and (per the screen) revokes other sessions.
+- `{ status: 'expired' }` — code was issued for this account but is past its 15-minute window; offer resend.
+- `{ status: 'invalid_code' }` — wrong code, **or a code↔email mismatch, or an unknown email**. Mints nothing. (Intentionally indistinguishable from a wrong code — no account enumeration.)
 
 ### Two-factor enrollment (security setup, post-login)
 

@@ -1,4 +1,4 @@
-import { LoginPage } from '@open-tomato/ui-components';
+import { LoginPage, ResetCodePage } from '@open-tomato/ui-components';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 
@@ -35,6 +35,23 @@ describe('FlowScreen delegation', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: /Continue with GitHub/i }));
     expect(onOAuth).toHaveBeenCalledWith('github');
+  });
+
+  test('harvests a multi-cell CodeInput into one joined code string', () => {
+    // The harvest predicate (maxLength===1 && inputMode==='numeric') is the
+    // seam's most brittle assumption — pin it against the real CodeInput markup.
+    const onPrimary = vi.fn();
+    render(
+      <FlowScreen onPrimary={onPrimary}>
+        <ResetCodePage />
+      </FlowScreen>,
+    );
+    Array.from('123456').forEach((digit, i) => {
+      fireEvent.change(screen.getByLabelText(`digit ${i + 1} of 6`), { target: { value: digit } });
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Reset password & sign in/i }));
+    const [fields] = onPrimary.mock.calls[0] ?? [];
+    expect(fields?.code).toBe('123456');
   });
 
   test('unrelated controls (password toggle) do not trigger flow events', () => {

@@ -47,7 +47,8 @@ const decodeSegment = <T>(segment: string): T => {
 
 const sign = (claims: object): string => `${b64url(HEADER)}.${b64url(claims)}.${MOCK_SIGNATURE}`;
 
-/** Random-ish but deterministic-friendly id (mock uses a counter, see authApi). */
+/** Deterministic id from a caller-supplied seed (authApi derives the seed from
+ *  a stable hash of the inputs — no counters, no randomness). */
 export const makeId = (prefix: string, seed: number): string => `${prefix}_${seed.toString(36).padStart(6, '0')}`;
 
 /**
