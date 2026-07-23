@@ -125,7 +125,10 @@ export const Topbar = ({
       <NotificationsBell
         notifications={notifications.map(toNotificationItem)}
         onMarkAllRead={onMarkAllNotificationsRead}
-        onOpenItem={() => onNavigate('/notifications')}
+        onOpenItem={(item) => {
+          const href = notifications.find((n) => n.id === item.id)?.href;
+          onNavigate(href ?? '/notifications');
+        }}
         onSeeAll={() => onNavigate('/notifications')}
       />
       <ThemeSwitcher theme={theme} preference={preference} onToggle={setTheme} />

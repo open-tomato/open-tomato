@@ -56,6 +56,7 @@ with a single workspace never see the switcher and stay on the `/` base.
 | `description` | string? | |
 | `status` | `'running' \| 'waiting' \| 'done' \| 'failed'` | Quick-filter pills + status column |
 | `agentId` | string | Runner agent (agent-cell) |
+| `agentInstanceId` | string | Per-run agent instance (session-cell's `agentInstanceId`) — distinct per session even for the same agent |
 | `model` | string | Model actually used (Known Entity) |
 | `taskId` | string? | One session per roadmap task; cleared on fork |
 | `branch` | string? | Cleared on fork |
@@ -167,6 +168,8 @@ added when that page lands.
 | `href` | string | Workspace-relative path; `doc` rows carry absolute URLs (new tab) |
 
 ## Provider surface (`api`)
+
+Error semantics beyond unknown-id rejection are **deferred past session 0**: the shell currently logs load failures in dev and stays on its empty defaults — real transports must add user-visible error states before shipping.
 
 Every method returns a Promise; `get` rejects with an Error for unknown
 ids. `workspaceId` filters are optional — omitting them returns all rows

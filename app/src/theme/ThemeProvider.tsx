@@ -28,7 +28,11 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       if (user.preferences.theme !== 'system') {
         setTheme(user.preferences.theme);
       }
-    });
+    })
+      .catch((error: unknown) => {
+      // Deferred error UI (session 0); keep the light default on failure.
+        if (import.meta.env.DEV) console.error('theme preference load failed', error);
+      });
     return () => {
       cancelled = true;
     };

@@ -64,6 +64,9 @@ export interface Session {
   status: SessionStatus;
   /** Runner agent (coordinates the session). */
   agentId: string;
+  /** Per-run agent instance id (session-cell's agentInstanceId) — distinct
+      per session even when the same agent runs concurrently. */
+  agentInstanceId: string;
   /** Model actually used by the run — feeds model-cell / Known Entity. */
   model: string;
   /** One session per roadmap task (UI-Sessions spec: Fork). */

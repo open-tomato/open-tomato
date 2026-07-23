@@ -31,7 +31,7 @@ const SEGMENT_TITLES: Record<string, string> = {
   tools: 'Tools',
   settings: 'Settings',
   notifications: 'Notifications',
-  search: 'Search',
+  search: 'Search results',
 };
 
 export const titleForSegment = (segment: string): string => SEGMENT_TITLES[segment] ?? 'Open Tomato';

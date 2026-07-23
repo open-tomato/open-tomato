@@ -46,7 +46,12 @@ export const useShellData = (workspaceId: string): ShellData => {
       setNotifications(ntfs);
       setSuggestions(sugg);
       setUsage(stats);
-    });
+    })
+      .catch((error: unknown) => {
+      // Error UI is deferred past session 0 (see docs/data-contracts.md);
+      // real transports must not silently strand the shell in empty state.
+        if (import.meta.env.DEV) console.error('shell data load failed', error);
+      });
     return () => {
       cancelled = true;
     };
