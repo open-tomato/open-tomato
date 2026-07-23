@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [03b, 03c, 03d]
 parallel-with: [05-wave-1, 06-port]
 size: M–L (2–3 sessions)
-status: sessions 1-2 done (CB PRs #13, #15); session 3 ready
+status: COMPLETE — sessions 1-3 done (CB PRs #13, #15, #16)
 linear: OPT-243
 ---
 
@@ -41,11 +41,11 @@ Tools ([UI-Tools.md](reference/UI-Tools.md)):
 - [x] New/Edit/Clone Tool modal: `ToolTypeSelector` (icon+name side-by-side variant), static segment, dynamic per-type segments (MCP: URL/credentials/auto-start; Skills: source + load-skills gating; API: webhook/auth-scheme/events ChipList), `ModalFooterStatus` wired to type
 - [x] Test Connection behavior + persistent error toast
 
-## Session 3 — Settings stub + Notifications + Search results
+## Session 3 — Settings stub + Notifications + Search results — DONE (CB PR #16: Settings vertical-nav shell + new simplified Notifications table + Search-results page w/ new SearchResult organism; catalog gap flagged: SearchSuggest/SearchResult kind accents+icons → searchKind module)
 
-- [ ] Settings ([UI-Settings.md](reference/UI-Settings.md)): vertical sub-nav shell only (rounded icon + title/description double-line buttons); content areas stub — full settings is a separate future effort
-- [ ] **Notifications page** (new simplified design per POC-RELEASE-PLANS): table of type-badge, double-line notification text (title|source fallback + description), source, date, action/resource link
-- [ ] **Search results page** (new simplified design): double-row rows with left decorator (avatar/icon by kind), title, description; click navigates — the full-page fallthrough target of `SearchSuggest`
+- [x] Settings ([UI-Settings.md](reference/UI-Settings.md)): vertical sub-nav shell only (rounded icon + title/description double-line buttons); content areas stub — full settings is a separate future effort
+- [x] **Notifications page** (new simplified design per POC-RELEASE-PLANS): table of type-badge, double-line notification text (title|source fallback + description), source, date, action/resource link
+- [x] **Search results page** (new simplified design): double-row rows with left decorator (avatar/icon by kind), title, description; click navigates — the full-page fallthrough target of `SearchSuggest`
 
 ## Verification
 
