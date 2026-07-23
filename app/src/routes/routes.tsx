@@ -1,7 +1,20 @@
 import type { RouteObject } from 'react-router';
 
 import { AppLayout } from '../app-shell/AppLayout';
+import {
+  AgentCloneRoute,
+  AgentEditRoute,
+  AgentNewRoute,
+  AgentsPage,
+} from '../pages/agents';
 import { OverviewPage } from '../pages/overview';
+import {
+  ExportTranscriptRoute,
+  ForkSessionRoute,
+  NewSessionRoute,
+  SessionsPage,
+  SessionViewPage,
+} from '../pages/sessions';
 
 import { PlaceholderPage } from './PlaceholderPage';
 
@@ -65,20 +78,30 @@ const entityRoutes = ({
 
 const workspaceChildren = (): RouteObject[] => [
   { index: true, element: <OverviewPage /> },
-  entityRoutes({
-    segment: 'sessions',
-    title: 'Sessions',
-    singular: 'Session',
-    param: 'sessionId',
-    subActions: ['fork', 'export'],
-  }),
-  entityRoutes({
-    segment: 'agents',
-    title: 'Agents',
-    singular: 'Agent',
-    param: 'agentId',
-    subActions: ['edit', 'clone', 'export'],
-  }),
+  // Sessions: the list is the layout for the New/Fork/Export modal
+  // sub-routes (rendered into its Outlet); the View page is a sibling full
+  // page so it fully replaces the list.
+  {
+    path: 'sessions',
+    element: <SessionsPage />,
+    children: [
+      { path: 'new', element: <NewSessionRoute /> },
+      { path: ':sessionId/fork', element: <ForkSessionRoute /> },
+      { path: ':sessionId/export', element: <ExportTranscriptRoute /> },
+    ],
+  },
+  { path: 'sessions/:sessionId', element: <SessionViewPage /> },
+  // Agents: grid-only (spec) — the grid is the layout for the
+  // New/Edit/Clone editor modal sub-routes.
+  {
+    path: 'agents',
+    element: <AgentsPage />,
+    children: [
+      { path: 'new', element: <AgentNewRoute /> },
+      { path: ':agentId/edit', element: <AgentEditRoute /> },
+      { path: ':agentId/clone', element: <AgentCloneRoute /> },
+    ],
+  },
   entityRoutes({
     segment: 'tasks',
     title: 'Roadmap',
