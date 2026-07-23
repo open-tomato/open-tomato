@@ -210,7 +210,9 @@ export const SessionViewPage = () => {
                 <MetaRow label="started">
                   <FormattedRelativeTime date={session.startedAt} now={POC_NOW} />
                 </MetaRow>
-                <MetaRow label={finished ? 'finished' : 'status'}>
+                <MetaRow label={finished
+                  ? 'finished'
+                  : 'status'}>
                   {finished
                     ? <FormattedRelativeTime date={detail.finishedAt} now={POC_NOW} />
                     : session.status}
