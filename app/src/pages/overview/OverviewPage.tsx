@@ -160,6 +160,7 @@ export const OverviewPage = () => {
             overview={overview}
             range={range}
             onSeeAllSessions={() => void navigate(withBase(base, '/sessions'))}
+            onOpenSession={(id) => void navigate(withBase(base, `/sessions/${id}`))}
           />
         )}
 
@@ -208,17 +209,32 @@ interface OverviewBodyProps {
   overview: UsageOverview;
   range: UsageRange;
   onSeeAllSessions: () => void;
+  onOpenSession: (sessionId: string) => void;
 }
 
 /** The loaded dashboard content — split out so the range/skeleton swap
  * stays readable and every hook here runs against a present payload. */
-const OverviewBody = ({ overview, range, onSeeAllSessions }: OverviewBodyProps) => {
+/** Period-over-period trend from a bucket series: second half vs first half. */
+const trendOf = (nums: number[]): number => {
+  if (nums.length < 2) return 0;
+  const mid = Math.floor(nums.length / 2);
+  const first = nums.slice(0, mid).reduce((a, b) => a + b, 0);
+  const second = nums.slice(mid).reduce((a, b) => a + b, 0);
+  if (first === 0) return 0;
+  return (second - first) / first;
+};
+
+const OverviewBody = ({ overview, range, onSeeAllSessions, onOpenSession }: OverviewBodyProps) => {
   const {
-    series, models, toolCalls, agents, activity, topSessions, budget, totals,
+    series, models, toolCalls, agents, activity, activityEnd, topSessions, budget, totals,
   } = overview;
 
-  const usedRatio = totals.tokens / budget.cap;
+  // Budget is a monthly figure (mirrors the sidebar week pill), independent of
+  // the toolbar range — so the ratio uses the budget's own used tokens.
+  const usedRatio = budget.usedTokens / budget.cap;
   const forecastRatio = Math.min(0.99, budget.forecastTokens / budget.cap);
+  const sessionsTrend = trendOf(series.map((d) => d.sessions));
+  const spendTrend = trendOf(series.map((d) => d.costUsd));
 
   const lineSeries = useMemo(
     () => models.map((m) => ({
@@ -236,10 +252,6 @@ const OverviewBody = ({ overview, range, onSeeAllSessions }: OverviewBodyProps) 
     ? 'months'
     : 'days';
 
-  const activityEnd = activity.length > 0
-    ? activity[activity.length - 1]!.day
-    : undefined;
-
   return (
     <>
       {/* hero stats — 4 across */}
@@ -247,19 +259,18 @@ const OverviewBody = ({ overview, range, onSeeAllSessions }: OverviewBodyProps) 
         <SmallStatCard
           title="tokens used"
           value={totals.tokens}
-          goal={budget.cap}
           footer={<Sparkline data={series.map((d) => d.totalTokens)} label="tokens per bucket" />}
         />
         <SmallStatCard
           title="sessions"
           value={totals.sessions}
-          trend={0.12}
+          trend={sessionsTrend}
           footer={<Sparkline data={series.map((d) => d.sessions)} label="sessions per bucket" />}
         />
         <SmallStatCard
           title="spend"
           value={<FormattedCurrency value={totals.costUsd} currency="usd" />}
-          trend={0.08}
+          trend={spendTrend}
           footer={<Sparkline data={series.map((d) => d.costUsd)} label="spend per bucket" />}
         />
         <SmallStatCard
@@ -394,9 +405,20 @@ const OverviewBody = ({ overview, range, onSeeAllSessions }: OverviewBodyProps) 
           {topSessions.map((session, i) => (
             <div
               key={session.sessionId}
+              role="button"
+              tabIndex={0}
+              aria-label={`Open transcript for ${session.title}`}
+              onClick={() => onOpenSession(session.sessionId)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onOpenSession(session.sessionId);
+                }
+              }}
               className={cn(
                 'grid grid-cols-[36px_1.4fr_0.9fr_0.7fr_0.9fr_0.7fr] items-center gap-3 px-[18px] py-3',
-                'transition-colors hover:bg-surface-sunk',
+                'cursor-pointer transition-colors hover:bg-surface-sunk',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
                 i > 0 && 'border-t border-border-soft',
               )}
             >

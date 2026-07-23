@@ -21,7 +21,7 @@ import type {
   UsageSeriesPoint,
 } from './types';
 
-import { AGENTS, SESSIONS, USAGE_STATS } from './fixtures';
+import { AGENTS, DEFAULT_WORKSPACE_ID, SESSIONS, USAGE_STATS } from './fixtures';
 
 /** Frozen reference "today" — the last bucket of every series. */
 const POC_TODAY = { year: 2026, month: 6, day: 23 } as const; // 2026-07-23
@@ -260,32 +260,74 @@ const topSessions = (workspaceId: string): TopSessionStat[] => SESSIONS
     costUsd: s.costUsd,
   }));
 
-const budgetFor = (
-  workspaceId: string,
-  range: UsageRange,
-  totals: { tokens: number; costUsd: number },
-): BudgetSummary => {
+/** Weeks per calendar month — projects the per-workspace weekly figures
+    (the sidebar week widget's source) up to a monthly budget so the Overview
+    budget card mirrors the week pill's healthy/unhealthy ratio per workspace,
+    instead of comparing a range total against a weekly cap. */
+const WEEKS_PER_MONTH = 4.345;
+
+/** Per-workspace usage scale, so hero stats + charts differ per workspace
+    rather than showing the same global series everywhere. The default
+    workspace is the reference (factor 1.0), keeping its figures — and the
+    api tests that assert against it — unchanged. */
+const REF_WEEK_TOKENS =
+  USAGE_STATS.find((u) => u.workspaceId === DEFAULT_WORKSPACE_ID)?.week.tokensUsed ?? 1;
+
+const workspaceFactor = (workspaceId: string): number => {
+  const used = USAGE_STATS.find((u) => u.workspaceId === workspaceId)?.week.tokensUsed;
+  if (used == null || REF_WEEK_TOKENS === 0) return 1;
+  return used / REF_WEEK_TOKENS;
+};
+
+const scalePoint = (p: UsageSeriesPoint, factor: number): UsageSeriesPoint => {
+  if (factor === 1) return p;
+  const tokensByModel: Record<string, number> = {};
+  for (const model of Object.keys(p.tokensByModel)) {
+    tokensByModel[model] = Math.round((p.tokensByModel[model] ?? 0) * factor);
+  }
+  return {
+    ...p,
+    tokensByModel,
+    totalTokens: Math.round(p.totalTokens * factor),
+    sessions: Math.max(0, Math.round(p.sessions * factor)),
+    costUsd: Math.round(p.costUsd * factor * 100) / 100,
+  };
+};
+
+/** Monthly budget derived from the workspace's weekly figures — decoupled
+    from the toolbar range (a monthly budget must not swing when you toggle
+    the 7d/30d chart window) and coherent with the sidebar week pill. */
+const budgetFor = (workspaceId: string, avgCostPerToken: number): BudgetSummary => {
   const week = USAGE_STATS.find((u) => u.workspaceId === workspaceId)?.week;
-  const cap = week?.tokenLimit ?? 4_000_000;
-  const days = RANGE_DAYS[range];
+  const usedTokens = Math.round((week?.tokensUsed ?? 0) * WEEKS_PER_MONTH);
+  const cap = Math.round((week?.tokenLimit ?? 4_000_000) * WEEKS_PER_MONTH);
   const monthIdx = POC_TODAY.month;
   const daysInMonth = new Date(POC_TODAY.year, monthIdx + 1, 0).getDate();
+  // Linear projection of the current month-to-date pace to month end.
+  const forecastTokens = Math.round((usedTokens / POC_TODAY.day) * daysInMonth);
   return {
     cap,
-    usedTokens: totals.tokens,
-    spentUsd: Math.round(totals.costUsd * 100) / 100,
-    forecastTokens: Math.round((totals.tokens / days) * 30),
+    usedTokens,
+    spentUsd: Math.round(usedTokens * avgCostPerToken * 100) / 100,
+    forecastTokens,
     periodStartLabel: `${MONTHS[monthIdx]} 1`,
     periodEndLabel: `${MONTHS[monthIdx]} ${daysInMonth}`,
   };
 };
+
+/** Frozen end-of-day anchor for the heatmap grid — the week containing
+    POC_TODAY. Never the wall clock. */
+const ACTIVITY_END_ISO = new Date(
+  Date.UTC(POC_TODAY.year, POC_TODAY.month, POC_TODAY.day),
+).toISOString();
 
 /** Build the full Overview payload for a workspace + range. */
 export const buildOverview = (
   workspaceId: string,
   range: UsageRange,
 ): UsageOverview => {
-  const series = seriesForRange(range);
+  const factor = workspaceFactor(workspaceId);
+  const series = seriesForRange(range).map((p) => scalePoint(p, factor));
   const totals = series.reduce(
     (acc, p) => ({
       tokens: acc.tokens + p.totalTokens,
@@ -299,19 +341,26 @@ export const buildOverview = (
     sessions: totals.sessions,
     costUsd: Math.round(totals.costUsd * 100) / 100,
   };
+  const avgCostPerToken = totals.tokens > 0
+    ? totals.costUsd / totals.tokens
+    : 0;
   const agents = agentsForRange(workspaceId, range);
   return {
     workspaceId,
     range,
     series,
     models: MODEL_SERIES.map((m) => ({ ...m })),
-    toolCalls: toolCallsForRange(range),
+    toolCalls: toolCallsForRange(range).map((t) => ({
+      ...t,
+      calls: Math.round(t.calls * factor),
+    })),
     agents,
     activity: agents.length > 0
       ? WEEK_ACTIVITY.map((c) => ({ ...c }))
       : [],
+    activityEnd: ACTIVITY_END_ISO,
     topSessions: topSessions(workspaceId),
-    budget: budgetFor(workspaceId, range, roundedTotals),
+    budget: budgetFor(workspaceId, avgCostPerToken),
     totals: roundedTotals,
   };
 };

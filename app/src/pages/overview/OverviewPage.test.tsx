@@ -11,6 +11,7 @@ const renderOverview = () => {
     [
       { path: '/', element: <OverviewPage /> },
       { path: '/sessions', element: <div>Sessions route stub</div> },
+      { path: '/sessions/:sessionId', element: <div>Session detail stub</div> },
     ],
     { initialEntries: ['/'] },
   );
@@ -64,5 +65,16 @@ describe('OverviewPage', () => {
     fireEvent.click(link);
 
     expect(await screen.findByText('Sessions route stub')).toBeTruthy();
+  });
+
+  test('a top-5 session row navigates to its transcript', async () => {
+    renderOverview();
+
+    const row = await screen.findByRole('button', {
+      name: /Open transcript for flaky-e2e-hunt/,
+    });
+    fireEvent.click(row);
+
+    expect(await screen.findByText('Session detail stub')).toBeTruthy();
   });
 });

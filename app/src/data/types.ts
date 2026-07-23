@@ -314,6 +314,9 @@ export interface UsageOverview {
   toolCalls: ToolCallStat[];
   agents: AgentUsageStat[];
   activity: ActivityCell[];
+  /** Frozen ISO end-of-week anchor for the heatmap grid (deterministic —
+      never falls back to the wall clock, even for zero-activity workspaces). */
+  activityEnd: string;
   topSessions: TopSessionStat[];
   budget: BudgetSummary;
   totals: {

@@ -168,8 +168,9 @@ Served by `api.usage.overview(workspaceId, range)`.
 | `toolCalls` | `ToolCallStat[]` | `name`, `calls`, `tone` — tool-calls chart |
 | `agents` | `AgentUsageStat[]` | `agentId`, `name`, `sessions`, `tokens`, `costUsd`, `tone` — spend-by-agent |
 | `activity` | `ActivityCell[]` | `day` (`YYYY-MM-DD` local), `hour` (0–23), `value` — when-agents-run heatmap; always the current week, range-independent |
+| `activityEnd` | IsoDateTime | Frozen end-of-week anchor for the heatmap grid (deterministic — the client never falls back to the wall clock) |
 | `topSessions` | `TopSessionStat[]` | Top-5 sessions by spend (all-time); `sessionId`/`title`/`agentInstanceId`/`model`/`modelTone`/`status`/`tokens`/`costUsd` |
-| `budget` | `BudgetSummary` | `cap`, `usedTokens`, `spentUsd`, `forecastTokens`, `periodStartLabel`, `periodEndLabel` |
+| `budget` | `BudgetSummary` | `cap`, `usedTokens`, `spentUsd`, `forecastTokens`, `periodStartLabel`, `periodEndLabel` — **monthly** figures, range-independent |
 | `totals` | `{ tokens; sessions; costUsd }` | Range-window totals (hero stat cards) |
 
 `UsageSeriesPoint`: `date` (IsoDateTime bucket start), `label` (sparse axis
@@ -179,10 +180,18 @@ chart palette (`'accent' | 'primary' | 'gold' | 'info' | 'success' |
 'danger' | 'neutral' | 'muted'`) so this contract stays UI-free.
 
 Backend requirement: aggregate real usage into the same shapes; `range` must
-change the series granularity and every derived total. `budget.cap` is the
-workspace monthly token limit; `forecastTokens` is an end-of-month
-projection from the selected range's run rate. `activity` grids the current
-week in the workspace's configured week-start (`monday` for the PoC).
+change the series granularity and every derived total. **`budget` is a monthly
+concept, decoupled from `range`** — `cap`/`usedTokens` are the workspace's
+monthly budget and month-to-date usage (the PoC mock projects the weekly
+sidebar figures to a month, so `usedTokens/cap` mirrors the week pill's
+healthy/unhealthy ratio per workspace); `forecastTokens` is a month-end
+projection from the month-to-date pace. `activity` grids the current week in
+the workspace's configured week-start (`monday` for the PoC).
+
+PoC mock limitation (tracked, not a contract requirement): the mock scales the
+global usage series by a per-workspace factor derived from each workspace's
+weekly usage, so figures differ per workspace; a real backend returns
+genuinely per-workspace aggregates and need not replicate that scaling.
 
 ### SearchSuggestionRecord
 
