@@ -6,12 +6,11 @@ import { Icon, cn, type IconName } from '@open-tomato/ui-components';
  * SessionTimeline — the chronological session event feed (left rail with
  * level-toned nodes, mono time column, event text + optional meta line).
  *
- * CATALOG GAP: `@open-tomato/ui-components` v0.7.0 does not export the
- * WS04 `SessionTimeline` molecule (it exists in the breakdown repo but was
- * not part of the published catalog). Rebuilt app-local here composing the
- * library `Icon` atom + tokens, faithful to the reference. Flag for
- * promotion into a future ui-components release so the View Session page
- * can drop this local copy.
+ * CATALOG GAP: the WS04 `SessionTimeline` molecule is not (yet) part of the
+ * published `@open-tomato/ui-components` catalog (v0.7.0). Rebuilt app-local
+ * here composing the library `Icon` atom + tokens, faithful to the
+ * reference. Flag for promotion into a future ui-components release so the
+ * View Session page can drop this local copy.
  */
 
 const LEVEL_ICON: Record<SessionTimelineLevel, IconName> = {

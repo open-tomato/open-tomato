@@ -16,12 +16,12 @@ type DateInput = Date | string | number;
 /**
  * AgentCard — a reusable-persona card for the Agents grid.
  *
- * CATALOG GAP: `@open-tomato/ui-components` v0.7.0 does not export the WS04
- * `AgentCard` organism (it exists in the breakdown repo but was not part of
- * the published catalog). Rebuilt app-local here composing library atoms /
- * molecules (AgentTitle, ModelFooter, Badge, Tag, Switch, Icon,
- * RowContextAction), faithful to the reference. Flag for promotion into a
- * future ui-components release so the Agents page can drop this local copy.
+ * CATALOG GAP: the WS04 `AgentCard` organism is not (yet) part of the
+ * published `@open-tomato/ui-components` catalog (v0.7.0). Rebuilt app-local
+ * here composing library atoms / molecules (AgentTitle, ModelFooter, Badge,
+ * Tag, Switch, Icon, RowContextAction), faithful to the reference. Flag for
+ * promotion into a future ui-components release so the Agents page can drop
+ * this local copy.
  *
  * Three rows: header (agent-title + running/off badge + context menu),
  * content (description + up to 5 tool badges with `+x more`), footer (dotted
