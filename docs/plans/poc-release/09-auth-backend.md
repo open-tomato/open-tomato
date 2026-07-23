@@ -4,7 +4,7 @@ tier: detailed (planned 2026-07-24 from auth-api-contract.md + backend survey)
 depends-on: [08 (auth-api-contract.md)]
 parallel-with: [12-partial]
 size: L
-status: PLANNED — awaiting approval before build
+status: PLANNED + decisions resolved (2026-07-24); build held for explicit go
 linear: OPT-248
 ---
 
@@ -109,22 +109,18 @@ lives in **redis** with TTLs, not Postgres.
   contract tests vs `auth-api-contract.md`, wire the auth app's `VITE_AUTH_API_URL` to the
   running service for an end-to-end walk; re-point `express` `introspectUrl` consumers.
 
-## Open decisions (need your call before/at build)
+## Resolved decisions (user, 2026-07-24)
 
-- **D-OAUTH — which single provider** end-to-end: **GitHub** (dev-community fit,
-  matches the portal's GitHub link) vs **Google**. Recommend GitHub.
-- **D-JWT — access-token signing:** **HS256 + shared secret** (simplest; other
-  services validate via `/introspect`) vs **RS256 + JWKS** (verify-anywhere, more
-  setup). Recommend HS256 for the PoC + the `/introspect` seam; note RS256 as the
-  graduation path.
-- **D-CFG — config:** **inline `process.env`** (every existing service's
-  convention; zero reference to adopt the YAML standard) vs make auth the **first
-  `@open-tomato/config` adopter** (aligns with the standard but no wiring to copy).
-  Recommend inline env for the PoC, flag adoption as a separate follow-up.
-- **D-WSP — workspace membership source:** **seed fixtures** (invitations +
-  memberships seeded to match the webapp's mock workspaces) vs a fuller
-  membership service. Recommend seed for the PoC; the workspace screen may move to
-  the webapp later without changing the claim shape (per the contract).
+- **D-OAUTH → Google** end-to-end; GitHub stubbed (`501`). (The `oauth:github`
+  `amr` and provider glyph stay defined for the deferred provider.)
+- **D-JWT → HS256 + shared secret.** Other services validate via this service's
+  `POST /introspect`. RS256 + JWKS recorded as the graduation path.
+- **D-CFG → inline `process.env`** at the top of `index.ts` (every existing
+  service's convention). Adopting `@open-tomato/config` is a separate follow-up,
+  not WS09.
+- **D-WSP → seed fixtures** — invitations + memberships seeded to match the
+  webapp's mock workspaces; enough to validate invites and stamp `wsp/wspRole/inv`.
+  The workspace screen can move to the webapp later without changing the claim shape.
 
 ## Verification
 
