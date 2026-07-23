@@ -4,6 +4,7 @@ import { Overlay, type OverlayDismiss, type OverlayVariants } from '../../atoms/
 import { cn } from '../../lib';
 
 import { modalPanel, type ModalPanelVariants } from './Modal.variants';
+import { ModalFooterStatus } from './ModalFooterStatus';
 import { OverlayHeader } from './OverlayHeader';
 
 export interface ModalProps extends ModalPanelVariants {
@@ -12,6 +13,12 @@ export interface ModalProps extends ModalPanelVariants {
   title?: ReactNode;
   eyebrow?: ReactNode;
   footer?: ReactNode;
+  /**
+   * Status string slot, footer-left (spec: "ModalFooterStatus") — driven
+   * by state changes in the modal content. Renders the footer row even
+   * without `footer` actions.
+   */
+  footerStatus?: ReactNode;
   dismiss?: OverlayDismiss;
   backdrop?: OverlayVariants['backdrop'];
   className?: string;
@@ -24,6 +31,7 @@ export const Modal = ({
   title,
   eyebrow,
   footer,
+  footerStatus,
   size,
   dismiss,
   backdrop,
@@ -56,8 +64,11 @@ export const Modal = ({
         <div className="overflow-y-auto p-5 text-sm leading-relaxed text-fg2">
           {children}
         </div>
-        {footer != null && (
+        {(footer != null || footerStatus != null) && (
           <div className="flex shrink-0 justify-end gap-2.5 border-t border-border-soft bg-surface-sunk px-5 py-3.5">
+            {footerStatus != null && (
+              <ModalFooterStatus>{footerStatus}</ModalFooterStatus>
+            )}
             {footer}
           </div>
         )}

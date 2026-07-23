@@ -23,3 +23,8 @@ export * from './OAuthButton';
 export * from './IconTile';
 export * from './PasswordStrength';
 export * from './IconButton';
+export * from './Icon';
+export * from './StatusIndicator';
+export * from './TrendIndicator';
+export * from './Formatted';
+export * from './Sparkline';

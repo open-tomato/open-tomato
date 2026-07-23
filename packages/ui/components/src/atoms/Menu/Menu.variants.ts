@@ -46,6 +46,9 @@ export const menuItem = cva(
       tone: {
         default: 'text-fg1 [&_svg]:text-fg3',
         danger: 'text-danger [&_svg]:text-danger',
+        // The "See all… / New workspace" style affirmative rows in the
+        // topbar menus.
+        accent: 'text-accent [&_svg]:text-accent',
       },
     },
     defaultVariants: { tone: 'default' },

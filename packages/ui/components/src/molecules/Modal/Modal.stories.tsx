@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { useState, type ComponentProps } from 'react';
+
 import { Button } from '../../atoms/Button';
 
 import { Modal } from './Modal';
@@ -81,4 +83,69 @@ export const Large: Story = {
 /** No title/footer — a bare centered card. */
 export const BodyOnly: Story = {
   args: { title: undefined, eyebrow: undefined, footer: undefined },
+};
+
+/**
+ * Spec (ModalFooterStatus): a status string in the footer, aligned left
+ * of the actions.
+ */
+export const FooterStatus: Story = {
+  args: { footerStatus: '2 sessions affected' },
+};
+
+/** The status slot renders the footer row even without actions. */
+export const FooterStatusOnly: Story = {
+  args: { footer: undefined, footerStatus: 'validating configuration…' },
+};
+
+const TOOL_TYPES = ['MCP server', 'Skill', 'API endpoint'] as const;
+
+const ToolTypeBody = ({
+  selected,
+  onSelect,
+}: {
+  selected: string;
+  onSelect: (t: string) => void;
+}) => (
+  <div className="flex flex-col gap-2">
+    <p className="m-0">Pick the tool type to configure:</p>
+    <div className="flex gap-2">
+      {TOOL_TYPES.map((t) => (
+        <Button
+          key={t}
+          variant={t === selected
+            ? 'primary'
+            : 'secondary'}
+          size="sm"
+          onClick={() => onSelect(t)}
+        >
+          {t}
+        </Button>
+      ))}
+    </div>
+  </div>
+);
+
+const FooterStatusLiveDemo = (args: ComponentProps<typeof Modal>) => {
+  const [selected, setSelected] = useState<string>(TOOL_TYPES[0]);
+  return (
+    <Modal
+      {...args}
+      eyebrow="New tool"
+      title="Add a tool"
+      footerStatus={`type: ${selected}`}
+      footer={<Button variant="primary">Continue</Button>}
+    >
+      <ToolTypeBody selected={selected} onSelect={setSelected} />
+    </Modal>
+  );
+};
+
+/**
+ * Spec: the status is driven by a state change in the modal content — here
+ * the footer mirrors the selected tool type (the tools-page flow). The
+ * initial selection is fixed so the visual baseline is deterministic.
+ */
+export const FooterStatusLive: Story = {
+  render: (args) => <FooterStatusLiveDemo {...args} />,
 };
