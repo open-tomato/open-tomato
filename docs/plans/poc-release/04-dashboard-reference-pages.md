@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [03b, 03c, 03d]
 parallel-with: [05-wave-1, 06-port]
 size: M–L (2–3 sessions)
-status: session 1 done (CB PR #13, 2026-07-23); sessions 2-3 ready
+status: sessions 1-2 done (CB PRs #13, #15); session 3 ready
 linear: OPT-243
 ---
 
@@ -26,20 +26,20 @@ Sessions ([UI-Sessions.md](reference/UI-Sessions.md)):
 - [x] Table per spec config (session-cell, agent-cell, status, tokens-progress, spend-over-time, user-inline, context-menu) + contextual actions (Open/Fork/Copy ID/Export; destructive Archive)
 - [x] Sub-pages: **New Session** modal (full property form incl. roadmap-task suggest, token-quota slider w/ hardcoded PoC steps, warning zone), **Fork** (prefill variant), **Export** (JSONL), **View** (timeline-first: result card, `SessionTimeline`, `FilesChanged`, runner metadata sidebar, session SmallStatCard, single-line UsageChart)
 
-## Session 2 — Agents + Roadmap + Tools
+## Session 2 — Agents + Roadmap + Tools — DONE (CB PR #15: AgentsPage/RoadmapPage/ToolsPage + editor modals; new AgentCard/ToolCard/ToolTypeSelector; catalog gap flagged: FilterBadge/StatusPill → FilterChip candidate)
 
 Agents ([UI-Agents.md](reference/UI-Agents.md)):
-- [ ] Filter field + `+ new agent`; filter badges (all/enabled/in use/disabled); `AgentCard` grid (header w/ running badge + context menu, description, tool badges w/ `+x more`, footer w/ model-footer, relative time, run count, on/off toggle)
-- [ ] New/Edit/Clone Agent modal: AvatarSelector, name/description, Droppable seed context, VerboseOptionList model pick, token-budget slider, grouped DecoratedToggleList tools
+- [x] Filter field + `+ new agent`; filter badges (all/enabled/in use/disabled); `AgentCard` grid (header w/ running badge + context menu, description, tool badges w/ `+x more`, footer w/ model-footer, relative time, run count, on/off toggle)
+- [x] New/Edit/Clone Agent modal: AvatarSelector, name/description, Droppable seed context, VerboseOptionList model pick, token-budget slider, grouped DecoratedToggleList tools
 
 Roadmap ([UI-Roadmap.md](reference/UI-Roadmap.md)):
-- [ ] `+ new task`; toolbar (search, status + priority selects); table per spec (id, task-cell, status/blocking/priority badges, user-inline, relative-time ETA, context menu w/ status+prio actions)
-- [ ] New/Edit Task form: title, description, 3 selects, ChipList tags (`allowNew`), ETA text input, Droppable attachments, relations (parent single-ChipList, subtasks multi, red blocked-by/blocking group)
+- [x] `+ new task`; toolbar (search, status + priority selects); table per spec (id, task-cell, status/blocking/priority badges, user-inline, relative-time ETA, context menu w/ status+prio actions)
+- [x] New/Edit Task form: title, description, 3 selects, ChipList tags (`allowNew`), ETA text input, Droppable attachments, relations (parent single-ChipList, subtasks multi, red blocked-by/blocking group)
 
 Tools ([UI-Tools.md](reference/UI-Tools.md)):
-- [ ] Type filter badges; `ToolCard` grid (tool-title, status badge incl. "connecting" pulse state, description, decorated summary w/ URI + counts + webhooks, footer usage)
-- [ ] New/Edit/Clone Tool modal: `ToolTypeSelector` (icon+name side-by-side variant), static segment, dynamic per-type segments (MCP: URL/credentials/auto-start; Skills: source + load-skills gating; API: webhook/auth-scheme/events ChipList), `ModalFooterStatus` wired to type
-- [ ] Test Connection behavior + persistent error toast
+- [x] Type filter badges; `ToolCard` grid (tool-title, status badge incl. "connecting" pulse state, description, decorated summary w/ URI + counts + webhooks, footer usage)
+- [x] New/Edit/Clone Tool modal: `ToolTypeSelector` (icon+name side-by-side variant), static segment, dynamic per-type segments (MCP: URL/credentials/auto-start; Skills: source + load-skills gating; API: webhook/auth-scheme/events ChipList), `ModalFooterStatus` wired to type
+- [x] Test Connection behavior + persistent error toast
 
 ## Session 3 — Settings stub + Notifications + Search results
 
