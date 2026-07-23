@@ -1,0 +1,37 @@
+{
+  "name": "@open-tomato/app-auth",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint ./src",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@open-tomato/ui-components": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.0.0"
+  },
+  "devDependencies": {
+    "@open-tomato/eslint-config": "workspace:^",
+    "@open-tomato/typescript-config": "workspace:^",
+    "@tailwindcss/vite": "^4",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "eslint": "^9.39.4",
+    "globals": "^17.2.0",
+    "jsdom": "^29.1.1",
+    "tailwindcss": "^4",
+    "typescript": "^5.9.3",
+    "vite": "^6.2.0",
+    "vitest": "^4.1.0"
+  }
+}
