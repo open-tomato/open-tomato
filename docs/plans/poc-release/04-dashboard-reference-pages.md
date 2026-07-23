@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [03b, 03c, 03d]
 parallel-with: [05-wave-1, 06-port]
 size: M–L (2–3 sessions)
-status: pending
+status: session 1 done (CB PR #13, 2026-07-23); sessions 2-3 ready
 linear: OPT-243
 ---
 
@@ -14,17 +14,17 @@ linear: OPT-243
 
 **Spec precedence:** `reference/UI-*.md` over raw-DS screens (e.g. Sessions is list-only, Agents is grid-only — ignore raw list/cards toggles).
 
-## Session 1 — Overview + Sessions
+## Session 1 — Overview + Sessions — DONE (CB PR #13: both pages rewritten as full spec compositions + 4 sub-page modals + new SessionTimeline molecule; catalog gaps flagged for promotion: StatusPill, label-and-text; Slider gained disabled)
 
 Overview ([UI-Overview.md](reference/UI-Overview.md), [Snippets.md](reference/Snippets.md)):
-- [ ] 4× SmallStatCard row · RowStatCard (budget/usage w/ forecast) · charts row (LineChart tokens-by-model + UsageChart tool calls) · charts row (multi UsageChart spend-by-agent + CalendarHeatmap) · Top-5-sessions full-row card (rank labels, DoubleLine, model entity, status label, tokens, cost)
-- [ ] Toolbar: time-range selector + export menu (PDF/JSON/YAML/CSV/Share)
+- [x] 4× SmallStatCard row · RowStatCard (budget/usage w/ forecast) · charts row (LineChart tokens-by-model + UsageChart tool calls) · charts row (multi UsageChart spend-by-agent + CalendarHeatmap) · Top-5-sessions full-row card (rank labels, DoubleLine, model entity, status label, tokens, cost)
+- [x] Toolbar: time-range selector + export menu (PDF/JSON/YAML/CSV/Share)
 
 Sessions ([UI-Sessions.md](reference/UI-Sessions.md)):
-- [ ] Stat row (Live now w/ pulse, Today, Tokens today, Cost today)
-- [ ] Detached toolbar: name/id/agent/branch filter, status quick-pills w/ counts, user dropdown (list-only; no grid toggle)
-- [ ] Table per spec config (session-cell, agent-cell, status, tokens-progress, spend-over-time, user-inline, context-menu) + contextual actions (Open/Fork/Copy ID/Export; destructive Archive)
-- [ ] Sub-pages: **New Session** modal (full property form incl. roadmap-task suggest, token-quota slider w/ hardcoded PoC steps, warning zone), **Fork** (prefill variant), **Export** (JSONL), **View** (timeline-first: result card, `SessionTimeline`, `FilesChanged`, runner metadata sidebar, session SmallStatCard, single-line UsageChart)
+- [x] Stat row (Live now w/ pulse, Today, Tokens today, Cost today)
+- [x] Detached toolbar: name/id/agent/branch filter, status quick-pills w/ counts, user dropdown (list-only; no grid toggle)
+- [x] Table per spec config (session-cell, agent-cell, status, tokens-progress, spend-over-time, user-inline, context-menu) + contextual actions (Open/Fork/Copy ID/Export; destructive Archive)
+- [x] Sub-pages: **New Session** modal (full property form incl. roadmap-task suggest, token-quota slider w/ hardcoded PoC steps, warning zone), **Fork** (prefill variant), **Export** (JSONL), **View** (timeline-first: result card, `SessionTimeline`, `FilesChanged`, runner metadata sidebar, session SmallStatCard, single-line UsageChart)
 
 ## Session 2 — Agents + Roadmap + Tools
 
