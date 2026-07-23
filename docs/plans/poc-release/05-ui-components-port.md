@@ -4,10 +4,20 @@ tier: detailed
 depends-on: [01; wave 1 on 03c+03d; wave 2 on 03b]
 parallel-with: [03 (different repo), 04, 06]
 size: L (3+ sessions, one per wave)
-status: wave 0 done (2026-07-22); waves 1–2 pending WS03
+status: COMPLETE — waves 0-2 done; ui-components@0.7.0 + theme-default@0.7.0 published 2026-07-23
 linear: OPT-244
 ---
 
+> **Waves 1+2 completed 2026-07-23** — published `@open-tomato/ui-components@0.7.0`
+> + `@open-tomato/theme-default@0.7.0` (fixed-group minor via changeset): 42 new
+> component folders (organisms incl. full Table kit + topbar set, chart/card
+> molecules, ConfirmPopover, upgraded AppShell + AuthShell, 10 auth pages +
+> PasskeyPrompt as templates per D7; dashboard pages excluded per D7).
+> 385 exports, 358 stories, 716/716 visual snapshots regenerated in-repo,
+> reference-gate green after a 119-file scrub pass. Port adaptations recorded
+> in the commit (`20e703c`): fixture placeholder for reference pages, glyph
+> wait in the visual runner, deep-import hazard preserved.
+>
 > **Wave 0 completed 2026-07-22** — published `@open-tomato/ui-components@0.6.0`
 > (25 atoms + 16 molecules + lib, 183 stories, Storybook workbench + visual
 > suite) and `@open-tomato/theme-default@0.6.0` (tokens + fonts) as the initial
