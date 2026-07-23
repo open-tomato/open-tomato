@@ -1,19 +1,32 @@
 export { api, type OpenTomatoApi } from './api';
-export { DEFAULT_WORKSPACE_ID } from './fixtures';
+export { DEFAULT_WORKSPACE_ID, POC_NOW } from './fixtures';
+export { agentTone, exportJsonl, sessionElapsedSeconds } from './sessionsData';
 export type {
   ActivityCell,
   Agent,
+  AgentEditorOptions,
+  AgentModelDef,
+  AgentModelSpeed,
   AgentStatus,
+  AgentToolDef,
+  AgentToolGroup,
   AgentUsageStat,
   BudgetSummary,
   ChartToneName,
   IsoDateTime,
+  NewSessionOptions,
   NotificationLevel,
   NotificationRecord,
+  ReadyTaskOption,
   SearchSuggestionKind,
   SearchSuggestionRecord,
   Session,
+  SessionDetail,
+  SessionFileChange,
   SessionStatus,
+  SessionTimelineEvent,
+  SessionTimelineLevel,
+  SessionToolCall,
   Task,
   TaskPriority,
   TaskStatus,

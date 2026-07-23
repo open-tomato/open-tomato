@@ -1,6 +1,6 @@
 # Webapp data contracts — draft backend API requirements
 
-**Status:** WS07 session 0 draft. Source of truth for the shapes is
+**Status:** WS07 session 2 (Sessions + Agents). Source of truth for the shapes is
 [`app/src/data/types.ts`](../src/data/types.ts); the provider surface is
 [`app/src/data/api.ts`](../src/data/api.ts). This document is the handoff
 artifact for backend planning: every entity and method here is consumed by
@@ -85,6 +85,53 @@ with a single workspace never see the switcher and stay on the `/` base.
 | `tokenBudgetPerRun` | number | New/Edit Agent budget slider |
 | `totalRuns` | number | History icon count |
 | `lastRunAt` | IsoDateTime? | Clock icon relative time |
+
+### SessionDetail (View Session sub-page)
+
+Everything the timeline-first View Session page renders beyond the base
+`Session`. In the mock layer it is **derived deterministically** from the
+session's own fields against a frozen clock (`POC_NOW`) — a real backend
+would serve the actual run log, files, and tool-call tallies instead.
+
+| Field | Type | Notes |
+|---|---|---|
+| `session` | `Session` | The base session |
+| `agentName` | string | Runner display name (resolved from `agentId`) |
+| `roadmapTaskLabel` | string? | `{taskId} · {title}` — header link; absent when unlinked |
+| `summary` | string | Collapsed result card body |
+| `finishedAt` | IsoDateTime | `session.finishedAt`, or the frozen now for live runs |
+| `elapsedSeconds` | number | Run duration (finished span, or now − start) |
+| `tokenSpark` | number[] | Cumulative token draw (SmallStatCard sparkline) |
+| `timeline` | `SessionTimelineEvent[]` | Event feed (see below) |
+| `files` | `SessionFileChange[]` | `{path, additions, deletions}` — FilesChanged |
+| `toolCalls` | `SessionToolCall[]` | `{name, value, tone}` — single-line UsageChart |
+| `commits` | number | Runner-metadata list |
+
+`SessionTimelineEvent`: `{ time: 'HH:MM:SS', level: 'info'|'tool'|'think'|'ok'|'err'|'done', icon?: string (lucide glyph), text: string, meta?: string }`.
+
+### NewSessionOptions (New / Fork Session form)
+
+Option sources for the session composer, scoped to a workspace.
+
+| Field | Type | Notes |
+|---|---|---|
+| `readyTasks` | `ReadyTaskOption[]` | Tasks in `ready-for-dev` **only** (the suggest offers that status). Each: `{id, title, type: 'feat'\|'fix'\|'chore', estimatedTokens, suggestedAgents: string[]}` — effort drives quota + subagent preselection |
+| `runnerAgents` | string[] | Runner-agent display names |
+| `subagents` | string[] | Allowed-subagent names (same pool) |
+
+### AgentEditorOptions (New / Edit / Clone Agent form)
+
+Config-level catalog (workspace-independent) behind the agent editor.
+
+| Field | Type | Notes |
+|---|---|---|
+| `models` | `AgentModelDef[]` | `{id, name, speed, caps: string[], blendedUsdPerMTok, description, cost}` — caps gate the tool surface; blended rate sizes the budget slider |
+| `toolGroups` | `AgentToolGroup[]` | `{cap, tools: {id, label, description, icon}[]}` — the page shows the groups the selected model's caps unlock |
+
+> Note: the editor's capability tools (`fs`, `shell`, `git`, …) are a
+> distinct surface from `Agent.toolIds` (workspace Tool entities shown as
+> card badges). The PoC keeps them separate; a real backend would unify the
+> two so an agent's editable tool selection matches what its card renders.
 
 ### Task (Roadmap)
 
@@ -219,8 +266,11 @@ the caller may see.
 | `api.users.me()` | `User` | Authenticated user + preferences |
 | `api.sessions.list(workspaceId?)` | `Session[]` | Filterable by status/user/agent later |
 | `api.sessions.get(id)` | `Session` | |
+| `api.sessions.detail(id)` | `SessionDetail` | View Session page; timeline/files/tool-calls/runner metadata (backend serves the real run log) |
+| `api.sessions.newSessionOptions(workspaceId)` | `NewSessionOptions` | New/Fork form: ready-for-dev tasks + agent pools |
 | `api.agents.list(workspaceId?)` | `Agent[]` | |
 | `api.agents.get(id)` | `Agent` | |
+| `api.agents.editorOptions()` | `AgentEditorOptions` | New/Edit/Clone form: model catalog + grouped tool surface (workspace-independent) |
 | `api.tasks.list(workspaceId?)` | `Task[]` | New Session needs `status = ready-for-dev` subset |
 | `api.tasks.get(id)` | `Task` | |
 | `api.tools.list(workspaceId?)` | `Tool[]` | |
@@ -230,8 +280,13 @@ the caller may see.
 | `api.usage.overview(workspaceId, range?)` | `UsageOverview` | Overview dashboard; `range` defaults to `'30d'`, must alter series granularity + every total |
 | `api.search.suggest(query?)` | `SearchSuggestionRecord[]` | Substring match across all five kinds; empty query = default set |
 
-Known gaps deliberately deferred beyond session 0 (mutations arrive with
-their pages in sessions 2–3): create/fork/archive session, create/edit/
-clone/toggle agent, task CRUD + status/priority updates, tool CRUD + test
-connection, notification mark-read, export endpoints (JSONL transcript,
-usage report), and the full `/search` results query.
+Known gaps deliberately deferred (mutations arrive with their pages): the
+Sessions + Agents read surfaces landed in session 2 (`sessions.detail`,
+`sessions.newSessionOptions`, `agents.editorOptions`), but their **write**
+side stays mocked — create/fork/archive session, create/edit/clone/toggle
+agent all resolve client-side only. Still outstanding for sessions 3+: task
+CRUD + status/priority updates, tool CRUD + test connection, notification
+mark-read, export endpoints (JSONL transcript, usage report), and the full
+`/search` results query. The status/tone maps and quota-slider constants
+(Opus reference rate, $10 session cap / $15 agent cap) are PoC UI constants,
+not backend contract — the real version reads workspace settings.

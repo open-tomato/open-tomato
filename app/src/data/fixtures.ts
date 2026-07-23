@@ -25,6 +25,14 @@ export const WORKSPACES: Workspace[] = [
 /** The single-workspace default (`/` base) — first entry, most recent. */
 export const DEFAULT_WORKSPACE_ID = WORKSPACES[0]!.id;
 
+/**
+ * Frozen reference "now" for every relative-time / duration render in the
+ * app (Sessions spend·time, session detail, Agents last-run). Matches the
+ * Overview's pinned 2026-07-23 world — never the wall clock, so stories,
+ * tests and visual baselines stay deterministic.
+ */
+export const POC_NOW: Date = new Date('2026-07-23T12:00:00Z');
+
 export const CURRENT_USER: User = {
   id: 'usr-jess',
   name: 'Jess Lin',

@@ -9,9 +9,12 @@
 
 import type {
   Agent,
+  AgentEditorOptions,
+  NewSessionOptions,
   NotificationRecord,
   SearchSuggestionRecord,
   Session,
+  SessionDetail,
   Task,
   Tool,
   UsageOverview,
@@ -21,6 +24,7 @@ import type {
   Workspace,
 } from './types';
 
+import { buildAgentEditorOptions } from './agentsData';
 import {
   AGENTS,
   CURRENT_USER,
@@ -33,6 +37,11 @@ import {
   WORKSPACES,
 } from './fixtures';
 import { buildOverview } from './overviewFixtures';
+import {
+  buildNewSessionOptions,
+  buildSessionDetail,
+  findSession,
+} from './sessionsData';
 
 const copy = <T>(value: T): T => structuredClone(value);
 
@@ -113,10 +122,23 @@ export const api = {
   sessions: {
     list: (workspaceId?: string): Promise<Session[]> => resolveCopy(byWorkspace(SESSIONS, workspaceId)),
     get: (id: string): Promise<Session> => getOrReject(SESSIONS, id, 'session'),
+    /** View Session sub-page payload — timeline, files, tool-calls, runner
+        metadata (deterministic, derived from the session's own fields). */
+    detail: (id: string): Promise<SessionDetail> => {
+      const session = findSession(id);
+      return session != null
+        ? resolveCopy(buildSessionDetail(session))
+        : Promise.reject(new Error(`session "${id}" not found`));
+    },
+    /** Option sources for the New / Fork Session form (ready-for-dev tasks,
+        runner agents, allowed subagents). */
+    newSessionOptions: (workspaceId: string): Promise<NewSessionOptions> => resolveCopy(buildNewSessionOptions(workspaceId)),
   },
   agents: {
     list: (workspaceId?: string): Promise<Agent[]> => resolveCopy(byWorkspace(AGENTS, workspaceId)),
     get: (id: string): Promise<Agent> => getOrReject(AGENTS, id, 'agent'),
+    /** Model catalog + grouped tool surface for the New/Edit/Clone editor. */
+    editorOptions: (): Promise<AgentEditorOptions> => resolveCopy(buildAgentEditorOptions()),
   },
   tasks: {
     list: (workspaceId?: string): Promise<Task[]> => resolveCopy(byWorkspace(TASKS, workspaceId)),

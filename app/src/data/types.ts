@@ -86,6 +86,140 @@ export interface Session {
   commits: number;
 }
 
+/* ---- session detail (View Session sub-page) ------------------------------ */
+
+/** SessionTimeline event flavour — drives the node tone + text treatment
+    (mirrors the ui-components SessionTimeline levels; kept as a plain union
+    so this contract stays UI-free). */
+export type SessionTimelineLevel =
+  | 'info'
+  | 'tool'
+  | 'think'
+  | 'ok'
+  | 'err'
+  | 'done';
+
+/** One row of the session event feed (UI-Sessions spec: View Session). */
+export interface SessionTimelineEvent {
+  /** Wall-clock stamp, pre-formatted (`12:04:21`). */
+  time: string;
+  level: SessionTimelineLevel;
+  /** Lucide glyph name (page maps it onto the Icon atom). */
+  icon?: string;
+  text: string;
+  /** Greyed mono second line (`1,284 tokens`, `exit 0 · 14 passed`). */
+  meta?: string;
+}
+
+/** One touched file (FilesChanged card). Field-compatible with the
+    ui-components `FileChange` shape. */
+export interface SessionFileChange {
+  path: string;
+  additions: number;
+  deletions: number;
+}
+
+/** One tool-call tally for the session's single-line UsageChart. */
+export interface SessionToolCall {
+  name: string;
+  value: number;
+  tone: ChartToneName;
+}
+
+/**
+ * Everything the View Session sub-page renders beyond the base `Session`:
+ * the event timeline, files touched, a tool-call breakdown, a token
+ * sparkline, and the resolved runner/roadmap labels. Deterministic —
+ * derived from the session's own fields against a frozen clock.
+ */
+export interface SessionDetail {
+  session: Session;
+  /** Runner agent display name (resolved from `session.agentId`). */
+  agentName: string;
+  /** Roadmap task label (`tsk-004 · Auth middleware …`) — absent when the
+      session has no linked task. */
+  roadmapTaskLabel?: string;
+  /** Result summary (collapsed result card). */
+  summary: string;
+  /** End time — the session's `finishedAt` or the frozen now for live runs. */
+  finishedAt: IsoDateTime;
+  /** Run duration in seconds (finished span, or now − start for live runs). */
+  elapsedSeconds: number;
+  /** Cumulative token draw over the run (SmallStatCard sparkline). */
+  tokenSpark: number[];
+  timeline: SessionTimelineEvent[];
+  files: SessionFileChange[];
+  toolCalls: SessionToolCall[];
+  /** Commits landed (runner-metadata list). */
+  commits: number;
+}
+
+/* ---- new / fork session form option sources ------------------------------ */
+
+/** A roadmap task offered by the New Session task suggest (ready-for-dev
+    only, per UI-Sessions spec). Drives quota + subagent preselection. */
+export interface ReadyTaskOption {
+  id: string;
+  title: string;
+  /** Branch-prefix hint derived from the task tags (`feat` / `fix` / `chore`). */
+  type: 'feat' | 'fix' | 'chore';
+  estimatedTokens: number;
+  /** Suggested subagent display names. */
+  suggestedAgents: string[];
+}
+
+/** Option sources for the New / Fork Session form. */
+export interface NewSessionOptions {
+  /** Tasks in `ready-for-dev` status (the only ones the suggest offers). */
+  readyTasks: ReadyTaskOption[];
+  /** Runner agent display names. */
+  runnerAgents: string[];
+  /** Allowed-subagent display names (same pool as runners). */
+  subagents: string[];
+}
+
+/* ---- agent editor option sources ----------------------------------------- */
+
+export type AgentModelSpeed = 'fast' | 'medium' | 'slow';
+
+/** A model the Agent editor offers — capability groups gate the tool
+    surface, the blended rate sizes the budget slider. */
+export interface AgentModelDef {
+  id: string;
+  /** Full display name (`claude-sonnet-4-5`). */
+  name: string;
+  speed: AgentModelSpeed;
+  /** Capability groups this model unlocks (keys into the tool groups). */
+  caps: string[];
+  /** Blended $/MTok — sizes the token-budget slider. */
+  blendedUsdPerMTok: number;
+  description: string;
+  /** Human pricing line (`$3/MTok in · $15/MTok out`). */
+  cost: string;
+}
+
+/** One tool the Agent editor can toggle. */
+export interface AgentToolDef {
+  id: string;
+  label: string;
+  description: string;
+  /** Lucide glyph name (page maps it onto the Icon atom). */
+  icon: string;
+}
+
+/** A capability group of tools (`code`, `web`, `db`, …). */
+export interface AgentToolGroup {
+  cap: string;
+  tools: AgentToolDef[];
+}
+
+/** Option sources for the New / Edit / Clone Agent editor. */
+export interface AgentEditorOptions {
+  models: AgentModelDef[];
+  /** All tool groups, in display order (page filters to the model's caps). */
+  toolGroups: AgentToolGroup[];
+}
+
 /* ---- agents -------------------------------------------------------------- */
 
 export type AgentStatus = 'enabled' | 'disabled';
