@@ -15,7 +15,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router';
 
-import { api, DEFAULT_WORKSPACE_ID, POC_NOW, resolveOwnerHandle } from '../../data';
+import { api, DEFAULT_WORKSPACE_ID, POC_NOW } from '../../data';
 import { withBase, workspaceBase } from '../../routes/paths';
 import { PageHead } from '../shared/PageHead';
 
@@ -119,6 +119,15 @@ export const RoadmapPage = () => {
 
   const tasks = useMemo(() => data?.tasks ?? [], [data]);
 
+  // Resolve owner handles from the served roster (an absent owner is an
+  // agent-owned task; an unknown id degrades to the bare id).
+  const ownerHandle = useMemo(() => {
+    const byId = new Map((data?.members ?? []).map((m) => [m.id, m.handle]));
+    return (ownerId?: string): string => (ownerId == null
+      ? 'agent'
+      : byId.get(ownerId) ?? ownerId);
+  }, [data]);
+
   const filtered = useMemo(
     () => tasks
       .filter((task) => status === 'all' || task.status === status)
@@ -168,7 +177,7 @@ export const RoadmapPage = () => {
       key: 'owner',
       header: 'Owner',
       width: 104,
-      cell: (t) => renderCellContent('user-inline', { handle: resolveOwnerHandle(t.ownerId) }),
+      cell: (t) => renderCellContent('user-inline', { handle: ownerHandle(t.ownerId) }),
     },
     {
       key: 'priority',
