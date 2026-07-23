@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [05-wave-0 (scaffold), 05-wave-1+2 (pages); 04 as spec]
 parallel-with: [08, 05-wave-2, 10, 11]
 size: L (scaffold + ~3 page sessions)
-status: session 0 done (2026-07-23); page sessions 1-3 pending (WS04 as spec)
+status: sessions 0-1 done (2026-07-23); sessions 2-3 pending (WS04 as spec)
 linear: OPT-246
 ---
 
@@ -18,11 +18,11 @@ linear: OPT-246
 - [x] **Mock data layer architecture**: typed contracts per entity (Session, Agent, Task, Tool, Notification, UsageStats…) + fixture providers; contracts collected in `app/docs/data-contracts.md` (or similar) as the backend requirements artifact
 - [x] Passing placeholder tests so the workspace stays green in the turbo gate
 
-## Session 1 — Shell chrome + Overview (M)
+## Session 1 — Shell chrome + Overview (M) — DONE (commits 9831c75 + 6fd486c: real Overview page composing ui-components@0.7.0, api.usage.overview w/ real year granularity, data-contracts updated; review fixes: clickable top-5 rows, monthly-budget coherence, per-workspace scaling, computed trends. Topbar/sidebar were delivered in session 0.)
 
-- [ ] Topbar wired: WorkspaceSwitcher (hidden single-workspace), SearchSuggest w/ 5 suggestion kinds + enter-fallthrough to `/search`, NotificationsBell popover → `/notifications`, ThemeSwitcher (hidden on system pref), ProfileMenu w/ inline logout confirm
-- [ ] Sidebar: nav items (layout-dashboard/terminal/bot/list/cpu icons), week-summary widget stub, Docs (new tab) + Settings quick access
-- [ ] Overview page per WS04 reference: stat cards, budget RowStatCard, charts rows, heatmap, top-5 sessions, time-range + export toolbar
+- [x] Topbar wired: WorkspaceSwitcher (hidden single-workspace), SearchSuggest w/ 5 suggestion kinds + enter-fallthrough to `/search`, NotificationsBell popover → `/notifications`, ThemeSwitcher (hidden on system pref), ProfileMenu w/ inline logout confirm
+- [x] Sidebar: nav items (layout-dashboard/terminal/bot/list/cpu icons), week-summary widget stub, Docs (new tab) + Settings quick access
+- [x] Overview page per WS04 reference: stat cards, budget RowStatCard, charts rows, heatmap, top-5 sessions, time-range + export toolbar
 
 ## Session 2 — Sessions + Agents (M–L)
 
