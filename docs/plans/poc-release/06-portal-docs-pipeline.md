@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [05-wave-0 (port checklist + gate + theme-default), 03a (skill adaptation)]
 parallel-with: [03b–d, 04]
 size: M–L (2–3 sessions)
-status: pending
+status: breakdown DONE (CB PRs #17, #18); OT port half next
 linear: OPT-245
 ---
 
@@ -17,15 +17,15 @@ linear: OPT-245
 ## Session(s) A — Breakdown (CB repo)
 
 Using the 03a-adapted skill (raw-DS JSX sources), migrate into `pre-components` (new `src/portal/` grouping or equivalent — decide layout at session start, keep the portal surface clearly separable for the split port):
-- [ ] `Header` + `Footer` (shared chrome)
-- [ ] `Hero`
-- [ ] `FeatureGrid`
-- [ ] `CommunityStrip`
-- [ ] `Landing` (composition template)
-- [ ] `BlogIndex` + `BlogPost`
-- [ ] `DocsLayout` (+ any docs-specific molecules the JSX reveals: sidebar nav, TOC, content styles)
-- [ ] Reuse existing atoms/molecules wherever the portal JSX duplicates them (buttons, cards, typography) — no parallel primitive set
-- [ ] Rosetta verification per component (portal artboards; extend `compare-design.mjs` source handling if needed)
+- [x] `Header` + `Footer` (shared chrome)
+- [x] `Hero`
+- [x] `FeatureGrid`
+- [x] `CommunityStrip`
+- [x] `Landing` (composition template)
+- [x] `BlogIndex` + `BlogPost`
+- [x] `DocsLayout` (+ any docs-specific molecules the JSX reveals: sidebar nav, TOC, content styles)
+- [x] Reuse existing atoms/molecules wherever the portal JSX duplicates them (buttons, cards, typography) — no parallel primitive set
+- [x] Rosetta verification per component (portal artboards; extend `compare-design.mjs` source handling if needed)
 
 ## Session(s) B — Scaffold + port (OT repo)
 
