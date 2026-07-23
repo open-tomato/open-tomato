@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [05-wave-0 (scaffold), 05-wave-1+2 (pages); 04 as spec]
 parallel-with: [08, 05-wave-2, 10, 11]
 size: L (scaffold + ~3 page sessions)
-status: sessions 0-1 done (2026-07-23); sessions 2-3 pending (WS04 as spec)
+status: sessions 0-2 done; session 3 pending (WS04 as spec)
 linear: OPT-246
 ---
 
@@ -24,13 +24,13 @@ linear: OPT-246
 - [x] Sidebar: nav items (layout-dashboard/terminal/bot/list/cpu icons), week-summary widget stub, Docs (new tab) + Settings quick access
 - [x] Overview page per WS04 reference: stat cards, budget RowStatCard, charts rows, heatmap, top-5 sessions, time-range + export toolbar
 
-## Session 2 — Sessions + Agents (M–L)
+## Session 2 — Sessions + Agents (M–L) — DONE (commits 926f7a8..b893ab7: Sessions page + View/New/Fork/Export routed modals, Agents grid + editor; api.sessions.detail/newSessionOptions + agents.editorOptions; app-local AgentCard/SessionTimeline pending library promotion; review MEDIUM fixed: model-derived editor tools)
 
-- [ ] Sessions list + quick-filter pills + user filter; table w/ contextual actions
-- [ ] New Session modal (roadmap-task suggest from mock tasks in ready-for-dev status, effort-driven quota preselection, PoC token-quota slider: ~10 steps, $10 max via Opus 4.x reference pricing, no-limit toggle, schedule text input, PR-review/notify toggles, warning zone)
-- [ ] Fork (prefill rules: title suffix, task cleared — one session per task, branch cleared) + Export (JSONL download, session-slug filename)
-- [ ] View Session: timeline-first layout, collapsed result card, SessionTimeline, FilesChanged, runner metadata sidebar, token SmallStatCard, single-line UsageChart
-- [ ] Agents grid + filters; New/Edit/Clone modals (AvatarSelector, seed-context Droppable, VerboseOptionList models, budget slider, ToolPicker groups); card toggle enable/disable rules
+- [x] Sessions list + quick-filter pills + user filter; table w/ contextual actions
+- [x] New Session modal (roadmap-task suggest from mock tasks in ready-for-dev status, effort-driven quota preselection, PoC token-quota slider: ~10 steps, $10 max via Opus 4.x reference pricing, no-limit toggle, schedule text input, PR-review/notify toggles, warning zone)
+- [x] Fork (prefill rules: title suffix, task cleared — one session per task, branch cleared) + Export (JSONL download, session-slug filename)
+- [x] View Session: timeline-first layout, collapsed result card, SessionTimeline, FilesChanged, runner metadata sidebar, token SmallStatCard, single-line UsageChart
+- [x] Agents grid + filters; New/Edit/Clone modals (AvatarSelector, seed-context Droppable, VerboseOptionList models, budget slider, ToolPicker groups); card toggle enable/disable rules
 
 ## Session 3 — Roadmap + Tools + Settings/Notifications/Search (M–L)
 
