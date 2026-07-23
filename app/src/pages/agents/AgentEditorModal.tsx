@@ -36,6 +36,9 @@ export type AgentEditorMode = 'new' | 'edit' | 'clone';
 const BUDGET_MAX_USD = 15;
 const BUDGET_STEPS = 10;
 
+/** Preferred initial tool selection where the model unlocks the code cap. */
+const PREFERRED_TOOL_DEFAULTS = ['fs', 'shell', 'git', 'tests'];
+
 /** Editor avatar tones (a subset of the AvatarSelector palette). */
 const AGENT_AVATAR_TONE: Record<string, AvatarSelectorTone> = {
   'agt-planner': 'primary',
@@ -102,7 +105,11 @@ export const AgentEditorModal = ({ open, onClose, mode = 'new', agent }: AgentEd
   const [model, setModel] = useState(() => (editing
     ? agent.model
     : 'sonnet-4-5'));
-  const [tools, setTools] = useState<string[]>(['fs', 'shell', 'git', 'tests']);
+  // Null = the selection is still the model's derived default; a non-null
+  // value is the user's explicit pick. The effective `tools` below is
+  // always reconciled to the active model's allowed set (no raw seed a
+  // later effect has to correct — same shape as NewSessionModal's runner).
+  const [toolsOverride, setToolsOverride] = useState<string[] | null>(null);
   const [budgetStep, setBudgetStep] = useState(5);
   // Seed context is required. Edit/clone start with the persona's context
   // file; new starts empty and must receive at least one file.
@@ -130,10 +137,28 @@ export const AgentEditorModal = ({ open, onClose, mode = 'new', agent }: AgentEd
 
   const allowedToolIds = (modelId: string): Set<string> => new Set(groupsForModel(modelId).flatMap((g) => g.tools.map((t) => t.id)));
 
+  /** The default selection for a model: the preferred code tools where the
+      model allows them, else the model's first available group — so the
+      initial set is always a subset of the visible, removable toggles. */
+  const defaultToolsFor = (modelId: string): string[] => {
+    const allowed = allowedToolIds(modelId);
+    const preferred = PREFERRED_TOOL_DEFAULTS.filter((id) => allowed.has(id));
+    if (preferred.length > 0) return preferred;
+    return groupsForModel(modelId)[0]?.tools.map((t) => t.id) ?? [];
+  };
+
+  // Effective selection: the user's explicit pick, or the model's derived
+  // default. Always model-consistent (footer count == checked toggles).
+  const tools = toolsOverride ?? defaultToolsFor(model);
+
   const pickModel = (next: string) => {
     setModel(next);
+    // Prune only an explicit user selection; an untouched (null) selection
+    // re-derives from the new model's defaults automatically.
     const allowed = allowedToolIds(next);
-    setTools((prev) => prev.filter((id) => allowed.has(id)));
+    setToolsOverride((prev) => (prev == null
+      ? null
+      : prev.filter((id) => allowed.has(id))));
   };
 
   const activeModel = getModel(model);
@@ -310,7 +335,7 @@ export const AgentEditorModal = ({ open, onClose, mode = 'new', agent }: AgentEd
                     key={group.cap}
                     title={group.cap}
                     value={tools}
-                    onChange={setTools}
+                    onChange={setToolsOverride}
                     options={group.tools.map((t) => ({
                       id: t.id,
                       title: t.label,

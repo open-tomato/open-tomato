@@ -56,4 +56,28 @@ describe('AgentsPage', () => {
     expect(await screen.findByText('Edit agent')).toBeTruthy();
     expect(await screen.findByText('Model')).toBeTruthy();
   });
+
+  test('the editor tool selection stays model-consistent for a non-code model', async () => {
+    // docs-gardener runs haiku-4-5 (caps: chat, web) — no `code` cap, so the
+    // default selection must derive from the model's allowed groups, not a
+    // fixed code-tool seed. Regression guard for the review MEDIUM.
+    renderAt('/agents/agt-docs/edit');
+    expect(await screen.findByText('Edit agent')).toBeTruthy();
+    expect(await screen.findByText('claude-haiku-4-5')).toBeTruthy();
+
+    // Every tool toggle is a role="switch"; the selected ones are checked.
+    const toggles = await screen.findAllByRole('switch');
+    const checked = toggles.filter((t) => t.getAttribute('aria-checked') === 'true');
+
+    // Footer "N tools" count == the number of checked toggles.
+    const footer = screen.getByText(/tools? · fast ·/);
+    const footerCount = Number(/(\d+) tool/.exec(footer.textContent ?? '')?.[1]);
+    expect(footerCount).toBe(checked.length);
+
+    // The selection is non-empty and lives in the model's allowed groups…
+    expect(checked.length).toBeGreaterThan(0);
+    expect(screen.getByRole('switch', { name: /chat\.summarize/ })).toBeTruthy();
+    // …and a code-cap tool the model doesn't allow is not even rendered.
+    expect(screen.queryByRole('switch', { name: /shell/ })).toBeNull();
+  });
 });
