@@ -200,6 +200,129 @@ export interface UsageStats {
   week: WeekSummary;
 }
 
+/* ---- overview usage series ----------------------------------------------- */
+
+/**
+ * Chart accent token name — a data-level mirror of the ui-components chart
+ * palette (`ChartTone`). Kept as a plain string union so this contract
+ * stays UI-free (same pattern as `Workspace.tone`); pages map it onto the
+ * library's `ChartTone` prop directly.
+ */
+export type ChartToneName =
+  | 'accent'
+  | 'primary'
+  | 'gold'
+  | 'info'
+  | 'success'
+  | 'danger'
+  | 'neutral'
+  | 'muted';
+
+/** Time window for the Overview usage series (toolbar Segmented). */
+export type UsageRange = '7d' | '30d' | '90d' | 'year';
+
+/**
+ * One bucket of the usage time-series — a day for the 7/30/90d ranges, a
+ * calendar month for `year`.
+ */
+export interface UsageSeriesPoint {
+  /** Bucket start (UTC midnight of the day, or the 1st for months). */
+  date: IsoDateTime;
+  /** Sparse axis label ("Jul 23" for days, "Jul" for months). */
+  label: string;
+  /** Tokens per model id — keys match `UsageModelSeries.model`. */
+  tokensByModel: Record<string, number>;
+  totalTokens: number;
+  sessions: number;
+  costUsd: number;
+}
+
+/** Model metadata for the tokens-by-model line chart legend + tones. */
+export interface UsageModelSeries {
+  /** Model id — a key into `UsageSeriesPoint.tokensByModel`. */
+  model: string;
+  /** Short display label ("sonnet"). */
+  label: string;
+  tone: ChartToneName;
+}
+
+/** A tool-call tally over the selected range (tool-calls chart). */
+export interface ToolCallStat {
+  name: string;
+  calls: number;
+  tone: ChartToneName;
+}
+
+/** Spend + activity for one agent over the range (spend-by-agent chart). */
+export interface AgentUsageStat {
+  agentId: string;
+  name: string;
+  sessions: number;
+  tokens: number;
+  costUsd: number;
+  tone: ChartToneName;
+}
+
+/**
+ * One heatmap cell (when-agents-run grid). `day` is a local calendar day
+ * (`YYYY-MM-DD`) — the CalendarHeatmap parses date-only strings as local
+ * calendar dates, so no timezone drift. Always the current week,
+ * range-independent (matches the "this week" grid in the spec).
+ */
+export interface ActivityCell {
+  day: string;
+  hour: number;
+  value: number;
+}
+
+/** A top-spending session row (top-5 sessions card). */
+export interface TopSessionStat {
+  sessionId: string;
+  title: string;
+  agentInstanceId: string;
+  model: string;
+  modelTone: ChartToneName;
+  status: SessionStatus;
+  tokens: number;
+  costUsd: number;
+}
+
+/**
+ * Monthly token budget with month-to-date usage and an end-of-month
+ * forecast projected from the selected range's run rate.
+ */
+export interface BudgetSummary {
+  /** Monthly token cap. */
+  cap: number;
+  /** Tokens used in the selected range. */
+  usedTokens: number;
+  /** Spend (USD) in the selected range. */
+  spentUsd: number;
+  /** Projected end-of-month tokens from the range run rate. */
+  forecastTokens: number;
+  /** Meter end labels ("Jul 1" / "Jul 31"). */
+  periodStartLabel: string;
+  periodEndLabel: string;
+}
+
+/** Everything the Overview page renders for one workspace + range. */
+export interface UsageOverview {
+  workspaceId: string;
+  range: UsageRange;
+  series: UsageSeriesPoint[];
+  models: UsageModelSeries[];
+  toolCalls: ToolCallStat[];
+  agents: AgentUsageStat[];
+  activity: ActivityCell[];
+  topSessions: TopSessionStat[];
+  budget: BudgetSummary;
+  totals: {
+    tokens: number;
+    sessions: number;
+    costUsd: number;
+  };
+}
+
 /* ---- search -------------------------------------------------------------- */
 
 /** Mirrors the ui-components SearchSuggestionKind union. */

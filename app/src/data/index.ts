@@ -1,8 +1,12 @@
 export { api, type OpenTomatoApi } from './api';
 export { DEFAULT_WORKSPACE_ID } from './fixtures';
 export type {
+  ActivityCell,
   Agent,
   AgentStatus,
+  AgentUsageStat,
+  BudgetSummary,
+  ChartToneName,
   IsoDateTime,
   NotificationLevel,
   NotificationRecord,
@@ -15,8 +19,14 @@ export type {
   TaskStatus,
   ThemePreference,
   Tool,
+  ToolCallStat,
   ToolStatus,
   ToolType,
+  TopSessionStat,
+  UsageModelSeries,
+  UsageOverview,
+  UsageRange,
+  UsageSeriesPoint,
   UsageStats,
   User,
   UserPreferences,

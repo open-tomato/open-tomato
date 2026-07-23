@@ -14,6 +14,8 @@ import type {
   Session,
   Task,
   Tool,
+  UsageOverview,
+  UsageRange,
   UsageStats,
   User,
   Workspace,
@@ -30,6 +32,7 @@ import {
   USAGE_STATS,
   WORKSPACES,
 } from './fixtures';
+import { buildOverview } from './overviewFixtures';
 
 const copy = <T>(value: T): T => structuredClone(value);
 
@@ -133,6 +136,15 @@ export const api = {
         ? resolveCopy(found)
         : Promise.reject(new Error(`usage stats for "${workspaceId}" not found`));
     },
+    /**
+     * Overview dashboard payload for a workspace + time range
+     * (7d/30d/90d/year). Deterministic per range — the toolbar Segmented
+     * re-fetches through this method on every range change.
+     */
+    overview: (
+      workspaceId: string,
+      range: UsageRange = '30d',
+    ): Promise<UsageOverview> => resolveCopy(buildOverview(workspaceId, range)),
   },
   search: {
     /** Empty/absent query returns the default suggestion set. */

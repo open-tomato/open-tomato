@@ -152,10 +152,37 @@ enable map from "load skills".
 | `week.tokensUsed` | number | Progress numerator |
 | `week.tokenLimit` | number | Progress denominator |
 
-The Overview page (session 1) will additionally need time-series data
-(tokens by model, tool calls, spend by agent, run heatmap, top-5 sessions
-by spend) for a selected range (7/30/90 days, this year) — contracts to be
-added when that page lands.
+### UsageOverview (Overview dashboard)
+
+Time-series + aggregates for the Overview page, scoped to a workspace and a
+`range` (`'7d' | '30d' | '90d' | 'year'`). Deterministic per range: the
+7/30/90d ranges are daily buckets, `year` is 12 calendar-month buckets.
+Served by `api.usage.overview(workspaceId, range)`.
+
+| Field | Type | Notes |
+|---|---|---|
+| `workspaceId` | string | |
+| `range` | `'7d' \| '30d' \| '90d' \| 'year'` | Echoes the requested range |
+| `series` | `UsageSeriesPoint[]` | One bucket per day (or month for `year`) |
+| `models` | `UsageModelSeries[]` | Line-chart legend + tones (`model`, `label`, `tone`) |
+| `toolCalls` | `ToolCallStat[]` | `name`, `calls`, `tone` — tool-calls chart |
+| `agents` | `AgentUsageStat[]` | `agentId`, `name`, `sessions`, `tokens`, `costUsd`, `tone` — spend-by-agent |
+| `activity` | `ActivityCell[]` | `day` (`YYYY-MM-DD` local), `hour` (0–23), `value` — when-agents-run heatmap; always the current week, range-independent |
+| `topSessions` | `TopSessionStat[]` | Top-5 sessions by spend (all-time); `sessionId`/`title`/`agentInstanceId`/`model`/`modelTone`/`status`/`tokens`/`costUsd` |
+| `budget` | `BudgetSummary` | `cap`, `usedTokens`, `spentUsd`, `forecastTokens`, `periodStartLabel`, `periodEndLabel` |
+| `totals` | `{ tokens; sessions; costUsd }` | Range-window totals (hero stat cards) |
+
+`UsageSeriesPoint`: `date` (IsoDateTime bucket start), `label` (sparse axis
+label), `tokensByModel` (`Record<modelId, number>`), `totalTokens`,
+`sessions`, `costUsd`. `ChartToneName` is a data-level mirror of the UI
+chart palette (`'accent' | 'primary' | 'gold' | 'info' | 'success' |
+'danger' | 'neutral' | 'muted'`) so this contract stays UI-free.
+
+Backend requirement: aggregate real usage into the same shapes; `range` must
+change the series granularity and every derived total. `budget.cap` is the
+workspace monthly token limit; `forecastTokens` is an end-of-month
+projection from the selected range's run rate. `activity` grids the current
+week in the workspace's configured week-start (`monday` for the PoC).
 
 ### SearchSuggestionRecord
 
@@ -191,6 +218,7 @@ the caller may see.
 | `api.tools.get(id)` | `Tool` | |
 | `api.notifications.list(workspaceId?)` | `NotificationRecord[]` | Newest-first; needs mark-all-read mutation endpoint later |
 | `api.usage.stats(workspaceId)` | `UsageStats` | Cheap summary for shell + stat cards |
+| `api.usage.overview(workspaceId, range?)` | `UsageOverview` | Overview dashboard; `range` defaults to `'30d'`, must alter series granularity + every total |
 | `api.search.suggest(query?)` | `SearchSuggestionRecord[]` | Substring match across all five kinds; empty query = default set |
 
 Known gaps deliberately deferred beyond session 0 (mutations arrive with

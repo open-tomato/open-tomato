@@ -38,6 +38,42 @@ describe('mock api', () => {
     expect(stats.week.tokenLimit).toBe(4_000_000);
   });
 
+  test('usage.overview honors the range param', async () => {
+    const week = await api.usage.overview(DEFAULT_WORKSPACE_ID, '7d');
+    const month = await api.usage.overview(DEFAULT_WORKSPACE_ID, '30d');
+    const year = await api.usage.overview(DEFAULT_WORKSPACE_ID, 'year');
+
+    expect(week.series).toHaveLength(7);
+    expect(month.series).toHaveLength(30);
+    expect(year.series).toHaveLength(12);
+    // Wider windows accumulate more tokens + tool calls.
+    expect(month.totals.tokens).toBeGreaterThan(week.totals.tokens);
+    const weekCalls = week.toolCalls.reduce((a, t) => a + t.calls, 0);
+    const monthCalls = month.toolCalls.reduce((a, t) => a + t.calls, 0);
+    expect(monthCalls).toBeGreaterThan(weekCalls);
+  });
+
+  test('usage.overview is deterministic and returns copies', async () => {
+    const a = await api.usage.overview(DEFAULT_WORKSPACE_ID, '30d');
+    const b = await api.usage.overview(DEFAULT_WORKSPACE_ID, '30d');
+    expect(a).toEqual(b);
+    expect(a).not.toBe(b);
+    expect(a.series[0]).not.toBe(b.series[0]);
+  });
+
+  test('usage.overview returns the top 5 sessions by spend, descending', async () => {
+    const { topSessions } = await api.usage.overview(DEFAULT_WORKSPACE_ID, '30d');
+    expect(topSessions.length).toBeLessThanOrEqual(5);
+    const costs = topSessions.map((s) => s.costUsd);
+    expect(costs).toEqual([...costs].sort((x, y) => y - x));
+  });
+
+  test('usage.overview defaults to the 30-day range', async () => {
+    const overview = await api.usage.overview(DEFAULT_WORKSPACE_ID);
+    expect(overview.range).toBe('30d');
+    expect(overview.series).toHaveLength(30);
+  });
+
   test('search.suggest covers all five suggestion kinds', async () => {
     const suggestions = await api.search.suggest();
     const kinds = new Set(suggestions.map((s) => s.kind));

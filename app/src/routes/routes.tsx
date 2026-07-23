@@ -1,6 +1,7 @@
 import type { RouteObject } from 'react-router';
 
 import { AppLayout } from '../app-shell/AppLayout';
+import { OverviewPage } from '../pages/overview';
 
 import { PlaceholderPage } from './PlaceholderPage';
 
@@ -63,7 +64,7 @@ const entityRoutes = ({
 });
 
 const workspaceChildren = (): RouteObject[] => [
-  { index: true, element: <PlaceholderPage title="Overview" /> },
+  { index: true, element: <OverviewPage /> },
   entityRoutes({
     segment: 'sessions',
     title: 'Sessions',
