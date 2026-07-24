@@ -1,0 +1,8 @@
+dist
+node_modules
+build
+# Visual regression — baselines are per-environment and NEVER committed
+# (CI keeps its own set via actions/cache; durable storage is a roadmap item)
+visual/
+visual-report.json
+storybook-static/
