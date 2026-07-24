@@ -68,8 +68,8 @@ export const Footer = forwardRef<HTMLElement, FooterProps>(
   ) => (
     <footer ref={ref} className={cn(portalFooter(), className)} {...props}>
       <div className="mx-auto max-w-[var(--content-max)]">
-        <div className="mb-12 grid grid-cols-[1.4fr_repeat(4,1fr)] gap-10">
-          <div>
+        <div className="mb-12 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-[1.4fr_repeat(4,1fr)] lg:gap-10">
+          <div className="col-span-full lg:col-span-1">
             <div className="mb-4 flex items-center gap-2.5">
               <TomatoMark size={32} />
               <Wordmark size={22} />

@@ -32,7 +32,7 @@ const HeroCircuit = () => (
 );
 
 const DefaultActions = () => (
-  <div className="mt-1.5 flex gap-3">
+  <div className="mt-1.5 flex flex-wrap gap-3">
     <Button variant="primary" size="lg" iconTrailing={<Icon name="arrow-right" size={18} />}>
       Start a session
     </Button>
@@ -94,7 +94,7 @@ export const Hero = forwardRef<HTMLElement, HeroProps>(
   ) => (
     <section ref={ref} className={cn(portalHero(), className)} {...props}>
       <HeroCircuit />
-      <div className="relative mx-auto grid max-w-[var(--content-max)] grid-cols-[1.3fr_1fr] items-center gap-10">
+      <div className="relative mx-auto grid max-w-[var(--content-max)] grid-cols-1 items-center gap-10 lg:grid-cols-[1.3fr_1fr]">
         <div className="flex flex-col gap-[22px]">
           <span className="self-start">
             {badge ?? (
@@ -104,7 +104,7 @@ export const Hero = forwardRef<HTMLElement, HeroProps>(
               </Badge>
             )}
           </span>
-          <h1 className="!m-0 !text-[72px] !font-extrabold !leading-none !tracking-[-0.025em]">
+          <h1 className="!m-0 !text-[44px] !font-extrabold !leading-none !tracking-[-0.025em] sm:!text-[56px] lg:!text-[72px]">
             {title ?? (
               <>
                 Cook with your agents. <span className="text-primary">Compost</span> the rest.
@@ -123,7 +123,7 @@ export const Hero = forwardRef<HTMLElement, HeroProps>(
           <div className="relative">
             <div className={heroGlow()} />
             {media ?? (
-              <div className="relative flex size-[360px] items-center justify-center">
+              <div className="relative flex aspect-square w-[min(360px,72vw)] items-center justify-center [&>svg]:h-auto [&>svg]:w-[83%]">
                 <TomatoMark size={300} />
               </div>
             )}

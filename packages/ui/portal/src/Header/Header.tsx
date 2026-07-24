@@ -97,7 +97,7 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(
           <Wordmark size={20} />
         </a>
 
-        <nav aria-label="Primary" className="ml-4 flex gap-1">
+        <nav aria-label="Primary" className="ml-4 hidden gap-1 lg:flex">
           {links.map((l) => (
             <a
               key={l.id}
@@ -118,7 +118,7 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(
         <button
           type="button"
           onClick={onSearch}
-          className="inline-flex min-w-[200px] cursor-pointer items-center gap-2 rounded-md border border-border-soft bg-surface-sunk px-2.5 py-1.5 text-[13px] text-fg3"
+          className="hidden min-w-[200px] cursor-pointer items-center gap-2 rounded-md border border-border-soft bg-surface-sunk px-2.5 py-1.5 text-[13px] text-fg3 md:inline-flex"
         >
           <Icon name="search" size={14} />
           <span className="flex-1 text-left">{searchPlaceholder}</span>

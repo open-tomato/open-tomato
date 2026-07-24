@@ -14,7 +14,7 @@ const DefaultTerminal = ({ path }: { path: string }) => (
       <span className="flex-1" />
       <span className="font-mono text-[11px] text-warm-400">{path}</span>
     </div>
-    <pre className="!m-0 !border-0 !bg-transparent px-5 py-[18px] font-mono !text-[13px] !leading-[1.7] !text-cream-100">
+    <pre className="!m-0 overflow-x-auto !border-0 !bg-transparent px-5 py-[18px] font-mono !text-[13px] !leading-[1.7] !text-cream-100">
       <span className="text-warm-400"># 1. install the cli</span>{'\n'}
       <span className="text-green-300">$</span> npm install -g <span className="text-red-300">@open-tomato/cli</span>{'\n'}
       {'\n'}
@@ -59,7 +59,7 @@ export const CodeQuickstart = forwardRef<HTMLElement, CodeQuickstartProps>(
     ref,
   ) => (
     <section ref={ref} className={cn(portalCodeQuickstart(), className)} {...props}>
-      <div className="mx-auto grid max-w-[var(--content-max)] grid-cols-[1fr_1.3fr] items-center gap-10">
+      <div className="mx-auto grid max-w-[var(--content-max)] grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
         <div>
           <div className="mb-2.5 font-mono text-xs uppercase tracking-[0.12em] text-accent">
             {eyebrow}

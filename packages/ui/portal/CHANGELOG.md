@@ -1,5 +1,17 @@
 # @open-tomato/ui-portal
 
+## 0.8.2
+
+### Patch Changes
+
+- Make the marketing surface responsive. Header nav + ⌘K search collapse below
+  `lg`/`md`; Hero, CodeQuickstart, CommunityStrip and Footer grids stack on
+  small screens; the Hero headline and mascot scale fluidly; the quickstart
+  terminal transcript scrolls inside its card. No horizontal overflow at
+  320/375/768/1024/1440.
+  - @open-tomato/ui-components@0.8.2
+  - @open-tomato/theme-default@0.8.2
+
 ## 0.8.1
 
 ### Patch Changes

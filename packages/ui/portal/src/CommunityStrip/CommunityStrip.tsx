@@ -92,7 +92,7 @@ export const CommunityStrip = forwardRef<HTMLElement, CommunityStripProps>(
     <section ref={ref} className={cn(portalCommunityStrip(), className)} {...props}>
       <CommunityCircuit />
       <div className="relative mx-auto max-w-[var(--content-max)]">
-        <div className="mb-10 grid grid-cols-[1fr_1.4fr] items-center gap-[60px]">
+        <div className="mb-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-[60px]">
           <div>
             <div className="mb-2.5 font-mono text-xs uppercase tracking-[0.12em] opacity-70">
               {eyebrow}
@@ -111,7 +111,7 @@ export const CommunityStrip = forwardRef<HTMLElement, CommunityStripProps>(
           </p>
         </div>
 
-        <div className="mb-8 grid grid-cols-3 gap-4">
+        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {quotes.map((q) => (
             <QuoteCard key={q.who} {...q} />
           ))}

@@ -1,5 +1,12 @@
 # @open-tomato/ui-docs
 
+## 0.8.2
+
+### Patch Changes
+
+- @open-tomato/ui-components@0.8.2
+- @open-tomato/theme-default@0.8.2
+
 ## 0.8.1
 
 ### Patch Changes

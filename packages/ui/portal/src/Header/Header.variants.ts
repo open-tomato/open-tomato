@@ -10,7 +10,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
  * the frosted-glass treatment; it stays in the variant, never inline.
  */
 export const portalHeader = cva([
-  'sticky top-0 z-30 flex h-[var(--header-h)] items-center gap-4 px-7',
+  'sticky top-0 z-30 flex h-[var(--header-h)] items-center gap-2 px-4 sm:gap-4 sm:px-7',
   'border-b border-border-soft',
   'bg-[color-mix(in_oklab,var(--bg)_80%,transparent)]',
   'backdrop-blur-[16px]',

@@ -1,7 +1,7 @@
 {
-  "name": "@open-tomato/app-auth",
+  "name": "@open-tomato/app-homepage",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,10 +12,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@open-tomato/ui-components": "workspace:*",
+    "@open-tomato/ui-portal": "workspace:*",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router": "^7.0.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@open-tomato/eslint-config": "workspace:^",

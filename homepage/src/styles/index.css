@@ -1,0 +1,26 @@
+/* Tailwind 4 consumer entry per the ui-portal styles.css contract: the library
+   ships no prebuilt utilities — its @source directive points this build at the
+   package's compiled JS so the utility classes its variants reference are
+   generated here. styles.css also pulls in fonts + tokens + the theme mapping,
+   so the marketing surface renders complete. */
+@import "tailwindcss";
+@import "@open-tomato/ui-portal/styles.css";
+
+/* Full-height neutral field the marketing page sits on. Sections own their own
+   backgrounds; this covers overscroll and the area below the footer. */
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg, #ffffff);
+}
+
+/* Sticky header offset for in-page anchor nav (Home / Features / Quickstart /
+   Community) so a scrolled-to section clears the fixed header. */
+:where([id="home"], [id="quickstart"], [id="features"], [id="community"]) {
+  scroll-margin-top: 5rem;
+}
