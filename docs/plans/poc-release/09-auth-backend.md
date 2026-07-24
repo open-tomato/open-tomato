@@ -4,7 +4,7 @@ tier: detailed (planned 2026-07-24 from auth-api-contract.md + backend survey)
 depends-on: [08 (auth-api-contract.md)]
 parallel-with: [12-partial]
 size: L
-status: PLANNED + decisions resolved (2026-07-24); build held for explicit go
+status: IN PROGRESS — 09a shipped (chassis + password sign-in, security-reviewed); 09b/09c/09d pending (2026-07-24)
 linear: OPT-248
 ---
 
@@ -98,9 +98,13 @@ lives in **redis** with TTLs, not Postgres.
 
 ## Implementation phasing (≈ per session)
 
-- **09a — chassis + password sign-in:** scaffold `services/auth` (copy notifications),
-  db/index + schema + migrations, redis dep, jose/argon2 token core, `POST /sign-in/email`
-  (password-only path), `/token/refresh`, `/introspect`, `errorHandler`, `/health`. Gate + supertest.
+- **09a — chassis + password sign-in:** ✅ **DONE (2026-07-24).** `services/auth` (`@open-tomato/auth`,
+  :4500) on the express chassis; all 7 tables + migration + guarded seed; ioredis session dep;
+  jose HS256 + `@node-rs/argon2` token core; `POST /sign-in/email` (password path), `/token/refresh`
+  (sid rotation), `/introspect`, `errorHandler`, `/health`. 25 tests (store-mocked, supertest), gate
+  green. Security-reviewed — fixed timing-enumeration + fail-open secret; hardening deferred to
+  OPT-259. Note: the plan's `@open-tomato/cache`=ioredis assumption was wrong (it's TanStack Query);
+  redis is `ioredis` behind a mockable store. Run steps + posture in `services/auth/README.md`.
 - **09b — 2FA + reset:** TOTP enroll/verify (otplib), sign-in 2FA challenge, reset request/confirm
   (account-bound codes, stub mail), recovery codes.
 - **09c — OAuth + workspace:** single-provider OAuth/OIDC initiate+callback (state/nonce/PKCE),
