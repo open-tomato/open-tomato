@@ -2,13 +2,14 @@
  * Workspace-pick flow state machine.
  *
  * Shared terminal step of sign-in and sign-up. Loads the user's open
- * invitations, then mints the FINAL session token with the workspace (and, for
- * an invite, the pending invitation) stamped at the token level.
+ * invitations, then mints the FINAL session token with the active workspace
+ * stamped as the `wsp` scope pointer only. Role and invite-acceptance state are
+ * NOT in the token (WS09e) — the app resolves them via `workspaceApi.getContext`.
  *
  * picking --loadInvites--> picking (+ invitations)
- * picking --select(invite ok)----> done (+ tokens with wsp/wspRole/inv)
+ * picking --select(invite ok)----> done (+ tokens with wsp only)
  * picking --select(bad invite)---> picking + error
- * picking --select(self-serve)---> done (+ tokens with wsp=ws_default, owner)
+ * picking --select(self-serve)---> done (+ tokens with wsp=ws_default)
  */
 
 import type { WorkspaceApi } from '../api/authApi';

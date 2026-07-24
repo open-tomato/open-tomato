@@ -47,10 +47,11 @@ export interface WorkspaceContextResult {
 }
 
 /**
- * Claims carried inside the access token. Workspace + invitation are flagged
- * HERE, at the token level, per the PoC plan: downstream services read the
- * active workspace and (for a not-yet-accepted invite) the pending
- * invitation straight off the verified token, no extra lookup.
+ * Claims carried inside the access token — identity plus a `wsp` workspace
+ * SCOPE pointer. Authorization (`wspRole`) and invite-acceptance state (`inv`)
+ * left the token in WS09e: they are no longer readable off the verified token
+ * and are resolved on demand via `workspaceApi.getContext` (backend
+ * `GET /workspaces/:id/me`). `wsp` alone is not proof of access.
  */
 export interface AccessTokenClaims {
   /** Subject — the user id. */
