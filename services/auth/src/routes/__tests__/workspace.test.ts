@@ -106,7 +106,7 @@ describe('GET /workspaces/invitations', () => {
 });
 
 describe('POST /workspaces/select', () => {
-  it('stamps wsp/wspRole/inv for a valid invite and preserves amr', async () => {
+  it('stamps wsp only for a valid invite and preserves amr (no role/inv in token)', async () => {
     vi.mocked(getInvitationById).mockResolvedValue(OPEN_INVITE);
 
     const res = await request(app).post('/workspaces/select')
@@ -115,19 +115,19 @@ describe('POST /workspaces/select', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.status).toBe('ok');
-    expect(res.body.tokens.claims).toMatchObject({
-      wsp: 'ws_open_garden', wspRole: 'member', inv: 'inv_og', amr: ['pwd'],
-    });
+    expect(res.body.tokens.claims).toMatchObject({ wsp: 'ws_open_garden', amr: ['pwd'] });
+    expect(res.body.tokens.claims.wspRole).toBeUndefined();
+    expect(res.body.tokens.claims.inv).toBeUndefined();
   });
 
-  it('mints the self-serve default when no invite is chosen', async () => {
+  it('mints the self-serve default (wsp only) when no invite is chosen', async () => {
     const res = await request(app).post('/workspaces/select')
       .set('Authorization', await bearer())
       .send({});
 
     expect(res.status).toBe(200);
     expect(res.body.tokens.claims.wsp).toBe('ws_default');
-    expect(res.body.tokens.claims.wspRole).toBe('owner');
+    expect(res.body.tokens.claims.wspRole).toBeUndefined();
     expect(res.body.tokens.claims.inv).toBeUndefined();
     expect(vi.mocked(getInvitationById)).not.toHaveBeenCalled();
   });
