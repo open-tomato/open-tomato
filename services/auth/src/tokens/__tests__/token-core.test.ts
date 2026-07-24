@@ -17,6 +17,7 @@ import { issueTokenSet, refreshTokenSet } from '../session-tokens.js';
 
 function createFakeRedis(): RedisClient {
   const map = new Map<string, string>();
+  const sets = new Map<string, Set<string>>();
   const fake = {
     async get(key: string): Promise<string | null> {
       return map.has(key)
@@ -31,6 +32,16 @@ function createFakeRedis(): RedisClient {
       return map.delete(key)
         ? 1
         : 0;
+    },
+    // The user→sessions index writes createSession makes (revoke support).
+    async sadd(key: string, member: string): Promise<number> {
+      const set = sets.get(key) ?? new Set<string>();
+      set.add(member);
+      sets.set(key, set);
+      return 1;
+    },
+    async expire(): Promise<number> {
+      return 1;
     },
   };
   return fake as unknown as RedisClient;

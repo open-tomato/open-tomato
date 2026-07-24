@@ -27,6 +27,7 @@ function buildApp(): express.Express {
     db: {} as RouteDeps['db'],
     redis: {} as RouteDeps['redis'],
     issuer,
+    mail: { sendPasswordResetCode: vi.fn() },
   };
   const app = express();
   app.use(express.json());

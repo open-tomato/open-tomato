@@ -28,6 +28,20 @@ export async function getUserByEmail(db: Db, email: string): Promise<UserRecord 
 }
 
 /**
+ * Find a user by id. Used by the second-factor and reset flows, which resolve
+ * the acting user from a server-side binding (challenge / access token) — never
+ * from a client-supplied `sub`.
+ */
+export async function getUserById(db: Db, userId: string): Promise<UserRecord | null> {
+  const rows = await db
+    .select({ id: usersTable.id, email: usersTable.email, name: usersTable.name })
+    .from(usersTable)
+    .where(eq(usersTable.id, userId))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+/**
  * Whether the user has a **confirmed** TOTP secret — the signal that a
  * password sign-in must escalate to `two_factor_required`. (The 2FA verify
  * endpoint itself is 09b; this read exists so 09a returns the correct shape.)

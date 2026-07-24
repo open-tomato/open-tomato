@@ -4,7 +4,7 @@ tier: detailed (planned 2026-07-24 from auth-api-contract.md + backend survey)
 depends-on: [08 (auth-api-contract.md)]
 parallel-with: [12-partial]
 size: L
-status: IN PROGRESS — 09a shipped (chassis + password sign-in, security-reviewed); 09b/09c/09d pending (2026-07-24)
+status: IN PROGRESS — 09a + 09b shipped (chassis + password sign-in + 2FA/reset/recovery, security-reviewed); 09c/09d pending (2026-07-24)
 linear: OPT-248
 ---
 
@@ -105,8 +105,18 @@ lives in **redis** with TTLs, not Postgres.
   green. Security-reviewed — fixed timing-enumeration + fail-open secret; hardening deferred to
   OPT-259. Note: the plan's `@open-tomato/cache`=ioredis assumption was wrong (it's TanStack Query);
   redis is `ioredis` behind a mockable store. Run steps + posture in `services/auth/README.md`.
-- **09b — 2FA + reset:** TOTP enroll/verify (otplib), sign-in 2FA challenge, reset request/confirm
-  (account-bound codes, stub mail), recovery codes.
+- **09b — 2FA + reset:** ✅ **DONE (2026-07-24).** TOTP enroll (`/2fa/totp/start`+`/verify`, otplib,
+  bearer-authed) with 8 argon2-hashed single-use recovery codes; sign-in 2FA (`/sign-in/2fa`) verifying
+  a TOTP **or** a recovery code against the single-use step-1 challenge (`amr:['pwd','otp']`); reset
+  request/confirm (`/reset/*`) with account-bound hashed Redis codes (15-min + grace → `ok`/`expired`/
+  `invalid_code`), decoy-hash timing equalization, session revocation on reset, and a stub console
+  mailer (`MAIL_URL` unset). Local bearer `requireAuth` (the chassis seam is still a passthrough stub);
+  passkey `/2fa/passkey/*` → `501` (D5). +49 tests (74 total), gate green. Security-reviewed — no
+  CRITICAL; fixed the HIGH `/reset/confirm` timing oracle (decoy argon2 on unknown-email/no-code
+  branches) + two MEDIUM single-use TOCTOU races (recovery `used_at IS NULL` CAS; challenge atomic-`DEL`
+  gate). Deferred to OPT-259: TOTP anti-replay, enroll step-up re-auth, TOTP-seed-at-rest encryption,
+  reset password-strength policy, per-endpoint attempt budgets. Notes: recovery codes redeemable at
+  `/sign-in/2fa` (unchanged wire shape) so enrollment codes are usable.
 - **09c — OAuth + workspace:** single-provider OAuth/OIDC initiate+callback (state/nonce/PKCE),
   sign-up (email + OAuth complete), workspace invitations + select (token-level claim stamping).
 - **09d — deploy prep + hardening:** `service.config.yaml` (WS12 coordination), Dockerfile,
