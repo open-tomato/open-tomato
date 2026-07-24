@@ -1,5 +1,11 @@
 # @open-tomato/app-auth
 
+## 0.0.2
+
+### Patch Changes
+
+- @open-tomato/ui-components@0.8.1
+
 ## 0.0.1
 
 ### Patch Changes

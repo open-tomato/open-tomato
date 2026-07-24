@@ -14,7 +14,7 @@
     },
     "app": {
       "name": "@open-tomato/app",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "dependencies": {
         "@open-tomato/ui-components": "workspace:*",
         "react": "^19.0.0",
@@ -41,7 +41,7 @@
     },
     "auth-app": {
       "name": "@open-tomato/app-auth",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "dependencies": {
         "@open-tomato/ui-components": "workspace:*",
         "react": "^19.0.0",
@@ -484,7 +484,7 @@
     },
     "packages/shared/theme-default": {
       "name": "@open-tomato/theme-default",
-      "version": "0.8.0",
+      "version": "0.8.1",
     },
     "packages/shared/types": {
       "name": "@open-tomato/types",
@@ -604,7 +604,7 @@
     },
     "packages/ui/components": {
       "name": "@open-tomato/ui-components",
-      "version": "0.8.0",
+      "version": "0.8.1",
       "dependencies": {
         "@open-tomato/theme-default": "workspace:*",
         "@radix-ui/react-accordion": "^1.2.16",
@@ -682,7 +682,7 @@
     },
     "packages/ui/docs": {
       "name": "@open-tomato/ui-docs",
-      "version": "0.8.0",
+      "version": "0.8.1",
       "dependencies": {
         "@open-tomato/theme-default": "workspace:*",
         "@open-tomato/ui-components": "workspace:*",
@@ -753,7 +753,7 @@
     },
     "packages/ui/portal": {
       "name": "@open-tomato/ui-portal",
-      "version": "0.8.0",
+      "version": "0.8.1",
       "dependencies": {
         "@open-tomato/theme-default": "workspace:*",
         "@open-tomato/ui-components": "workspace:*",

@@ -1,5 +1,15 @@
 # @open-tomato/ui-portal
 
+## 0.8.1
+
+### Patch Changes
+
+- 6175034: Fix FeatureCard to use a pure `import type` for lucide's `IconName`, so no bare
+  `lucide-react/dynamic` side-effect import lands in the published bundle (that
+  subpath isn't in lucide's exports map and breaks strict-ESM consumers).
+  - @open-tomato/ui-components@0.8.1
+  - @open-tomato/theme-default@0.8.1
+
 ## 0.8.0
 
 ### Minor Changes

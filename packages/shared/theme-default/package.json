@@ -1,6 +1,6 @@
 {
   "name": "@open-tomato/theme-default",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": false,
   "type": "module",
   "description": "Default theme for @open-tomato/ui-* packages: semantic design-token variables (light + dark) and type-face source. Override by redefining the semantic variables after import.",
