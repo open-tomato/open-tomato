@@ -7,6 +7,8 @@
  */
 import type { AccessTokenClaims, AccessTokenInput } from './types.js';
 
+import { randomUUID } from 'node:crypto';
+
 import { jwtVerify, SignJWT } from 'jose';
 
 /** Access-token lifetime: 15 minutes (short — refresh rotates it). */
@@ -18,6 +20,13 @@ const ALG = 'HS256';
 /** Issuer claim — stamped on mint and enforced on verify (token-confusion
  *  hardening if this HS256 secret is ever shared with another signer). */
 const ISSUER = 'open-tomato-auth';
+/**
+ * Signing-key id stamped in the JWT header. A single static id today (one HS256
+ * key), but present from day one so tokens are **rotation-ready**: the RS256/JWKS
+ * graduation swaps the key set and selects by `kid` (O(1), no scanning) without
+ * a token-shape change. See the auth-architecture direction (D-JWT graduation).
+ */
+const KID = 'hs-1';
 
 /** Current epoch seconds (floored) — the JWT time unit. */
 export const nowSeconds = (): number => Math.floor(Date.now() / 1000);
@@ -54,10 +63,12 @@ export function createTokenIssuer(secret: string): TokenIssuer {
 
       // jose owns `iat`/`exp` in the signed payload; we mirror them into the
       // returned `claims` so callers get the exact decoded shape without a
-      // round-trip.
+      // round-trip. `jti` (a per-token id) is the hook a future access-token
+      // denylist checks — minted now so tokens are identifiable from day one.
       const token = await new SignJWT({ ...input })
-        .setProtectedHeader({ alg: ALG, typ: 'JWT' })
+        .setProtectedHeader({ alg: ALG, typ: 'JWT', kid: KID })
         .setIssuer(ISSUER)
+        .setJti(randomUUID())
         .setIssuedAt(iat)
         .setExpirationTime(exp)
         .sign(key);
