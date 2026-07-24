@@ -1,0 +1,119 @@
+{
+  "name": "@open-tomato/ui-portal",
+  "version": "0.7.0",
+  "private": false,
+  "type": "module",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles/index.css",
+    "./theme.css": "./dist/styles/tokens.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vite build",
+    "lint:fix": "eslint ./src --ext .ts,.tsx --fix",
+    "lint": "eslint ./src --ext .ts,.tsx",
+    "check-types": "tsc --noEmit",
+    "dev": "vite --host",
+    "storybook": "storybook dev -p 6006",
+    "build:storybook": "storybook build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:visual": "scripts/test-visual.sh",
+    "test:visual:update": "scripts/test-visual.sh --update",
+    "check:stories": "node scripts/check-stories.mjs"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "@open-tomato/theme-default": "workspace:*",
+    "@open-tomato/ui-components": "workspace:*",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.25.0",
+    "tailwind-merge": "^3.6.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^2.0.2",
+    "@eslint/js": "^9.39.4",
+    "@eslint/markdown": "^7.5.1",
+    "@next/eslint-plugin-next": "^16.1.6",
+    "@storybook/addon-vitest": "~10.4.1",
+    "@storybook/react-vite": "^10.4.1",
+    "@storybook/test-runner": "^0.24.4",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@tailwindcss/postcss": "^4",
+    "@tailwindcss/vite": "^4",
+    "@types/eslint-plugin-jsx-a11y": "^6.10.1",
+    "@types/jest-image-snapshot": "^6.4.1",
+    "@types/node": "^22.13.5",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "@vitejs/plugin-react": "^6.0.2",
+    "@vitest/browser": "^4.1.7",
+    "@vitest/browser-playwright": "^4.1.7",
+    "@vitest/coverage-v8": "^4.1.7",
+    "concurrently": "^10.0.3",
+    "eslint": "^9.39.4",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsonc": "^3.1.2",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "eslint-plugin-storybook": "^10.2.19",
+    "eslint-plugin-turbo": "^2.8.1",
+    "express": "^5.1.0",
+    "globals": "^17.2.0",
+    "jest-image-snapshot": "^6.5.2",
+    "jsdom": "^29.1.1",
+    "jsonc-eslint-parser": "^3.1.0",
+    "playwright": "1.61.1",
+    "playwright-core": "1.61.1",
+    "postcss": "^8.5.15",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "storybook": "^10.4.1",
+    "tailwindcss": "^4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.0",
+    "vite": "^8.0.13",
+    "vite-plugin-dts": "^5.0.1",
+    "vite-plugin-static-copy": "^4.1.0",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.7",
+    "vitest-browser-react": "^2.2.0",
+    "wait-on": "^9.0.10"
+  },
+  "trustedDependencies": [
+    "@swc/core",
+    "unrs-resolver"
+  ],
+  "overrides": {
+    "playwright": "1.61.1",
+    "playwright-core": "1.61.1"
+  }
+}

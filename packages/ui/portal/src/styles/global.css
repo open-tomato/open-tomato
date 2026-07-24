@@ -1,0 +1,13 @@
+/* Workbench entry (Storybook, demo app). Published consumers use the package
+   export (`@open-tomato/ui-components/styles.css` — built from lib.css) instead.
+
+   Layering — the theming split:
+     fonts.css   type faces (swappable source; from @open-tomato/theme-default)
+     tokens.css  DEFAULT THEME DEFINITION (semantic variables, light + dark;
+                 from @open-tomato/theme-default)
+     theme.css   COMPONENT CONTRACT (variables → Tailwind utility mapping)
+   @import statements MUST come first — Google Fonts before any other rule. */
+@import "@open-tomato/theme-default/fonts.css";
+@import "tailwindcss";
+@import "@open-tomato/theme-default/tokens.css";
+@import "./theme.css";
