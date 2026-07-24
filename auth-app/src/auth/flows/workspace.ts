@@ -2,19 +2,20 @@
  * Workspace-pick flow state machine.
  *
  * Shared terminal step of sign-in and sign-up. Loads the user's open
- * invitations, then mints the FINAL session token with the workspace (and, for
- * an invite, the pending invitation) stamped at the token level.
+ * invitations, then mints the FINAL session token with the active workspace
+ * stamped as the `wsp` scope pointer only. Role and invite-acceptance state are
+ * NOT in the token (WS09e) — the app resolves them via `workspaceApi.getContext`.
  *
  * picking --loadInvites--> picking (+ invitations)
- * picking --select(invite ok)----> done (+ tokens with wsp/wspRole/inv)
+ * picking --select(invite ok)----> done (+ tokens with wsp only)
  * picking --select(bad invite)---> picking + error
- * picking --select(self-serve)---> done (+ tokens with wsp=ws_default, owner)
+ * picking --select(self-serve)---> done (+ tokens with wsp=ws_default)
  */
 
-import type { AuthApi } from '../api/authApi';
+import type { WorkspaceApi } from '../api/authApi';
 import type { TokenSet, WorkspaceInvitation } from '../types';
 
-import { authApi as defaultApi } from '../api/authApi';
+import { workspaceApi as defaultApi } from '../api/authApi';
 
 export type WorkspaceStep = 'picking' | 'done';
 
@@ -44,18 +45,16 @@ export const initialWorkspace = (
 export const workspaceReduce = async (
   state: WorkspaceState,
   event: WorkspaceEvent,
-  api: AuthApi = defaultApi,
+  api: WorkspaceApi = defaultApi,
 ): Promise<WorkspaceState> => {
   switch (event.kind) {
     case 'loadInvites': {
-      const invitations = await api.workspace.listInvitations();
+      const invitations = await api.listInvitations();
       return { ...state, invitations };
     }
 
     case 'select': {
-      const result = await api.workspace.select({
-        userId: state.userId, invitationId: event.invitationId,
-      });
+      const result = await api.select({ userId: state.userId, invitationId: event.invitationId });
       if (result.status === 'invalid_invitation') {
         return { ...state, step: 'picking', error: 'That invitation is no longer valid. Pick another or start fresh.' };
       }

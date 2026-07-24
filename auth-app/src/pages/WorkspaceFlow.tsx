@@ -4,10 +4,10 @@ import { useLocation, useNavigate } from 'react-router';
 
 import {
   FlowScreen,
-  authApi,
   completeSignIn,
   initialWorkspace,
   persistSession,
+  workspaceApi,
   workspaceReduce,
   type WorkspaceState,
 } from '../auth';
@@ -40,7 +40,7 @@ export const WorkspaceFlow = () => {
   // Load invitations once (the machine's `loadInvites` transition is unit-
   // tested directly; here we merge the result without a render-time ref).
   useEffect(() => {
-    void authApi.workspace.listInvitations().then((invitations) => {
+    void workspaceApi.listInvitations().then((invitations) => {
       setState((s) => ({ ...s, invitations }));
     });
   }, []);

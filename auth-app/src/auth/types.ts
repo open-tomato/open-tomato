@@ -35,10 +35,23 @@ export interface WorkspaceInvitation {
 }
 
 /**
- * Claims carried inside the access token. Workspace + invitation are flagged
- * HERE, at the token level, per the PoC plan: downstream services read the
- * active workspace and (for a not-yet-accepted invite) the pending
- * invitation straight off the verified token, no extra lookup.
+ * Workspace authorization context — resolved on demand (backend
+ * `GET /workspaces/:id/me`) now that role/invite left the identity token.
+ * `wspRole` is the effective role: the member's role, else a pending invite's
+ * role, else null (no access).
+ */
+export interface WorkspaceContextResult {
+  wspRole: WorkspaceRole | null;
+  membership: { role: WorkspaceRole } | null;
+  pendingInvite: { id: string; role: WorkspaceRole } | null;
+}
+
+/**
+ * Claims carried inside the access token — identity plus a `wsp` workspace
+ * SCOPE pointer. Authorization (`wspRole`) and invite-acceptance state (`inv`)
+ * left the token in WS09e: they are no longer readable off the verified token
+ * and are resolved on demand via `workspaceApi.getContext` (backend
+ * `GET /workspaces/:id/me`). `wsp` alone is not proof of access.
  */
 export interface AccessTokenClaims {
   /** Subject — the user id. */
@@ -47,13 +60,11 @@ export interface AccessTokenClaims {
   name: string;
   /** How this session was authenticated. */
   amr: Amr[];
-  /** Active workspace, once selected. Absent until WorkspacePick resolves. */
+  /** Active workspace SCOPE pointer, once selected. Absent until WorkspacePick
+   *  resolves. Presence is NOT proof of access — authorization (role) is resolved
+   *  on demand via `workspaceApi.getContext` (backend `GET /workspaces/:id/me`);
+   *  `wspRole`/`inv` left the token in WS09e. */
   wsp?: string;
-  /** Role within the active workspace. */
-  wspRole?: WorkspaceRole;
-  /** Pending invitation id — present when the session entered via an invite
-   *  that has not been formally accepted yet. */
-  inv?: string;
   /** Issued-at / expiry, seconds since epoch (JWT convention). */
   iat: number;
   exp: number;

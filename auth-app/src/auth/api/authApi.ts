@@ -21,8 +21,8 @@ import type {
   TokenSet,
   TwoFactorMethod,
   UserProfile,
+  WorkspaceContextResult,
   WorkspaceInvitation,
-  WorkspaceRole,
 } from '../types';
 
 import { frozenClock } from '../clock';
@@ -201,211 +201,230 @@ const maskEmail = (email: string): string => {
 /** Simulate network latency without a real timer in tests. */
 const settle = <T>(value: T): Promise<T> => Promise.resolve(value);
 
+/** Deterministic session id from the subject + a discriminator (no counters). */
+const sessionIdFor = (sub: string, extra: string): string => makeId('sid', stableHash(`${sub}:${extra}`));
+
+/** Mint a token set for a user. `extra` carries only the `wsp` scope pointer —
+ *  authorization (role) and invite state are no longer token claims (WS09e). */
+const issueForUser = (
+  user: UserProfile,
+  amr: TokenSet['claims']['amr'],
+  clock: Clock,
+  extra: { wsp?: string } = {},
+): TokenSet => issueTokens(
+  {
+    sub: user.id, email: user.email, name: user.name, amr, ...extra,
+  },
+  sessionIdFor(user.id, amr.join('+')),
+  clock,
+);
+
 /* ------------------------------------------------------------------ *
  * Factory (clock-injectable for tests; default export uses the frozen clock)
  * ------------------------------------------------------------------ */
 
-export const createAuthApi = (clock: Clock = frozenClock) => {
-  const sessionId = (sub: string, extra: string): string => makeId('sid', stableHash(`${sub}:${extra}`));
-
-  const issueFor = (
-    user: UserProfile,
-    amr: TokenSet['claims']['amr'],
-    extra: { wsp?: string; wspRole?: WorkspaceRole; inv?: string } = {},
-  ): TokenSet => issueTokens(
-    {
-      sub: user.id, email: user.email, name: user.name, amr, ...extra,
-    },
-    sessionId(user.id, amr.join('+')),
-    clock,
-  );
-
-  return {
-    signIn: {
-      /** Email + password. May escalate to a 2FA challenge. */
-      withEmail: ({ email, password }: EmailSignInRequest): Promise<SignInResult> => {
-        const user = USERS_BY_EMAIL[email.trim().toLowerCase()];
-        if (user == null || password === WRONG_PASSWORD || password.trim() === '') {
-          return settle({ status: 'invalid_credentials' });
-        }
-        if (user.id === USER_2FA.id) {
-          return settle({
-            status: 'two_factor_required',
-            user,
-            challenge: {
-              challengeId: makeId('chl', stableHash(`${user.id}:signin`)),
-              methods: ['totp', 'passkey'],
-            },
-          });
-        }
-        return settle({ status: 'ok', tokens: issueFor(user, ['pwd']) });
-      },
-
-      /** Complete a pending 2FA challenge from sign-in. */
-      verifyTwoFactor: ({ challengeId, code }: VerifyTwoFactorRequest): Promise<VerifyTwoFactorResult> => {
-        void challengeId;
-        if (code !== VALID_TOTP_CODE) return settle({ status: 'invalid_code' });
-        return settle({ status: 'ok', tokens: issueFor(USER_2FA, ['pwd', 'otp']) });
-      },
-
-      /** Federated sign-in. `github` maps to an existing account (straight in);
-       *  `google` is a new identity that must pick a handle (needs_profile).
-       *  `simulate:'denied'` models the user rejecting the consent screen. */
-      withOAuth: ({ provider, simulate }: OAuthSignInRequest): Promise<OAuthResult> => {
-        if (simulate === 'denied') {
-          return settle({ status: 'denied', reason: 'The sign-in was cancelled at the provider.' });
-        }
-        const existing = OAUTH_EXISTING[provider];
-        if (existing != null) {
-          return settle({ status: 'ok', tokens: issueFor(existing, [`oauth:${provider}`]) });
-        }
+export const createAuthApi = (clock: Clock = frozenClock) => ({
+  signIn: {
+    /** Email + password. May escalate to a 2FA challenge. */
+    withEmail: ({ email, password }: EmailSignInRequest): Promise<SignInResult> => {
+      const user = USERS_BY_EMAIL[email.trim().toLowerCase()];
+      if (user == null || password === WRONG_PASSWORD || password.trim() === '') {
+        return settle({ status: 'invalid_credentials' });
+      }
+      if (user.id === USER_2FA.id) {
         return settle({
-          status: 'needs_profile',
-          provider,
-          suggested: {
-            id: makeId('usr', stableHash(`${provider}:new`)),
-            email: `new-user@${provider}.example`,
-            name: provider === 'google'
-              ? 'Alex Rivera'
-              : 'New User',
-            handle: '',
+          status: 'two_factor_required',
+          user,
+          challenge: {
+            challengeId: makeId('chl', stableHash(`${user.id}:signin`)),
+            methods: ['totp', 'passkey'],
           },
         });
-      },
+      }
+      return settle({ status: 'ok', tokens: issueForUser(user, ['pwd'], clock) });
     },
 
-    signUp: {
-      /** Email sign-up, step 1. Rejects an address that already has an account. */
-      withEmail: ({ email, username, password }: EmailSignUpRequest): Promise<SignUpResult> => {
-        void password;
-        if (USERS_BY_EMAIL[email.trim().toLowerCase()] != null) {
-          return settle({ status: 'email_taken' });
-        }
-        const user: UserProfile = {
-          id: makeId('usr', stableHash(email)), email, name: username, handle: username,
-        };
-        return settle({ status: 'ok', user, tokens: issueFor(user, ['pwd']) });
-      },
+    /** Complete a pending 2FA challenge from sign-in. */
+    verifyTwoFactor: ({ challengeId, code }: VerifyTwoFactorRequest): Promise<VerifyTwoFactorResult> => {
+      void challengeId;
+      if (code !== VALID_TOTP_CODE) return settle({ status: 'invalid_code' });
+      return settle({ status: 'ok', tokens: issueForUser(USER_2FA, ['pwd', 'otp'], clock) });
+    },
 
-      /**
+    /** Federated sign-in. `github` maps to an existing account (straight in);
+       *  `google` is a new identity that must pick a handle (needs_profile).
+       *  `simulate:'denied'` models the user rejecting the consent screen. */
+    withOAuth: ({ provider, simulate }: OAuthSignInRequest): Promise<OAuthResult> => {
+      if (simulate === 'denied') {
+        return settle({ status: 'denied', reason: 'The sign-in was cancelled at the provider.' });
+      }
+      const existing = OAUTH_EXISTING[provider];
+      if (existing != null) {
+        return settle({ status: 'ok', tokens: issueForUser(existing, [`oauth:${provider}`], clock) });
+      }
+      return settle({
+        status: 'needs_profile',
+        provider,
+        suggested: {
+          id: makeId('usr', stableHash(`${provider}:new`)),
+          email: `new-user@${provider}.example`,
+          name: provider === 'google'
+            ? 'Alex Rivera'
+            : 'New User',
+          handle: '',
+        },
+      });
+    },
+  },
+
+  signUp: {
+    /** Email sign-up, step 1. Rejects an address that already has an account. */
+    withEmail: ({ email, username, password }: EmailSignUpRequest): Promise<SignUpResult> => {
+      void password;
+      if (USERS_BY_EMAIL[email.trim().toLowerCase()] != null) {
+        return settle({ status: 'email_taken' });
+      }
+      const user: UserProfile = {
+        id: makeId('usr', stableHash(email)), email, name: username, handle: username,
+      };
+      return settle({ status: 'ok', user, tokens: issueForUser(user, ['pwd'], clock) });
+    },
+
+    /**
        * Finish an OAuth sign-up once the user has chosen a handle. A handle
        * already linked to an account returns `email_taken` (the federated
        * identity collides) — so the contract's `email_taken` result is
        * reachable here, not just from `withEmail`.
        */
-      completeOAuth: ({ provider, username, displayName }: CompleteOAuthRequest): Promise<SignUpResult> => {
-        if (TAKEN_HANDLES.has(username.trim().toLowerCase())) {
-          return settle({ status: 'email_taken' });
-        }
-        const user: UserProfile = {
-          id: makeId('usr', stableHash(`${provider}:${username}`)),
-          email: `${username}@${provider}.example`,
-          name: displayName,
-          handle: username,
-        };
-        return settle({ status: 'ok', user, tokens: issueFor(user, [`oauth:${provider}`]) });
-      },
+    completeOAuth: ({ provider, username, displayName }: CompleteOAuthRequest): Promise<SignUpResult> => {
+      if (TAKEN_HANDLES.has(username.trim().toLowerCase())) {
+        return settle({ status: 'email_taken' });
+      }
+      const user: UserProfile = {
+        id: makeId('usr', stableHash(`${provider}:${username}`)),
+        email: `${username}@${provider}.example`,
+        name: displayName,
+        handle: username,
+      };
+      return settle({ status: 'ok', user, tokens: issueForUser(user, [`oauth:${provider}`], clock) });
     },
+  },
 
-    reset: {
-      /** Send a one-time reset code. Always 'sent' (no account enumeration). */
-      requestCode: ({ email }: RequestResetRequest): Promise<RequestResetResult> => settle({ status: 'sent', channel: 'email', maskedEmail: maskEmail(email) }),
+  reset: {
+    /** Send a one-time reset code. Always 'sent' (no account enumeration). */
+    requestCode: ({ email }: RequestResetRequest): Promise<RequestResetResult> => settle({ status: 'sent', channel: 'email', maskedEmail: maskEmail(email) }),
 
-      /**
+    /**
        * Verify the code and set a new password in one step. The code is bound
        * to a single account: an unknown email — or a code that wasn't issued
        * for that email — returns `invalid_code` and mints NOTHING. There is no
        * default-user fallback (that would be an account-takeover shape). A real
        * backend looks the code up by (account, code) and rejects any mismatch.
        */
-      resetPassword: ({ email, code, newPassword }: ResetPasswordRequest): Promise<ResetPasswordResult> => {
-        void newPassword;
-        const user = USERS_BY_EMAIL[email.trim().toLowerCase()];
-        // No account for this email → the code cannot have been issued for it.
-        if (user == null) return settle({ status: 'invalid_code' });
-        if (code === EXPIRED_RESET_CODE) return settle({ status: 'expired' });
-        if (code !== VALID_RESET_CODE) return settle({ status: 'invalid_code' });
-        // Password reset signs the user in and (per the screen) revokes other
-        // sessions — the fresh token is minted on `pwd`.
-        return settle({ status: 'ok', tokens: issueFor(user, ['pwd']) });
-      },
+    resetPassword: ({ email, code, newPassword }: ResetPasswordRequest): Promise<ResetPasswordResult> => {
+      void newPassword;
+      const user = USERS_BY_EMAIL[email.trim().toLowerCase()];
+      // No account for this email → the code cannot have been issued for it.
+      if (user == null) return settle({ status: 'invalid_code' });
+      if (code === EXPIRED_RESET_CODE) return settle({ status: 'expired' });
+      if (code !== VALID_RESET_CODE) return settle({ status: 'invalid_code' });
+      // Password reset signs the user in and (per the screen) revokes other
+      // sessions — the fresh token is minted on `pwd`.
+      return settle({ status: 'ok', tokens: issueForUser(user, ['pwd'], clock) });
+    },
+  },
+
+  twoFactor: {
+    /** Begin TOTP enrollment — hand back the secret + otpauth URI to render
+       *  as a QR. */
+    enrollTotpStart: (): Promise<TotpEnrollment> => settle({
+      secret: TOTP_SECRET,
+      otpauthUri: `otpauth://totp/Open%20Tomato:${USER_STANDARD.email}?secret=${TOTP_SECRET}&issuer=Open%20Tomato`,
+    }),
+
+    /** Verify the first TOTP code to finish enrollment. */
+    enrollTotpVerify: ({ code }: EnrollTotpVerifyRequest): Promise<EnrollTotpVerifyResult> => {
+      if (code !== VALID_TOTP_CODE) return settle({ status: 'invalid_code' });
+      return settle({ status: 'ok', recoveryCodes: RECOVERY_CODES });
     },
 
-    twoFactor: {
-      /** Begin TOTP enrollment — hand back the secret + otpauth URI to render
-       *  as a QR. */
-      enrollTotpStart: (): Promise<TotpEnrollment> => settle({
-        secret: TOTP_SECRET,
-        otpauthUri: `otpauth://totp/Open%20Tomato:${USER_STANDARD.email}?secret=${TOTP_SECRET}&issuer=Open%20Tomato`,
-      }),
-
-      /** Verify the first TOTP code to finish enrollment. */
-      enrollTotpVerify: ({ code }: EnrollTotpVerifyRequest): Promise<EnrollTotpVerifyResult> => {
-        if (code !== VALID_TOTP_CODE) return settle({ status: 'invalid_code' });
-        return settle({ status: 'ok', recoveryCodes: RECOVERY_CODES });
-      },
-
-      /** WebAuthn registration options for the passkey ceremony (D5,
+    /** WebAuthn registration options for the passkey ceremony (D5,
        *  PoC-optional for the backend). The client passes these to
        *  `navigator.credentials.create({ publicKey })`. */
-      enrollPasskeyStart: (): Promise<PasskeyRegistrationOptions> => settle({
-        challenge: 'bW9jay1jaGFsbGVuZ2U',
-        rp: { name: 'Open Tomato', id: 'open-tomato.dev' },
-        user: { id: 'dXNyX3NhbQ', name: USER_STANDARD.email, displayName: USER_STANDARD.name },
-        pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
-        timeout: 60000,
-        attestation: 'none',
-      }),
+    enrollPasskeyStart: (): Promise<PasskeyRegistrationOptions> => settle({
+      challenge: 'bW9jay1jaGFsbGVuZ2U',
+      rp: { name: 'Open Tomato', id: 'open-tomato.dev' },
+      user: { id: 'dXNyX3NhbQ', name: USER_STANDARD.email, displayName: USER_STANDARD.name },
+      pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
+      timeout: 60000,
+      attestation: 'none',
+    }),
 
-      /** Finish passkey registration. Backend verification is mocked — any
+    /** Finish passkey registration. Backend verification is mocked — any
        *  credential the browser returns is accepted (D5). */
-      enrollPasskeyFinish: (credential: unknown): Promise<PasskeyRegisterResult> => {
-        if (credential == null) return settle({ status: 'failed', reason: 'No credential returned by the browser.' });
-        return settle({ status: 'ok', recoveryCodes: RECOVERY_CODES });
-      },
+    enrollPasskeyFinish: (credential: unknown): Promise<PasskeyRegisterResult> => {
+      if (credential == null) return settle({ status: 'failed', reason: 'No credential returned by the browser.' });
+      return settle({ status: 'ok', recoveryCodes: RECOVERY_CODES });
     },
-
-    workspace: {
-      /** Open invitations for the current user. */
-      listInvitations: (): Promise<WorkspaceInvitation[]> => settle(INVITATIONS.map((i) => ({ ...i }))),
-
-      /**
-       * Resolve the active workspace and mint the FINAL session token with the
-       * workspace claim baked in. When `invitationId` is present it is validated
-       * (group/invitation validation flagged at token level, per the plan) — an
-       * unknown invite is rejected; a valid one stamps `wsp`, `wspRole`, and the
-       * pending `inv` claim. No invite → the self-serve default workspace with
-       * an owner role.
-       */
-      select: ({ userId, invitationId }: SelectWorkspaceRequest): Promise<
-        | { status: 'ok'; tokens: TokenSet }
-        | { status: 'invalid_invitation' }
-      > => {
-        const user = Object.values(USERS_BY_EMAIL).find((u) => u.id === userId)
-          ?? { ...USER_STANDARD, id: userId };
-        if (invitationId != null) {
-          const invite = INVITATIONS.find((i) => i.id === invitationId);
-          if (invite == null) return settle({ status: 'invalid_invitation' });
-          return settle({
-            status: 'ok',
-            tokens: issueFor(user, ['pwd'], {
-              wsp: invite.workspaceId, wspRole: invite.role, inv: invite.id,
-            }),
-          });
-        }
-        return settle({
-          status: 'ok',
-          tokens: issueFor(user, ['pwd'], { wsp: 'ws_default', wspRole: 'owner' }),
-        });
-      },
-    },
-  };
-};
+  },
+});
 
 export type AuthApi = ReturnType<typeof createAuthApi>;
 
 /** Default instance every screen imports — frozen clock, deterministic. */
 export const authApi: AuthApi = createAuthApi();
+
+/**
+ * Workspace API — the surface split off `authApi` in WS09e, mirroring the
+ * backend module boundary (Phase C can point it at a separate base URL). The
+ * mock resolves everything from the same deterministic fixtures.
+ */
+export const createWorkspaceApi = (clock: Clock = frozenClock) => ({
+  /** Open invitations for the current user (copies, so callers can't mutate the fixture). */
+  listInvitations: (): Promise<WorkspaceInvitation[]> => settle(INVITATIONS.map((i) => ({ ...i }))),
+
+  /**
+   * Resolve the active workspace and mint the FINAL token with the `wsp` scope
+   * pointer only. Role/invite are NOT stamped — the app reads them from
+   * {@link getContext}. An unknown invite is rejected; no invite → the
+   * self-serve default workspace.
+   */
+  select: ({ userId, invitationId }: SelectWorkspaceRequest): Promise<
+    | { status: 'ok'; tokens: TokenSet }
+    | { status: 'invalid_invitation' }
+  > => {
+    const user = Object.values(USERS_BY_EMAIL).find((u) => u.id === userId)
+      ?? { ...USER_STANDARD, id: userId };
+    if (invitationId != null) {
+      const invite = INVITATIONS.find((i) => i.id === invitationId);
+      if (invite == null) return settle({ status: 'invalid_invitation' });
+      return settle({ status: 'ok', tokens: issueForUser(user, ['pwd'], clock, { wsp: invite.workspaceId }) });
+    }
+    return settle({ status: 'ok', tokens: issueForUser(user, ['pwd'], clock, { wsp: 'ws_default' }) });
+  },
+
+  /**
+   * The caller's authorization context for a workspace (mirrors the backend
+   * `GET /workspaces/:id/me`). `ws_default` is the self-serve owner workspace;
+   * a workspace matching an open invite reports that invite's role as a pending
+   * (not-yet-accepted) grant; anything else is no access.
+   */
+  getContext: (workspaceId: string): Promise<WorkspaceContextResult> => {
+    if (workspaceId === 'ws_default') {
+      return settle({ wspRole: 'owner', membership: { role: 'owner' }, pendingInvite: null });
+    }
+    const invite = INVITATIONS.find((i) => i.workspaceId === workspaceId);
+    if (invite != null) {
+      return settle({ wspRole: invite.role, membership: null, pendingInvite: { id: invite.id, role: invite.role } });
+    }
+    return settle({ wspRole: null, membership: null, pendingInvite: null });
+  },
+});
+
+export type WorkspaceApi = ReturnType<typeof createWorkspaceApi>;
+
+/** Default workspace-API instance every screen imports — frozen clock, deterministic. */
+export const workspaceApi: WorkspaceApi = createWorkspaceApi();
 
 /** Test/fixture constants, exported so specs assert against the same source. */
 export const AUTH_FIXTURES = {

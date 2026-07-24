@@ -12,6 +12,10 @@ to and nothing else:
 - Provider surface (the contract): [`auth-app/src/auth/api/authApi.ts`](../src/auth/api/authApi.ts)
 - Token minting/decoding: [`auth-app/src/auth/api/tokens.ts`](../src/auth/api/tokens.ts)
 
+Since WS09e, the workspace surface is its own provider, `workspaceApi`, split
+off `authApi` (same file: [`auth-app/src/auth/api/authApi.ts`](../src/auth/api/authApi.ts),
+`createWorkspaceApi`) so it can eventually point at a separate base URL.
+
 Today these run against deterministic fixtures; a real backend must serve the
 same method set, request shapes, and result semantics over the wire. Screen
 wiring lives in `auth-app/src/pages/*` and the flow state machines in
@@ -53,16 +57,17 @@ backend's job). Access-token claims (`AccessTokenClaims`):
 | `sub` | string | User id |
 | `email`, `name` | string | Profile basics for the app chrome |
 | `amr` | `Amr[]` | Authentication Methods References — how the session was proven: `pwd`, `otp`, `webauthn`, `oauth:google`, `oauth:github`. A password + TOTP sign-in carries `['pwd','otp']`. |
-| `wsp` | string? | **Active workspace id — stamped at the token level.** Absent until workspace pick resolves. |
-| `wspRole` | `owner\|admin\|member\|viewer`? | Role within `wsp`. |
-| `inv` | string? | **Pending invitation id — token-level flag** for a session that entered via a not-yet-accepted invite (group/invitation validation lives here, per the plan). |
+| `wsp` | string? | **Active workspace SCOPE pointer** — presence is not proof of access; role/invite resolve via workspace context (see below). Absent until workspace pick resolves. |
 | `iat`, `exp` | number | Issued-at / expiry (seconds). |
 
-Rationale for workspace/invitation at the token level: downstream services read
-the active workspace and any pending invitation straight off the verified token,
-with no extra round-trip. The workspace screen lives in the auth layer purely
-for this group/invitation validation; it can move to the webapp later (D-note in
-the plan) without changing the claim shape.
+Rationale: `wsp` only tells downstream services *which* workspace the session
+is scoped to; it carries no authorization by itself. Role (`wspRole`) and
+pending-invite state left the token in WS09e — a caller resolves them on
+demand via `workspaceApi.getContext` (`GET /workspaces/:id/me`, bearer-authed)
+instead of reading them off the verified token. This avoids baking
+authorization into a 15-minute-TTL credential that can't be revoked mid-flight,
+and keeps invite/membership changes effective immediately rather than only
+after the next token refresh.
 
 ## Endpoints
 
@@ -165,19 +170,31 @@ passkeys graduate from optional.
 
 ### Workspace
 
-#### `GET /workspaces/invitations` — `workspace.listInvitations`
+Served by `workspaceApi` (split off `authApi` in WS09e — see the intro note).
+
+#### `GET /workspaces/invitations` — `workspaceApi.listInvitations`
 Result: `WorkspaceInvitation[]` — open invites for the current user
 (`id, workspaceId, workspaceName, description, members, role, invitedBy, tone`).
 
-#### `POST /workspaces/select` — `workspace.select`
+#### `POST /workspaces/select` — `workspaceApi.select`
 Request: `{ userId, invitationId? }`
 Result:
-- `{ status: 'ok', tokens }` — mints the **final** session token with `wsp`
-  (+ `wspRole`, and `inv` when an invite was used) stamped in.
-  - With `invitationId`: the invite is **validated** (group/invitation
-    validation at the token level); a valid one stamps `wsp`/`wspRole`/`inv`.
-  - Without: the self-serve default workspace (`wsp: ws_default`, `wspRole: owner`).
+- `{ status: 'ok', tokens }` — mints the **final** session token with **`wsp`
+  only** stamped in (no `wspRole`/`inv` — those are resolved on demand via
+  `getContext` below).
+  - With `invitationId`: the invite is **validated**; a valid one stamps `wsp`
+    to the invite's workspace.
+  - Without: the self-serve default workspace (`wsp: ws_default`).
 - `{ status: 'invalid_invitation' }` — unknown/expired invite; pick another or start fresh.
+
+#### `GET /workspaces/:id/me` — `workspaceApi.getContext`
+Bearer-authed. Result: `{ wspRole, membership, pendingInvite }` — the caller's
+authorization context for the given workspace, resolved on demand instead of
+being read off the token. `wspRole` is the **effective role**: the member's
+role if `membership` is set, else a `pendingInvite`'s role, else `null` (no
+access). This is where authorization moved when it left the identity token
+(WS09e) — call it after `select` (or whenever the active workspace changes) to
+learn what the session is actually allowed to do.
 
 ## OAuth / OIDC redirect flow
 

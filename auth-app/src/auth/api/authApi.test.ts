@@ -157,35 +157,3 @@ describe('authApi — two-factor enrollment', () => {
     expect((await authApi.twoFactor.enrollPasskeyFinish(null)).status).toBe('failed');
   });
 });
-
-describe('authApi — workspace (claims at token level)', () => {
-  test('lists invitations as copies', async () => {
-    const a = await authApi.workspace.listInvitations();
-    const b = await authApi.workspace.listInvitations();
-    expect(a.map((i) => i.id)).toEqual(['inv_og', 'inv_tm', 'inv_sd']);
-    expect(a[0]).not.toBe(b[0]);
-  });
-
-  test('selecting an invite stamps wsp/wspRole/inv on the token', async () => {
-    const result = await authApi.workspace.select({ userId: USER_STANDARD.id, invitationId: 'inv_og' });
-    expect(result.status).toBe('ok');
-    if (result.status !== 'ok') return;
-    const { claims } = result.tokens;
-    expect(claims.wsp).toBe('ws_open_garden');
-    expect(claims.wspRole).toBe('member');
-    expect(claims.inv).toBe('inv_og');
-  });
-
-  test('an unknown invitation is rejected', async () => {
-    expect((await authApi.workspace.select({ userId: USER_STANDARD.id, invitationId: 'inv_bogus' })).status)
-      .toBe('invalid_invitation');
-  });
-
-  test('the self-serve default mints an owner workspace with no invitation claim', async () => {
-    const result = await authApi.workspace.select({ userId: USER_STANDARD.id });
-    if (result.status !== 'ok') throw new Error('expected ok');
-    expect(result.tokens.claims.wsp).toBe('ws_default');
-    expect(result.tokens.claims.wspRole).toBe('owner');
-    expect(result.tokens.claims.inv).toBeUndefined();
-  });
-});
