@@ -48,9 +48,9 @@ introspect seam is now real: `@open-tomato/express`'s `buildRequireAuth` /
 for consumers. `service.config.yaml` is written (provisional pending WS12
 grow-box onboarding). **Remaining (next session):** the auth-app HTTP wiring to
 this live service (`httpAuthApi` over `VITE_AUTH_API_URL`; OAuth browser-redirect
-+ webapp hand-off) — split out because it pairs with the workspace-service
-decomposition (`wspRole` leaves the identity token). `wspRole`-in-token is
-**PoC-only**; don't build on it permanently.
++ webapp hand-off) — split out because it paired with the workspace-service
+decomposition (WS09e — `wspRole`/`inv` have now left the identity token; see the
+Tokens note above).
 
 **09c design notes:** OAuth is provider-agnostic OIDC (authorization-code +
 PKCE + `state`/`nonce`), Google the only configured provider (others → `501`);
