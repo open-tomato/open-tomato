@@ -17,6 +17,7 @@ export * from './EmptyState';
 export * from './Droppable';
 export * from './Sortable';
 export * from './TomatoMark';
+export * from './Wordmark';
 export * from './WorkspaceMark';
 export * from './Divider';
 export * from './OAuthButton';

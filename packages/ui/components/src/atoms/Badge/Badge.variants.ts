@@ -18,6 +18,9 @@ export const badge = cva(
         danger: 'bg-danger/15 text-danger',
         info: 'bg-info/15 text-info',
         accent: 'bg-accent text-on-accent',
+        // Portal marketing release pill — a 24%-leaf tint filled with the
+        // open-wordmark green.
+        leaf: 'bg-[color-mix(in_oklab,var(--leaf)_24%,transparent)] text-wordmark-open',
       },
       size: {
         sm: 'text-xs px-2 py-0.5',

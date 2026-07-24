@@ -10,7 +10,7 @@ const meta = {
   argTypes: {
     tone: {
       control: 'select',
-      options: ['neutral', 'success', 'warning', 'danger', 'info', 'accent'],
+      options: ['neutral', 'success', 'warning', 'danger', 'info', 'accent', 'leaf'],
     },
     size: { control: 'select', options: ['sm', 'md'] },
   },
@@ -42,6 +42,11 @@ export const Neutral: Story = {
 
 export const Accent: Story = {
   args: { tone: 'accent', children: 'agent' },
+};
+
+/** Portal marketing release pill — garden-green leaf tint. */
+export const Leaf: Story = {
+  args: { tone: 'leaf', children: 'v0.4.2 — fresh from the garden' },
 };
 
 export const SmallSize: Story = {
