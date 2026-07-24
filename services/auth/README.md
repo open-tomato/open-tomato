@@ -21,7 +21,8 @@ invitations/select onto the schema already created here.
 | `POST /sign-up/email` | `{status:'ok', user, tokens}` (`amr:['pwd']`) · `{status:'email_taken'}` (200) |
 | `POST /sign-up/oauth/:provider/complete` | `{status:'ok', user, tokens}` (`amr:['oauth:google']`) · `{status:'email_taken'}` — provisions from the cookie-carried verified identity + chosen handle |
 | `GET /workspaces/invitations` | `WorkspaceInvitation[]` — **bearer-authed**; open invites for the token's email, display fields derived |
-| `POST /workspaces/select` | `{status:'ok', tokens}` (final token, `wsp`/`wspRole`/`inv` stamped) · `{status:'invalid_invitation'}` — **bearer-authed** |
+| `POST /workspaces/select` | `{status:'ok', tokens}` (final token, **`wsp` scope only** — role/invite off-token) · `{status:'invalid_invitation'}` — bearer-authed |
+| `GET /workspaces/:id/me` | `{ wspRole, membership, pendingInvite }` — **bearer-authed**; resolves the caller's role + pending invite on demand (authz lives here, not in the token) |
 | `POST /token/refresh` | `{status:'ok', tokens}` — rotates access via the `sid`-bound refresh token · 401 on unknown/rotated |
 | `POST /introspect` | `{active:true, ...claims}` · `{active:false}` — the framework `auth.introspectUrl` seam |
 | `POST /reset/request` | `{status:'sent', channel, maskedEmail}` — **always** (no enumeration); mints an account-bound code + stub-mails it |
@@ -31,8 +32,11 @@ invitations/select onto the schema already created here.
 | `POST /2fa/passkey/start`·`/finish` | `501` — deferred (D5) |
 | `GET /health` | chassis builtin |
 
-Tokens: 15-min HS256 access JWT + 30-day opaque refresh bound to a `sid`
-(Redis). Claims match `AccessTokenClaims` (`sub/email/name/amr/wsp?/wspRole?/inv?/iat/exp`).
+Tokens: 15-min HS256 access JWT + 30-day opaque refresh bound to a `sid` (Redis).
+Claims are identity + a `wsp` scope pointer (`sub/email/name/amr/wsp?/iat/exp`).
+Authorization (`wspRole`) and invite-acceptance state (`inv`) left the identity
+token in WS09e — resolve them via `GET /workspaces/:id/me` (the WorkspaceContext
+seam a future standalone workspace service lifts out behind).
 
 **09d notes (deploy prep + hardening, backend):** the access token now carries a
 `kid` header (`hs-1`) and a `jti` claim — rotation-ready + a denylist hook, no
