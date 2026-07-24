@@ -8,6 +8,7 @@
     "app",
     "auth-app",
     "homepage",
+    "docs-site",
     "services/*",
     "types",
     "cli",

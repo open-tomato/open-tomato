@@ -266,5 +266,25 @@
   font-family: var(--font-mono);
   font-size: 0.88em;
 }
+/* GFM tables — a quiet bordered grid. The renderer wraps wide tables in an
+   overflow-x:auto container, so this only styles the cells. */
+.portal-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+.portal-prose th,
+.portal-prose td {
+  border: 1px solid var(--border-soft);
+  padding: 0.5em 0.75em;
+  text-align: left;
+  vertical-align: top;
+}
+.portal-prose thead th {
+  background: var(--surface-sunk);
+  font-weight: var(--fw-semibold);
+  color: var(--fg1);
+}
+
 /* First block sits flush with the container top. */
 .portal-prose > :first-child { margin-top: 0; }

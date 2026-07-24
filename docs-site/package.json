@@ -1,7 +1,7 @@
 {
-  "name": "@open-tomato/app-auth",
+  "name": "@open-tomato/app-docs",
   "private": true,
-  "version": "0.0.4",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,13 +9,18 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint ./src",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "generate": "node scripts/generate.mjs",
+    "check-links": "node scripts/check-links.mjs"
   },
   "dependencies": {
-    "@open-tomato/ui-components": "workspace:*",
+    "@open-tomato/ui-docs": "workspace:*",
+    "@open-tomato/ui-portal": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.0.0"
+    "react-markdown": "^9.0.1",
+    "react-router": "^7.0.0",
+    "remark-gfm": "^4.0.0"
   },
   "devDependencies": {
     "@open-tomato/eslint-config": "workspace:^",

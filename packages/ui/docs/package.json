@@ -1,6 +1,6 @@
 {
   "name": "@open-tomato/ui-docs",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "private": false,
   "type": "module",
   "module": "./dist/index.js",

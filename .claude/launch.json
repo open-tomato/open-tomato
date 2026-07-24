@@ -20,6 +20,12 @@
       "port": 5175
     },
     {
+      "name": "docs-site",
+      "runtimeExecutable": "bunx",
+      "runtimeArgs": ["vite", "docs-site", "--port", "5176", "--strictPort"],
+      "port": 5176
+    },
+    {
       "name": "ui-storybook",
       "runtimeExecutable": "bun",
       "runtimeArgs": ["--cwd", "packages/ui/components", "run", "storybook"],

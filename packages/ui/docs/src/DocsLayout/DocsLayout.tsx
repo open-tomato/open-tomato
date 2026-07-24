@@ -119,7 +119,7 @@ export const DocsLayout = forwardRef<HTMLDivElement, DocsLayoutProps>(
 
       <article className="min-w-0">
         <Breadcrumb items={breadcrumb} index={breadcrumb.length - 1} />
-        <h1 className="!mb-1.5 !mt-2 !text-[44px] !font-bold !leading-[1.05] !tracking-[-0.02em]">
+        <h1 className="!mb-1.5 !mt-2 !text-[32px] !font-bold !leading-[1.05] !tracking-[-0.02em] sm:!text-[44px]">
           {title}
         </h1>
         <p className="!mb-6 !mt-0 max-w-[640px] !text-[17px] !leading-[1.6] !text-fg2">
@@ -128,7 +128,7 @@ export const DocsLayout = forwardRef<HTMLDivElement, DocsLayoutProps>(
         <Prose>{children ?? <DefaultBody />}</Prose>
       </article>
 
-      <DocsTOC anchors={anchors} editHref={editHref} />
+      <DocsTOC anchors={anchors} editHref={editHref} className="hidden lg:block" />
     </div>
   ),
 );

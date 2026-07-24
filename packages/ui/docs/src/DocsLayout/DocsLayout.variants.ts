@@ -6,7 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
  * is the shell the docs site renders pages into.
  */
 export const portalDocsLayout = cva(
-  'mx-auto grid max-w-[var(--content-max)] grid-cols-[220px_1fr_200px] gap-10 px-7 pt-8',
+  'mx-auto grid max-w-[var(--content-max)] grid-cols-1 gap-10 px-4 pt-8 sm:px-7 lg:grid-cols-[220px_1fr_200px]',
 );
 
 export type PortalDocsLayoutVariants = VariantProps<typeof portalDocsLayout>;

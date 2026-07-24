@@ -1,0 +1,25 @@
+/* Tailwind 4 consumer entry. This app renders portal chrome (Header/Footer)
+   and the docs surface (DocsLayout/Prose/…), so it pulls both packages'
+   styles.css. Each brings fonts + tokens + its own component theme + a @source
+   glob at its compiled JS; the fonts/tokens are identical copies of
+   theme-default, so the duplication is inert, and both @source globs are
+   required so Tailwind generates the utilities both surfaces reference. */
+@import "tailwindcss";
+@import "@open-tomato/ui-portal/styles.css";
+@import "@open-tomato/ui-docs/styles.css";
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg, #ffffff);
+}
+
+/* Sticky-header offset so a TOC anchor click lands the heading below the bar. */
+.portal-prose :where(h2, h3) {
+  scroll-margin-top: 5rem;
+}

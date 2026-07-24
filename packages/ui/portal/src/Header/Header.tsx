@@ -40,8 +40,11 @@ export interface HeaderProps extends Omit<HTMLAttributes<HTMLElement>, 'onSelect
   links?: readonly PortalNavLink[];
   /** Id of the active route — highlights the matching link. */
   active?: string;
-  /** Called with a link id when a nav link (or the brand) is clicked. */
-  onNavigate?: (id: string) => void;
+  /** Called with a link id and the click event when a nav link (or the brand)
+   *  is clicked. Links navigate natively via their `href` by default; a SPA
+   *  consumer that wants to intercept internal routes calls
+   *  `event.preventDefault()` itself before routing. */
+  onNavigate?: (id: string, event: MouseEvent<HTMLAnchorElement>) => void;
   /** Current theme, driving the toggle glyph. */
   theme?: ThemeName;
   /** Called with the theme to switch TO. */
@@ -82,9 +85,8 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(
     },
     ref,
   ) => {
-    const navigate = (id: string) => (e: MouseEvent) => {
-      e.preventDefault();
-      onNavigate?.(id);
+    const navigate = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+      onNavigate?.(id, e);
     };
     return (
       <header ref={ref} className={cn(portalHeader(), className)} {...props}>
@@ -94,7 +96,11 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(
           className="inline-flex items-center gap-2.5 !no-underline text-inherit"
         >
           <TomatoMark size={28} />
-          <Wordmark size={20} />
+          {/* Icon-only brand on the narrowest screens keeps the right-side
+              controls (search / github / theme / CTA) on one row. */}
+          <span className="hidden sm:inline-flex">
+            <Wordmark size={20} />
+          </span>
         </a>
 
         <nav aria-label="Primary" className="ml-4 hidden gap-1 lg:flex">
