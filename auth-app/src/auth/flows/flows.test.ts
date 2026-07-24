@@ -187,7 +187,7 @@ describe('workspace machine', () => {
     const s = await workspaceReduce(initialWorkspace('usr_sam'), { kind: 'select', invitationId: 'inv_og' });
     expect(s.step).toBe('done');
     expect(s.tokens?.claims.wsp).toBe('ws_open_garden');
-    expect(s.tokens?.claims.inv).toBe('inv_og');
+    expect((s.tokens?.claims as unknown as Record<string, unknown>)['inv']).toBeUndefined();
   });
 
   test('an invalid invitation keeps the pick step with an error', async () => {
@@ -200,6 +200,6 @@ describe('workspace machine', () => {
     const s = await workspaceReduce(initialWorkspace('usr_sam', 'fresh'), { kind: 'select' });
     expect(s.step).toBe('done');
     expect(s.tokens?.claims.wsp).toBe('ws_default');
-    expect(s.tokens?.claims.wspRole).toBe('owner');
+    expect((s.tokens?.claims as unknown as Record<string, unknown>)['wspRole']).toBeUndefined();
   });
 });

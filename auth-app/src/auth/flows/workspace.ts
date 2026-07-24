@@ -11,10 +11,10 @@
  * picking --select(self-serve)---> done (+ tokens with wsp=ws_default, owner)
  */
 
-import type { AuthApi } from '../api/authApi';
+import type { WorkspaceApi } from '../api/authApi';
 import type { TokenSet, WorkspaceInvitation } from '../types';
 
-import { authApi as defaultApi } from '../api/authApi';
+import { workspaceApi as defaultApi } from '../api/authApi';
 
 export type WorkspaceStep = 'picking' | 'done';
 
@@ -44,18 +44,16 @@ export const initialWorkspace = (
 export const workspaceReduce = async (
   state: WorkspaceState,
   event: WorkspaceEvent,
-  api: AuthApi = defaultApi,
+  api: WorkspaceApi = defaultApi,
 ): Promise<WorkspaceState> => {
   switch (event.kind) {
     case 'loadInvites': {
-      const invitations = await api.workspace.listInvitations();
+      const invitations = await api.listInvitations();
       return { ...state, invitations };
     }
 
     case 'select': {
-      const result = await api.workspace.select({
-        userId: state.userId, invitationId: event.invitationId,
-      });
+      const result = await api.select({ userId: state.userId, invitationId: event.invitationId });
       if (result.status === 'invalid_invitation') {
         return { ...state, step: 'picking', error: 'That invitation is no longer valid. Pick another or start fresh.' };
       }
