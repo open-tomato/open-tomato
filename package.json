@@ -15,8 +15,7 @@
     "packages/service/*",
     "packages/notifications/*",
     "packages/agents/*",
-    "packages/ui/*",
-    "packages/ui-skeleton"
+    "packages/ui/*"
   ],
   "scripts": {
     "build": "turbo run build",
