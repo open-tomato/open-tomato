@@ -1,5 +1,6 @@
 import type { RedisClient } from '../../redis/index.js';
 
+import { decodeJwt, decodeProtectedHeader } from 'jose';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -75,6 +76,25 @@ describe('createTokenIssuer', () => {
     const issuer = createTokenIssuer(SECRET);
     const { claims } = await issuer.mintAccessToken({ ...baseClaims, amr: ['pwd'] });
     expect(claims.exp - claims.iat).toBe(ACCESS_TTL_SECONDS);
+  });
+
+  it('stamps a kid header and a unique jti (rotation + denylist hooks)', async () => {
+    const issuer = createTokenIssuer(SECRET);
+    const a = await issuer.mintAccessToken({ ...baseClaims, amr: ['pwd'] });
+    const b = await issuer.mintAccessToken({ ...baseClaims, amr: ['pwd'] });
+
+    const header = decodeProtectedHeader(a.token);
+    expect(header.kid).toBe('hs-1');
+    expect(header.typ).toBe('JWT');
+
+    // jti is present and unique per token — the future access-token denylist key.
+    const jtiA = decodeJwt(a.token).jti;
+    const jtiB = decodeJwt(b.token).jti;
+    expect(typeof jtiA).toBe('string');
+    expect(jtiA).not.toBe(jtiB);
+
+    // Still verifies as a normal access token.
+    expect(await issuer.verifyAccessToken(a.token)).not.toBeNull();
   });
 
   it('rejects an expired token', async () => {

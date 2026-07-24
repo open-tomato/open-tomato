@@ -4,7 +4,7 @@ tier: detailed (planned 2026-07-24 from auth-api-contract.md + backend survey)
 depends-on: [08 (auth-api-contract.md)]
 parallel-with: [12-partial]
 size: L
-status: IN PROGRESS — 09a + 09b + 09c shipped (password + 2FA/reset + OAuth/sign-up/workspace, security-reviewed); 09d pending (2026-07-24)
+status: IN PROGRESS — 09a–09d backend shipped (password + 2FA/reset + OAuth/sign-up/workspace + deploy-prep/introspect-seam, security-reviewed); auth-app HTTP wiring + workspace-service decomposition are the next session (2026-07-24)
 linear: OPT-248
 ---
 
@@ -134,9 +134,34 @@ lives in **redis** with TTLs, not Postgres.
   now pins `typ` + validates claim shape, federation uses a domain-separated key, regression-tested) and
   two HIGHs (reject unverified OIDC emails; 8-char min password on sign-up/reset). Deferred to OPT-259:
   durable invite acceptance / membership writes, per-endpoint throttling, a `handle` column.
-- **09d — deploy prep + hardening:** `service.config.yaml` (WS12 coordination), Dockerfile,
-  contract tests vs `auth-api-contract.md`, wire the auth app's `VITE_AUTH_API_URL` to the
-  running service for an end-to-end walk; re-point `express` `introspectUrl` consumers.
+- **09d — deploy prep + hardening (backend):** ✅ **DONE (2026-07-24).** `kid` + `jti` stamped in the
+  access token (`issuer.ts`) — rotation-ready header + denylist hook, no behavior change. Implemented the
+  `@open-tomato/express` **introspect seam** (`buildRequireAuth`/`buildOptionalAuth`) as a pluggable
+  `SessionVerifier` port with an HTTP `/introspect` adapter (introspect-now, RS256/JWKS-swap-later — see
+  the auth-architecture direction), fail-closed, exported + tested (7 tests). `service.config.yaml` written
+  (provisional; WS12 confirms the grow-box schema); the 09a Dockerfile stands (build-verification is WS12's
+  job). Contract coverage: the 114 per-flow route tests already assert every documented result union, so
+  they serve as the contract tests. Auth 114 + express 127 tests, gate green.
+  **Deferred to the next session** (see the kickoff): the auth-app HTTP wiring (`httpAuthApi` over
+  `VITE_AUTH_API_URL` + env switch; OAuth browser-redirect + callback landing + webapp session hand-off) —
+  split out deliberately because it's a frontend routing/UX rework that pairs with the
+  **workspace-service decomposition** (pulling `wspRole`/authz out of the identity token, per the
+  architecture direction), the stakeholder's stated next-session goal. `wspRole`-in-token stays **PoC-only**
+  for now (documented) so nothing builds on it permanently.
+
+## Auth architecture direction (decided 2026-07-24, architect-reviewed)
+
+Recorded so the next session inherits it. **Centralized token issuance + decentralized STATELESS
+validation** (auth is sole issuer + owner of the refresh/session store; other services verify offline). The
+forgery-blast-radius concern is solved by graduating HS256-shared-secret → **RS256/JWKS** (services hold
+only the public key, cannot mint) — collapsing N signing-compromise points to one; rotate that one key via
+`kid` + JWKS overlap (O(1) selection, pull-based propagation, never peer gossip), keeping key-rotation and
+session-lifetime as independent clocks. **Never distribute `AUTH_JWT_SECRET` to services.** The monolith is
+really three bounded contexts — **Auth** (identity + authenticators), **User/Profile** (PII/GDPR,
+by-ID-only), **Workspace** (memberships/invitations + config) — to split at the target; keep authorization
+(`wspRole`) OUT of the identity token so that split stays clean. Keep the monolith for the PoC; the cheap
+forward-compat hooks (`kid`, `jti`, key-resolver-shaped verifier) are already in. Full analysis in the
+`auth-architecture-direction` session memory.
 
 ## Resolved decisions (user, 2026-07-24)
 

@@ -1,4 +1,12 @@
 export { createService } from './create-service';
+export {
+  buildRequireAuth,
+  buildOptionalAuth,
+  createIntrospectVerifier,
+  getSession,
+  passthroughMiddleware,
+} from './auth';
+export type { SessionClaims, SessionVerifier } from './auth';
 export type { ServiceConfig, ResolvedServiceConfig } from './schema';
 export type { ServiceHandle, ServiceContext, ClientsMap } from './types';
 export { createDependency, createHttpClient } from '@open-tomato/service-core';

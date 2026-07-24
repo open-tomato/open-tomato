@@ -1,0 +1,52 @@
+# service.config.yaml — grow-box onboarding descriptor for services/auth.
+#
+# PROVISIONAL (WS09d best-effort). The authoritative schema lives in the external
+# grow-box repo and is confirmed during WS12 onboarding; field names here may be
+# adjusted to match that spec. This captures the service's real shape (port,
+# dependencies, env, health) so WS12 has an accurate starting point.
+service:
+  id: auth
+  name: "@open-tomato/auth"
+  description: >-
+    Authentication gateway — password + 2FA sign-in, password reset, OAuth/OIDC,
+    email + federated sign-up, and workspace invitations/select.
+  runtime: bun
+  entrypoint: services/auth/index.ts
+  port: 4500
+
+dependencies:
+  - name: postgres
+    kind: postgres
+    required: true
+    # Own database; soft UUID/text cross-service refs only, no cross-service FKs.
+    notes: 7 tables (users, credentials, oauth_accounts, totp_secrets, recovery_codes,
+      workspace_memberships, invitations); migrations via drizzle-kit.
+  - name: redis
+    kind: redis
+    required: true
+    # Ephemeral state: refresh sessions (sid), 2FA challenges, reset codes,
+    # OAuth transaction state.
+
+health:
+  path: /health          # chassis builtin
+  method: GET
+
+# Cross-service session validation seam (currently unused by other services).
+# Consumers set `auth.introspectUrl` to this to validate tokens; the graduation
+# path swaps introspect for RS256/JWKS behind the same middleware (see the
+# auth-architecture direction).
+introspect:
+  path: /introspect
+  method: POST
+
+env:
+  required:
+    - AUTH_JWT_SECRET          # >=32 bytes outside dev/test; service fails closed without a real secret
+    - DATABASE_URL
+    - REDIS_URL
+  optional:
+    - PORT                     # default 4500
+    - AUTH_PUBLIC_URL          # OAuth callback origin; default http://localhost:4500
+    - MAIL_URL                 # unset -> console stub mailer for reset codes
+    - OAUTH_GOOGLE_CLIENT_ID   # unset -> OAuth returns 501
+    - OAUTH_GOOGLE_CLIENT_SECRET

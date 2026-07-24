@@ -34,6 +34,20 @@ invitations/select onto the schema already created here.
 Tokens: 15-min HS256 access JWT + 30-day opaque refresh bound to a `sid`
 (Redis). Claims match `AccessTokenClaims` (`sub/email/name/amr/wsp?/wspRole?/inv?/iat/exp`).
 
+**09d notes (deploy prep + hardening, backend):** the access token now carries a
+`kid` header (`hs-1`) and a `jti` claim — rotation-ready + a denylist hook, no
+behavior change (the RS256/JWKS graduation swaps the key set and selects by
+`kid`; see `auth-architecture-direction` in session memory). The framework
+introspect seam is now real: `@open-tomato/express`'s `buildRequireAuth` /
+`buildOptionalAuth` are a pluggable `SessionVerifier` port with an HTTP
+`/introspect` adapter (introspect-now, JWKS-swap-later), fail-closed, exported
+for consumers. `service.config.yaml` is written (provisional pending WS12
+grow-box onboarding). **Remaining (next session):** the auth-app HTTP wiring to
+this live service (`httpAuthApi` over `VITE_AUTH_API_URL`; OAuth browser-redirect
++ webapp hand-off) — split out because it pairs with the workspace-service
+decomposition (`wspRole` leaves the identity token). `wspRole`-in-token is
+**PoC-only**; don't build on it permanently.
+
 **09c design notes:** OAuth is provider-agnostic OIDC (authorization-code +
 PKCE + `state`/`nonce`), Google the only configured provider (others → `501`);
 every endpoint is env-overridable so tests point the token/JWKS at a mock and
