@@ -5,10 +5,13 @@ import { errorHandler } from '@open-tomato/errors';
 import { createService } from '@open-tomato/express';
 
 import { createDbDependency } from './src/db/index.js';
+import { createMailTransport } from './src/mail/transport.js';
 import { createRedisDependency } from './src/redis/index.js';
 import { introspectRouter } from './src/routes/introspect.js';
+import { resetRouter } from './src/routes/reset.js';
 import { signInRouter } from './src/routes/sign-in.js';
 import { tokenRouter } from './src/routes/token.js';
+import { twoFactorRouter } from './src/routes/two-factor.js';
 import { createTokenIssuer } from './src/tokens/issuer.js';
 
 // ---------------------------------------------------------------------------
@@ -19,6 +22,8 @@ const PORT = Number(process.env['PORT'] ?? 4500);
 const DATABASE_URL =
   process.env['DATABASE_URL'] ?? 'postgresql://auth:auth@localhost:5435/auth';
 const REDIS_URL = process.env['REDIS_URL'] ?? 'redis://localhost:6380';
+// Transactional mail (reset codes). Unset → console stub (see mail/transport).
+const MAIL_URL = process.env['MAIL_URL'];
 
 // HS256 shared secret (D-JWT). Fail CLOSED: the well-known dev default is only
 // permitted in explicit local contexts (`NODE_ENV` development/test). Anywhere
@@ -62,11 +67,14 @@ await createService({
     const db = ctx.deps.get(dbDep);
     const redis = ctx.deps.get(redisDep);
     const issuer = createTokenIssuer(AUTH_JWT_SECRET);
-    const routeDeps = { db, redis, issuer };
+    const mail = createMailTransport(MAIL_URL);
+    const routeDeps = { db, redis, issuer, mail };
 
     app.use('/sign-in', signInRouter(routeDeps));
     app.use('/token', tokenRouter(routeDeps));
     app.use('/introspect', introspectRouter(routeDeps));
+    app.use('/reset', resetRouter(routeDeps));
+    app.use('/2fa', twoFactorRouter(routeDeps));
 
     // Typed error handler (@open-tomato/errors) — mounted last so it catches
     // ValidationError / UnauthorizedError from the routes above with the

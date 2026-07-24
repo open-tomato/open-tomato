@@ -20,6 +20,8 @@ import { REFRESH_TTL_SECONDS } from '../tokens/issuer.js';
 
 const SESSION_PREFIX = 'auth:sess:';
 const REFRESH_PREFIX = 'auth:refresh:';
+/** Per-user set of live `sid`s, so a reset can revoke every session at once. */
+const USER_SESSIONS_PREFIX = 'auth:usess:';
 
 /** Persisted session envelope — the record plus the live refresh token. */
 interface StoredSession extends SessionRecord {
@@ -43,6 +45,7 @@ const mintSid = (): string => `sid_${randomUUID().replace(/-/g, '')}`;
 
 const sessionKey = (sid: string): string => `${SESSION_PREFIX}${sid}`;
 const refreshKey = (token: string): string => `${REFRESH_PREFIX}${token}`;
+const userSessionsKey = (userId: string): string => `${USER_SESSIONS_PREFIX}${userId}`;
 
 /**
  * Create a session and its first refresh token. Both Redis keys are written
@@ -58,8 +61,35 @@ export async function createSession(
 
   await redis.set(sessionKey(sid), JSON.stringify(stored), 'EX', REFRESH_TTL_SECONDS);
   await redis.set(refreshKey(refreshToken), sid, 'EX', REFRESH_TTL_SECONDS);
+  // Track the sid under its user so a password reset can revoke every session.
+  await redis.sadd(userSessionsKey(input.sub), sid);
+  await redis.expire(userSessionsKey(input.sub), REFRESH_TTL_SECONDS);
 
   return { sid, refreshToken };
+}
+
+/**
+ * Revoke **all** sessions for a user — used after a password reset. Deletes each
+ * session record and its current refresh reverse-key, then clears the index.
+ * Returns how many sessions were removed. Any `sid` whose session already
+ * expired is skipped (its keys are gone), keeping the index self-healing.
+ */
+export async function revokeUserSessions(redis: RedisClient, userId: string): Promise<number> {
+  const indexKey = userSessionsKey(userId);
+  const sids = await redis.smembers(indexKey);
+
+  let revoked = 0;
+  for (const sid of sids) {
+    const raw = await redis.get(sessionKey(sid));
+    if (raw == null) continue;
+    const stored = JSON.parse(raw) as StoredSession;
+    await redis.del(refreshKey(stored.currentRefresh));
+    await redis.del(sessionKey(sid));
+    revoked += 1;
+  }
+
+  await redis.del(indexKey);
+  return revoked;
 }
 
 /**

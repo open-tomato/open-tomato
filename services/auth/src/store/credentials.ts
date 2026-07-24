@@ -27,3 +27,24 @@ export async function getCredentialByUserId(db: Db, userId: string): Promise<Cre
     .limit(1);
   return rows[0] ?? null;
 }
+
+/**
+ * Set (or replace) a user's password hash — the write side of password reset.
+ * Updates the existing credential in place, or inserts one if the account had
+ * none. Always stamps `argon2id` (the only algorithm this service mints).
+ */
+export async function setPassword(db: Db, userId: string, passwordHash: string): Promise<void> {
+  const updated = await db
+    .update(credentialsTable)
+    .set({ password_hash: passwordHash, algo: 'argon2id' })
+    .where(eq(credentialsTable.user_id, userId))
+    .returning({ id: credentialsTable.id });
+
+  if (updated.length === 0) {
+    await db.insert(credentialsTable).values({
+      user_id: userId,
+      password_hash: passwordHash,
+      algo: 'argon2id',
+    });
+  }
+}

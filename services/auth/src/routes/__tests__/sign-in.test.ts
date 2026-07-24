@@ -52,6 +52,7 @@ function buildApp(): express.Express {
     db: {} as RouteDeps['db'],
     redis: {} as RouteDeps['redis'],
     issuer: createTokenIssuer('test-secret'),
+    mail: { sendPasswordResetCode: vi.fn() },
   };
   const app = express();
   app.use(express.json());
