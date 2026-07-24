@@ -13,14 +13,17 @@ The consolidated active stack for Open Tomato — backend services, frontend app
 ```text
 open-tomato/
 ├── packages/                 # @open-tomato/* shared packages + publish pipeline
-│   ├── shared/*              # framework-agnostic libs (logger, errors, config, …)
+│   ├── shared/*              # framework-agnostic libs (logger, errors, config, theme-default, …)
 │   ├── service/*             # service-tier libs (express, mcp, service-core, …)
 │   ├── notifications/*       # notification plugins
 │   ├── agents/*              # agent infrastructure (agents-config)
-│   ├── ui-skeleton/          # UI component library (on-hold)
+│   ├── ui/*                  # published UI libraries (ui-components, ui-portal, ui-docs)
 │   └── scripts/              # publish pipeline (preflight, prepare-publish, …)
 ├── services/                 # backend services (notifications, orchestrator, scheduler, task-worker)
-├── app/                      # Vite + React + TS frontend
+├── app/                      # webapp dashboard (Vite + React + TS)
+├── auth-app/                 # auth gateway frontend (Vite + React)
+├── homepage/                 # marketing homepage (built from @open-tomato/ui-portal)
+├── docs-site/                # documentation site (built from @open-tomato/ui-docs)
 ├── cli/                      # tomato CLI (publishes as @open-tomato/cli)
 ├── templates/                # service templates (express, mcp)
 ├── types/                    # repo-level shared TS types (@open-tomato/repo-types)

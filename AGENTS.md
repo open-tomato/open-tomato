@@ -30,7 +30,7 @@ This umbrella file gives you orientation, conventions, and pointers — nothing 
 
 | Area | Path | Role |
 | --- | --- | --- |
-| Packages | `packages/` | All `@open-tomato/*` shared packages (`shared/*`, `service/*`, `notifications/*`, `agents/*`, `ui-skeleton`). Published via the private registry. |
+| Packages | `packages/` | All `@open-tomato/*` shared packages (`shared/*`, `service/*`, `notifications/*`, `agents/*`, `ui/*`). Published via the private registry. |
 | Services | `services/` | Backend services (`notifications`, `orchestrator`, `scheduler`, `task-worker`). |
 | App | `app/` | Frontend (Vite + React + TS). |
 | CLI | `cli/` | The `tomato` CLI — workspace member, publishes as `@open-tomato/cli`. |
@@ -89,7 +89,7 @@ External / on-hold / satellite repos (`grow-box/`, `auth/`, `knowledge-base/`, `
 
 ## Known gotchas (post-consolidation)
 
-- **Test files and story files are excluded from `check-types`** in some packages (e.g., `packages/ui-skeleton/`). This matches the established pattern: dev artifacts are not production code; `tsc --noEmit` only gates production sources. See `packages/ui-skeleton/tsconfig.json`.
+- **Test files and story files are excluded from `check-types`** in some packages (e.g., the `packages/ui/*` libraries). This matches the established pattern: dev artifacts are not production code; `tsc --noEmit` only gates production sources.
 - **Pre-existing test debt in `services/orchestrator/`** — several `runner.test.ts` / store tests reference functions the test mocks don't expose (broken since commit `e96fbb2`, the executor→orchestrator rename). These are not regressions from the consolidation. Track as separate tech debt.
 - **Per-area `AGENTS.md` files merged from prior standalone repos** (`cli/`, `templates/express/`, `templates/mcp/`, several under `packages/`) may still describe their pre-consolidation standalone context. They should be refreshed lazily as work touches each area.
 

@@ -12,7 +12,7 @@ This directory hosts the `@open-tomato/*` shared package ecosystem. All sub-pack
 | Service | `packages/service/*` | Service-tier libraries (`express`, `mcp`, `service-core`, `orchestration`, `worker-protocol`) |
 | Notifications | `packages/notifications/*` | Notification plugins (`plugin-anthropic`, `plugin-executor`, `plugin-tech-tree`) |
 | Agents | `packages/agents/*` | Agent infrastructure (`config` — the agent configuration package, NOT the service-config which lives in `shared/config`) |
-| UI | `packages/ui-skeleton` | UI component library (on-hold; resumes after visual-testing pipeline lands) |
+| UI | `packages/ui/*` | Published UI libraries: `ui-components` (atoms→templates), `ui-portal` (marketing), `ui-docs` (docs/blog). Theme tokens live in `packages/shared/theme-default`. |
 | Scripts | `packages/scripts/` | Publish pipeline (`preflight.ts`, `prepare-publish.ts`, `publish-packages.ts`, `graduate.ts`, `registry.ts`) |
 
 ## Internal dependency policy
