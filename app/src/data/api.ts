@@ -12,11 +12,15 @@ import type {
   AgentEditorOptions,
   NewSessionOptions,
   NotificationRecord,
+  SearchResultRecord,
   SearchSuggestionRecord,
   Session,
   SessionDetail,
   Task,
+  TaskFormOptions,
+  TeamMember,
   Tool,
+  ToolEditorOptions,
   UsageOverview,
   UsageRange,
   UsageStats,
@@ -29,6 +33,7 @@ import {
   AGENTS,
   CURRENT_USER,
   DEFAULT_WORKSPACE_ID,
+  MEMBERS,
   NOTIFICATIONS,
   SESSIONS,
   TASKS,
@@ -37,11 +42,14 @@ import {
   WORKSPACES,
 } from './fixtures';
 import { buildOverview } from './overviewFixtures';
+import { buildSearchResults } from './searchData';
 import {
   buildNewSessionOptions,
   buildSessionDetail,
   findSession,
 } from './sessionsData';
+import { buildTaskFormOptions } from './tasksData';
+import { buildToolEditorOptions } from './toolsData';
 
 const copy = <T>(value: T): T => structuredClone(value);
 
@@ -119,6 +127,10 @@ export const api = {
   users: {
     me: (): Promise<User> => resolveCopy(CURRENT_USER),
   },
+  members: {
+    /** Workspace roster — the Roadmap owner pool + Settings → Members. */
+    list: (): Promise<TeamMember[]> => resolveCopy(MEMBERS),
+  },
   sessions: {
     list: (workspaceId?: string): Promise<Session[]> => resolveCopy(byWorkspace(SESSIONS, workspaceId)),
     get: (id: string): Promise<Session> => getOrReject(SESSIONS, id, 'session'),
@@ -143,10 +155,15 @@ export const api = {
   tasks: {
     list: (workspaceId?: string): Promise<Task[]> => resolveCopy(byWorkspace(TASKS, workspaceId)),
     get: (id: string): Promise<Task> => getOrReject(TASKS, id, 'task'),
+    /** Option sources for the New / Edit Task form (owners, tags, and the
+        task list the Relations block draws from). */
+    formOptions: (workspaceId?: string): Promise<TaskFormOptions> => resolveCopy(buildTaskFormOptions(workspaceId)),
   },
   tools: {
     list: (workspaceId?: string): Promise<Tool[]> => resolveCopy(byWorkspace(TOOLS, workspaceId)),
     get: (id: string): Promise<Tool> => getOrReject(TOOLS, id, 'tool'),
+    /** System events + loadable skills behind the New/Edit/Clone editor. */
+    editorOptions: (): Promise<ToolEditorOptions> => resolveCopy(buildToolEditorOptions()),
   },
   notifications: {
     list: (workspaceId?: string): Promise<NotificationRecord[]> => resolveCopy(byWorkspace(NOTIFICATIONS, workspaceId)),
@@ -177,6 +194,11 @@ export const api = {
         ? all
         : all.filter(matches(needle)));
     },
+    /** Full-page results (⌘K → Enter fall-through). Empty query → []. */
+    results: (
+      query?: string,
+      workspaceId?: string,
+    ): Promise<SearchResultRecord[]> => resolveCopy(buildSearchResults(query, workspaceId)),
   },
 };
 

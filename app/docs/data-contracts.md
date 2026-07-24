@@ -1,6 +1,8 @@
 # Webapp data contracts — draft backend API requirements
 
-**Status:** WS07 session 2 (Sessions + Agents). Source of truth for the shapes is
+**Status:** WS07 session 3 — every app page now consumes this contract
+(Overview, Sessions, Agents, Roadmap, Tools, Settings, Notifications,
+Search). Source of truth for the shapes is
 [`app/src/data/types.ts`](../src/data/types.ts); the provider surface is
 [`app/src/data/api.ts`](../src/data/api.ts). This document is the handoff
 artifact for backend planning: every entity and method here is consumed by
@@ -44,6 +46,17 @@ with a single workspace never see the switcher and stay on the `/` base.
 | `role` | `'owner' \| 'admin' \| 'member'` | Role badge |
 | `preferences.theme` | `'light' \| 'dark' \| 'system'` | `system` hides the ThemeSwitcher |
 | `preferences.weekStartsOn` | `'monday' \| 'sunday'` | Calendar-heatmap first row (UI-Overview) |
+
+### TeamMember
+
+Workspace roster — the Roadmap owner pool + the Settings → Members section.
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | string | Matches `Task.ownerId` for owner-handle resolution |
+| `handle` | string | `@`-less short name shown inline (roadmap owner column) |
+| `name` | string | Full display name |
+| `role` | `'owner' \| 'admin' \| 'member'` | Members roster + admin gating |
 
 ### Session
 
@@ -153,6 +166,20 @@ Config-level catalog (workspace-independent) behind the agent editor.
 | `estimatedTokens` | number? | Drives New Session quota preselection |
 | `suggestedAgentIds` | string[] | Estimated-effort agent hints |
 
+Owner resolution: the roadmap `user-inline` column maps `ownerId` →
+`TeamMember.handle` (an absent owner is an agent-owned task → the `agent`
+pseudo-owner). Served by the client via the member roster.
+
+### TaskFormOptions (New / Edit Task form)
+
+Served by `api.tasks.formOptions(workspaceId?)`.
+
+| Field | Type | Notes |
+|---|---|---|
+| `owners` | string[] | Member handles + the `agent` pseudo-owner (owner Select) |
+| `tags` | string[] | Existing tag vocabulary offered as ChipList suggestions (`allowNew`) |
+| `tasks` | `{ id; title }[]` | Every task for the Relations block (parent / subtasks / blocked-by / blocking); the current task is filtered out client-side |
+
 ### Tool
 
 | Field | Type | Notes |
@@ -166,11 +193,25 @@ Config-level catalog (workspace-independent) behind the agent editor.
 | `uri` | string | Summary top line (`stdio://` \| `http(s)://` \| webhook URL \| skills source) |
 | `events` | string[] | Webhooks that fire this tool |
 | `itemCount` | number? | "x tools" (MCP) / "x skills" (skill-set) |
-| `uses` | number | Footer counter; 0 renders "never used" |
+| `uses` | number | Total tracked uses (lifetime) |
+| `inUse` | number | Agents currently wired to this tool; 0 → footer "never used" |
+| `lastUsedAt` | IsoDateTime? | Footer relative-time; absent → never run |
 
-Not yet modeled (needed for New/Edit Tool, session 3): credentials blob /
-auth scheme (stored encrypted, write-only), auto-start flag, per-skill
-enable map from "load skills".
+### ToolEditorOptions (New / Edit / Clone Tool form)
+
+Served by `api.tools.editorOptions()` (workspace-independent). The load
+gate itself is client state; the catalog it reveals is served.
+
+| Field | Type | Notes |
+|---|---|---|
+| `systemEvents` | `{ value; label }[]` | Events an API-client webhook can subscribe to (`Call webhook on` ChipList) |
+| `sampleSkills` | `ToolSkillOption[]` | `{ id, name, description }` — surfaced by the skill-set "Load skills" scan |
+
+Still write-only / not modeled on `Tool` (submitted by the editor, never
+read back): credentials blob / auth scheme (stored encrypted), the MCP
+auto-start flag, and the per-skill enable map from "load skills". Clone
+unlocks credential entry (a new tool takes its own secrets); Edit masks
+them.
 
 ### Notification (`NotificationRecord`)
 
@@ -178,13 +219,14 @@ enable map from "load skills".
 |---|---|---|
 | `id` | string | |
 | `workspaceId` | string | |
-| `level` | `'ok' \| 'warn' \| 'err' \| 'info'` | Popover grouping order + type badge |
-| `title` | string | Double-line title |
+| `level` | `'ok' \| 'warn' \| 'err' \| 'info'` | Tones the topbar bell popover |
+| `category` | `'session' \| 'agent' \| 'tool' \| 'billing' \| 'member' \| 'system'` | Notifications-page leading badge (distinct from `level`; simplified PoC taxonomy) |
+| `title` | string | Double-line title; an empty string falls back to `source` (page + bell) |
 | `body` | string | Double-line description |
-| `source` | string? | Falls back as title provider when absent |
+| `source` | string? | Provider/source; the title's fallback when `title` is empty |
 | `createdAt` | IsoDateTime | Date column / time chip |
 | `unread` | boolean | Red bell dot when any true; mark-all-read flips all |
-| `href` | string? | Workspace-relative link to the resource |
+| `href` | string? | Workspace-relative link to the resource (Notifications page "Open" link) |
 
 ### UsageStats / WeekSummary
 
@@ -250,6 +292,20 @@ genuinely per-workspace aggregates and need not replicate that scaling.
 | `sub` | string? | Mono context line |
 | `href` | string | Workspace-relative path; `doc` rows carry absolute URLs (new tab) |
 
+### SearchResultRecord (full search-results page)
+
+The `⌘K → Enter` fall-through target — richer than the popover suggestion
+(a longer `description` line vs. the terse mono `sub`). Same five kinds,
+same href semantics. Served by `api.search.results(query?, workspaceId?)`.
+
+| Field | Type | Notes |
+|---|---|---|
+| `kind` | `'agent' \| 'session' \| 'task' \| 'tool' \| 'doc'` | Kind-tinted decorator + trailing pill |
+| `id` | string | Underlying entity id / doc slug |
+| `title` | string | Result title (top line) |
+| `description` | string | Longer second line (clamped to two lines) |
+| `href` | string | Workspace-relative path; `doc` rows carry absolute URLs (new tab) |
+
 ## Provider surface (`api`)
 
 Error semantics beyond unknown-id rejection are **deferred past session 0**: the shell currently logs load failures in dev and stays on its empty defaults — real transports must add user-visible error states before shipping.
@@ -264,6 +320,7 @@ the caller may see.
 | `api.workspaces.get(id)` | `Workspace` | 404 → rejection |
 | `api.workspaces.defaultId()` | `string` | The single-workspace `/` base target |
 | `api.users.me()` | `User` | Authenticated user + preferences |
+| `api.members.list()` | `TeamMember[]` | Workspace roster — Roadmap owner pool + Settings → Members |
 | `api.sessions.list(workspaceId?)` | `Session[]` | Filterable by status/user/agent later |
 | `api.sessions.get(id)` | `Session` | |
 | `api.sessions.detail(id)` | `SessionDetail` | View Session page; timeline/files/tool-calls/runner metadata (backend serves the real run log) |
@@ -273,20 +330,25 @@ the caller may see.
 | `api.agents.editorOptions()` | `AgentEditorOptions` | New/Edit/Clone form: model catalog + grouped tool surface (workspace-independent) |
 | `api.tasks.list(workspaceId?)` | `Task[]` | New Session needs `status = ready-for-dev` subset |
 | `api.tasks.get(id)` | `Task` | |
+| `api.tasks.formOptions(workspaceId?)` | `TaskFormOptions` | New/Edit Task form: owner / tag / relation pools |
 | `api.tools.list(workspaceId?)` | `Tool[]` | |
 | `api.tools.get(id)` | `Tool` | |
+| `api.tools.editorOptions()` | `ToolEditorOptions` | New/Edit/Clone Tool form: system events + loadable skills (workspace-independent) |
 | `api.notifications.list(workspaceId?)` | `NotificationRecord[]` | Newest-first; needs mark-all-read mutation endpoint later |
 | `api.usage.stats(workspaceId)` | `UsageStats` | Cheap summary for shell + stat cards |
 | `api.usage.overview(workspaceId, range?)` | `UsageOverview` | Overview dashboard; `range` defaults to `'30d'`, must alter series granularity + every total |
 | `api.search.suggest(query?)` | `SearchSuggestionRecord[]` | Substring match across all five kinds; empty query = default set |
+| `api.search.results(query?, workspaceId?)` | `SearchResultRecord[]` | Full `/search` page; substring match across sessions/agents/tasks/tools + docs; empty query = `[]` |
 
 Known gaps deliberately deferred (mutations arrive with their pages): the
-Sessions + Agents read surfaces landed in session 2 (`sessions.detail`,
-`sessions.newSessionOptions`, `agents.editorOptions`), but their **write**
-side stays mocked — create/fork/archive session, create/edit/clone/toggle
-agent all resolve client-side only. Still outstanding for sessions 3+: task
-CRUD + status/priority updates, tool CRUD + test connection, notification
-mark-read, export endpoints (JSONL transcript, usage report), and the full
-`/search` results query. The status/tone maps and quota-slider constants
-(Opus reference rate, $10 session cap / $15 agent cap) are PoC UI constants,
-not backend contract — the real version reads workspace settings.
+read surfaces for every page now exist, but their **write** side stays
+mocked — create/fork/archive session, create/edit/clone/toggle agent,
+create/edit task + status/priority quick-sets, create/edit/clone tool +
+Test Connection (a client-only pulse → settle → persistent toast), and
+notification mark-read all resolve client-side only. Still outstanding for
+later sessions: those mutation endpoints, the full Settings write surface
+(the shell stubs every section), and the export endpoints (JSONL
+transcript, usage report). The status/category/tone maps and quota-slider
+constants (Opus reference rate, $10 session cap / $15 agent cap) are PoC UI
+constants, not backend contract — the real version reads workspace
+settings.

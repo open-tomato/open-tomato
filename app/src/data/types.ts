@@ -35,6 +35,18 @@ export interface Workspace {
 
 export type UserRole = 'owner' | 'admin' | 'member';
 
+/**
+ * A workspace member — the option pool behind the Roadmap task-owner
+ * Select and the Settings → Members section. `handle` is the `@`-less
+ * short name shown inline (the roadmap owner column's `user-inline`).
+ */
+export interface TeamMember {
+  id: string;
+  handle: string;
+  name: string;
+  role: UserRole;
+}
+
 export interface UserPreferences {
   /** `system` hides the theme switcher (app-shell spec: Top Bar). */
   theme: ThemePreference;
@@ -273,6 +285,19 @@ export interface Task {
   suggestedAgentIds: string[];
 }
 
+/**
+ * Option sources for the New / Edit Task form (Roadmap). Owner handles
+ * (workspace members + the `agent` pseudo-owner), the existing tag
+ * vocabulary offered as ChipList suggestions, and the id/title of every
+ * task so the Relations block (parent / subtasks / blocked-by / blocking)
+ * can offer them — the current task is filtered out caller-side.
+ */
+export interface TaskFormOptions {
+  owners: string[];
+  tags: string[];
+  tasks: { id: string; title: string }[];
+}
+
 /* ---- tools --------------------------------------------------------------- */
 
 export type ToolType = 'api-client' | 'mcp-server' | 'skill-set';
@@ -294,16 +319,61 @@ export interface Tool {
   itemCount?: number;
   /** Total tracked uses in this workspace; 0 renders "never used". */
   uses: number;
+  /** Agents currently wired to this tool — feeds the ToolCard footer
+      ("x agents using" / "never used" at zero). */
+  inUse: number;
+  /** Last invocation — feeds the ToolCard footer's relative-time; absent
+      when the tool has never run. */
+  lastUsedAt?: IsoDateTime;
+}
+
+/* ---- tool editor option sources ------------------------------------------ */
+
+/** One skill surfaced by the ToolEditor's "Load skills" scan. */
+export interface ToolSkillOption {
+  id: string;
+  name: string;
+  description: string;
+}
+
+/**
+ * Option sources for the New / Edit / Clone Tool editor: the system
+ * events an API-client webhook can subscribe to, and the skills the
+ * skill-set "Load skills" scan surfaces (the load gate is client state,
+ * the catalog is served). Config-level — workspace-independent.
+ */
+export interface ToolEditorOptions {
+  systemEvents: { value: string; label: string }[];
+  sampleSkills: ToolSkillOption[];
 }
 
 /* ---- notifications ------------------------------------------------------- */
 
 export type NotificationLevel = 'ok' | 'warn' | 'err' | 'info';
 
+/**
+ * Coarse category of the event that raised a notification — the leading
+ * badge on the Notifications page (distinct from `level`, which tones the
+ * topbar bell). A simplified PoC taxonomy pending the real Notifications
+ * service design; the badge tone map is the accepted interpretation.
+ */
+export type NotificationCategory =
+  | 'session'
+  | 'agent'
+  | 'tool'
+  | 'billing'
+  | 'member'
+  | 'system';
+
 export interface NotificationRecord {
   id: string;
   workspaceId: string;
   level: NotificationLevel;
+  /** Event category — the Notifications page's leading badge. */
+  category: NotificationCategory;
+  /** Empty string → the notification's first line falls back to `source`
+      (Notifications page: "title … default provider or source if not
+      provided"). */
   title: string;
   body: string;
   /** Provider/source shown on the notifications page table. */
@@ -482,5 +552,21 @@ export interface SearchSuggestionRecord {
    * prefixes the active workspace base. `doc` suggestions carry an
    * absolute https:// URL instead.
    */
+  href: string;
+}
+
+/**
+ * A full search-results-page row — the fall-through target of the topbar
+ * SearchSuggest (⌘K → Enter with no selection). Richer than the popover
+ * suggestion: a longer `description` second line (the suggest's `sub` is a
+ * terse mono context line). Same five kinds, same href semantics.
+ */
+export interface SearchResultRecord {
+  id: string;
+  kind: SearchSuggestionKind;
+  title: string;
+  /** Longer, greyed second line (clamped to two lines on the row). */
+  description: string;
+  /** Workspace-relative destination (`doc` rows carry an absolute URL). */
   href: string;
 }
