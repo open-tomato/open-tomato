@@ -148,3 +148,6 @@ vite.config.ts.timestamp-*
 **/.docs/
 
 .staging/
+
+# Sandbox-safe deletion staging (rm -rf is blocked)
+.garbage/
