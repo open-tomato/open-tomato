@@ -146,7 +146,7 @@ vite.config.ts.timestamp-*
 
 # Generated documentation output (TypeDoc, OpenAPI exports)
 **/.docs/
-
+.tooling/
 .staging/
 
 # Sandbox-safe deletion staging (rm -rf is blocked)
