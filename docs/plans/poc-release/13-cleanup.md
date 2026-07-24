@@ -4,9 +4,24 @@ tier: milestone
 depends-on: [05, 07]
 parallel-with: [12]
 size: S
-status: pending
+status: MOSTLY DONE — ui-skeleton removed + doc refs scrubbed; gate green; `.temp` rm is a manual step (2026-07-24)
 linear: OPT-252
 ---
+
+> **Progress (2026-07-24).**
+> 1. **ui-skeleton removed** — package/dir/workspace-glob deleted earlier (`6dd2fb0`);
+>    stale doc references now scrubbed (README + AGENTS.md + packages/AGENTS.md repo
+>    trees updated to `ui/*` + new apps; docs-site intro regenerated).
+> 2. **`.temp/` sweep** — verified byte-identical to the tracked
+>    `docs/plans/poc-release/reference/` mirror (nothing unique lost) and no tracked
+>    file references it. The actual `rm -rf .temp` is **blocked by the session
+>    sandbox** (destructive delete of untracked user files) → left as a one-line
+>    manual step: `rm -rf .temp`.
+> 3. **Final gate sanity** — `bun run publish:dry` green (114/114 tasks, preflight +
+>    reference-gate OK); no pending changesets; no dangling `workspace:*` refs.
+> 4. **Flagged, non-blocking:** `packages/bun.lock` (a subtree-merged nested lockfile)
+>    still carries historical `ui-skeleton` entries; `packages/scripts/preflight.test.ts`
+>    keeps `ui-skeleton` as a naming-convention **test fixture** (valid, intentional).
 
 # WS13 — Cleanup
 
