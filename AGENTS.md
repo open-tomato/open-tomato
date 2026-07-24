@@ -5,7 +5,7 @@ description: "Umbrella orientation for agents working in the consolidated open-t
 
 # AGENTS — Open Tomato
 
-You are a software engineering agent working in the **open-tomato** mono-repo — the TypeScript-first, Bun + Turborepo workspace that houses the active cross-iterating stack: `packages/`, `services/`, `app/`, `cli/`, `templates/`, plus reference material in `docs/` and `skills/`.
+You are a software engineering agent working in the **open-tomato** mono-repo — the TypeScript-first, Bun + Turborepo workspace that houses the active cross-iterating stack: `packages/`, `services/`, the frontend apps (`app/`, `auth-app/`, `homepage/`, `docs-site/`), `cli/`, `templates/`, plus reference material in `docs/` and `skills/`.
 
 **Before doing anything in this repo:**
 
@@ -31,8 +31,8 @@ This umbrella file gives you orientation, conventions, and pointers — nothing 
 | Area | Path | Role |
 | --- | --- | --- |
 | Packages | `packages/` | All `@open-tomato/*` shared packages (`shared/*`, `service/*`, `notifications/*`, `agents/*`, `ui/*`). Published via the private registry. |
-| Services | `services/` | Backend services (`notifications`, `orchestrator`, `scheduler`, `task-worker`). |
-| App | `app/` | Frontend (Vite + React + TS). |
+| Services | `services/` | Backend services (`notifications`, `orchestrator`, `scheduler`, `task-worker`, `auth`). |
+| Apps | `app/`, `auth-app/`, `homepage/`, `docs-site/` | Frontends (Vite + React + TS): `app/` = webapp dashboard, `auth-app/` = auth gateway, `homepage/` = marketing (built from `@open-tomato/ui-portal`), `docs-site/` = docs (built from `@open-tomato/ui-docs`). |
 | CLI | `cli/` | The `tomato` CLI — workspace member, publishes as `@open-tomato/cli`. |
 | Templates | `templates/` | Service boilerplates (`express`, `mcp`). Workspace members and clone targets. |
 | Types | `types/` | Repo-level shared TypeScript types (`@open-tomato/repo-types`). |

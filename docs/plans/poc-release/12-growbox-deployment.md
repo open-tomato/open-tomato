@@ -4,11 +4,33 @@ tier: milestone
 depends-on: [any buildable app — pilot can use a placeholder image]
 parallel-with: [07, 08]
 size: M
-status: pending
+status: pending — host access confirmed; homepage/docs-site/auth all buildable now
 linear: OPT-251
 ---
 
 # WS12 — Deployment via grow-box
+
+## Session context (confirmed 2026-07-24)
+
+- **Host:** the grow-box box runs at **192.168.10.10**; SSH via the `loki` or
+  `dev` shell aliases (`ssh loki` / `ssh dev`). Deploy/`make` ops run **on the
+  host**, never the Mac. The grow-box repo is at `/Users/marcos/projects/open-tomato/grow-box`.
+- **Pilot = homepage** (`type: frontend`, no backing stores — simplest path to
+  burn down the untested Phase-7 seam). It builds to a static Vite `dist/`.
+- **Prebuilt-image-only:** each app needs a **built container image pushed to a
+  registry the host can pull** (git build-mode is deferred in grow-box). So WS12
+  adds a Dockerfile per frontend (nginx serving `dist/`) + a CI build/push step;
+  decide registry (ghcr vs the self-hosted Verdaccio-adjacent registry). The
+  auth **service** already has a Dockerfile (`services/auth/Dockerfile`) and
+  declares postgres + redis capabilities.
+- **Config format gotcha:** the sample `samples/knowledge-base/service.config.yaml`
+  puts materialization fields under `infrastructure.growbox`, but the phase-7 doc
+  text says `infrastructure.homelab`. **Reconcile against the live validator on
+  the host** (`make svc-validate`) before authoring the real configs.
+- **Env wiring:** the frontends read outbound URLs from `VITE_*` build args
+  (`homepage/src/links.ts`, `docs-site/src/links.ts`); the auth app reads
+  `VITE_AUTH_API_URL`. Point these at the deployed origins per environment.
+  The auth service needs `AUTH_JWT_SECRET` (≥32 bytes; it fails closed without one).
 
 **Goal:** all four PoC apps (+ auth backend) running under grow-box via the Phase-7 `service.config.yaml` seam — the seam's first real-world use.
 
