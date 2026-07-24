@@ -1,5 +1,5 @@
 /* Workbench entry (Storybook, demo app). Published consumers use the package
-   export (`@open-tomato/ui-components/styles.css` — built from lib.css) instead.
+   export (`@open-tomato/ui-docs/styles.css` — built from lib.css) instead.
 
    Layering — the theming split:
      fonts.css   type faces (swappable source; from @open-tomato/theme-default)

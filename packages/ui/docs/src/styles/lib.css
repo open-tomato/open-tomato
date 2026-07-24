@@ -1,10 +1,10 @@
 /* Published consumer entry — shipped as dist/styles/index.css and exported as
-   "@open-tomato/ui-components/styles.css".
+   "@open-tomato/ui-docs/styles.css".
 
    Usage (consumer's Tailwind 4 CSS entry):
 
        @import "tailwindcss";
-       @import "@open-tomato/ui-components/styles.css";
+       @import "@open-tomato/ui-docs/styles.css";
 
    The @source below points the consumer's Tailwind build at this package's
    compiled JS, so the utility classes our variants reference are generated
