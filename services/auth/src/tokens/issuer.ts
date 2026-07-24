@@ -67,8 +67,20 @@ export function createTokenIssuer(secret: string): TokenIssuer {
 
     async verifyAccessToken(token) {
       try {
-        const { payload } = await jwtVerify(token, key, { algorithms: [ALG], issuer: ISSUER });
-        // `jwtVerify` already enforced signature + `exp`; shape the payload.
+        // Pin `typ: 'JWT'` (mint sets it) so a token of a DIFFERENT class signed
+        // with the same secret — e.g. the OAuth pending-federation token
+        // (`typ: 'ot-pending-fed'`) — can never verify as an access token.
+        const { payload } = await jwtVerify(token, key, { algorithms: [ALG], issuer: ISSUER, typ: 'JWT' });
+        // Shape guard: only a genuine access token (required claims present and
+        // well-typed) is trusted. Blocks any payload that verifies but isn't one.
+        if (
+          typeof payload.sub !== 'string' || payload.sub === ''
+          || typeof payload['email'] !== 'string'
+          || typeof payload['name'] !== 'string'
+          || !Array.isArray(payload['amr'])
+        ) {
+          return null;
+        }
         return payload as unknown as AccessTokenClaims;
       } catch {
         return null;

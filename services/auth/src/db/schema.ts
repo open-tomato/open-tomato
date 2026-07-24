@@ -188,7 +188,12 @@ export const invitationsTable = pgTable(
     created_at: timestamp().notNull()
       .defaultNow(),
     expires_at: timestamp(),
-    /** Null until the invite is accepted during workspace select. */
+    /**
+     * Null while the invite is still pending. Workspace select stamps the
+     * invite as a **pending** `inv` claim (per the contract) without accepting
+     * it — formally accepting (setting this + writing a `workspace_memberships`
+     * row) is a later explicit step, tracked in OPT-259.
+     */
     accepted_at: timestamp(),
   },
   (t) => [

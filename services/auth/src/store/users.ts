@@ -17,6 +17,24 @@ export interface UserRecord {
 /** Normalise an email for lookup/storage — trim + lowercase. */
 export const normalizeEmail = (email: string): string => email.trim().toLowerCase();
 
+/**
+ * Create a user, or return `null` when the email is already taken. Relies on
+ * the `users_email_uq` constraint via `onConflictDoNothing`: a colliding insert
+ * writes nothing and returns no row, which the caller maps to `email_taken`
+ * (no enumeration beyond what sign-up inherently reveals).
+ */
+export async function createUser(
+  db: Db,
+  input: { email: string; name: string },
+): Promise<UserRecord | null> {
+  const rows = await db
+    .insert(usersTable)
+    .values({ email: normalizeEmail(input.email), name: input.name })
+    .onConflictDoNothing({ target: usersTable.email })
+    .returning({ id: usersTable.id, email: usersTable.email, name: usersTable.name });
+  return rows[0] ?? null;
+}
+
 /** Find a user by email (case-insensitive). Returns `null` when absent. */
 export async function getUserByEmail(db: Db, email: string): Promise<UserRecord | null> {
   const rows = await db

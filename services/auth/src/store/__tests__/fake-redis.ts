@@ -22,6 +22,11 @@ export function createFakeRedis(): FakeRedis {
     async get(key: string): Promise<string | null> {
       return strings.get(key) ?? null;
     },
+    async getdel(key: string): Promise<string | null> {
+      const value = strings.get(key) ?? null;
+      strings.delete(key);
+      return value;
+    },
     async set(key: string, value: string): Promise<'OK'> {
       strings.set(key, value);
       return 'OK';

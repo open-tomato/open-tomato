@@ -110,7 +110,7 @@ async function seed(): Promise<void> {
       .values({ user_id: sam.id, workspace_id: 'ws_open_garden', role: 'member' })
       .onConflictDoNothing();
 
-    // --- Open invitation (open-garden → Sam) ------------------------------
+    // --- Open invitations for Sam (mirror the webapp's mock invites, D-WSP) --
     const inviteExisting = await db
       .select({ id: invitationsTable.id })
       .from(invitationsTable)
@@ -118,14 +118,32 @@ async function seed(): Promise<void> {
       .limit(1);
     if (inviteExisting.length === 0) {
       const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      await db.insert(invitationsTable).values({
-        workspace_id: 'ws_open_garden',
-        workspace_name: 'open-garden',
-        email: 'sam@open-tomato.dev',
-        role: 'member',
-        invited_by: ren.id,
-        expires_at: expires,
-      });
+      await db.insert(invitationsTable).values([
+        {
+          workspace_id: 'ws_open_garden',
+          workspace_name: 'open-garden',
+          email: 'sam@open-tomato.dev',
+          role: 'member',
+          invited_by: ren.id,
+          expires_at: expires,
+        },
+        {
+          workspace_id: 'ws_tomato_mainline',
+          workspace_name: 'tomato-mainline',
+          email: 'sam@open-tomato.dev',
+          role: 'admin',
+          invited_by: ren.id,
+          expires_at: expires,
+        },
+        {
+          workspace_id: 'ws_seed_bank',
+          workspace_name: 'seed-bank',
+          email: 'sam@open-tomato.dev',
+          role: 'viewer',
+          invited_by: ren.id,
+          expires_at: expires,
+        },
+      ]);
     }
      
     console.log(`seeded auth dev fixtures — password for all accounts: "${DEV_PASSWORD}"`);
