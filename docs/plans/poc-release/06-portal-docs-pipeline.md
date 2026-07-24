@@ -4,7 +4,7 @@ tier: detailed
 depends-on: [05-wave-0 (port checklist + gate + theme-default), 03a (skill adaptation)]
 parallel-with: [03b–d, 04]
 size: M–L (2–3 sessions)
-status: breakdown DONE (CB PRs #17, #18); OT port half next
+status: COMPLETE — breakdown (CB #17/#18) + port published (ui-portal/ui-docs@0.8.1)
 linear: OPT-245
 ---
 
