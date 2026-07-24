@@ -12,7 +12,7 @@
  * module and never need a live Redis.
  */
 import type { RedisClient } from '../redis/index.js';
-import type { Amr, SessionRecord, WorkspaceRole } from '../tokens/types.js';
+import type { Amr, SessionRecord } from '../tokens/types.js';
 
 import { randomUUID } from 'node:crypto';
 
@@ -35,8 +35,6 @@ export interface NewSessionInput {
   name: string;
   amr: Amr[];
   wsp?: string;
-  wspRole?: WorkspaceRole;
-  inv?: string;
 }
 
 /** Opaque, unguessable refresh token — two UUIDs, no dashes. */
@@ -117,8 +115,6 @@ export async function getSessionByRefreshToken(
     name: stored.name,
     amr: stored.amr,
     wsp: stored.wsp,
-    wspRole: stored.wspRole,
-    inv: stored.inv,
   };
 }
 

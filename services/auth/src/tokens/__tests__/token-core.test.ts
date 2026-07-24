@@ -121,19 +121,18 @@ describe('createTokenIssuer', () => {
     expect(await issuer.verifyAccessToken(tampered)).toBeNull();
   });
 
-  it('preserves optional workspace claims', async () => {
+  it('preserves the optional wsp scope claim and no longer carries role/inv', async () => {
     const issuer = createTokenIssuer(SECRET);
     const { token } = await issuer.mintAccessToken({
       ...baseClaims,
       amr: ['pwd'],
       wsp: 'ws_open_garden',
-      wspRole: 'member',
-      inv: 'inv_og',
     });
     const verified = await issuer.verifyAccessToken(token);
     expect(verified?.wsp).toBe('ws_open_garden');
-    expect(verified?.wspRole).toBe('member');
-    expect(verified?.inv).toBe('inv_og');
+    // Authorization (role) + invite-acceptance state left the token in WS09e.
+    expect((verified as unknown as Record<string, unknown>)['wspRole']).toBeUndefined();
+    expect((verified as unknown as Record<string, unknown>)['inv']).toBeUndefined();
   });
 });
 
