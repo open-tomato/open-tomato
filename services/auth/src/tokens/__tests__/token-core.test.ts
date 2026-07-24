@@ -189,4 +189,18 @@ describe('refreshTokenSet', () => {
   it('carries the 30-day refresh lifetime constant', () => {
     expect(REFRESH_TTL_SECONDS).toBe(30 * 24 * 60 * 60);
   });
+
+  it('preserves the wsp scope pointer across a refresh and never resurrects authz', async () => {
+    const redis = createFakeRedis();
+    const issuer = createTokenIssuer(SECRET);
+
+    const first = await issueTokenSet(redis, issuer, { ...baseClaims, amr: ['pwd'], wsp: 'ws_open_garden' });
+    const rotated = await refreshTokenSet(redis, issuer, first.refreshToken);
+
+    expect(rotated).not.toBeNull();
+    const claims = await issuer.verifyAccessToken(rotated!.accessToken);
+    expect(claims?.wsp).toBe('ws_open_garden');
+    expect((claims as unknown as Record<string, unknown>)['wspRole']).toBeUndefined();
+    expect((claims as unknown as Record<string, unknown>)['inv']).toBeUndefined();
+  });
 });

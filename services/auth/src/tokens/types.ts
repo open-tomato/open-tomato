@@ -23,7 +23,8 @@ export interface AccessTokenClaims {
   amr: Amr[];
   /** Active workspace SCOPE pointer, once selected. Absent until workspace pick
    *  resolves. Authorization (role) is NOT in the token — resolve it on demand
-   *  via `GET /workspaces/:id/me` (WS09e). */
+   *  via `GET /workspaces/:id/me` (WS09e). Presence of `wsp` is NOT proof of
+   *  access — downstream must still authorize via `GET /workspaces/:id/me`. */
   wsp?: string;
   /** Issued-at / expiry, seconds since epoch (JWT convention). */
   iat: number;

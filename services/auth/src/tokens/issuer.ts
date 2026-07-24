@@ -59,13 +59,25 @@ export function createTokenIssuer(secret: string): TokenIssuer {
     async mintAccessToken(input, issuedAt = nowSeconds()) {
       const iat = issuedAt;
       const exp = iat + ACCESS_TTL_SECONDS;
-      const claims: AccessTokenClaims = { ...input, iat, exp };
+      // Explicit allow-list of signed claim fields — structurally closes the
+      // token so a caller spreading a wider object into `input` can never sign
+      // extra fields in (defense in depth beyond the AccessTokenInput type).
+      const signedClaims = {
+        sub: input.sub,
+        email: input.email,
+        name: input.name,
+        amr: input.amr,
+        ...(input.wsp === undefined
+          ? {}
+          : { wsp: input.wsp }),
+      };
+      const claims: AccessTokenClaims = { ...signedClaims, iat, exp };
 
       // jose owns `iat`/`exp` in the signed payload; we mirror them into the
       // returned `claims` so callers get the exact decoded shape without a
       // round-trip. `jti` (a per-token id) is the hook a future access-token
       // denylist checks — minted now so tokens are identifiable from day one.
-      const token = await new SignJWT({ ...input })
+      const token = await new SignJWT({ ...signedClaims })
         .setProtectedHeader({ alg: ALG, typ: 'JWT', kid: KID })
         .setIssuer(ISSUER)
         .setJti(randomUUID())
