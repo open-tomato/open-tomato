@@ -30,11 +30,14 @@ import { revokeUserSessions } from '../store/sessions.js';
 import { getUserByEmail } from '../store/users.js';
 import { issueTokenSet } from '../tokens/session-tokens.js';
 
+/** Minimum length for a reset's new password (aligns with sign-up policy). */
+const MIN_PASSWORD_LENGTH = 8;
+
 const RequestSchema = z.object({ email: z.string() });
 const ConfirmSchema = z.object({
   email: z.string(),
   code: z.string(),
-  newPassword: z.string().min(1),
+  newPassword: z.string().min(MIN_PASSWORD_LENGTH),
 });
 
 /** Mask an email for the always-`sent` response — mirrors the auth-app mock. */

@@ -4,7 +4,7 @@ tier: detailed (planned 2026-07-24 from auth-api-contract.md + backend survey)
 depends-on: [08 (auth-api-contract.md)]
 parallel-with: [12-partial]
 size: L
-status: IN PROGRESS — 09a + 09b shipped (chassis + password sign-in + 2FA/reset/recovery, security-reviewed); 09c/09d pending (2026-07-24)
+status: IN PROGRESS — 09a + 09b + 09c shipped (password + 2FA/reset + OAuth/sign-up/workspace, security-reviewed); 09d pending (2026-07-24)
 linear: OPT-248
 ---
 
@@ -117,8 +117,23 @@ lives in **redis** with TTLs, not Postgres.
   gate). Deferred to OPT-259: TOTP anti-replay, enroll step-up re-auth, TOTP-seed-at-rest encryption,
   reset password-strength policy, per-endpoint attempt budgets. Notes: recovery codes redeemable at
   `/sign-in/2fa` (unchanged wire shape) so enrollment codes are usable.
-- **09c — OAuth + workspace:** single-provider OAuth/OIDC initiate+callback (state/nonce/PKCE),
-  sign-up (email + OAuth complete), workspace invitations + select (token-level claim stamping).
+- **09c — OAuth + workspace:** ✅ **DONE (2026-07-24).** Provider-agnostic OIDC (authorization-code +
+  PKCE + `state`/`nonce`), Google the only configured provider (others → `501`), every endpoint
+  env-overridable so tests hit a mock token/JWKS and real Google is just credentials: `GET
+  /sign-in/oauth/:provider` (initiate → 302) + `/callback` (state single-use CSRF + nonce + server-side
+  code exchange + id_token JWKS/iss/aud verify → `ok`|`needs_profile`|`denied`). `POST /sign-up/email`
+  (→ `ok`|`email_taken`) and `/sign-up/oauth/:provider/complete` (provisions from a signed httpOnly
+  `ot_pending_fed` cookie carrying the OIDC-verified identity — the contract body has no identity, so
+  it's bridged server-side, never trusted from the client). `GET /workspaces/invitations` +
+  `POST /workspaces/select` (bearer-authed; invite validated + bound to the caller's email; final token
+  stamps `wsp`/`wspRole`/`inv`; self-serve → `ws_default`/`owner`). +35 tests (109 total), gate green.
+  Decisions: OAuth strategy = provider-agnostic OIDC / Google-default / mock-testable (user, 2026-07-24);
+  callback returns JSON (browser redirect-to-webapp hand-off is 09d); workspace UI fields
+  (`description`/`members`/`tone`) derived from real data (no migration). Security-reviewed — fixed a
+  CRITICAL token-confusion bypass (pending-fed cookie verified as an access token: `verifyAccessToken`
+  now pins `typ` + validates claim shape, federation uses a domain-separated key, regression-tested) and
+  two HIGHs (reject unverified OIDC emails; 8-char min password on sign-up/reset). Deferred to OPT-259:
+  durable invite acceptance / membership writes, per-endpoint throttling, a `handle` column.
 - **09d — deploy prep + hardening:** `service.config.yaml` (WS12 coordination), Dockerfile,
   contract tests vs `auth-api-contract.md`, wire the auth app's `VITE_AUTH_API_URL` to the
   running service for an end-to-end walk; re-point `express` `introspectUrl` consumers.
