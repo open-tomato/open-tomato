@@ -4,9 +4,18 @@ tier: milestone
 depends-on: [06]
 parallel-with: [07, 08, 11]
 size: S
-status: pending
+status: COMPLETE — /homepage built + gate green; ui-portal made responsive, republished @0.8.2 (2026-07-24)
 linear: OPT-249
 ---
+
+> **Done (2026-07-24).** `/homepage` (Vite + React 19) composes `@open-tomato/ui-portal`
+> — Header + Landing + Footer — with outbound links wired via env-overridable config
+> (`homepage/src/links.ts`). Turbo gate green; 4 smoke tests. Building it surfaced that
+> the ui-portal marketing components were desktop-first; they were made responsive at the
+> library layer (nav/search collapse, grids stack, hero headline + mascot scale, terminal
+> scrolls) — no overflow at 320/375/768/1024/1440 — and the fixed group republished at
+> **0.8.2**. Static `dist/` builds for the WS12 pilot. Gaps: OPT-257 (ThemeName re-export),
+> OPT-258 (Icon dynamic-map bundle weight). Dev preview: `.claude/launch.json` → `homepage` (:5175).
 
 # WS10 — Homepage app
 
