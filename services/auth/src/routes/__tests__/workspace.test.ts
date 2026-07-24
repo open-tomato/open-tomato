@@ -12,6 +12,7 @@ vi.mock('../../store/invitations.js', () => ({
   listOpenInvitationsForEmail: vi.fn(),
   getInvitationById: vi.fn(),
   countWorkspaceMembers: vi.fn(),
+  getMembershipRole: vi.fn(),
 }));
 vi.mock('../../store/users.js', () => ({
   getUserById: vi.fn(),
@@ -19,7 +20,7 @@ vi.mock('../../store/users.js', () => ({
 }));
 vi.mock('../../store/sessions.js', () => ({ createSession: vi.fn() }));
 
-const { listOpenInvitationsForEmail, getInvitationById, countWorkspaceMembers } = await import('../../store/invitations.js');
+const { listOpenInvitationsForEmail, getInvitationById, countWorkspaceMembers, getMembershipRole } = await import('../../store/invitations.js');
 const { getUserById } = await import('../../store/users.js');
 const { createSession } = await import('../../store/sessions.js');
 const { workspaceRouter } = await import('../workspace.js');
@@ -59,6 +60,7 @@ beforeEach(() => {
   vi.mocked(listOpenInvitationsForEmail).mockReset();
   vi.mocked(getInvitationById).mockReset();
   vi.mocked(countWorkspaceMembers).mockReset();
+  vi.mocked(getMembershipRole).mockReset();
   vi.mocked(getUserById).mockReset();
   vi.mocked(createSession).mockReset();
   vi.mocked(createSession).mockResolvedValue({ sid: 'sid_x', refreshToken: 'rt_seed' });
@@ -159,6 +161,46 @@ describe('POST /workspaces/select', () => {
   it('requires auth', async () => {
     const res = await request(app).post('/workspaces/select')
       .send({});
+    expect(res.status).toBe(401);
+  });
+});
+
+describe('GET /workspaces/:id/me', () => {
+  it('reports the caller’s membership role', async () => {
+    vi.mocked(getMembershipRole).mockResolvedValue('admin');
+    vi.mocked(listOpenInvitationsForEmail).mockResolvedValue([]);
+
+    const res = await request(app).get('/workspaces/ws_open_garden/me')
+      .set('Authorization', await bearer());
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ wspRole: 'admin', membership: { role: 'admin' }, pendingInvite: null });
+  });
+
+  it('falls back to a pending invite when not yet a member', async () => {
+    vi.mocked(getMembershipRole).mockResolvedValue(null);
+    vi.mocked(listOpenInvitationsForEmail).mockResolvedValue([OPEN_INVITE]);
+
+    const res = await request(app).get('/workspaces/ws_open_garden/me')
+      .set('Authorization', await bearer());
+
+    expect(res.body).toEqual({
+      wspRole: 'member', membership: null, pendingInvite: { id: 'inv_og', role: 'member' },
+    });
+  });
+
+  it('returns a null role for a workspace the caller cannot access', async () => {
+    vi.mocked(getMembershipRole).mockResolvedValue(null);
+    vi.mocked(listOpenInvitationsForEmail).mockResolvedValue([]);
+
+    const res = await request(app).get('/workspaces/ws_stranger/me')
+      .set('Authorization', await bearer());
+
+    expect(res.body).toEqual({ wspRole: null, membership: null, pendingInvite: null });
+  });
+
+  it('requires auth', async () => {
+    const res = await request(app).get('/workspaces/ws_open_garden/me');
     expect(res.status).toBe(401);
   });
 });

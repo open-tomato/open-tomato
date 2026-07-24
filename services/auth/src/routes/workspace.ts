@@ -30,6 +30,7 @@ import {
 } from '../store/invitations.js';
 import { getUserById, normalizeEmail } from '../store/users.js';
 import { issueTokenSet } from '../tokens/session-tokens.js';
+import { createWorkspaceContext } from '../workspace/context.js';
 
 import { requireAuth } from './require-auth.js';
 
@@ -64,6 +65,7 @@ export function workspaceRouter(deps: RouteDeps): Router {
   const router = Router({ mergeParams: true });
   const { db, redis, issuer } = deps;
   const auth = requireAuth(issuer);
+  const context = createWorkspaceContext(db);
 
   router.get('/invitations', auth, async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -122,6 +124,17 @@ export function workspaceRouter(deps: RouteDeps): Router {
       // `GET /workspaces/:id/me` (WS09e). `amr` is preserved from the session.
       const tokens = await issueTokenSet(redis, issuer, { sub, email, name, amr, wsp });
       res.status(200).json({ status: 'ok', tokens });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.get('/:id/me', auth, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { sub, email } = (req as AuthedRequest).auth;
+      const workspaceId = req.params.id ?? '';
+      const result = await context.resolveContext({ sub, email, workspaceId });
+      res.status(200).json(result);
     } catch (err) {
       next(err);
     }
