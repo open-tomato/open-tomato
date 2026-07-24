@@ -1,8 +1,9 @@
-import { Icon } from '@open-tomato/ui-components';
-// Pure `import type` — fully erased at build so no bare `lucide-react/dynamic`
-// side-effect import lands in dist (that subpath isn't in lucide's exports map
-// and breaks strict-ESM consumers; the Icon atom lazy-loads it at runtime).
+// `import type` (not `import { type … }`) so nothing lands in dist — a bare
+// `lucide-react/dynamic` side-effect import breaks strict-ESM consumers (that
+// subpath isn't in lucide's exports map; the Icon atom lazy-loads it at runtime).
 import type { IconName } from 'lucide-react/dynamic';
+
+import { Icon } from '@open-tomato/ui-components';
 import { forwardRef, type HTMLAttributes } from 'react';
 
 import { BrandGlyph, type BrandGlyphName } from '../BrandGlyph';
