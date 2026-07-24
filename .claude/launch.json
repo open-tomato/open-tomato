@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "webapp",
+      "runtimeExecutable": "bunx",
+      "runtimeArgs": ["vite", "app", "--port", "5173", "--strictPort"],
+      "port": 5173
+    },
+    {
+      "name": "auth-app",
+      "runtimeExecutable": "bunx",
+      "runtimeArgs": ["vite", "auth-app", "--port", "5174", "--strictPort"],
+      "port": 5174
+    },
+    {
+      "name": "ui-storybook",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["--cwd", "packages/ui/components", "run", "storybook"],
+      "port": 6006
+    }
+  ]
+}
