@@ -32,8 +32,6 @@ export async function issueTokenSet(
     name: input.name,
     amr: input.amr,
     wsp: input.wsp,
-    wspRole: input.wspRole,
-    inv: input.inv,
   });
 
   const { token, claims } = await issuer.mintAccessToken(input);
@@ -70,8 +68,6 @@ export async function refreshTokenSet(
     name: session.name,
     amr: session.amr,
     wsp: session.wsp,
-    wspRole: session.wspRole,
-    inv: session.inv,
   });
 
   return {

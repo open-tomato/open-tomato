@@ -13,7 +13,7 @@ export type Amr = 'pwd' | 'otp' | 'webauthn' | `oauth:${OAuthProvider}`;
 
 export type WorkspaceRole = 'owner' | 'admin' | 'member' | 'viewer';
 
-/** Claims carried inside the access token. */
+/** Claims carried inside the access token — identity + a workspace scope pointer. */
 export interface AccessTokenClaims {
   /** Subject — the user id. */
   sub: string;
@@ -21,12 +21,11 @@ export interface AccessTokenClaims {
   name: string;
   /** How this session was authenticated. */
   amr: Amr[];
-  /** Active workspace, once selected. Absent until workspace pick resolves. */
+  /** Active workspace SCOPE pointer, once selected. Absent until workspace pick
+   *  resolves. Authorization (role) is NOT in the token — resolve it on demand
+   *  via `GET /workspaces/:id/me` (WS09e). Presence of `wsp` is NOT proof of
+   *  access — downstream must still authorize via `GET /workspaces/:id/me`. */
   wsp?: string;
-  /** Role within the active workspace. */
-  wspRole?: WorkspaceRole;
-  /** Pending invitation id — set when the session entered via an unaccepted invite. */
-  inv?: string;
   /** Issued-at / expiry, seconds since epoch (JWT convention). */
   iat: number;
   exp: number;
@@ -53,7 +52,6 @@ export interface SessionRecord {
   email: string;
   name: string;
   amr: Amr[];
+  /** Active workspace scope pointer, preserved across refresh. */
   wsp?: string;
-  wspRole?: WorkspaceRole;
-  inv?: string;
 }

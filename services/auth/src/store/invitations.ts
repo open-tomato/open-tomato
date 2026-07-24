@@ -69,3 +69,20 @@ export async function countWorkspaceMembers(db: Db, workspaceId: string): Promis
     .where(eq(workspaceMembershipsTable.workspace_id, workspaceId));
   return Number(rows[0]?.n ?? 0);
 }
+
+/** The caller's confirmed role in a workspace, or `null` when not a member. */
+export async function getMembershipRole(
+  db: Db,
+  userId: string,
+  workspaceId: string,
+): Promise<WorkspaceRole | null> {
+  const rows = await db
+    .select({ role: workspaceMembershipsTable.role })
+    .from(workspaceMembershipsTable)
+    .where(and(
+      eq(workspaceMembershipsTable.user_id, userId),
+      eq(workspaceMembershipsTable.workspace_id, workspaceId),
+    ))
+    .limit(1);
+  return rows[0]?.role ?? null;
+}

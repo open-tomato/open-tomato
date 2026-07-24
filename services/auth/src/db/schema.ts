@@ -28,7 +28,8 @@ export const credentialAlgoEnum = pgEnum('credential_algo', ['argon2id', 'scrypt
 /** OAuth / OIDC providers the service federates with. */
 export const oauthProviderEnum = pgEnum('oauth_provider', ['google', 'github']);
 
-/** Role a user holds within a workspace (mirrors the token `wspRole` claim). */
+/** Role a user holds within a workspace. Resolved on demand via the
+ *  WorkspaceContext seam (`GET /workspaces/:id/me`) — no longer a token claim. */
 export const workspaceRoleEnum = pgEnum('workspace_role', ['owner', 'admin', 'member', 'viewer']);
 
 // ---------------------------------------------------------------------------

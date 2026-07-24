@@ -21,7 +21,8 @@ invitations/select onto the schema already created here.
 | `POST /sign-up/email` | `{status:'ok', user, tokens}` (`amr:['pwd']`) · `{status:'email_taken'}` (200) |
 | `POST /sign-up/oauth/:provider/complete` | `{status:'ok', user, tokens}` (`amr:['oauth:google']`) · `{status:'email_taken'}` — provisions from the cookie-carried verified identity + chosen handle |
 | `GET /workspaces/invitations` | `WorkspaceInvitation[]` — **bearer-authed**; open invites for the token's email, display fields derived |
-| `POST /workspaces/select` | `{status:'ok', tokens}` (final token, `wsp`/`wspRole`/`inv` stamped) · `{status:'invalid_invitation'}` — **bearer-authed** |
+| `POST /workspaces/select` | `{status:'ok', tokens}` (final token, **`wsp` scope only** — role/invite off-token) · `{status:'invalid_invitation'}` — bearer-authed |
+| `GET /workspaces/:id/me` | `{ wspRole, membership, pendingInvite }` — **bearer-authed**; resolves the caller's role + pending invite on demand (authz lives here, not in the token) |
 | `POST /token/refresh` | `{status:'ok', tokens}` — rotates access via the `sid`-bound refresh token · 401 on unknown/rotated |
 | `POST /introspect` | `{active:true, ...claims}` · `{active:false}` — the framework `auth.introspectUrl` seam |
 | `POST /reset/request` | `{status:'sent', channel, maskedEmail}` — **always** (no enumeration); mints an account-bound code + stub-mails it |
@@ -31,8 +32,11 @@ invitations/select onto the schema already created here.
 | `POST /2fa/passkey/start`·`/finish` | `501` — deferred (D5) |
 | `GET /health` | chassis builtin |
 
-Tokens: 15-min HS256 access JWT + 30-day opaque refresh bound to a `sid`
-(Redis). Claims match `AccessTokenClaims` (`sub/email/name/amr/wsp?/wspRole?/inv?/iat/exp`).
+Tokens: 15-min HS256 access JWT + 30-day opaque refresh bound to a `sid` (Redis).
+Claims are identity + a `wsp` scope pointer (`sub/email/name/amr/wsp?/iat/exp`).
+Authorization (`wspRole`) and invite-acceptance state (`inv`) left the identity
+token in WS09e — resolve them via `GET /workspaces/:id/me` (the WorkspaceContext
+seam a future standalone workspace service lifts out behind).
 
 **09d notes (deploy prep + hardening, backend):** the access token now carries a
 `kid` header (`hs-1`) and a `jti` claim — rotation-ready + a denylist hook, no
@@ -44,9 +48,9 @@ introspect seam is now real: `@open-tomato/express`'s `buildRequireAuth` /
 for consumers. `service.config.yaml` is written (provisional pending WS12
 grow-box onboarding). **Remaining (next session):** the auth-app HTTP wiring to
 this live service (`httpAuthApi` over `VITE_AUTH_API_URL`; OAuth browser-redirect
-+ webapp hand-off) — split out because it pairs with the workspace-service
-decomposition (`wspRole` leaves the identity token). `wspRole`-in-token is
-**PoC-only**; don't build on it permanently.
++ webapp hand-off) — split out because it paired with the workspace-service
+decomposition (WS09e — `wspRole`/`inv` have now left the identity token; see the
+Tokens note above).
 
 **09c design notes:** OAuth is provider-agnostic OIDC (authorization-code +
 PKCE + `state`/`nonce`), Google the only configured provider (others → `501`);

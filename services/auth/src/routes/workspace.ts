@@ -7,16 +7,16 @@
  *   invites, with the contract's display fields (`description`, `members`,
  *   `tone`) derived from real data.
  * `POST /workspaces/select` — `{ invitationId? }`:
- *   - `{ status:'ok', tokens }` — mints the FINAL token with `wsp` (+ `wspRole`,
- *     and `inv` for an invite) stamped in. With an invite: validated + bound to
- *     the caller's email. Without: the self-serve default (`ws_default`/`owner`).
+ *   - `{ status:'ok', tokens }` — mints the FINAL token with `wsp` only (no
+ *     `wspRole`/`inv` — authorization and invite-acceptance state are resolved
+ *     via `GET /workspaces/:id/me`, WS09e). With an invite: validated + bound
+ *     to the caller's email. Without: the self-serve default (`ws_default`).
  *   - `{ status:'invalid_invitation' }` — unknown / expired / already-accepted /
  *     not addressed to this user.
  */
 import type { RouteDeps } from './context.js';
 import type { AuthedRequest } from './require-auth.js';
 import type { InvitationRow } from '../store/invitations.js';
-import type { WorkspaceRole } from '../tokens/types.js';
 import type { Request, Response, NextFunction } from 'express';
 
 import { zodToValidationError } from '@open-tomato/errors';
@@ -30,6 +30,7 @@ import {
 } from '../store/invitations.js';
 import { getUserById, normalizeEmail } from '../store/users.js';
 import { issueTokenSet } from '../tokens/session-tokens.js';
+import { createWorkspaceContext } from '../workspace/context.js';
 
 import { requireAuth } from './require-auth.js';
 
@@ -41,7 +42,7 @@ const SelectSchema = z.object({
 });
 
 /** The self-serve workspace minted when no invite is chosen. */
-const DEFAULT_WORKSPACE = { id: 'ws_default', role: 'owner' as const };
+const DEFAULT_WORKSPACE = { id: 'ws_default' };
 
 const TONES = ['accent', 'primary', 'gold'] as const;
 
@@ -64,6 +65,7 @@ export function workspaceRouter(deps: RouteDeps): Router {
   const router = Router({ mergeParams: true });
   const { db, redis, issuer } = deps;
   const auth = requireAuth(issuer);
+  const context = createWorkspaceContext(db);
 
   router.get('/invitations', auth, async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -107,8 +109,6 @@ export function workspaceRouter(deps: RouteDeps): Router {
       const { invitationId } = parsed.data;
 
       let wsp = DEFAULT_WORKSPACE.id;
-      let wspRole: WorkspaceRole = DEFAULT_WORKSPACE.role;
-      let inv: string | undefined;
 
       if (invitationId != null) {
         const invite = await getInvitationById(db, invitationId);
@@ -117,14 +117,24 @@ export function workspaceRouter(deps: RouteDeps): Router {
           return;
         }
         wsp = invite.workspaceId;
-        wspRole = invite.role;
-        inv = invite.id;
       }
 
-      // The FINAL token carries the workspace claim; `amr` is preserved from the
-      // session that reached this step (pwd / otp / oauth).
-      const tokens = await issueTokenSet(redis, issuer, { sub, email, name, amr, wsp, wspRole, inv });
+      // The FINAL token carries ONLY the `wsp` scope pointer. Authorization (role)
+      // and invite-acceptance state are NOT in the token — resolve via
+      // `GET /workspaces/:id/me` (WS09e). `amr` is preserved from the session.
+      const tokens = await issueTokenSet(redis, issuer, { sub, email, name, amr, wsp });
       res.status(200).json({ status: 'ok', tokens });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.get('/:id/me', auth, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { sub, email } = (req as AuthedRequest).auth;
+      const workspaceId = req.params.id ?? '';
+      const result = await context.resolveContext({ sub, email, workspaceId });
+      res.status(200).json(result);
     } catch (err) {
       next(err);
     }
